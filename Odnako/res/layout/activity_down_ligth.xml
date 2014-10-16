@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout_new"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/DOWNLOADINGS_AD_UNIT_ID" />
+
+        <ScrollView
+            android:id="@+id/art_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/adView"
+            android:background="@color/white"
+            android:fillViewport="true"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/main_new_lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/down_NOT_pro_lin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:id="@+id/down_NOT_pro_lin_spinners"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="20dp" >
+
+                        <LinearLayout
+                            android:id="@+id/cat_lin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="horizontal"
+                            android:paddingBottom="15dp" >
+
+                            <TextView
+                                android:id="@+id/cat_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/white"
+                                android:text="@string/category"
+                                android:textColor="@android:color/black" />
+
+                            <Spinner
+                                android:id="@+id/cat_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/spinner_default_holo_light_am" >
+                            </Spinner>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/quont_lin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="horizontal"
+                            android:paddingBottom="15dp" >
+
+                            <TextView
+                                android:id="@+id/quontity_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/white"
+                                android:text="@string/quontity"
+                                android:textColor="@android:color/black" />
+
+                            <Spinner
+                                android:id="@+id/quont_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/spinner_default_holo_light_am" >
+                            </Spinner>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <!-- end of not pro down -->
+
+                    <LinearLayout
+                        android:id="@+id/down_btn_lin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="20dp" >
+
+                        <Button
+                            android:id="@+id/down_button"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/download_btn_xml" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- many loads lin lay -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/down_all_info"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/info_box_blue" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/down_all"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@color/white"
+                            android:text="@string/download_all"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+                        <Button
+                            android:id="@+id/many_down_button"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="right"
+                            android:background="@drawable/download_btn_xml"
+                            android:enabled="true" />
+                </LinearLayout>
+
+                <!-- Автозагрузка -->
+
+                <LinearLayout
+                    android:id="@+id/auto_load_lin_lay_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/auto_load_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:text="@string/auto_load"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:id="@+id/auto_load_lin_lay_center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:paddingBottom="25dp" >
+
+                        <CheckBox
+                            android:id="@+id/check_box_auto_load"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+                        </CheckBox>
+
+                        <Button
+                            android:id="@+id/time_dialog_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/choose_time_btn"
+                            android:textColor="#000000"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/deleteBtn"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+    <ExpandableListView
+        android:id="@+id/exListViewNew"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:divider="@android:color/transparent"
+        android:groupIndicator="@null"
+        android:indicatorLeft="250dp"
+        android:indicatorRight="300dp" />
+
+</android.support.v4.widget.DrawerLayout>
