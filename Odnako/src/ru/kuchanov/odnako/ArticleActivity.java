@@ -1,3 +1,4 @@
+//test comment on github
 package ru.kuchanov.odnako;
 
 import java.io.File;
@@ -166,7 +167,7 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 			ArticleActivity.EXTRA_MESSAGE_TO_MAIN = "extra_message_to_main";
 		}
 
-		//Задаёт дефолт настройки из xml
+		//Г‡Г Г¤Г ВёГІ Г¤ГҐГґГ®Г«ГІ Г­Г Г±ГІГ°Г®Г©ГЄГЁ ГЁГ§ xml
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		if (pref.getString("theme", "dark").equals("dark"))
 		{
@@ -239,23 +240,23 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 		lock.lock();
 		/////////TEST NAVDRAW
 
-		//Задаёт дефолт настройки из xml и вешает листенер их изменения
+		//Г‡Г Г¤Г ВёГІ Г¤ГҐГґГ®Г«ГІ Г­Г Г±ГІГ°Г®Г©ГЄГЁ ГЁГ§ xml ГЁ ГўГҐГёГ ГҐГІ Г«ГЁГ±ГІГҐГ­ГҐГ° ГЁГµ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї
 		PreferenceManager.setDefaultValues(this, R.xml.pref, false);
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-		//Задаёт дефолт настройки из xmlи вешает листенер их изменения
+		//Г‡Г Г¤Г ВёГІ Г¤ГҐГґГ®Г«ГІ Г­Г Г±ГІГ°Г®Г©ГЄГЁ ГЁГ§ xmlГЁ ГўГҐГёГ ГҐГІ Г«ГЁГ±ГІГҐГ­ГҐГ° ГЁГµ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї
 
 		mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		// Находим наш list 
+		// ГЌГ ГµГ®Г¤ГЁГ¬ Г­Г Гё list 
 		mDrawerList = (ExpandableListView) findViewById(R.id.exListView);
 		mDrawerList.setCacheColorHint(0);
 
-		//Создаем набор данных для адаптера
+		//Г‘Г®Г§Г¤Г ГҐГ¬ Г­Г ГЎГ®Г° Г¤Г Г­Г­Г»Гµ Г¤Г«Гї Г Г¤Г ГЇГІГҐГ°Г 
 		FillMenuList fillMenuList = new FillMenuList();
 		fillMenuList.setActivity(this);
 		this.groups = fillMenuList.getGroups();
 		this.groupsLinks = fillMenuList.getGroupsLinks();
-		//Создаем адаптер и передаем context и список с данными
+		//Г‘Г®Г§Г¤Г ГҐГ¬ Г Г¤Г ГЇГІГҐГ° ГЁ ГЇГҐГ°ГҐГ¤Г ГҐГ¬ context ГЁ Г±ГЇГЁГ±Г®ГЄ Г± Г¤Г Г­Г­Г»Г¬ГЁ
 		ExpListAdapter adapter = new ExpListAdapter(getApplicationContext(), groups);
 		mDrawerList.setAdapter(adapter);
 		//Set on child click listener
@@ -559,10 +560,10 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 				intent.putExtra(Intent.EXTRA_TEXT, ArticleActivity.artInfo[0]);
 				try
 				{
-					startActivity(Intent.createChooser(intent, "Поделиться статьёй"));
+					startActivity(Intent.createChooser(intent, "ГЏГ®Г¤ГҐГ«ГЁГІГјГ±Гї Г±ГІГ ГІГјВёГ©"));
 				} catch (android.content.ActivityNotFoundException ex)
 				{
-					Toast.makeText(getApplicationContext(), "Ошибка! =(", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "ГЋГёГЁГЎГЄГ ! =(", Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			case R.id.theme:
@@ -685,7 +686,7 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		//Задаёт дефолт настройки из xml и вешает листенер их изменения
+		//Г‡Г Г¤Г ВёГІ Г¤ГҐГґГ®Г«ГІ Г­Г Г±ГІГ°Г®Г©ГЄГЁ ГЁГ§ xml ГЁ ГўГҐГёГ ГҐГІ Г«ГЁГ±ГІГҐГ­ГҐГ° ГЁГµ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї
 		SharedPreferences pref;
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		if (pref.getString("theme", "dark").equals("dark"))
@@ -753,15 +754,15 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 			case R.id.art_text:
 //				if (isOn)
 //				{
-					menu.add(0, this.MENU_SPEECH_TEXT, 0, "Прочитать статью вслух");
+					menu.add(0, this.MENU_SPEECH_TEXT, 0, "ГЏГ°Г®Г·ГЁГІГ ГІГј Г±ГІГ ГІГјГѕ ГўГ±Г«ГіГµ");
 //				}
 //				else
 //				{
 //					menu.removeItem(this.MENU_SPEECH_TEXT);
 //				}
-				menu.add(0, this.MENU_SHARE_TEXT, 0, "Получить тест статьи");
-				menu.add(0, this.MENU_SHOW_COMMENTS, 0, "Комментарии");
-				menu.add(0, this.MENU_OPEN_IN_BROWSER, 0, "Открыть в браузере");
+				menu.add(0, this.MENU_SHARE_TEXT, 0, "ГЏГ®Г«ГіГ·ГЁГІГј ГІГҐГ±ГІ Г±ГІГ ГІГјГЁ");
+				menu.add(0, this.MENU_SHOW_COMMENTS, 0, "ГЉГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГЁ");
+				menu.add(0, this.MENU_OPEN_IN_BROWSER, 0, "ГЋГІГЄГ°Г»ГІГј Гў ГЎГ°Г ГіГ§ГҐГ°ГҐ");
 			break;
 		}
 	}
@@ -786,7 +787,7 @@ public class ArticleActivity extends ActionBarActivity implements SharedPreferen
 							ttobj.setLanguage(Locale.getDefault());
 							if (ttobj.isLanguageAvailable(new Locale("rus", "RUS")) < 0)
 							{
-								Toast.makeText(ArticleActivity.this, "Требуется поддержка русского языка. \n См. настройки синтеза речи вашего устройства.", Toast.LENGTH_LONG).show();
+								Toast.makeText(ArticleActivity.this, "Г’Г°ГҐГЎГіГҐГІГ±Гї ГЇГ®Г¤Г¤ГҐГ°Г¦ГЄГ  Г°ГіГ±Г±ГЄГ®ГЈГ® ГїГ§Г»ГЄГ . \n Г‘Г¬. Г­Г Г±ГІГ°Г®Г©ГЄГЁ Г±ГЁГ­ГІГҐГ§Г  Г°ГҐГ·ГЁ ГўГ ГёГҐГЈГ® ГіГ±ГІГ°Г®Г©Г±ГІГўГ .", Toast.LENGTH_LONG).show();
 								return;
 							}
 							ttobj.setLanguage(new Locale("rus", "RUS"));
