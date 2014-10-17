@@ -1,6 +1,4 @@
-//test comment on github
-
-//test comment to github from eclipse
+//delete comments to github from eclipse
 package ru.kuchanov.odnako;
 
 import java.io.File;
