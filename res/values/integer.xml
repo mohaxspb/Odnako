@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer
+        name="width">75</integer>
+    <integer
+        name="heigth">75</integer>
+    
+</resources>
