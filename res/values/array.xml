@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="menu_items">
+        <item>Авторы</item>
+        <item>Категории</item>
+        <item>Лента обновлений</item>
+        <item>Новости</item>
+        <item>Загрузки</item>
+        <item>Настройки</item>
+    </string-array>
+    <string-array name="authors">
+        <item>Михаил Леонтьев</item>
+        <item>Виктор Мараховский</item>
+        <item>Анатолий Вассерман</item>
+        <item>Все авторы</item>
+    </string-array>
+    <string-array name="categories">
+        <item>Идеология</item>
+        <item>Экономическая политика</item>
+        <item>Государственное строительство</item>
+        <item>Оборонная политика</item>
+        <item>Евразия</item>
+        <item>Человекостроение</item>
+        <item>Миропорядок</item>
+    </string-array>
+    <string-array name="menu_items_links">
+        <item>Авторы</item>
+        <item>Категории</item>
+        <item>www.odnako.org/blogs</item>
+        <item>novosti.odnako.org</item>
+        <item>Загрузки</item>
+        <item>Настройки</item>
+    </string-array>
+    <string-array name="authors_links">
+        <item>leontev.odnako.org</item>
+        <item>viktormarahovskiy.odnako.org</item>
+        <item>awas.odnako.org</item>
+        <item>www.odnako.org/authors</item>
+    </string-array>
+    <string-array name="categories_links">
+        <item>ideologiya.odnako.org</item>
+        <item>ekonomicheskayapolitika.odnako.org</item>
+        <item>gosudarstvennoestroitelstvo.odnako.org</item>
+        <item>oboronnayapolitika.odnako.org</item>
+        <item>eurasia.odnako.org</item>
+        <item>chelovekostroenie.odnako.org</item>
+        <item>miroporyadok.odnako.org</item>
+    </string-array>
+    <string-array name="categories_to_load">
+        <item>Лента обновлений</item>
+        <item>Новости</item>
+        <item>Идеология</item>
+        <item>Экономическая политика</item>
+        <item>Государственное строительство</item>
+        <item>Оборонная политика</item>
+        <item>Евразия</item>
+        <item>Человекостроение</item>
+        <item>Миропорядок</item>
+    </string-array>
+    <string-array name="categories_to_load_links">
+        <item>www.odnako.org/blogs</item>
+        <item>novosti.odnako.org</item>
+        <item>ideologiya.odnako.org</item>
+        <item>ekonomicheskayapolitika.odnako.org</item>
+        <item>gosudarstvennoestroitelstvo.odnako.org</item>
+        <item>oboronnayapolitika.odnako.org</item>
+        <item>eurasia.odnako.org</item>
+        <item>chelovekostroenie.odnako.org</item>
+        <item>miroporyadok.odnako.org</item>
+    </string-array>
+    <string-array name="files_dir">
+        <item>В папке приложения</item>
+        <item>На карте памяти</item>
+    </string-array>
+    <string-array name="files_dir_values">
+        <item>/data/data/ru.kuchanov.odnako/files</item>
+        <item>/mnt/sdcard/odnako/</item>
+    </string-array>
+    <string-array name="notif_period">
+        <item>30 мин</item>
+        <item>1 час</item>
+        <item>1.5 часа</item>
+        <item>2 часа</item>
+    </string-array>
+    <string-array name="notif_period_values">
+        <item>30</item>
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+    </string-array>
+
+</resources>
