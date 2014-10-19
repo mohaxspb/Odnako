@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Однако</string>
-    <string name="art_act">Однако</string>
+    <string name="article">Статья</string>
+    <string name="arts_list">Список статей</string>
     <string name="action_settings">Настройки</string>
     <string name="design">Внешний вид</string>
     <string name="refresh">Обновить</string>
