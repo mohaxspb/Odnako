@@ -1,35 +1,21 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.utils.ReadUnreadRegister;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterable
 {
@@ -93,32 +79,32 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 		super.notifyDataSetChanged();
 	}
 
-	// кол-во элементов
+	// пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	@Override
 	public int getCount()
 	{
 		return objects.size();
 	}
 
-	// элемент по позиции
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	@Override
 	public ArtsInfo getItem(int position)
 	{
 		return (objects.get(position));
 	}
 
-	// id по позиции
+	// id пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	@Override
 	public long getItemId(int position)
 	{
 		return position;
 	}
 
-	// пункт списка
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		final ArtsInfo p = getArticle(position);
+		//final ArtsInfo p = getArticle(position);
 		int type = getItemViewType(position);
 		View view = null;
 		switch (type)
@@ -128,7 +114,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 				if (convertView == null)
 				{
 					ViewGroup viewGroup;
-					//Задаёт дефолт настройки из xml и вешает листенер их изменения
+					//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ xml пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //					SharedPreferences pref;
 //					pref = PreferenceManager.getDefaultSharedPreferences(act);
 //					if (pref.getString("theme", "dark").equals("dark"))
@@ -149,7 +135,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 //						viewGroup.setTag(holderMain);
 //						view = viewGroup;
 //					}
-					viewGroup = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, null);
+					viewGroup = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, new LinearLayout(act));
 					holderMain = new ArticleHolder((TextView) viewGroup.findViewById(R.id.title), (TextView) viewGroup.findViewById(R.id.author_name),
 					(ImageView) viewGroup.findViewById(R.id.art_img), (LinearLayout) viewGroup.findViewById(R.id.text_lin_lay_art), (ImageView) viewGroup.findViewById(R.id.save_img),
 					(ImageView) viewGroup.findViewById(R.id.read_img));
@@ -358,7 +344,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 		return 1;
 	}
 
-	// товар по позиции
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	ArtsInfo getArticle(int position)
 	{
 		return ((ArtsInfo) getItem(position));

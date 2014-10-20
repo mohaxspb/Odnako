@@ -3,6 +3,7 @@ package ru.kuchanov.odnako.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
 public class ReadUnreadRegister
 {
 	Context ctx;

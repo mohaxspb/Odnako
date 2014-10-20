@@ -7,8 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="19"
-        tools:node="replace" />
+        android:targetSdkVersion="21"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -53,7 +52,7 @@
         <activity
             android:name="ru.kuchanov.odnako.ArticleActivity"
             android:label="@string/article"
-            android:parentActivityName="ru.kuchanov.odnako.MainActivityNew" >
+            android:parentActivityName="ru.kuchanov.odnako.activities.ActivityMain" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

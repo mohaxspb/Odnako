@@ -7,7 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
