@@ -1,37 +1,59 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.utils.DownloadImageTask;
+import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
+import android.text.Html;
+import android.text.Spanned;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterable
+public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 {
 
 	ActionBarActivity act;
 	LayoutInflater lInflater;
-	ArrayList<ArtsInfo> objects;
-	public ArrayList<ArtsInfo> orig;
+
+	ListView artsListView;
+
+	ArrayList<ArtInfo> artsInfo;
+	ArrayList<ArtInfo> orig;
 	SharedPreferences pref;
 
-	public ArtsListAdapter(ActionBarActivity act, int resource, ArrayList<ArtsInfo> objects)
+	public ArtsListAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> artsInfo, ListView artsListView)
 	{
-		super(act, resource, objects);
+		super(act, resource, artsInfo);
 		this.act = act;
-		this.objects = objects;
+		this.artsInfo = artsInfo;
 		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		this.artsListView = artsListView;
 	}
 
 	@SuppressLint("DefaultLocale")
@@ -44,14 +66,17 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 			protected FilterResults performFiltering(CharSequence constraint)
 			{
 				final FilterResults oReturn = new FilterResults();
-				final ArrayList<ArtsInfo> results = new ArrayList<ArtsInfo>();
+				final ArrayList<ArtInfo> results = new ArrayList<ArtInfo>();
 				if (orig == null)
-					orig = objects;
+				{
+					orig = artsInfo;
+				}
+
 				if (constraint != null)
 				{
 					if (orig != null && orig.size() > 0)
 					{
-						for (final ArtsInfo g : orig)
+						for (final ArtInfo g : orig)
 						{
 							if (g.title.toLowerCase().contains(constraint.toString()))
 							{
@@ -68,7 +93,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results)
 			{
-				objects = (ArrayList<ArtsInfo>) results.values;
+				artsInfo = (ArrayList<ArtInfo>) results.values;
 				notifyDataSetChanged();
 			}
 		};
@@ -79,32 +104,33 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 		super.notifyDataSetChanged();
 	}
 
-	// ���-�� ���������
 	@Override
 	public int getCount()
 	{
-		return objects.size();
+		return artsInfo.size();
 	}
 
-	// ������� �� �������
 	@Override
-	public ArtsInfo getItem(int position)
+	public ArtInfo getItem(int position)
 	{
-		return (objects.get(position));
+		return (artsInfo.get(position));
 	}
 
-	// id �� �������
+	ArtInfo getArticle(int position)
+	{
+		return ((ArtInfo) getItem(position));
+	}
+
 	@Override
 	public long getItemId(int position)
 	{
 		return position;
 	}
 
-	// ����� ������
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
+	public View getView(final int position, View convertView, ViewGroup parent)
 	{
-		//final ArtsInfo p = getArticle(position);
+		final ArtInfo p = getArticle(position);
 		int type = getItemViewType(position);
 		View view = null;
 		switch (type)
@@ -113,35 +139,16 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 				ArticleHolder holderMain;
 				if (convertView == null)
 				{
-					ViewGroup viewGroup;
-					//����� ������ ��������� �� xml � ������ �������� �� ���������
-//					SharedPreferences pref;
-//					pref = PreferenceManager.getDefaultSharedPreferences(act);
-//					if (pref.getString("theme", "dark").equals("dark"))
-//					{
-//						viewGroup = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.article_child_view_dark, null);
-//						holderMain = new ArticleHolder((TextView) viewGroup.findViewById(R.id.title), (TextView) viewGroup.findViewById(R.id.author_name),
-//						(ImageView) viewGroup.findViewById(R.id.art_img), (LinearLayout) viewGroup.findViewById(R.id.text_lin_lay_art), (ImageView) viewGroup.findViewById(R.id.save_img),
-//						(ImageView) viewGroup.findViewById(R.id.read_img));
-//						viewGroup.setTag(holderMain);
-//						view = viewGroup;
-//					}
-//					else
-//					{
-//						viewGroup = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.article_child_view_ligth, null);
-//						holderMain = new ArticleHolder((TextView) viewGroup.findViewById(R.id.title_ligth), (TextView) viewGroup.findViewById(R.id.author_name_ligth),
-//						(ImageView) viewGroup.findViewById(R.id.art_img), (LinearLayout) viewGroup.findViewById(R.id.text_lin_lay_art), (ImageView) viewGroup.findViewById(R.id.save_img),
-//						(ImageView) viewGroup.findViewById(R.id.read_img));
-//						viewGroup.setTag(holderMain);
-//						view = viewGroup;
-//					}
-					viewGroup = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, new LinearLayout(act));
-					holderMain = new ArticleHolder((TextView) viewGroup.findViewById(R.id.title), (TextView) viewGroup.findViewById(R.id.author_name),
-					(ImageView) viewGroup.findViewById(R.id.art_img), (LinearLayout) viewGroup.findViewById(R.id.text_lin_lay_art), (ImageView) viewGroup.findViewById(R.id.save_img),
-					(ImageView) viewGroup.findViewById(R.id.read_img));
-					viewGroup.setTag(holderMain);
-					view = viewGroup;
-					
+					ViewGroup vg;
+					vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, new LinearLayout(act));
+					holderMain = new ArticleHolder((TextView) vg.findViewById(R.id.art_card_title_tv), (TextView) vg.findViewById(R.id.author_name), (ImageView) vg.findViewById(R.id.art_card_img),
+					(ImageView) vg.findViewById(R.id.save_img), (ImageView) vg.findViewById(R.id.read_img), (ImageView) vg.findViewById(R.id.comments_img),
+					(ImageView) vg.findViewById(R.id.share_img), (TextView) vg.findViewById(R.id.num_of_comms), (TextView) vg.findViewById(R.id.num_of_sharings),
+					(TextView) vg.findViewById(R.id.art_card_date_tv), (TextView) vg.findViewById(R.id.art_card_preview_tv), (ImageView) vg.findViewById(R.id.art_card_settings),
+					(ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay));
+					vg.setTag(holderMain);
+					view = vg;
+
 				}
 				else
 				{
@@ -149,185 +156,219 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 					holderMain = (ArticleHolder) convertView.getTag();
 				}
 
-//				//Title of article
-//				Spanned spannedContentTitle = Html.fromHtml(p.title);
-//				holderMain.title.setText(spannedContentTitle);
-//				holderMain.linLay.setOnClickListener(new OnClickListener()
-//				{
-//					public void onClick(View arg0)
-//					{
-//						if (p.authorBlogUrl.equals("allAuthors"))
-//						{
-//							act.getSupportActionBar().setTitle(p.title);
-//							MainActivityNew.CATEGORY_TO_LOAD = p.url;
-//							PullToRefreshListView pullToRefListV = (PullToRefreshListView) act.findViewById(R.id.pull_to_refresh_listview_main);
-//							pullToRefListV.setMode(Mode.PULL_FROM_START);
-//							pullToRefListV.setRefreshing();
-//						}
-//						else
-//						{
-//							Intent intent = new Intent(act, ArticleActivity.class);
-//							//String[] artInfo = new String[2];
-//							String[] artInfo = new String[3];
-//							artInfo[0] = p.url;
-//							artInfo[1] = p.title;
-//							/* h */artInfo[2] = p.authorName;
-//							MainActivityNew.CUR_ART_INFO = artInfo;
-//							System.out.println(artInfo[0] + artInfo[1]);
-//							intent.putExtra(MainActivityNew.EXTRA_MESSAGE, artInfo);
-//							act.startActivity(intent);
-//						}
-//					}
-//				});
-//
-//				pref = PreferenceManager.getDefaultSharedPreferences(act);
-//
-//				String scaleFactorString = pref.getString("scale", "1");
-//				float scaleFactor = Float.valueOf(scaleFactorString);
-//				holderMain.title.setTextSize(21 * scaleFactor);
-//
-//				//name of author
-//				if (!p.authorName.equals("default"))
-//				{
-//					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
-//					holderMain.author.setText(spannedContent);
-//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1);
-//					holderMain.author.setLayoutParams(layParams);
-//					holderMain.author.setPadding(10, 0, 0, 0);
-//					holderMain.author.setGravity(Gravity.AXIS_X_SHIFT);
-//				}
-//				else if (p.authorName.equals("default"))
-//				{
-//					holderMain.author.setText(null);
-//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
-//					holderMain.author.setLayoutParams(layParams);
-//				}
-//				holderMain.author.setTextSize(21 * scaleFactor);
-//				//end
-//
-//				// ART_IMG
-//				DownloadImageTask downFlag = (DownloadImageTask) new DownloadImageTask((ImageButton) null, (ImageView) holderMain.img, (ActionBarActivity) act);
-//				downFlag.execute(p.img);
-//				holderMain.img.setPadding(1, 1, 1, 1);
-//				final float scale = act.getResources().getDisplayMetrics().density;
-//				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-//				holderMain.img.setScaleType(ScaleType.FIT_XY);
-//				LayoutParams params = new LayoutParams(pixels, pixels);
-//				holderMain.img.setLayoutParams(params);
-//				//onClickListener
-//				holderMain.img.setOnClickListener(new OnClickListener()
-//				{
-//					public void onClick(View arg0)
-//					{
-//						if (!p.authorBlogUrl.equals("default") && !p.authorBlogUrl.equals("allAuthors"))
-//						{
-//							act.getSupportActionBar().setTitle(p.authorName);
-//							MainActivityNew.CATEGORY_TO_LOAD = p.authorBlogUrl;
-//							PullToRefreshListView pullToRefListV = (PullToRefreshListView) act.findViewById(R.id.pull_to_refresh_listview_main);//
-//							pullToRefListV.setRefreshing();
-//						}
-//						else
-//						{
-//							System.out.println("p.authorBlogLink.equals('default')");
-//						}
-//					}
-//				});
-//				//end of ART_IMG
-//
-//				//SaveImg
-//				String appDir;
-//				appDir = pref.getString("filesDir", "");
-//
-//				String formatedCategory;
+				//popUp menu in cardView
+				holderMain.settings.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						PopupMenu popup = new PopupMenu(act, v);
+						popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+						{
+
+							public boolean onMenuItemClick(MenuItem item)
+							{
+								switch (item.getItemId())
+								{
+									case R.id.mark_as_read:
+										ArtsListAdapter.markAsRead(p.url, act);
+										return true;
+									case R.id.share_link:
+										ArtsListAdapter.shareUrl(p.url, act);
+										return true;
+									case R.id.show_comments:
+										ArtsListAdapter.showComments(p, position, act);
+										return true;
+									default:
+										return false;
+								}
+							}
+						});
+						MenuInflater inflater = popup.getMenuInflater();
+						inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
+						popup.show();
+					}
+
+				});
+				////End of popUp menu in cardView
+
+				//light checked item in listView
+				ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+
+				if (artsListFrag.getMyActivatedPosition() == position)
+				{
+					view.setBackgroundColor(act.getResources().getColor(R.color.blue));
+				}
+				else
+				{
+					view.setBackgroundColor(Color.TRANSPARENT);
+				}
+				////////
+
+				//Title of article
+				Spanned spannedContentTitle = Html.fromHtml(p.title);
+				holderMain.title.setText(spannedContentTitle);
+				holderMain.top_lin_lay.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showArticle(p, position, act);
+					}
+				});
+
+				pref = PreferenceManager.getDefaultSharedPreferences(act);
+
+				String scaleFactorString = pref.getString("scale", "1");
+				float scaleFactor = Float.valueOf(scaleFactorString);
+				holderMain.title.setTextSize(21 * scaleFactor);
+
+				//preview
+				Spanned spannedContentPreview = Html.fromHtml(p.preview);
+				holderMain.preview.setText(spannedContentPreview);
+				holderMain.preview.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showArticle(p, position, act);
+					}
+				});
+
+				holderMain.preview.setTextSize(21 * scaleFactor);
+
+				// ART_IMG
+				DownloadImageTask downFlag = (DownloadImageTask) new DownloadImageTask((ImageView) holderMain.art_img, (ActionBarActivity) act);
+				downFlag.execute(p.img);
+				holderMain.art_img.setPadding(1, 1, 1, 1);
+				final float scale = act.getResources().getDisplayMetrics().density;
+				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+				holderMain.art_img.setScaleType(ScaleType.FIT_XY);
+				LayoutParams params = new LayoutParams(pixels, pixels);
+				holderMain.art_img.setLayoutParams(params);
+				//end of ART_IMG
+				
+				//SaveImg
+				String appDir;
+				appDir = pref.getString("filesDir", "");
+
+				String formatedCategory;
 //				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
-//				formatedCategory = formatedCategory.replace("/", "_");
-//				formatedCategory = formatedCategory.replace(":", "_");
-//				formatedCategory = formatedCategory.replace(".", "_");
-//
-//				String formatedLink;
-//				formatedLink = p.url.replace("-", "_");
-//				formatedLink = formatedLink.replace("/", "_");
-//				formatedLink = formatedLink.replace(":", "_");
-//				formatedLink = formatedLink.replace(".", "_");
-//
-//				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/" + formatedLink);
-//				//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-//				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
-//				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
-//
+				String TO_DELETE="odnako.org/blogs";
+				formatedCategory = TO_DELETE.replace("-", "_");
+				formatedCategory = formatedCategory.replace("/", "_");
+				formatedCategory = formatedCategory.replace(":", "_");
+				formatedCategory = formatedCategory.replace(".", "_");
+
+				String formatedLink;
+				formatedLink = p.url.replace("-", "_");
+				formatedLink = formatedLink.replace("/", "_");
+				formatedLink = formatedLink.replace(":", "_");
+				formatedLink = formatedLink.replace(".", "_");
+
+				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/" + formatedLink);
+				//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
+				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
+				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
+				paramsForIcons.setMargins(5, 5, 5, 5);
+				paramsForIcons.gravity=Gravity.CENTER;
+
 //				holderMain.save.setPadding(1, 1, 1, 1);
-//				holderMain.save.setScaleType(ScaleType.FIT_XY);
-//				holderMain.save.setLayoutParams(paramsForIcons);
-//
-//				if (currentArticleFile.exists())
-//				{
-//					if (pref.getString("theme", "dark").equals("dark"))
-//					{
-//						holderMain.save.setImageResource(R.drawable.ic_action_content_save_dark);
-//					}
-//					else
-//					{
-//						holderMain.save.setImageResource(R.drawable.ic_action_content_save_light);
-//					}
-//					
-//				}
-//				else
-//				{
-//					if (pref.getString("theme", "dark").equals("dark"))
-//					{
-//						holderMain.save.setImageResource(R.drawable.ic_action_save_dark);
-//					}
-//					else
-//					{
-//						holderMain.save.setImageResource(R.drawable.ic_action_save_light);
-//					}
-//				}
-//				////end SaveImg
-//
-//				//read Img
-//				ReadUnreadRegister read = new ReadUnreadRegister(act);
+				holderMain.save.setScaleType(ScaleType.FIT_XY);
+				holderMain.save.setLayoutParams(paramsForIcons);
+
+				if (currentArticleFile.exists())
+				{
+					if (pref.getString("theme", "dark").equals("dark"))
+					{
+						holderMain.save.setImageResource(R.drawable.ic_action_save_dark);
+					}
+					else
+					{
+						holderMain.save.setImageResource(R.drawable.ic_action_save_light);
+					}
+
+				}
+				else
+				{
+					if (pref.getString("theme", "dark").equals("dark"))
+					{
+						holderMain.save.setImageResource(android.R.color.transparent);
+					}
+					else
+					{
+						holderMain.save.setImageResource(android.R.color.transparent);
+					}
+				}
+				////end SaveImg
+
+				//read Img
+				ReadUnreadRegister read = new ReadUnreadRegister(act);
 //				SharedPreferences pref;
 //				pref = PreferenceManager.getDefaultSharedPreferences(act);
-//
+
 //				holderMain.read.setPadding(1, 1, 1, 1);
-//				holderMain.read.setScaleType(ScaleType.FIT_XY);
-//				holderMain.read.setLayoutParams(paramsForIcons);
-//
-//				if (read.check(p.url))
-//				{
-//					if (pref.getString("theme", "dark").equals("dark"))
-//					{
-//						holderMain.read.setImageResource(R.drawable.ic_action_read_dark);
-//					}
-//					else
-//					{
-//						holderMain.read.setImageResource(R.drawable.ic_action_read_light);
-//					}
-//				}
-//				else
-//				{
-//					if (pref.getString("theme", "dark").equals("dark"))
-//					{
-//						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_dark);
-//					}
-//					else
-//					{
-//						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_light);
-//					}
-//				}
-//				if (p.authorBlogUrl.equals("allAuthors"))
-//				{
-////					System.out.println("allAutors removing save read imgs");
-//					LayoutParams paramsForIconsEmpty = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//					holderMain.read.setImageDrawable(null);
-//					holderMain.read.setLayoutParams(paramsForIconsEmpty);
-//					holderMain.save.setImageDrawable(null);
-//					holderMain.save.setLayoutParams(paramsForIconsEmpty);
-//				}
+				holderMain.read.setScaleType(ScaleType.FIT_XY);
+				holderMain.read.setLayoutParams(paramsForIcons);
+
+				if (read.check(p.url))
+				{
+					if (pref.getString("theme", "dark").equals("dark"))
+					{
+						holderMain.read.setImageResource(R.drawable.read_dark);
+					}
+					else
+					{
+						holderMain.read.setImageResource(R.drawable.read_light);
+					}
+				}
+				else
+				{
+					if (pref.getString("theme", "dark").equals("dark"))
+					{
+						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_dark);
+					}
+					else
+					{
+						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_light);
+					}
+				}
 				////end read Img
+
+				//
+				//				//name of author
+				//				if (!p.authorName.equals("default"))
+				//				{
+				//					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
+				//					holderMain.author.setText(spannedContent);
+				//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1);
+				//					holderMain.author.setLayoutParams(layParams);
+				//					holderMain.author.setPadding(10, 0, 0, 0);
+				//					holderMain.author.setGravity(Gravity.AXIS_X_SHIFT);
+				//				}
+				//				else if (p.authorName.equals("default"))
+				//				{
+				//					holderMain.author.setText(null);
+				//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
+				//					holderMain.author.setLayoutParams(layParams);
+				//				}
+				//				holderMain.author.setTextSize(21 * scaleFactor);
+				//				//end
+				//
+
+				//
+
+				//				if (p.authorBlogUrl.equals("allAuthors"))
+				//				{
+				////					System.out.println("allAutors removing save read imgs");
+				//					LayoutParams paramsForIconsEmpty = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				//					holderMain.read.setImageDrawable(null);
+				//					holderMain.read.setLayoutParams(paramsForIconsEmpty);
+				//					holderMain.save.setImageDrawable(null);
+				//					holderMain.save.setLayoutParams(paramsForIconsEmpty);
+				//				}
 				return view;
-				default:
-					return view;
+			default:
+				return view;
 
 		}
 	}
@@ -344,29 +385,82 @@ public class ArtsListAdapter extends ArrayAdapter<ArtsInfo> implements Filterabl
 		return 1;
 	}
 
-	// ����� �� �������
-	ArtsInfo getArticle(int position)
+	public static void markAsRead(String url, Context ctx)
 	{
-		return ((ArtsInfo) getItem(position));
+		Toast.makeText(ctx, "readed!", Toast.LENGTH_SHORT).show();
+	}
+
+	public static void shareUrl(String url, Context ctx)
+	{
+		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
+	}
+
+	public static void showComments(ArtInfo artInfo, int position, Context ctx)
+	{
+		Toast.makeText(ctx, "comments!", Toast.LENGTH_SHORT).show();
+	}
+
+	protected static void showArticle(ArtInfo artInfo, int position, ActionBarActivity act)
+	{
+		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
+
+		//check if it's large screen
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		boolean twoPane = pref.getBoolean("twoPane", false);
+
+		System.out.println("twoPane: " + twoPane);
+		if (twoPane)
+		{
+			//light clicked card
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+			artsListFrag.setActivatedPosition(position);
+
+			//			
+			//			if(artsListFrag.getMyActivatedPosition()==position)
+			//			{
+			//				itemView.setBackgroundColor(Color.BLUE);
+			//			}
+			//			else
+			//			{
+			//				itemView.setBackgroundColor(Color.TRANSPARENT);
+			//			}
+			////////
+		}
+
 	}
 
 	static class ArticleHolder
 	{
 		TextView title;
-		TextView author;
-		ImageView img;
-		LinearLayout linLay;
+		TextView author_name;
+		ImageView art_img;
 		ImageView save;
 		ImageView read;
+		ImageView comms;
+		ImageView share;
+		TextView num_of_comms;
+		TextView num_of_shares;
+		TextView date;
+		TextView preview;
+		ImageView settings;
+		ViewGroup top_lin_lay;
 
-		ArticleHolder(TextView title, TextView author, ImageView img, LinearLayout linLay, ImageView save, ImageView read)
+		ArticleHolder(TextView title, TextView author, ImageView img, ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms, TextView num_of_shares, TextView date,
+		TextView preview, ImageView settings, ViewGroup top_lin_lay)
 		{
 			this.title = title;
-			this.author = author;
-			this.img = img;
-			this.linLay = linLay;
+			this.author_name = author;
+			this.art_img = img;
 			this.save = save;
 			this.read = read;
+			this.comms = comms;
+			this.share = share;
+			this.num_of_comms = num_of_comms;
+			this.num_of_shares = num_of_shares;
+			this.date = date;
+			this.preview = preview;
+			this.settings = settings;
+			this.top_lin_lay = top_lin_lay;
 		}
 	}
 }

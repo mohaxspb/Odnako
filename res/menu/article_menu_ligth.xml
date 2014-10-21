@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_action_overflow_ligth"
+        android:icon="@drawable/ic_action_overflow_light"
         android:orderInCategory="200"
         android:showAsAction="never"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/design"
-        android:icon="@drawable/ic_action_overflow_ligth"
+        android:icon="@drawable/ic_action_overflow_light"
         android:orderInCategory="210"
         android:showAsAction="never"
         android:title="@string/design"
@@ -94,7 +94,7 @@
     <item
         android:id="@+id/menu_item_share"
         android:actionProviderClass="android.widget.ShareActionProvider"
-        android:icon="@drawable/ic_action_share_for_ligth"
+        android:icon="@drawable/share_light"
         android:showAsAction="ifRoom"
         android:title="@string/share"
         app:showAsAction="ifRoom"/>

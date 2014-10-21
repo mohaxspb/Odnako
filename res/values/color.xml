@@ -7,5 +7,6 @@
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <color name="cur_theme">#ff33B5E5</color>
+    <color name="blue">#7ecce8</color>
 
 </resources>

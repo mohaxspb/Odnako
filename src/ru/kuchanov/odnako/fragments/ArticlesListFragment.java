@@ -9,7 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.lists_and_utils.ArtsInfo;
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class ArticlesListFragment extends Fragment
@@ -40,10 +41,6 @@ public class ArticlesListFragment extends Fragment
 	{
 		System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
-
-		
-
-		//setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(), android.R.layout.simple_list_item_activated_1, android.R.id.text1, DummyContent.ITEMS));
 	}
 
 	@Override
@@ -51,26 +48,21 @@ public class ArticlesListFragment extends Fragment
 	{
 		System.out.println("ArticlesListFragment onCreateView");
 		//inflate root view
-		View v=inflater.inflate(R.layout.fragment_arts_list, null);
+		View v=inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
 
 		///////
-		// TODO: replace with a real list adapter.
 		this.artsList = (ListView) v.findViewById(R.id.arts_list_view);
-		
-		
+				
 		//fill Arraylist with artsInfo
 		//sample data now
-		ArrayList<ArtsInfo> artsInfo = new ArrayList<ArtsInfo>();
+		ArrayList<ArtInfo> artsInfo = new ArrayList<ArtInfo>();
 		int sampleNum = 30;
-		String[] sampleArr = { "test", "test", "test", "test", "test" };
 		for (int i = 0; i < sampleNum; i++)
 		{
-			artsInfo.add(new ArtsInfo(sampleArr));
+			artsInfo.add(new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "default", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i)));
 		}
-		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, artsInfo);
-		System.out.println("artsList==null: "+artsList==null);
-		System.out.println("artsListAdapter==null: "+artsListAdapter==null);
-		
+		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, artsInfo, artsList);
+
 		this.artsList.setAdapter(artsListAdapter);
 		///////
 
@@ -127,7 +119,7 @@ public class ArticlesListFragment extends Fragment
 		artsList.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
 	}
 
-	private void setActivatedPosition(int position)
+	public void setActivatedPosition(int position)
 	{
 		if (position == ListView.INVALID_POSITION)
 		{
@@ -139,5 +131,10 @@ public class ArticlesListFragment extends Fragment
 		}
 
 		mActivatedPosition = position;
+	}
+	
+	public int getMyActivatedPosition()
+	{
+		return this.mActivatedPosition;
 	}
 }

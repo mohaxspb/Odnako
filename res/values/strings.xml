@@ -4,6 +4,16 @@
     <string name="app_name">Однако</string>
     <string name="article">Статья</string>
     <string name="arts_list">Список статей</string>
+    <string name="title">Заголовок</string>
+    <string name="date">Дата</string>
+    <string name="preview">Краткое содержание</string>
+    <string name="author">Автор</string>
+    <string name="num_of_comms">Количество комментариев</string>
+    <string name="num_of_shares">Количество поделившихся</string>
+    <string name="mark_as_read">Отметить прочитанной</string>
+    <string name="share_link">Поделиться ссылкой</string>
+    <string name="show_comments">Читать комментарии</string>
+    <string name="zero">0</string>
     <string name="action_settings">Настройки</string>
     <string name="design">Внешний вид</string>
     <string name="refresh">Обновить</string>

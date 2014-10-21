@@ -1,80 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="#84ffff"
+    android:checkable="true"
+    android:focusable="false"
+    card_view:cardBackgroundColor="@android:color/white"
     card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="10dp" >
+    card_view:cardElevation="5dp" >
 
     <LinearLayout
+        android:id="@+id/art_card_main_lin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/img_lin_lay_art"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:id="@+id/art_card_top_lin_lay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
 
             <ImageView
-                android:id="@+id/art_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/art_card_img"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:layout_margin="5dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/hello_world" />
+                android:background="@drawable/ic_launcher"
+                android:contentDescription="@string/hello_world"
+                android:scaleType="fitXY" />
 
             <LinearLayout
-                android:id="@+id/save_read_lin_lay_art"
+                android:id="@+id/art_card_title_date_lin"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/art_card_title_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/art_card_date_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/art_card_settings"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/ic_action_overflow_light"
+                android:contentDescription="@string/hello_world"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+        <!-- PREVIEW -->
+
+        <TextView
+            android:id="@+id/art_card_preview_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/preview" />
+
+        <!-- bottom linlay -->
+
+        <LinearLayout
+            android:id="@+id/art_card_bottom_lin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/art_card_read_comm_lin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
 
                 <ImageView
                     android:id="@+id/read_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/hello_world" />
+                    android:contentDescription="@string/hello_world"
+                    android:scaleType="fitXY" />
 
-                <ImageView
-                    android:id="@+id/save_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/hello_world" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/comments_img"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/chat"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:id="@+id/num_of_comms"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/zero" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/text_lin_lay_art"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/title_ligth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/author_name"
-                android:layout_width="wrap_content"
-                android:layout_height="0dip"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="1dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:gravity="bottom"
-                android:textColor="@android:color/black" />
+                android:gravity="center"
+                android:text="@string/author"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/art_card_save_share_lin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/save_img"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:contentDescription="@string/hello_world"
+                    android:scaleType="fitXY" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/share_img"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/share_light"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:id="@+id/num_of_sharings"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/zero" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

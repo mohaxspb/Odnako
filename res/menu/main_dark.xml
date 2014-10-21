@@ -10,7 +10,7 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/design"
-        android:icon="@drawable/ic_action_overflow_ligth"
+        android:icon="@drawable/ic_action_overflow_light"
         android:orderInCategory="210"
         android:showAsAction="never"
         android:title="@string/design"
