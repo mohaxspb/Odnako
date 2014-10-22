@@ -6,39 +6,158 @@ import java.util.Comparator;
 public class ArtInfo implements Comparable<ArtInfo>
 {
 
-	private String[] AllInfo=new String[9];
+	private String[] AllInfo = new String[16];
 
+	//get it from blogs page
 	public String url, title, img, authorBlogUrl, authorName;
-	
-	public String preview="empty";
-	public String pubDate="empty";
-	
-	public int numOfComments=0;
-	public int numOfSharings=0;
-	
-	//public String numOfInfoPages;
 
+	//get it from RSS page
+	public String preview, pubDate = "empty";
+	//public String pubDate = "empty";
+
+	//get it from article page
+	public int numOfComments, numOfSharings = 0;
+	public String artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more = "empty";
+
+	/**
+	 * 
+	 * @param artInfoArr
+	 *            16 parameters, including: url, title, img, authorBlogUrl,
+	 *            authorName, preview, pubDate, numOfComments, numOfSharings,
+	 *            artText, authorDescr, tegs_main, tegs_all, share_quont,
+	 *            to_read_main, to_read_more
+	 */
 	public ArtInfo(String[] artInfoArr)
 	{
+		if (artInfoArr.length == 5)
+		{
+			this.url = artInfoArr[0];
+			this.title = artInfoArr[1];
+			this.img = artInfoArr[2];
+			this.authorBlogUrl = artInfoArr[3];
+			this.authorName = artInfoArr[4];
 
-		this.url = artInfoArr[0];
-		this.title = artInfoArr[1];
-		this.img = artInfoArr[2];
-		this.authorBlogUrl = artInfoArr[3];
-		this.authorName = artInfoArr[4];
-		
-		this.AllInfo[0]=url;
-		this.AllInfo[1]=title;
-		this.AllInfo[2]=img;
-		this.AllInfo[3]=authorBlogUrl;
-		this.AllInfo[4]=authorName;
-		this.AllInfo[5]="empty";
-		this.AllInfo[6]="empty";
-		this.AllInfo[7]="0";
-		this.AllInfo[8]="0";
+			this.preview = "empty";
+			this.pubDate = "empty";
+
+			this.numOfComments = 0;
+			this.numOfSharings = 0;
+			this.artText = "empty";
+			this.authorDescr = "empty";
+			this.tegs_main = "empty";
+			this.tegs_all = "empty";
+			this.share_quont = "empty";
+			this.to_read_main = "empty";
+			this.to_read_more = "empty";
+
+			this.AllInfo[0] = url;
+			this.AllInfo[1] = title;
+			this.AllInfo[2] = img;
+			this.AllInfo[3] = authorBlogUrl;
+			this.AllInfo[4] = authorName;
+
+			this.AllInfo[5] = "empty";
+			this.AllInfo[6] = "empty";
+
+			this.AllInfo[7] = "0";
+			this.AllInfo[8] = "0";
+			this.AllInfo[9] = "empty";
+			this.AllInfo[10] = "empty";
+			this.AllInfo[11] = "empty";
+			this.AllInfo[12] = "empty";
+			this.AllInfo[13] = "empty";
+			this.AllInfo[14] = "empty";
+			this.AllInfo[15] = "empty";
+		}
+		else if (artInfoArr.length == 7)
+		{
+			this.url = artInfoArr[0];
+			this.title = artInfoArr[1];
+			this.img = artInfoArr[2];
+			this.authorBlogUrl = artInfoArr[3];
+			this.authorName = artInfoArr[4];
+
+			this.preview = artInfoArr[5];
+			this.pubDate = artInfoArr[6];
+
+			this.numOfComments = 0;
+			this.numOfSharings = 0;
+			this.artText = "empty";
+			this.authorDescr = "empty";
+			this.tegs_main = "empty";
+			this.tegs_all = "empty";
+			this.share_quont = "empty";
+			this.to_read_main = "empty";
+			this.to_read_more = "empty";
+
+			this.AllInfo[0] = url;
+			this.AllInfo[1] = title;
+			this.AllInfo[2] = img;
+			this.AllInfo[3] = authorBlogUrl;
+			this.AllInfo[4] = authorName;
+
+			this.AllInfo[5] = preview;
+			this.AllInfo[6] = pubDate;
+
+			this.AllInfo[7] = "0";
+			this.AllInfo[8] = "0";
+
+			this.AllInfo[9] = "empty";
+			this.AllInfo[10] = "empty";
+			this.AllInfo[11] = "empty";
+			this.AllInfo[12] = "empty";
+			this.AllInfo[13] = "empty";
+			this.AllInfo[14] = "empty";
+			this.AllInfo[15] = "empty";
+		}
+		else if (artInfoArr.length == 16)
+		{
+			this.url = artInfoArr[0];
+			this.title = artInfoArr[1];
+			this.img = artInfoArr[2];
+			this.authorBlogUrl = artInfoArr[3];
+			this.authorName = artInfoArr[4];
+
+			this.preview = artInfoArr[5];
+			this.pubDate = artInfoArr[6];
+
+			this.numOfComments = Integer.parseInt(artInfoArr[7]);
+			this.numOfSharings = Integer.parseInt(artInfoArr[8]);
+			this.artText = artInfoArr[9];
+			this.authorDescr = artInfoArr[10];
+			this.tegs_main = artInfoArr[11];
+			this.tegs_all = artInfoArr[12];
+			this.share_quont = artInfoArr[13];
+			this.to_read_main = artInfoArr[14];
+			this.to_read_more = artInfoArr[15];
+
+			this.AllInfo[0] = url;
+			this.AllInfo[1] = title;
+			this.AllInfo[2] = img;
+			this.AllInfo[3] = authorBlogUrl;
+			this.AllInfo[4] = authorName;
+
+			this.AllInfo[5] = preview;
+			this.AllInfo[6] = pubDate;
+
+			this.AllInfo[7] = String.valueOf(numOfComments);
+			this.AllInfo[8] = String.valueOf(numOfSharings);
+			this.AllInfo[9] = this.artText;
+			this.AllInfo[10] = this.authorDescr;
+			this.AllInfo[11] = this.tegs_main;
+			this.AllInfo[12] = this.tegs_all;
+			this.AllInfo[13] = this.share_quont;
+			this.AllInfo[14] = this.to_read_main;
+			this.AllInfo[15] = this.to_read_more;
+
+		}
+		else
+		{
+			System.out.println("ArtInfo construcror. Invalid arr lenght. It can't be, yes? In other case: WTF, MOTHERFUCKER?!");
+		}
 	}
-	
-	public ArtInfo(String url, String title, String img,String authorBlogUrl,String authorName)
+
+	public ArtInfo(String url, String title, String img, String authorBlogUrl, String authorName)
 	{
 
 		this.url = url;
@@ -46,29 +165,78 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.img = img;
 		this.authorBlogUrl = authorBlogUrl;
 		this.authorName = authorName;
-		
-		this.AllInfo[0]=url;
-		this.AllInfo[1]=title;
-		this.AllInfo[2]=img;
-		this.AllInfo[3]=authorBlogUrl;
-		this.AllInfo[4]=authorName;
-		this.AllInfo[5]="empty";
-		this.AllInfo[6]="empty";
-		this.AllInfo[7]="0";
-		this.AllInfo[8]="0";
+
+		this.preview = "empty";
+		this.pubDate = "empty";
+
+		this.numOfComments = 0;
+		this.numOfSharings = 0;
+		this.artText = "empty";
+		this.authorDescr = "empty";
+		this.tegs_main = "empty";
+		this.tegs_all = "empty";
+		this.share_quont = "empty";
+		this.to_read_main = "empty";
+		this.to_read_more = "empty";
+
+		this.AllInfo[0] = url;
+		this.AllInfo[1] = title;
+		this.AllInfo[2] = img;
+		this.AllInfo[3] = authorBlogUrl;
+		this.AllInfo[4] = authorName;
+
+		this.AllInfo[5] = "empty";
+		this.AllInfo[6] = "empty";
+
+		this.AllInfo[7] = "0";
+		this.AllInfo[8] = "0";
+		this.AllInfo[9] = "empty";
+		this.AllInfo[10] = "empty";
+		this.AllInfo[11] = "empty";
+		this.AllInfo[12] = "empty";
+		this.AllInfo[13] = "empty";
+		this.AllInfo[14] = "empty";
+		this.AllInfo[15] = "empty";
 	}
-	
-	public void updateArtInfo(String preView, String pubDate, int numOfComments, int numOfSharings)
+
+	public void updateArtInfoFromRSS(String preView, String pubDate)
 	{
-		this.preview=preView;
-		this.pubDate=pubDate;
-		this.numOfComments=numOfComments;
-		this.numOfSharings=numOfSharings;
+		this.preview = preView;
+		this.pubDate = pubDate;
+
+		this.AllInfo[5] = preView;
+		this.AllInfo[6] = pubDate;
+	}
+
+	public void updateArtInfoFromARTICLE(int numOfComments, int numOfSharings, String artText, String authorDescr, String tegs_main, String tegs_all, String share_quont, String to_read_main,
+	String to_read_more)
+	{
+				
+		this.numOfComments = numOfComments;
+		this.numOfSharings = numOfSharings;
+		this.artText = artText;
+		this.authorDescr = authorDescr;
+		this.tegs_main = tegs_main;
+		this.tegs_all = tegs_all;
+		this.share_quont = share_quont;
+		this.to_read_main = to_read_main;
+		this.to_read_more = to_read_more;
+
 		
-		this.AllInfo[5]=preView;
-		this.AllInfo[6]=pubDate;
-		this.AllInfo[7]=String.valueOf(numOfComments);
-		this.AllInfo[8]=String.valueOf(numOfSharings);
+		this.AllInfo[7] = String.valueOf(this.numOfComments);
+		this.AllInfo[8] = String.valueOf(this.numOfSharings);
+		this.AllInfo[9] = this.artText;
+		this.AllInfo[10] = this.authorDescr;
+		this.AllInfo[11] = this.tegs_main;
+		this.AllInfo[12] = this.tegs_all;
+		this.AllInfo[13] = this.share_quont;
+		this.AllInfo[14] = this.to_read_main;
+		this.AllInfo[15] = this.to_read_more;
+	}
+
+	public String[] getArtInfoAsAtringArray()
+	{
+		return this.AllInfo;
 	}
 
 	@Override
@@ -77,6 +245,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		return Arrays.toString(this.AllInfo);
 	}
 
+	@Override
 	public int compareTo(ArtInfo other)
 	{
 		return this.title.compareTo(other.title);
@@ -89,6 +258,13 @@ public class ArtInfo implements Comparable<ArtInfo>
 			return one.title.compareTo(other.title);
 		}
 	};
+	
+//	public static Comparator<ArtInfo> COMPARE_BY_AUTHOR = new Comparator<ArtInfo>()
+//	{
+//		public int compare(ArtInfo one, ArtInfo other)
+//		{
+//			return one.title.compareTo(other.title);
+//		}
+//	};
 
 }
-

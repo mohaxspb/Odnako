@@ -8,6 +8,7 @@
     <string name="date">Дата</string>
     <string name="preview">Краткое содержание</string>
     <string name="author">Автор</string>
+    <string name="author_descr">Об авторе</string>
     <string name="num_of_comms">Количество комментариев</string>
     <string name="num_of_shares">Количество поделившихся</string>
     <string name="mark_as_read">Отметить прочитанной</string>

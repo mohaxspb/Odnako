@@ -9,9 +9,11 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +27,9 @@ public class ArticlesListFragment extends Fragment
 {
 
 	private ListView artsList;
+	
+	ActionBarActivity act;
+	Context ctx;
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -41,6 +46,9 @@ public class ArticlesListFragment extends Fragment
 	{
 		System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
+		
+		this.act=(ActionBarActivity) this.getActivity();
+		this.ctx=this.act;
 	}
 
 	@Override
@@ -59,8 +67,20 @@ public class ArticlesListFragment extends Fragment
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
-			artsInfo.add(new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "default", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i)));
+			ArtInfo artInfo=new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i));
+			artInfo.updateArtInfoFromRSS("preview_"+String.valueOf(i), "date_"+String.valueOf(i));
+			artInfo.updateArtInfoFromARTICLE(i, i, "art_text_"+String.valueOf(i), "author_description_"+String.valueOf(i), "tegs_main_"+String.valueOf(i), "tegs_all_"+String.valueOf(i), String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!", "to_read_main_"+String.valueOf(i), "to_read_more_"+String.valueOf(i));
+			artsInfo.add(artInfo);
 		}
+		
+		ArtInfo artInfoTEST=new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/", "Разработчик");
+		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
+		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date", "url !!!! title !!!! date");
+		
+		artsInfo.set(1, artInfoTEST);
+		
+		ActivityMain.setAllArtsInfo(artsInfo);
+		
 		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, artsInfo, artsList);
 
 		this.artsList.setAdapter(artsListAdapter);

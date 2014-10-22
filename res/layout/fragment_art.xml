@@ -1,12 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/art_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/article" />
+        android:orientation="vertical" >
 
-</LinearLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="6dp"
+            card_view:cardElevation="5dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/art_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="10dp"
+                    android:text="@string/title"
+                    android:textSize="25sp" />
+
+                <LinearLayout
+                    android:id="@+id/art_author_lin_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_author_img"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_crop_original_grey600_48dp" />
+
+                    <TextView
+                        android:id="@+id/art_author"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:paddingLeft="10dp"
+                        android:text="@string/author"
+                        android:textSize="21sp" />
+
+                    <ImageView
+                        android:id="@+id/art_author_all_arts_btn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/hello_world"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_list_grey600_48dp" />
+
+                    <ImageView
+                        android:id="@+id/art_author_description_btn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_keyboard_arrow_down_grey600_48dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/art_author_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="10dp"
+                    android:text="@string/author_descr"
+                    android:textSize="21sp" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/art_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:text="@string/article" />
+    </LinearLayout>
+
+</ScrollView>

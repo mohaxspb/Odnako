@@ -3,13 +3,22 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityArticle;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
-import ru.kuchanov.odnako.utils.DownloadImageTask;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -237,23 +246,38 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.preview.setTextSize(21 * scaleFactor);
 
 				// ART_IMG
-				DownloadImageTask downFlag = (DownloadImageTask) new DownloadImageTask((ImageView) holderMain.art_img, (ActionBarActivity) act);
-				downFlag.execute(p.img);
-				holderMain.art_img.setPadding(1, 1, 1, 1);
+				//				DownloadImageTask downFlag = (DownloadImageTask) new DownloadImageTask((ImageView) holderMain.art_img, (ActionBarActivity) act);
+				//				downFlag.execute(p.img);
 				final float scale = act.getResources().getDisplayMetrics().density;
 				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-				holderMain.art_img.setScaleType(ScaleType.FIT_XY);
+				//				holderMain.art_img.setScaleType(ScaleType.FIT_XY);
 				LayoutParams params = new LayoutParams(pixels, pixels);
+				params.setMargins(5, 5, 5, 5);
 				holderMain.art_img.setLayoutParams(params);
+				holderMain.art_img.setPadding(5, 5, 5, 5);
+
+				//testing UniversalImageLoader
+				@SuppressWarnings("deprecation")
+				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act).discCacheFileNameGenerator(new HashCodeFileNameGenerator()).build();
+				DisplayImageOptions options = new DisplayImageOptions.Builder().displayer(new RoundedBitmapDisplayer(10)).showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+				.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp).showImageOnFail(R.drawable.ic_action_refresh_ligth).cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+				.bitmapConfig(Bitmap.Config.RGB_565).build();
+
+				ImageLoader imageLoader = ImageLoader.getInstance();
+				if (!imageLoader.isInited())
+				{
+					imageLoader.init(config);
+				}
+				imageLoader.displayImage(p.img, holderMain.art_img, options);
 				//end of ART_IMG
-				
+
 				//SaveImg
 				String appDir;
 				appDir = pref.getString("filesDir", "");
 
 				String formatedCategory;
-//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
-				String TO_DELETE="odnako.org/blogs";
+				//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
+				String TO_DELETE = "odnako.org/blogs";
 				formatedCategory = TO_DELETE.replace("-", "_");
 				formatedCategory = formatedCategory.replace("/", "_");
 				formatedCategory = formatedCategory.replace(":", "_");
@@ -270,21 +294,24 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
 				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
 				paramsForIcons.setMargins(5, 5, 5, 5);
-				paramsForIcons.gravity=Gravity.CENTER;
+				paramsForIcons.gravity = Gravity.CENTER;
 
-//				holderMain.save.setPadding(1, 1, 1, 1);
 				holderMain.save.setScaleType(ScaleType.FIT_XY);
 				holderMain.save.setLayoutParams(paramsForIcons);
 
 				if (currentArticleFile.exists())
 				{
+
+				}
+				if (p.url != null)
+				{
 					if (pref.getString("theme", "dark").equals("dark"))
 					{
-						holderMain.save.setImageResource(R.drawable.ic_action_save_dark);
+						holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
 					}
 					else
 					{
-						holderMain.save.setImageResource(R.drawable.ic_action_save_light);
+						holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
 					}
 
 				}
@@ -303,10 +330,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 				//read Img
 				ReadUnreadRegister read = new ReadUnreadRegister(act);
-//				SharedPreferences pref;
-//				pref = PreferenceManager.getDefaultSharedPreferences(act);
-
-//				holderMain.read.setPadding(1, 1, 1, 1);
 				holderMain.read.setScaleType(ScaleType.FIT_XY);
 				holderMain.read.setLayoutParams(paramsForIcons);
 
@@ -314,48 +337,122 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					if (pref.getString("theme", "dark").equals("dark"))
 					{
-						holderMain.read.setImageResource(R.drawable.read_dark);
+						holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
 					}
 					else
 					{
-						holderMain.read.setImageResource(R.drawable.read_light);
+						holderMain.read.setImageResource(R.drawable.ic_drafts_grey600_48dp);
 					}
 				}
 				else
 				{
 					if (pref.getString("theme", "dark").equals("dark"))
 					{
-						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_dark);
+						holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
 					}
 					else
 					{
-						holderMain.read.setImageResource(R.drawable.ic_action_content_unread_light);
+						holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
 					}
 				}
 				////end read Img
 
-				//
-				//				//name of author
-				//				if (!p.authorName.equals("default"))
-				//				{
-				//					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
-				//					holderMain.author.setText(spannedContent);
-				//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1);
-				//					holderMain.author.setLayoutParams(layParams);
-				//					holderMain.author.setPadding(10, 0, 0, 0);
-				//					holderMain.author.setGravity(Gravity.AXIS_X_SHIFT);
-				//				}
-				//				else if (p.authorName.equals("default"))
-				//				{
-				//					holderMain.author.setText(null);
-				//					LayoutParams layParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
-				//					holderMain.author.setLayoutParams(layParams);
-				//				}
-				//				holderMain.author.setTextSize(21 * scaleFactor);
-				//				//end
-				//
+				//comments btn
+				holderMain.comms.setScaleType(ScaleType.FIT_XY);
+				holderMain.comms.setLayoutParams(paramsForIcons);
 
-				//
+				if (pref.getString("theme", "dark").equals("dark"))
+				{
+					holderMain.comms.setImageResource(R.drawable.ic_comment_white_48dp);
+				}
+				else
+				{
+					holderMain.comms.setImageResource(R.drawable.ic_comment_grey600_48dp);
+				}
+
+				holderMain.comms.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showComments(p, position, act);
+					}
+				});
+				holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
+				holderMain.num_of_comms.setTextSize(21 * scaleFactor);
+				holderMain.num_of_comms.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showComments(p, position, act);
+					}
+				});
+				////end of comments btn
+				//share btn
+				holderMain.share.setScaleType(ScaleType.FIT_XY);
+				holderMain.share.setLayoutParams(paramsForIcons);
+
+				if (pref.getString("theme", "dark").equals("dark"))
+				{
+					holderMain.share.setImageResource(R.drawable.ic_share_white_48dp);
+				}
+				else
+				{
+					holderMain.share.setImageResource(R.drawable.ic_share_grey600_48dp);
+				}
+
+				holderMain.share.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.shareUrl(p.url, act);
+					}
+				});
+
+				holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
+				holderMain.num_of_shares.setTextSize(21 * scaleFactor);
+				holderMain.num_of_shares.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.shareUrl(p.url, act);
+					}
+				});
+				////end of share btn
+
+				//name of author
+				if (!p.authorName.equals("default"))
+				{
+					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
+					holderMain.author_name.setText(spannedContent);
+
+				}
+				else if (p.authorName.equals("default"))
+				{
+					holderMain.author_name.setText(null);
+				}
+
+				//				LayoutParams layParams = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+				//				layParams.setMargins(5, 5, 5, 5);
+				//				holderMain.author_name.setLayoutParams(layParams);
+				//				holderMain.author_name.setGravity(Gravity.CENTER_VERTICAL);
+
+				holderMain.author_name.setTextSize(21 * scaleFactor);
+
+				holderMain.author_name.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showAllAuthorsArticles(p, act);
+					}
+				});
+				//end of name of author
+
+				//Date
+				holderMain.date.setText(p.pubDate);
+				holderMain.author_name.setTextSize(21 * scaleFactor);
+				////End of Date
 
 				//				if (p.authorBlogUrl.equals("allAuthors"))
 				//				{
@@ -370,6 +467,15 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			default:
 				return view;
 
+		}
+	}
+
+	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
+	{
+
+		if (!p.authorName.equals("empty"))
+		{
+			Toast.makeText(act, "show all AuthorsArticles!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -395,14 +501,9 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
 	}
 
-	public static void showComments(ArtInfo artInfo, int position, Context ctx)
+	public static void showComments(ArtInfo artInfo, int position, ActionBarActivity act)
 	{
-		Toast.makeText(ctx, "comments!", Toast.LENGTH_SHORT).show();
-	}
-
-	protected static void showArticle(ArtInfo artInfo, int position, ActionBarActivity act)
-	{
-		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(act, "comments!", Toast.LENGTH_SHORT).show();
 
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -414,19 +515,31 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			//light clicked card
 			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
-
-			//			
-			//			if(artsListFrag.getMyActivatedPosition()==position)
-			//			{
-			//				itemView.setBackgroundColor(Color.BLUE);
-			//			}
-			//			else
-			//			{
-			//				itemView.setBackgroundColor(Color.TRANSPARENT);
-			//			}
-			////////
 		}
+	}
 
+	protected static void showArticle(ArtInfo artInfo, int position, ActionBarActivity act)
+	{
+		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
+
+		//fill CUR_ART_INFO var 
+		ActivityMain.setCUR_ART_INFO(artInfo);
+
+		//check if it's large screen
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		boolean twoPane = pref.getBoolean("twoPane", false);
+		if (twoPane)
+		{
+			//light clicked card
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+			artsListFrag.setActivatedPosition(position);
+		}
+		else
+		{
+			Intent intent = new Intent(act, ActivityArticle.class);
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE, artInfo.getArtInfoAsAtringArray());
+			act.startActivity(intent);
+		}
 	}
 
 	static class ArticleHolder
@@ -434,6 +547,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		TextView title;
 		TextView author_name;
 		ImageView art_img;
+		//		CardView card_img;
 		ImageView save;
 		ImageView read;
 		ImageView comms;
@@ -445,12 +559,13 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		ImageView settings;
 		ViewGroup top_lin_lay;
 
-		ArticleHolder(TextView title, TextView author, ImageView img, ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms, TextView num_of_shares, TextView date,
-		TextView preview, ImageView settings, ViewGroup top_lin_lay)
+		ArticleHolder(TextView title, TextView author, /* CardView card_img, */ImageView img, ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms,
+		TextView num_of_shares, TextView date, TextView preview, ImageView settings, ViewGroup top_lin_lay)
 		{
 			this.title = title;
 			this.author_name = author;
 			this.art_img = img;
+			//			this.card_img=card_img;
 			this.save = save;
 			this.read = read;
 			this.comms = comms;

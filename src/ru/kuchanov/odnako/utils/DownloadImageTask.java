@@ -8,24 +8,36 @@ import java.io.InputStream;
 import ru.kuchanov.odnako.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.widget.ImageView;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 {
-	//ImageButton bmImage;
 	ImageView iv;
-	Activity act;
+	
+	CardView card;
+	ActionBarActivity act;
 	ProgressDialog pd;
 	String imgAdress;
 
-	public DownloadImageTask(ImageView iv, Activity act)
+	public DownloadImageTask(ImageView iv, ActionBarActivity act)
 	{
-//		this.bmImage = bmImage;
 		this.act = act;
 		this.iv = iv;
+	}
+	
+	public DownloadImageTask(CardView card, ActionBarActivity act)
+	{
+		this.act = act;
+		this.card = card;
 	}
 
 	protected void onPreExecute()
@@ -38,7 +50,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 		String imgAdress = urls[0];
 		this.imgAdress = imgAdress;
 		Bitmap mIcon11 = null;
-		
+
 		//
 		String dirToWrite = act.getFilesDir().getAbsolutePath();
 		String formatedImgAdress;
@@ -49,10 +61,10 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 		File blogsPageFile = new File(dirToWriteFile + "/" + formatedImgAdress);
 		//System.out.println("DownImgs blogsPageFile.exists() "+blogsPageFile.exists());
 		//System.out.println("DownImgs blogsPageFile.getPath() "+blogsPageFile.getPath());
-		if(blogsPageFile.exists())
+		if (blogsPageFile.exists())
 		{
 			//System.out.println("doInBackground blogsPageFile.getPath() "+blogsPageFile.getPath());
-			mIcon11=BitmapFactory.decodeFile(blogsPageFile.getPath());
+			mIcon11 = BitmapFactory.decodeFile(blogsPageFile.getPath());
 		}
 		else
 		{
@@ -84,36 +96,42 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 			}
 		}
 		//
-		
 
 		return mIcon11;
 	}
 
 	protected void onPostExecute(Bitmap result)
 	{
+//		if(this.iv==null)
+//		{
+//			if (result != null)
+//			{
+//				write(result);
+//				this.card.setBackgroundDrawable(new BitmapDrawable(act.getResources(), result));
+//			}
+//			else
+//			{
+//				this.card.setBackgroundDrawable(act.getResources().getDrawable(R.drawable.ic_crop_original_grey600_48dp));
+//			}
+//			return;
+//		}
 
 		if (result != null)
 		{
 			write(result);
-//			if (bmImage == null)
-//			{
-				iv.setImageBitmap(result);
-//			}
-//			else
-//			{
-//				bmImage.setImageBitmap(result);
-//			}
+			iv.setImageBitmap(result);
 		}
 		else
 		{
-//			if (bmImage == null)
-//			{
-				iv.setImageResource(R.drawable.ic_launcher);
-//			}
-//			else
-//			{
-//				bmImage.setImageResource(R.drawable.ic_launcher);
-//			}
+			SharedPreferences pref=PreferenceManager.getDefaultSharedPreferences(act);
+			if(pref.getString("theme", "dark").equals("dark"))
+			{
+				iv.setImageResource(R.drawable.ic_crop_original_white_48dp);
+			}
+			else
+			{
+				iv.setImageResource(R.drawable.ic_crop_original_grey600_48dp);
+			}
 		}
 	}
 
@@ -127,7 +145,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 		File dirToWriteFile = new File(dirToWrite + "/images/");
 		dirToWriteFile.mkdirs();
 		File blogsPageFile = new File(dirToWriteFile + "/" + this.imgAdress);
-		
+
 		if (!blogsPageFile.exists())
 		{
 			try

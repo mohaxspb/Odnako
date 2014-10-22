@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
@@ -28,10 +27,8 @@
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_launcher"
                 android:contentDescription="@string/hello_world"
                 android:scaleType="fitXY" />
-
             <LinearLayout
                 android:id="@+id/art_card_title_date_lin"
                 android:layout_width="0dip"
@@ -104,16 +101,14 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
-                        android:background="@drawable/chat"
                         android:contentDescription="@string/hello_world"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_comment_grey600_48dp" />
 
                     <TextView
                         android:id="@+id/num_of_comms"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginLeft="5dp"
                         android:text="@string/zero" />
                 </LinearLayout>
             </LinearLayout>
@@ -123,8 +118,7 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="5dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/author"
@@ -155,16 +149,14 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
-                        android:background="@drawable/share_light"
                         android:contentDescription="@string/hello_world"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_share_grey600_48dp" />
 
                     <TextView
                         android:id="@+id/num_of_sharings"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginLeft="5dp"
                         android:text="@string/zero" />
                 </LinearLayout>
             </LinearLayout>
