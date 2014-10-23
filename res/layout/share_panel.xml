@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="6dp"
+    card_view:cardElevation="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp" >
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="6dp"
+            card_view:cardElevation="5dp" >
+
+            <ImageView
+                android:id="@+id/art_share_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/hello_world"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_share_grey600_48dp" />
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@android:color/transparent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_facebook" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_twitter" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_vkontakte" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_odnoklassniki" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_google" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_share_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/social_livejournal" />
+
+                    <TextView
+                        android:id="@+id/art_share_quont_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:text="@string/zero"
+                        android:textColor="@android:color/black"
+                        android:textSize="21sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- </LinearLayout> -->
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

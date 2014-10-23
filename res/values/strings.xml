@@ -9,6 +9,9 @@
     <string name="preview">Краткое содержание</string>
     <string name="author">Автор</string>
     <string name="author_descr">Об авторе</string>
+    <string name="tegs">Теги</string>
+    <string name="also_by_theme">Также по теме "ТЕМА":</string>
+    <string name="also_to_read">Также смотрите:</string>
     <string name="num_of_comms">Количество комментариев</string>
     <string name="num_of_shares">Количество поделившихся</string>
     <string name="mark_as_read">Отметить прочитанной</string>
@@ -41,6 +44,7 @@
     <string name="ARTICLE_AD_UNIT_ID">ca-app-pub-2231528705144312/4065818981</string>
     <string name="COMMENTS_AD_UNIT_ID">ca-app-pub-2231528705144312/7019285382</string>
     <string name="DOWNLOADINGS_AD_UNIT_ID">ca-app-pub-2231528705144312/8496018582</string>
+    <string name="TWO_PANE_AD_UNIT_ID">ca-app-pub-2231528705144312/7818128982</string>
     <string name="ligth">Светлая</string>
     <string name="dark">Тёмная</string>
     <string name="theme">Тема</string>
@@ -125,7 +129,7 @@
     <string name="ads_on_advantages">Включив рекламу вы получите возможность в бесплатной версии в разделе загрузки выбирать не только загрузку 5-ти статей из ленты обновлений, но ещё 2-а раздела и до 10-ти статей!</string>
     <string name="pro_ver_adv">В полной версии вы сможете пользоваться загрузками статей без ограничений, приложение не будет просить вас включить рекламу. Также вы получите моральное удовлетворение от вклада в развитие IT сектора Российской экономики! =)</string>
     <string name="version_history_summary">Увлекательная и поучительная история развития приложения от первого релиза до нынешнего состояния.</string>
-    <string name="version_history" >Version 1.11\n
+    <string name="version_history">Version 1.11\n
 -Первая рабочая версия.\n
 \n
 Version 1.2\n
@@ -200,7 +204,6 @@ Version 2.30\n
 Изменения дизайна:\n
 -Теперь доступ к списку всех статей автора с экрана статьи доступен по нажатию на кнопку справа от его имени.\n
 -Сохранённые статьи теперь отображаются цветом соответствующей иконки, а не её наличием.\n
--Изменён экран настроек.\n
-</string>
+-Изменён экран настроек.\n</string>
 
 </resources>

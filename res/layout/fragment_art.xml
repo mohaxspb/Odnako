@@ -30,11 +30,12 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:padding="10dp"
-                    android:text="@string/title"
-                    android:textSize="25sp" />
+                    android:text="@string/version_history_summary"
+                    android:textColor="@android:color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/art_author_lin_lay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -49,15 +50,31 @@
                         android:padding="5dp"
                         android:src="@drawable/ic_crop_original_grey600_48dp" />
 
-                    <TextView
-                        android:id="@+id/art_author"
+                    <LinearLayout
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:paddingLeft="10dp"
-                        android:text="@string/author"
-                        android:textSize="21sp" />
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp" >
+
+                        <TextView
+                            android:id="@+id/art_author"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:text="@string/version_history_summary"
+                            android:textColor="@android:color/black"
+                            android:textSize="21sp" />
+
+                        <TextView
+                            android:id="@+id/pub_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:text="@string/date"
+                            android:textSize="17sp" />
+                    </LinearLayout>
 
                     <ImageView
                         android:id="@+id/art_author_all_arts_btn"
@@ -78,12 +95,23 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/art_tags_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="10dp"
+                    android:text="@string/tegs"
+                    android:textColor="@android:color/black"
+                    android:textSize="21sp" />
+
+                <TextView
                     android:id="@+id/art_author_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:padding="10dp"
-                    android:text="@string/author_descr"
+                    android:text="@string/version_history_summary"
+                    android:textColor="@android:color/black"
                     android:textSize="21sp" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -92,9 +120,18 @@
             android:id="@+id/art_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:text="@string/article"
+            android:textColor="@android:color/black" />
+
+        <LinearLayout
+            android:id="@+id/art_bottom_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:padding="10dp"
-            android:text="@string/article" />
+            android:orientation="vertical" >
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

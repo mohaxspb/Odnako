@@ -7,7 +7,7 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/article_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -19,22 +19,14 @@
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/ARTICLE_AD_UNIT_ID" />
 
-        <ScrollView
-            android:id="@+id/art_scroll"
+        <fragment
+            android:id="@+id/article"
+            android:name="ru.kuchanov.odnako.fragments.ArticleFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/adView"
-            android:orientation="vertical" >
-
-            <fragment
-                android:id="@+id/article"
-                android:name="ru.kuchanov.odnako.fragments.ArticleFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                tools:context="ru.kuchanov.odnako.activities.ActivityArticle" />
-        </ScrollView>
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            tools:context="ru.kuchanov.odnako.activities.ActivityArticle" />
     </RelativeLayout>
 
     <ExpandableListView

@@ -238,6 +238,81 @@ public class ArtInfo implements Comparable<ArtInfo>
 	{
 		return this.AllInfo;
 	}
+	
+	public String[] getAllTegsArr()
+	{
+		String[] allTegsArr;
+		
+		if(!this.tegs_all.equals("empty"))
+		{
+			allTegsArr=this.tegs_all.split(" !!!! ");
+		}
+		else
+		{
+			System.out.println("AllTegs var is empty!");
+			allTegsArr=null;
+		}
+		
+		return allTegsArr;
+	}
+	
+	public AlsoToRead getAlsoByTheme()
+	{
+		AlsoToRead alsoToRead;
+		String[] allInfo;
+		
+		if(!this.to_read_main.equals("empty"))
+		{
+			allInfo=this.to_read_main.split(" !!!! ");
+			String[] titles=new String[allInfo.length/3];
+			String[] urls=new String[allInfo.length/3];
+			String[] dates=new String[allInfo.length/3];
+			for(int i=0; i<allInfo.length/3; i++)
+			{
+				titles[i]=allInfo[0+i*3];
+				urls[i]=allInfo[1+i*3];
+				dates[i]=allInfo[2+i*3];
+			}
+			alsoToRead=new AlsoToRead(titles, urls, dates);
+		}
+		else
+		{
+			System.out.println("alsoToRead (to_read_main) var is empty!");
+			alsoToRead=null;
+		}
+		
+		return alsoToRead;
+	}
+	
+	public AlsoToRead getAlsoToReadMore()
+	{
+		AlsoToRead alsoToRead;
+		String[] allInfo;
+		
+		if(!this.to_read_more.equals("empty"))
+		{
+			allInfo=this.to_read_more.split(" !!!! ");
+			String[] titles=new String[allInfo.length/3];
+			String[] urls=new String[allInfo.length/3];
+			String[] dates=new String[allInfo.length/3];
+			for(int i=0; i<allInfo.length/3; i++)
+			{
+				titles[i]=allInfo[0+i*3];
+				urls[i]=allInfo[1+i*3];
+				dates[i]=allInfo[2+i*3];
+			}
+			alsoToRead=new AlsoToRead(titles, urls, dates);
+		}
+		else
+		{
+			System.out.println("alsoToRead (to_read_more) var is empty!");
+			alsoToRead=null;
+		}
+		
+		return alsoToRead;
+	}
+	
+	
 
 	@Override
 	public String toString()
@@ -266,5 +341,19 @@ public class ArtInfo implements Comparable<ArtInfo>
 //			return one.title.compareTo(other.title);
 //		}
 //	};
+	public class AlsoToRead
+	{
+		public String[] titles;
+		public String[] urls;
+		public String[] dates;
+		public AlsoToRead(String[] titles,String[] urls,String[] dates)
+		{
+			this.titles=titles;
+			this.urls=urls;
+			this.dates=dates;
+		}
+	}
 
 }
+
+

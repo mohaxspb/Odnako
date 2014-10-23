@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
+            ads:adUnitId="@string/TWO_PANE_AD_UNIT_ID" />
 
         <LinearLayout
             android:id="@+id/main_lin"

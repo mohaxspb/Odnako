@@ -41,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/title"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
                 <TextView
@@ -66,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
             android:text="@string/preview" />
 
         <!-- bottom linlay -->
@@ -122,6 +124,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/author"
+                android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <LinearLayout

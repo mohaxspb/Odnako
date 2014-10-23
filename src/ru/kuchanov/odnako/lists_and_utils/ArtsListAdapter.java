@@ -537,7 +537,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE, artInfo.getArtInfoAsAtringArray());
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO, artInfo.getArtInfoAsAtringArray());
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION, position);
 			act.startActivity(intent);
 		}
 	}

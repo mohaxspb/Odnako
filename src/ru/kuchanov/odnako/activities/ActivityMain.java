@@ -7,14 +7,15 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Set;
+
+import com.google.android.gms.ads.AdView;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.utils.AddAds;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,9 +23,12 @@ import android.support.v7.app.ActionBarActivity;
 
 public class ActivityMain extends ActionBarActivity
 {
-	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE = "extra_message_from_main_to_article";
+	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
+	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
+	
 	public boolean twoPane;
 	SharedPreferences pref;
+	AdView adView;
 
 	private static ArrayList<ArtInfo> ALL_ARTS_INFO;
 	private static ArtInfo CUR_ART_INFO;
@@ -34,7 +38,7 @@ public class ActivityMain extends ActionBarActivity
 		System.out.println("ActivityMain onCreate");
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.layout_main);
+		this.setContentView(R.layout.layout_activity_main);
 
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
@@ -65,6 +69,26 @@ public class ActivityMain extends ActionBarActivity
 			// 'activated' state when touched.
 			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list)).setActivateOnItemClick(true);
 		}
+
+		//adMob
+		adView = (AdView) this.findViewById(R.id.adView);
+		AddAds addAds = new AddAds(this, this.adView);
+		//addAds.addAd();
+		//end of adMob
+	}
+	
+	@Override
+	public void onPause()
+	{
+		adView.pause();
+		super.onPause();
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		adView.destroy();
+		super.onDestroy();
 	}
 
 	@Override
@@ -116,27 +140,15 @@ public class ActivityMain extends ActionBarActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("ActivityMain onRestoreInstanceState");
 
+		//restore All_arts_info
 		Set<String> keySet = savedInstanceState.keySet();
-
-		String[] keySetSortedArr = new String[keySet.size()];
-		keySet.toArray(keySetSortedArr);
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(Arrays.asList(keySetSortedArr));
-
-		Collections.sort(keySetSortedArrList, new Comparator<String>()
-		{
-			@Override
-			public int compare(String fruite1, String fruite2)
-			{
-
-				return fruite1.compareTo(fruite2);
-			}
-		});
+		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+		Collections.sort(keySetSortedArrList);
 		if (keySet.contains("ALL_ARTS_INFO_00"))
 		{
 			ActivityMain.ALL_ARTS_INFO = new ArrayList<ArtInfo>();
 			for (int i = 0; i < keySetSortedArrList.size(); i++)
 			{
-
 				String s = keySetSortedArrList.get(i);
 				if (s.startsWith("ALL_ARTS_INFO_"))
 				{
@@ -166,7 +178,6 @@ public class ActivityMain extends ActionBarActivity
 		{
 			System.out.println("ActivityMain: onRestoreInstanceState. ActivityMain.CUR_ART_INFO=null");
 		}
-		//ActivityMain.CUR_ART_INFO=new ArtInfo(savedInstanceState.getStringArray("CUR_ART_INFO"));
 	}
 
 	/**
