@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
@@ -40,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -563,12 +565,36 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 //            transaction.replace(R.id.article_comments_container, commentsFragment);
 //            transaction.replace(R.id.article, commentsFragment);
 //            transaction.addToBackStack(null);
-            transaction.addToBackStack(null);
-            transaction.hide(artFrag);
+            FrameLayout fr=(FrameLayout) act.findViewById(R.id.article_comments_container);
+//            int shownId=fr.getChildAt(0).getId();
+//            System.out.println("artFrag==null: "+String.valueOf(artFrag==null));
+//            System.out.println("artFrag.isHidden()==true: "+String.valueOf(artFrag.isHidden()==true));
+            
+            if(!artFrag.isHidden())
+            {
+            	transaction.addToBackStack(null);
+                transaction.hide(artFrag);
+            }
+            //check if there is commFrag
+            CommentsFragment commFrag=(CommentsFragment) act.getSupportFragmentManager().findFragmentById(R.id.article_comments_container);
+            if(commFrag!=null)
+            {
+            	System.out.println("commFrag!=null");
+            	transaction.addToBackStack(null);
+                transaction.hide(commFrag);
+            }
+            else
+            {
+            	System.out.println("commFrag=null");
+            	//do nothing
+            }
             transaction.add(R.id.article_comments_container, commentsFragment);
-
+            
+//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
             // Commit the transaction
             transaction.commit();
+            
+            ArtsListAdapter.getTopVisibleFragment(fr, act);
 		}
 		else
 		{
@@ -644,5 +670,24 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			this.settings = settings;
 			this.top_lin_lay = top_lin_lay;
 		}
+	}
+	
+	public static Fragment getTopVisibleFragment(ViewGroup container, ActionBarActivity act)
+	{
+		Fragment frag=null;
+		int fragStackLenght;
+		int topFragId;
+		
+		fragStackLenght=act.getSupportFragmentManager().getBackStackEntryCount();
+		System.out.println("fragStackLenght: "+fragStackLenght);
+		fragStackLenght=container.getChildCount();
+		System.out.println("fragStackLenght: "+fragStackLenght);
+		
+		topFragId=container.getChildAt(container.getChildCount()-1).getId();
+		
+		frag=act.getSupportFragmentManager().findFragmentById(topFragId);
+		
+		
+		return frag;
 	}
 }

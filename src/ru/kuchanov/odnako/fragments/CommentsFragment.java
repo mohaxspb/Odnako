@@ -42,7 +42,7 @@ public class CommentsFragment extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		System.out.println("ArticleFragment onCreate");
+		System.out.println("CommentsFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -58,7 +58,7 @@ public class CommentsFragment extends Fragment
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		System.out.println("ArticleFragment onCreateView");
+		System.out.println("CommentsFragment onCreateView");
 		View v = inflater.inflate(R.layout.fragment_comments_list, new LinearLayout(act));
 
 		//find all views
@@ -108,7 +108,7 @@ public class CommentsFragment extends Fragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		System.out.println("ArticleFragment onViewCreated");
+		System.out.println("CommentsFragment onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 
 	}
@@ -116,21 +116,21 @@ public class CommentsFragment extends Fragment
 	@Override
 	public void onAttach(Activity activity)
 	{
-		System.out.println("ArticleFragment onAttach");
+		System.out.println("CommentsFragment onAttach");
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-		System.out.println("ArticleFragment onDetach");
+		System.out.println("CommentsFragment onDetach");
 		super.onDetach();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		System.out.println("ArticleFragment onSaveInstanceState");
+		System.out.println("CommentsFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 	}
 
