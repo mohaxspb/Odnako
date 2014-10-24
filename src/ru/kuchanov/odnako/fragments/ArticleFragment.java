@@ -9,7 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo.AlsoToRead;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -32,6 +33,7 @@ public class ArticleFragment extends Fragment
 {
 	private ActionBarActivity act;
 	private SharedPreferences pref;
+	private boolean twoPane;
 
 	private TextView artTextView;
 
@@ -63,6 +65,9 @@ public class ArticleFragment extends Fragment
 		this.act = (ActionBarActivity) this.getActivity();
 
 		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+		
+		pref = PreferenceManager.getDefaultSharedPreferences(act);
+		this.twoPane=pref.getBoolean("twoPane", false);
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -100,6 +105,25 @@ public class ArticleFragment extends Fragment
 		}
 
 		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
+		//set onClickListener
+		this.commentsBottomBtn.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				if(twoPane)
+				{
+					ArticlesListFragment atsListFrag=(ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+					
+					ArtsListAdapter.showComments(curArtInfo, atsListFrag.getMyActivatedPosition(), act);
+				}
+				else
+				{
+					ArtsListAdapter.showComments(curArtInfo, -1, act);
+				}
+			}
+		});
 		this.bottomPanel.addView(this.commentsBottomBtn);
 
 		this.allTegsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
@@ -110,7 +134,7 @@ public class ArticleFragment extends Fragment
 		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
 		"http://yuriykuchanov.odnako.org/", "Разработчик");
 		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид",
+		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
 		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
 		this.curArtInfo = artInfoTEST;
 
@@ -180,12 +204,23 @@ public class ArticleFragment extends Fragment
 		LinearLayout curLinLay = firstLin;
 
 		//max width
+		int width;
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
-		int width = displayMetrics.widthPixels / 4 * 3;
+		if(this.twoPane)
+		{
+			width = displayMetrics.widthPixels / 4 * 3;
+		}
+		else
+		{
+			width=displayMetrics.widthPixels;
+		}
+		
 		int vPad=v.getPaddingLeft()+v.getPaddingRight();
 		int bPad=this.bottomPanel.getPaddingLeft()+this.bottomPanel.getPaddingRight();
 		int cPad=this.allTegsCard.getPaddingLeft()+this.allTegsCard.getPaddingRight();
 		int minusPaddings=vPad+bPad+cPad;
+		System.out.println("width: " + width);
+		System.out.println("minusPaddings: "+minusPaddings);
 		width-=minusPaddings;
 //		System.out.println("minusPaddings: "+minusPaddings);
 		int minHeight = 0;
@@ -220,8 +255,8 @@ public class ArticleFragment extends Fragment
 			//check if it's too much
 			//must check not device, but View width
 			//so if it's planshet we must take only 3/4 of device width
-//			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
-//			System.out.println("height: " + height+"/ minHeight: " + minHeight);
+			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
+			System.out.println("height: " + height+"/ minHeight: " + minHeight);
 			
 			if (curLinChildrenWidth >= width || height> minHeight)
 			{
@@ -246,10 +281,10 @@ public class ArticleFragment extends Fragment
 	{
 		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoByTheme();
 		//for test
-		String[] s1 = new String[] { "title", "title" };
-		String[] s2 = new String[] { "title", "title" };
-		String[] s3 = new String[] { "title", "title" };
-		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
+//		String[] s1 = new String[] { "title", "title" };
+//		String[] s2 = new String[] { "title", "title" };
+//		String[] s3 = new String[] { "title", "title" };
+//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
 		if (alsoToRead == null)
 		{
 			return;
@@ -273,10 +308,10 @@ public class ArticleFragment extends Fragment
 	{
 		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoToReadMore();
 		//for test
-		String[] s1 = new String[] { "title", "title", "title" };
-		String[] s2 = new String[] { "url", "url", "url" };
-		String[] s3 = new String[] { "date", "date", "date" };
-		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
+//		String[] s1 = new String[] { "title", "title", "title" };
+//		String[] s2 = new String[] { "url", "url", "url" };
+//		String[] s3 = new String[] { "date", "date", "date" };
+//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
 		if (alsoToRead == null)
 		{
 			return;
@@ -298,7 +333,7 @@ public class ArticleFragment extends Fragment
 
 	private void setSizeAndTheme()
 	{
-		pref = PreferenceManager.getDefaultSharedPreferences(act);
+		
 		String scaleFactorString = pref.getString("scale_art", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 

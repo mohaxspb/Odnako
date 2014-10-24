@@ -8,5 +8,7 @@
     <color name="black">#ff000000</color>
     <color name="cur_theme">#ff33B5E5</color>
     <color name="blue">#7ecce8</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
 
 </resources>

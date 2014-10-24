@@ -3,7 +3,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -11,8 +11,11 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
+import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.fragments.CommentsFragment;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,7 +23,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
@@ -55,7 +60,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 	ArrayList<ArtInfo> orig;
 	SharedPreferences pref;
 
-	public ArtsListAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> artsInfo, ListView artsListView)
+	public ArtsListAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> artsInfo,
+	ListView artsListView)
 	{
 		super(act, resource, artsInfo);
 		this.act = act;
@@ -149,11 +155,21 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				if (convertView == null)
 				{
 					ViewGroup vg;
-					vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, new LinearLayout(act));
-					holderMain = new ArticleHolder((TextView) vg.findViewById(R.id.art_card_title_tv), (TextView) vg.findViewById(R.id.author_name), (ImageView) vg.findViewById(R.id.art_card_img),
-					(ImageView) vg.findViewById(R.id.save_img), (ImageView) vg.findViewById(R.id.read_img), (ImageView) vg.findViewById(R.id.comments_img),
-					(ImageView) vg.findViewById(R.id.share_img), (TextView) vg.findViewById(R.id.num_of_comms), (TextView) vg.findViewById(R.id.num_of_sharings),
-					(TextView) vg.findViewById(R.id.art_card_date_tv), (TextView) vg.findViewById(R.id.art_card_preview_tv), (ImageView) vg.findViewById(R.id.art_card_settings),
+					vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view,
+					new LinearLayout(act));
+					holderMain = new ArticleHolder(
+					(TextView) vg.findViewById(R.id.art_card_title_tv),
+					(TextView) vg.findViewById(R.id.author_name),
+					(ImageView) vg.findViewById(R.id.art_card_img),
+					(ImageView) vg.findViewById(R.id.save_img),
+					(ImageView) vg.findViewById(R.id.read_img),
+					(ImageView) vg.findViewById(R.id.comments_img),
+					(ImageView) vg.findViewById(R.id.share_img),
+					(TextView) vg.findViewById(R.id.num_of_comms),
+					(TextView) vg.findViewById(R.id.num_of_sharings),
+					(TextView) vg.findViewById(R.id.art_card_date_tv),
+					(TextView) vg.findViewById(R.id.art_card_preview_tv),
+					(ImageView) vg.findViewById(R.id.art_card_settings),
 					(ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay));
 					vg.setTag(holderMain);
 					view = vg;
@@ -203,7 +219,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				////End of popUp menu in cardView
 
 				//light checked item in listView
-				ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+				ArticlesListFragment artsListFrag = (ArticlesListFragment) act
+				.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 
 				if (artsListFrag.getMyActivatedPosition() == position)
 				{
@@ -256,12 +273,23 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.art_img.setLayoutParams(params);
 				holderMain.art_img.setPadding(5, 5, 5, 5);
 
-				//testing UniversalImageLoader
-				@SuppressWarnings("deprecation")
-				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act).discCacheFileNameGenerator(new HashCodeFileNameGenerator()).build();
-				DisplayImageOptions options = new DisplayImageOptions.Builder().displayer(new RoundedBitmapDisplayer(10)).showImageOnLoading(R.drawable.ic_action_refresh_ligth)
-				.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp).showImageOnFail(R.drawable.ic_action_refresh_ligth).cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-				.bitmapConfig(Bitmap.Config.RGB_565).build();
+				//UniversalImageLoader
+				File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
+				
+				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
+				.diskCache(new UnlimitedDiscCache(cacheDir))
+				.build();
+				
+				DisplayImageOptions options = new DisplayImageOptions.Builder()
+				.displayer(new RoundedBitmapDisplayer(10))
+				.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+				.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
+				.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
+				.cacheInMemory(true)
+				.cacheOnDisk(true)
+				.considerExifParams(true)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.build();
 
 				ImageLoader imageLoader = ImageLoader.getInstance();
 				if (!imageLoader.isInited())
@@ -289,7 +317,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				formatedLink = formatedLink.replace(":", "_");
 				formatedLink = formatedLink.replace(".", "_");
 
-				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/" + formatedLink);
+				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
+				+ formatedLink);
 				//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
 				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
 				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
@@ -513,8 +542,41 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		if (twoPane)
 		{
 			//light clicked card
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
+			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
+			
+			
+			
+			// Create fragment and give it an argument for the selected article
+//            ArticleFragment newFragment = new ArticleFragment();
+//            Bundle args = new Bundle();
+//            args.putInt(ArticleFragment.ARG_POSITION, position);
+//            newFragment.setArguments(args);
+			CommentsFragment commentsFragment=new CommentsFragment();
+			ArticleFragment artFrag=(ArticleFragment) act.getSupportFragmentManager().findFragmentById(R.id.article);
+        
+            FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+//            transaction.replace(R.id.article_comments_container, commentsFragment);
+//            transaction.replace(R.id.article, commentsFragment);
+//            transaction.addToBackStack(null);
+            transaction.addToBackStack(null);
+            transaction.hide(artFrag);
+            transaction.add(R.id.article_comments_container, commentsFragment);
+
+            // Commit the transaction
+            transaction.commit();
+		}
+		else
+		{
+			Intent intent = new Intent(act, ActivityComments.class);
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO,
+			artInfo.getArtInfoAsStringArray());
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION, position);
+			act.startActivity(intent);
 		}
 	}
 
@@ -531,13 +593,15 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		if (twoPane)
 		{
 			//light clicked card
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
+			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
 		}
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO, artInfo.getArtInfoAsAtringArray());
+			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO,
+			artInfo.getArtInfoAsStringArray());
 			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION, position);
 			act.startActivity(intent);
 		}
@@ -560,8 +624,10 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		ImageView settings;
 		ViewGroup top_lin_lay;
 
-		ArticleHolder(TextView title, TextView author, /* CardView card_img, */ImageView img, ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms,
-		TextView num_of_shares, TextView date, TextView preview, ImageView settings, ViewGroup top_lin_lay)
+		ArticleHolder(TextView title, TextView author, /* CardView card_img, */ImageView img,
+		ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms,
+		TextView num_of_shares, TextView date, TextView preview, ImageView settings,
+		ViewGroup top_lin_lay)
 		{
 			this.title = title;
 			this.author_name = author;

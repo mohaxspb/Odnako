@@ -111,11 +111,11 @@ public class ActivityMain extends ActionBarActivity
 			{
 				if (i < 10)
 				{
-					outState.putStringArray("ALL_ARTS_INFO_0" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsAtringArray());
+					outState.putStringArray("ALL_ARTS_INFO_0" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsStringArray());
 				}
 				else
 				{
-					outState.putStringArray("ALL_ARTS_INFO_" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsAtringArray());
+					outState.putStringArray("ALL_ARTS_INFO_" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsStringArray());
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class ActivityMain extends ActionBarActivity
 		//save curArtInfo
 		if (ActivityMain.CUR_ART_INFO != null)
 		{
-			outState.putStringArray("CUR_ART_INFO", ActivityMain.CUR_ART_INFO.getArtInfoAsAtringArray());
+			outState.putStringArray("CUR_ART_INFO", ActivityMain.CUR_ART_INFO.getArtInfoAsStringArray());
 		}
 		else
 		{

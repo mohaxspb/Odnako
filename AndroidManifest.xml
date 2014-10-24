@@ -63,6 +63,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+         <activity
+            android:name="ru.kuchanov.odnako.activities.ActivityComments"
+            android:label="@string/comments" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.kuchanov.odnako.activities.ActivityArticle" />
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".PrefActivity"
             android:label="@string/settings_title" >
