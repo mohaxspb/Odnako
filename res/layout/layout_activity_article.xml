@@ -7,7 +7,6 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:id="@+id/article_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -18,7 +17,7 @@
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/ARTICLE_AD_UNIT_ID" />
-
+        <!--
         <fragment
             android:id="@+id/article"
             android:name="ru.kuchanov.odnako.fragments.ArticleFragment"
@@ -27,6 +26,15 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             tools:context="ru.kuchanov.odnako.activities.ActivityArticle" />
+        -->
+
+        <FrameLayout
+            android:id="@+id/article_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" >
+        </FrameLayout>
     </RelativeLayout>
 
     <ExpandableListView

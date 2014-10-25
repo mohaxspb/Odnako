@@ -6,6 +6,10 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -55,6 +59,8 @@ public class ArticleFragment extends Fragment
 	CardView alsoToReadCard;
 
 	ArtInfo curArtInfo;
+	int position;/*position in all art arr; need to show next/previous arts*/
+	ArrayList<ArtInfo> allArtsInfo;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -64,7 +70,33 @@ public class ArticleFragment extends Fragment
 
 		this.act = (ActionBarActivity) this.getActivity();
 
-		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+//		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+		this.curArtInfo=new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
+		this.position=this.getArguments().getInt("position");
+		//restore AllArtsInfo
+		this.allArtsInfo=new ArrayList<ArtInfo>();
+		Set<String> keySet=this.getArguments().keySet();
+		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+		Collections.sort(keySetSortedArrList);
+		for(int i=0; i<keySetSortedArrList.size(); i++)
+		{
+			if(keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
+			{
+				if(i<10)
+				{
+					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray("allArtsInfo_0"+String.valueOf(i))));
+				}
+				else
+				{
+					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray("allArtsInfo_"+String.valueOf(i))));
+				}
+				
+			}
+			else
+			{
+				break;
+			}
+		}
 		
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane=pref.getBoolean("twoPane", false);
@@ -73,7 +105,7 @@ public class ArticleFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		System.out.println("ArticleFragment onCreateView");
-		View v = inflater.inflate(R.layout.fragment_art, new LinearLayout(act));
+		View v = inflater.inflate(R.layout.fragment_art, container, false);
 
 		//find all views
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
@@ -131,28 +163,18 @@ public class ArticleFragment extends Fragment
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 
 		//test
-		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
-		"http://yuriykuchanov.odnako.org/", "Разработчик");
-		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
-		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
-		this.curArtInfo = artInfoTEST;
+//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
+//		"http://yuriykuchanov.odnako.org/", "Разработчик");
+//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
+//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
+//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
+//		this.curArtInfo = artInfoTEST;
 
 		this.setUpAllTegsLayout(v);
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 		//end of find all views
 
-		//get info from activity
-		if (this.getArguments() != null)
-		{
-			System.out.println(this.getArguments().getString("edttext"));
-		}
-		else
-		{
-			System.out.println("this.getArguments()=null");
-		}
-		////End of get info from activity
 
 		//setting size of Images and text
 		this.setSizeAndTheme();

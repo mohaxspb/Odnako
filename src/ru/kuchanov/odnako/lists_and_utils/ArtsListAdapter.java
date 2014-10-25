@@ -277,11 +277,11 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 				//UniversalImageLoader
 				File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
-				
+
 				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
 				.diskCache(new UnlimitedDiscCache(cacheDir))
 				.build();
-				
+
 				DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.displayer(new RoundedBitmapDisplayer(10))
 				.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
@@ -547,54 +547,52 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
 			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
-			
-			
-			
-			// Create fragment and give it an argument for the selected article
-//            ArticleFragment newFragment = new ArticleFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ArticleFragment.ARG_POSITION, position);
-//            newFragment.setArguments(args);
-			CommentsFragment commentsFragment=new CommentsFragment();
-			ArticleFragment artFrag=(ArticleFragment) act.getSupportFragmentManager().findFragmentById(R.id.article);
-        
-            FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
 
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-//            transaction.replace(R.id.article_comments_container, commentsFragment);
-//            transaction.replace(R.id.article, commentsFragment);
-//            transaction.addToBackStack(null);
-            FrameLayout fr=(FrameLayout) act.findViewById(R.id.article_comments_container);
-//            int shownId=fr.getChildAt(0).getId();
-//            System.out.println("artFrag==null: "+String.valueOf(artFrag==null));
-//            System.out.println("artFrag.isHidden()==true: "+String.valueOf(artFrag.isHidden()==true));
-            
-            if(!artFrag.isHidden())
-            {
-            	transaction.addToBackStack(null);
-                transaction.hide(artFrag);
-            }
-            //check if there is commFrag
-            CommentsFragment commFrag=(CommentsFragment) act.getSupportFragmentManager().findFragmentById(R.id.article_comments_container);
-            if(commFrag!=null)
-            {
-            	System.out.println("commFrag!=null");
-            	transaction.addToBackStack(null);
-                transaction.hide(commFrag);
-            }
-            else
-            {
-            	System.out.println("commFrag=null");
-            	//do nothing
-            }
-            transaction.add(R.id.article_comments_container, commentsFragment);
-            
-//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
-            // Commit the transaction
-            transaction.commit();
-            
-            ArtsListAdapter.getTopVisibleFragment(fr, act);
+			// Create fragment and give it an argument for the selected article
+			//            ArticleFragment newFragment = new ArticleFragment();
+			//            Bundle args = new Bundle();
+			//            args.putInt(ArticleFragment.ARG_POSITION, position);
+			//            newFragment.setArguments(args);
+			CommentsFragment commentsFragment = new CommentsFragment();
+			ArticleFragment artFrag = (ArticleFragment) act.getSupportFragmentManager().findFragmentById(R.id.article);
+
+			FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
+
+			// Replace whatever is in the fragment_container view with this fragment,
+			// and add the transaction to the back stack so the user can navigate back
+			//            transaction.replace(R.id.article_comments_container, commentsFragment);
+			//            transaction.replace(R.id.article, commentsFragment);
+			//            transaction.addToBackStack(null);
+			FrameLayout fr = (FrameLayout) act.findViewById(R.id.article_comments_container);
+			//            int shownId=fr.getChildAt(0).getId();
+			//            System.out.println("artFrag==null: "+String.valueOf(artFrag==null));
+			//            System.out.println("artFrag.isHidden()==true: "+String.valueOf(artFrag.isHidden()==true));
+
+			if (!artFrag.isHidden())
+			{
+				transaction.addToBackStack(null);
+				transaction.hide(artFrag);
+			}
+			//check if there is commFrag
+			CommentsFragment commFrag = (CommentsFragment) act.getSupportFragmentManager().findFragmentById(
+			R.id.article_comments_container);
+			if (commFrag != null)
+			{
+				System.out.println("commFrag!=null");
+				transaction.addToBackStack(null);
+				transaction.hide(commFrag);
+			}
+			else
+			{
+				System.out.println("commFrag=null");
+				//do nothing
+			}
+			transaction.add(R.id.article_comments_container, commentsFragment);
+
+			//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
+			// Commit the transaction
+			transaction.commit();
+
 		}
 		else
 		{
@@ -626,9 +624,29 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO,
-			artInfo.getArtInfoAsStringArray());
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION, position);
+			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
+			intent.putExtra("position", position);
+			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
+			if (allArtsInfo != null)
+			{
+				for (int i = 0; i < allArtsInfo.size(); i++)
+				{
+					if (i < 10)
+					{
+						intent.getExtras().putStringArray("allArtsInfo_0" + String.valueOf(i),
+						allArtsInfo.get(i).getArtInfoAsStringArray());
+					}
+					else
+					{
+						intent.getExtras().putStringArray("allArtsInfo_" + String.valueOf(i),
+						allArtsInfo.get(i).getArtInfoAsStringArray());
+					}
+				}
+			}
+			else
+			{
+				System.out.println("ActivityArticle: onSaveInstanceState. this.allArtsInfo=null");
+			}
 			act.startActivity(intent);
 		}
 	}
@@ -671,23 +689,23 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			this.top_lin_lay = top_lin_lay;
 		}
 	}
-	
-	public static Fragment getTopVisibleFragment(ViewGroup container, ActionBarActivity act)
-	{
-		Fragment frag=null;
-		int fragStackLenght;
-		int topFragId;
-		
-		fragStackLenght=act.getSupportFragmentManager().getBackStackEntryCount();
-		System.out.println("fragStackLenght: "+fragStackLenght);
-		fragStackLenght=container.getChildCount();
-		System.out.println("fragStackLenght: "+fragStackLenght);
-		
-		topFragId=container.getChildAt(container.getChildCount()-1).getId();
-		
-		frag=act.getSupportFragmentManager().findFragmentById(topFragId);
-		
-		
-		return frag;
-	}
+
+	//	public static Fragment getTopVisibleFragment(ViewGroup container, ActionBarActivity act)
+	//	{
+	//		Fragment frag=null;
+	//		int fragStackLenght;
+	//		int topFragId;
+	//		
+	//		fragStackLenght=act.getSupportFragmentManager().getBackStackEntryCount();
+	//		System.out.println("fragStackLenght: "+fragStackLenght);
+	//		fragStackLenght=container.getChildCount();
+	//		System.out.println("fragStackLenght: "+fragStackLenght);
+	//		
+	//		topFragId=container.getChildAt(container.getChildCount()-1).getId();
+	//		
+	//		frag=act.getSupportFragmentManager().findFragmentById(topFragId);
+	//		
+	//		
+	//		return frag;
+	//	}
 }
