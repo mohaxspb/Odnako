@@ -3,11 +3,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
@@ -17,13 +13,12 @@ import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.fragments.CommentsFragment;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -270,30 +265,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.art_img.setLayoutParams(params);
 				holderMain.art_img.setPadding(5, 5, 5, 5);
 
-				//UniversalImageLoader
-				File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
-
-				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
-				.diskCache(new UnlimitedDiscCache(cacheDir))
-				.build();
-
-				DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.displayer(new RoundedBitmapDisplayer(10))
-				.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
-				.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
-				.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
-				.cacheInMemory(true)
-				.cacheOnDisk(true)
-				.considerExifParams(true)
-				.bitmapConfig(Bitmap.Config.RGB_565)
-				.build();
-
-				ImageLoader imageLoader = ImageLoader.getInstance();
-				if (!imageLoader.isInited())
-				{
-					imageLoader.init(config);
-				}
-				imageLoader.displayImage(p.img, holderMain.art_img, options);
+				ImageLoader imageLoader=UniversalImageLoader.get(act);
+				imageLoader.displayImage(p.img_art, holderMain.art_img);
 				//end of ART_IMG
 
 				//SaveImg
@@ -497,11 +470,14 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 	}
 
 	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
-	{
-
-		if (!p.authorName.equals("empty"))
+	{		
+		if (!p.authorBlogUrl.equals("empty") && !p.authorBlogUrl.equals(""))
 		{
 			Toast.makeText(act, "show all AuthorsArticles!", Toast.LENGTH_SHORT).show();
+		}
+		else
+		{
+			System.out.println("p.authorBlogUrl.equals('empty') (|| ''): WTF?!");
 		}
 	}
 

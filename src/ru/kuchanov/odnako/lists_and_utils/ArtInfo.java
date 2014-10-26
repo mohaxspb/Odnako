@@ -6,10 +6,10 @@ import java.util.Comparator;
 public class ArtInfo implements Comparable<ArtInfo>
 {
 
-	private String[] AllInfo = new String[16];
+	private String[] AllInfo = new String[17];
 
 	//get it from blogs page
-	public String url, title, img, authorBlogUrl, authorName;
+	public String url, title, img_art, authorBlogUrl, authorName;
 
 	//get it from RSS page
 	public String preview, pubDate = "empty";
@@ -17,7 +17,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 	//get it from article page
 	public int numOfComments, numOfSharings = 0;
-	public String artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more = "empty";
+	public String artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more,
+	img_author = "empty";
 
 	/**
 	 * 
@@ -29,11 +30,12 @@ public class ArtInfo implements Comparable<ArtInfo>
 	 */
 	public ArtInfo(String[] artInfoArr)
 	{
+		//from blogs page
 		if (artInfoArr.length == 5)
 		{
 			this.url = artInfoArr[0];
 			this.title = artInfoArr[1];
-			this.img = artInfoArr[2];
+			this.img_art = artInfoArr[2];
 			this.authorBlogUrl = artInfoArr[3];
 			this.authorName = artInfoArr[4];
 
@@ -52,7 +54,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 			this.AllInfo[0] = url;
 			this.AllInfo[1] = title;
-			this.AllInfo[2] = img;
+			this.AllInfo[2] = img_art;
 			this.AllInfo[3] = authorBlogUrl;
 			this.AllInfo[4] = authorName;
 
@@ -68,12 +70,14 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.AllInfo[13] = "empty";
 			this.AllInfo[14] = "empty";
 			this.AllInfo[15] = "empty";
+			this.AllInfo[16] = "empty";
 		}
+		//from RSS
 		else if (artInfoArr.length == 7)
 		{
 			this.url = artInfoArr[0];
 			this.title = artInfoArr[1];
-			this.img = artInfoArr[2];
+			this.img_art = artInfoArr[2];
 			this.authorBlogUrl = artInfoArr[3];
 			this.authorName = artInfoArr[4];
 
@@ -92,7 +96,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 			this.AllInfo[0] = url;
 			this.AllInfo[1] = title;
-			this.AllInfo[2] = img;
+			this.AllInfo[2] = img_art;
 			this.AllInfo[3] = authorBlogUrl;
 			this.AllInfo[4] = authorName;
 
@@ -109,12 +113,14 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.AllInfo[13] = "empty";
 			this.AllInfo[14] = "empty";
 			this.AllInfo[15] = "empty";
+			this.AllInfo[16] = "empty";
 		}
-		else if (artInfoArr.length == 16)
+		//from article
+		else if (artInfoArr.length == 17)
 		{
 			this.url = artInfoArr[0];
 			this.title = artInfoArr[1];
-			this.img = artInfoArr[2];
+			this.img_art = artInfoArr[2];
 			this.authorBlogUrl = artInfoArr[3];
 			this.authorName = artInfoArr[4];
 
@@ -130,10 +136,11 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.share_quont = artInfoArr[13];
 			this.to_read_main = artInfoArr[14];
 			this.to_read_more = artInfoArr[15];
+			this.img_author = artInfoArr[16];
 
 			this.AllInfo[0] = url;
 			this.AllInfo[1] = title;
-			this.AllInfo[2] = img;
+			this.AllInfo[2] = img_art;
 			this.AllInfo[3] = authorBlogUrl;
 			this.AllInfo[4] = authorName;
 
@@ -149,11 +156,13 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.AllInfo[13] = this.share_quont;
 			this.AllInfo[14] = this.to_read_main;
 			this.AllInfo[15] = this.to_read_more;
+			this.AllInfo[16] = this.img_author;
 
 		}
 		else
 		{
-			System.out.println("ArtInfo construcror. Invalid arr lenght. It can't be, yes? In other case: WTF, MOTHERFUCKER?!");
+			System.out
+			.println("ArtInfo construcror. Invalid arr lenght. It can't be, yes? In other case: WTF, MOTHERFUCKER?!");
 		}
 	}
 
@@ -162,7 +171,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 		this.url = url;
 		this.title = title;
-		this.img = img;
+		this.img_art = img;
 		this.authorBlogUrl = authorBlogUrl;
 		this.authorName = authorName;
 
@@ -197,6 +206,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.AllInfo[13] = "empty";
 		this.AllInfo[14] = "empty";
 		this.AllInfo[15] = "empty";
+		this.AllInfo[16] = "empty";
 	}
 
 	public void updateArtInfoFromRSS(String preView, String pubDate)
@@ -208,8 +218,9 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.AllInfo[6] = pubDate;
 	}
 
-	public void updateArtInfoFromARTICLE(int numOfComments, int numOfSharings, String artText, String authorDescr, String tegs_main, String tegs_all, String share_quont, String to_read_main,
-	String to_read_more)
+	public void updateArtInfoFromARTICLE(int numOfComments, int numOfSharings, String artText, String authorDescr,
+	String tegs_main, String tegs_all, String share_quont, String to_read_main,
+	String to_read_more, String img_author)
 	{
 
 		this.numOfComments = numOfComments;
@@ -221,6 +232,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.share_quont = share_quont;
 		this.to_read_main = to_read_main;
 		this.to_read_more = to_read_more;
+		this.img_author = img_author;
 
 		this.AllInfo[7] = String.valueOf(this.numOfComments);
 		this.AllInfo[8] = String.valueOf(this.numOfSharings);
@@ -231,6 +243,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.AllInfo[13] = this.share_quont;
 		this.AllInfo[14] = this.to_read_main;
 		this.AllInfo[15] = this.to_read_more;
+		this.AllInfo[16] = this.img_author;
 	}
 
 	public String[] getArtInfoAsStringArray()

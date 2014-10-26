@@ -6,25 +6,19 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -40,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ArticleFragment extends Fragment
 {
@@ -47,16 +42,18 @@ public class ArticleFragment extends Fragment
 	private SharedPreferences pref;
 	private boolean twoPane;
 
+	ImageLoader imageLoader;
+
 	private TextView artTextView;
 
 	private ScrollView scroll;
 
 	private TextView artTitleTV;
 	private TextView artAuthorTV;
-	private TextView artAuthorDescription;
-	
+	private TextView artAuthorDescriptionTV;
+
 	private TextView artDateTV;
-	private TextView artTegsMainTV;
+	private TextView artTagsMainTV;
 
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
@@ -70,7 +67,7 @@ public class ArticleFragment extends Fragment
 	CardView alsoToReadCard;
 
 	ArtInfo curArtInfo;
-	int position;/*position in all art arr; need to show next/previous arts*/
+	int position;/* position in all art arr; need to show next/previous arts */
 	ArrayList<ArtInfo> allArtsInfo;
 
 	@Override
@@ -81,36 +78,40 @@ public class ArticleFragment extends Fragment
 
 		this.act = (ActionBarActivity) this.getActivity();
 
-//		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
-		this.curArtInfo=new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
-		this.position=this.getArguments().getInt("position");
+		this.imageLoader = UniversalImageLoader.get(act);
+
+		//		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
+		this.position = this.getArguments().getInt("position");
 		//restore AllArtsInfo
-		this.allArtsInfo=new ArrayList<ArtInfo>();
-		Set<String> keySet=this.getArguments().keySet();
+		this.allArtsInfo = new ArrayList<ArtInfo>();
+		Set<String> keySet = this.getArguments().keySet();
 		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
 		Collections.sort(keySetSortedArrList);
-		for(int i=0; i<keySetSortedArrList.size(); i++)
+		for (int i = 0; i < keySetSortedArrList.size(); i++)
 		{
-			if(keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
+			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
 			{
-				if(i<10)
+				if (i < 10)
 				{
-					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray("allArtsInfo_0"+String.valueOf(i))));
+					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray(
+					"allArtsInfo_0" + String.valueOf(i))));
 				}
 				else
 				{
-					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray("allArtsInfo_"+String.valueOf(i))));
+					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray(
+					"allArtsInfo_" + String.valueOf(i))));
 				}
-				
+
 			}
 			else
 			{
 				break;
 			}
 		}
-		
+
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
-		this.twoPane=pref.getBoolean("twoPane", false);
+		this.twoPane = pref.getBoolean("twoPane", false);
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -120,16 +121,16 @@ public class ArticleFragment extends Fragment
 
 		//find all views
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
-//		this.artTextView.setText(R.string.version_history);
+		//		this.artTextView.setText(R.string.version_history);
 
 		this.scroll = (ScrollView) v.findViewById(R.id.art_scroll);
 
 		this.artTitleTV = (TextView) v.findViewById(R.id.art_title);
 		this.artAuthorTV = (TextView) v.findViewById(R.id.art_author);
-		this.artAuthorDescription = (TextView) v.findViewById(R.id.art_author_description);
-		
+		this.artAuthorDescriptionTV = (TextView) v.findViewById(R.id.art_author_description);
+
 		this.artDateTV = (TextView) v.findViewById(R.id.pub_date);
-		this.artTegsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
+		this.artTagsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
 
 		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
 		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
@@ -149,19 +150,30 @@ public class ArticleFragment extends Fragment
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel_landscape, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);
 		}
-
-		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
-		//set onClickListener
-		this.commentsBottomBtn.setOnClickListener(new OnClickListener()
+		this.shareCard.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
 			public void onClick(View v)
 			{
-				if(twoPane)
+				// TODO Auto-generated method stub
+				Toast.makeText(act, "share!", Toast.LENGTH_SHORT).show();
+			}
+		});
+
+		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
+		//set onClickListener
+		this.commentsBottomBtn.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				if (twoPane)
 				{
-					ArticlesListFragment atsListFrag=(ArticlesListFragment) act.getSupportFragmentManager().findFragmentById(R.id.articles_list);
-					
+					ArticlesListFragment atsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
+					.findFragmentById(R.id.articles_list);
+
 					ArtsListAdapter.showComments(curArtInfo, atsListFrag.getMyActivatedPosition(), act);
 				}
 				else
@@ -177,16 +189,15 @@ public class ArticleFragment extends Fragment
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 
 		//test
-//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
-//		"http://yuriykuchanov.odnako.org/", "Разработчик");
-//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
-//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
-//		this.curArtInfo = artInfoTEST;
+		//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
+		//		"http://yuriykuchanov.odnako.org/", "Разработчик");
+		//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
+		//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
+		//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
+		//		this.curArtInfo = artInfoTEST;
 
-		fillFielsdsWithInfo(v);
+		this.fillFielsdsWithInfo(v);
 		//end of find all views
-
 
 		//setting size of Images and text
 		this.setSizeAndTheme();
@@ -226,87 +237,85 @@ public class ArticleFragment extends Fragment
 	{
 		String[] allTegs = this.curArtInfo.getAllTegsArr();
 		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
-		if (allTegs == null)
+		if (allTegs != null)
 		{
-			return;
-		}
-		this.bottomPanel.addView(this.allTegsCard);
-		LinearLayout allTegsLin = (LinearLayout) allTegsCard.findViewById(R.id.all_tegs_lin);
-		LinearLayout firstLin = (LinearLayout) allTegsCard.findViewById(R.id.first_tegs_lin);
-		LayoutInflater inflater = act.getLayoutInflater();
-		int curLinId = 0;
-		LinearLayout curLinLay = firstLin;
+			this.bottomPanel.addView(this.allTegsCard);
+			LinearLayout allTegsLin = (LinearLayout) allTegsCard.findViewById(R.id.all_tegs_lin);
+			LinearLayout firstLin = (LinearLayout) allTegsCard.findViewById(R.id.first_tegs_lin);
+			LayoutInflater inflater = act.getLayoutInflater();
+			int curLinId = 0;
+			LinearLayout curLinLay = firstLin;
 
-		//max width
-		int width;
-		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
-		if(this.twoPane)
-		{
-			width = displayMetrics.widthPixels / 4 * 3;
-		}
-		else
-		{
-			width=displayMetrics.widthPixels;
-		}
-		
-		int vPad=rooView.getPaddingLeft()+rooView.getPaddingRight();
-		int bPad=this.bottomPanel.getPaddingLeft()+this.bottomPanel.getPaddingRight();
-		int cPad=this.allTegsCard.getPaddingLeft()+this.allTegsCard.getPaddingRight();
-		int minusPaddings=vPad+bPad+cPad;
-		System.out.println("width: " + width);
-		System.out.println("minusPaddings: "+minusPaddings);
-		width-=minusPaddings;
-//		System.out.println("minusPaddings: "+minusPaddings);
-		int minHeight = 0;
-//		System.out.println("width: " + width);
-		//
-		for (int i = 0; i < allTegs.length; i++)
-		{
-			
-			CardView c = (CardView) inflater.inflate(R.layout.teg_card, curLinLay, false);
-			TextView tag = (TextView) c.findViewById(R.id.teg_tv);
-			tag.setText(allTegs[i]);
-			curLinLay.addView(c);
-			
-			
-			//calculate total linLay width
-			int curLinChildrenWidth = 0;
-			
-			for (int u = 0; u < curLinLay.getChildCount(); u++)
+			//max width
+			int width;
+			DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
+			if (this.twoPane)
 			{
-				curLinLay.getChildAt(u).measure(0, 0);
-				curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
+				width = displayMetrics.widthPixels / 4 * 3;
 			}
-			//plus 10*2 (2xpaddings of each tag
-			curLinChildrenWidth+=curLinLay.getChildCount()*10;
-			if(i==0)
+			else
 			{
-				curLinLay.getChildAt(1).measure(0, 0);
-				minHeight=curLinLay.getChildAt(1).getMeasuredHeight();
+				width = displayMetrics.widthPixels;
 			}
-			//curLinLay.getChildAt(curLinLay.getChildCount()-1).measure(0, 0);
-			int height=curLinLay.getChildAt(curLinLay.getChildCount()-1).getMeasuredHeight();
-			//check if it's too much
-			//must check not device, but View width
-			//so if it's planshet we must take only 3/4 of device width
-			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
-			System.out.println("height: " + height+"/ minHeight: " + minHeight);
-			
-			if (curLinChildrenWidth >= width || height> minHeight)
-			{
-				curLinId++;
-				LinearLayout nextLin = new LinearLayout(act);
-				nextLin.setOrientation(LinearLayout.HORIZONTAL);
-				LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				nextLin.setLayoutParams(params);
-				nextLin.setId(curLinId);
 
-				//remove previous and add it to next
-				curLinLay.removeView(c);
-				curLinLay = nextLin;
+			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
+			int bPad = this.bottomPanel.getPaddingLeft() + this.bottomPanel.getPaddingRight();
+			int cPad = this.allTegsCard.getPaddingLeft() + this.allTegsCard.getPaddingRight();
+			int minusPaddings = vPad + bPad + cPad;
+			//		System.out.println("width: " + width);
+			//		System.out.println("minusPaddings: "+minusPaddings);
+			width -= minusPaddings;
+			//		System.out.println("minusPaddings: "+minusPaddings);
+			int minHeight = 0;
+			//		System.out.println("width: " + width);
+			//
+			for (int i = 0; i < allTegs.length; i++)
+			{
+
+				CardView c = (CardView) inflater.inflate(R.layout.teg_card, curLinLay, false);
+				TextView tag = (TextView) c.findViewById(R.id.teg_tv);
+				tag.setText(allTegs[i]);
 				curLinLay.addView(c);
 
-				allTegsLin.addView(curLinLay);
+				//calculate total linLay width
+				int curLinChildrenWidth = 0;
+
+				for (int u = 0; u < curLinLay.getChildCount(); u++)
+				{
+					curLinLay.getChildAt(u).measure(0, 0);
+					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
+				}
+				//plus 10*2 (2xpaddings of each tag
+				curLinChildrenWidth += curLinLay.getChildCount() * 10;
+				if (i == 0)
+				{
+					curLinLay.getChildAt(1).measure(0, 0);
+					minHeight = curLinLay.getChildAt(1).getMeasuredHeight();
+				}
+				//curLinLay.getChildAt(curLinLay.getChildCount()-1).measure(0, 0);
+				int height = curLinLay.getChildAt(curLinLay.getChildCount() - 1).getMeasuredHeight();
+				//check if it's too much
+				//must check not device, but View width
+				//so if it's planshet we must take only 3/4 of device width
+				//			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
+				//			System.out.println("height: " + height+"/ minHeight: " + minHeight);
+
+				if (curLinChildrenWidth >= width || height > minHeight)
+				{
+					curLinId++;
+					LinearLayout nextLin = new LinearLayout(act);
+					nextLin.setOrientation(LinearLayout.HORIZONTAL);
+					LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+					nextLin.setLayoutParams(params);
+					nextLin.setId(curLinId);
+
+					//remove previous and add it to next
+					curLinLay.removeView(c);
+					curLinLay = nextLin;
+					curLinLay.addView(c);
+
+					allTegsLin.addView(curLinLay);
+				}
 			}
 		}
 	}
@@ -315,26 +324,25 @@ public class ArticleFragment extends Fragment
 	{
 		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoByTheme();
 		//for test
-//		String[] s1 = new String[] { "title", "title" };
-//		String[] s2 = new String[] { "title", "title" };
-//		String[] s3 = new String[] { "title", "title" };
-//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
-		if (alsoToRead == null)
+		//		String[] s1 = new String[] { "title", "title" };
+		//		String[] s2 = new String[] { "title", "title" };
+		//		String[] s3 = new String[] { "title", "title" };
+		//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
+		if (alsoToRead != null)
 		{
-			return;
-		}
 
-		this.bottomPanel.addView(this.alsoByThemeCard);
-		LinearLayout mainLin = (LinearLayout) this.alsoByThemeCard.findViewById(R.id.also_main);
-		LayoutInflater inflater = act.getLayoutInflater();
-		for (int i = 0; i < alsoToRead.titles.length; i++)
-		{
-			CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
-			TextView title = (TextView) c.findViewById(R.id.title);
-			title.setText(alsoToRead.titles[i]);
-			TextView date = (TextView) c.findViewById(R.id.date);
-			date.setText(alsoToRead.dates[i]);
-			mainLin.addView(c);
+			this.bottomPanel.addView(this.alsoByThemeCard);
+			LinearLayout mainLin = (LinearLayout) this.alsoByThemeCard.findViewById(R.id.also_main);
+			LayoutInflater inflater = act.getLayoutInflater();
+			for (int i = 0; i < alsoToRead.titles.length; i++)
+			{
+				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
+				TextView title = (TextView) c.findViewById(R.id.title);
+				title.setText(alsoToRead.titles[i]);
+				TextView date = (TextView) c.findViewById(R.id.date);
+				date.setText(alsoToRead.dates[i]);
+				mainLin.addView(c);
+			}
 		}
 	}
 
@@ -342,32 +350,31 @@ public class ArticleFragment extends Fragment
 	{
 		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoToReadMore();
 		//for test
-//		String[] s1 = new String[] { "title", "title", "title" };
-//		String[] s2 = new String[] { "url", "url", "url" };
-//		String[] s3 = new String[] { "date", "date", "date" };
-//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
-		if (alsoToRead == null)
+		//		String[] s1 = new String[] { "title", "title", "title" };
+		//		String[] s2 = new String[] { "url", "url", "url" };
+		//		String[] s3 = new String[] { "date", "date", "date" };
+		//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
+		if (alsoToRead != null)
 		{
-			return;
-		}
 
-		this.bottomPanel.addView(this.alsoToReadCard);
-		LinearLayout mainLin = (LinearLayout) this.alsoToReadCard.findViewById(R.id.also_main);
-		LayoutInflater inflater = act.getLayoutInflater();
-		for (int i = 0; i < alsoToRead.titles.length; i++)
-		{
-			CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
-			TextView title = (TextView) c.findViewById(R.id.title);
-			title.setText(alsoToRead.titles[i]);
-			TextView date = (TextView) c.findViewById(R.id.date);
-			date.setText(alsoToRead.dates[i]);
-			mainLin.addView(c);
+			this.bottomPanel.addView(this.alsoToReadCard);
+			LinearLayout mainLin = (LinearLayout) this.alsoToReadCard.findViewById(R.id.also_main);
+			LayoutInflater inflater = act.getLayoutInflater();
+			for (int i = 0; i < alsoToRead.titles.length; i++)
+			{
+				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
+				TextView title = (TextView) c.findViewById(R.id.title);
+				title.setText(alsoToRead.titles[i]);
+				TextView date = (TextView) c.findViewById(R.id.date);
+				date.setText(alsoToRead.dates[i]);
+				mainLin.addView(c);
+			}
 		}
 	}
 
 	private void setSizeAndTheme()
 	{
-		
+
 		String scaleFactorString = pref.getString("scale_art", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 
@@ -375,78 +382,138 @@ public class ArticleFragment extends Fragment
 
 		this.artTitleTV.setTextSize(25 * scaleFactor);
 		this.artAuthorTV.setTextSize(21 * scaleFactor);
-		this.artAuthorDescription.setTextSize(21 * scaleFactor);
+		this.artAuthorDescriptionTV.setTextSize(21 * scaleFactor);
+		this.artDateTV.setTextSize(17 * scaleFactor);
+		this.artTagsMainTV.setTextSize(21 * scaleFactor);
 
 		//images
 		final float scale = getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 		LayoutParams params = new LayoutParams(pixels, pixels);
 
-		this.artAuthorIV.setPadding(5, 5, 5, 5);
-		this.artAuthorIV.setScaleType(ScaleType.FIT_XY);
+		int iconPxels = (int) (50 * scaleFactor * scale + 0.5f);
+		LayoutParams iconsParams = new LayoutParams(iconPxels, iconPxels);
+
 		this.artAuthorIV.setLayoutParams(params);
+		this.artAuthorArticlesIV.setLayoutParams(iconsParams);
+		this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
 
-		this.artAuthorArticlesIV.setPadding(5, 5, 5, 5);
-		this.artAuthorArticlesIV.setScaleType(ScaleType.FIT_XY);
-		this.artAuthorArticlesIV.setLayoutParams(params);
+		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
+		LayoutParams zeroAllParams = new LayoutParams(0, 0);
+		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-		this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
-		this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
-		this.artAuthorDescriptionIV.setLayoutParams(params);
+		//removing tags field if it's empty
+		if (this.curArtInfo.tegs_main.equals("empty") || this.curArtInfo.tegs_main.equals(""))
+		{
+			this.artTagsMainTV.setText(null);
+			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
+		}
+		else
+		{
+			this.artTagsMainTV.setText(this.curArtInfo.tegs_main);
+			this.artTagsMainTV.setLayoutParams(normalParams);
+		}
+		//set descr of author btn
+		//set descrTV height to 0 by default
+		this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
 
-	}
+		if (this.curArtInfo.authorDescr.equals("empty") || this.curArtInfo.authorDescr.equals(""))
+		{
+			this.artAuthorDescriptionTV.setText(null);
+			this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
+			//
+			this.artAuthorDescriptionIV.setLayoutParams(zeroAllParams);
+		}
+		else
+		{
+			//restore size
+			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
+			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
+			this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
+
+			this.artAuthorDescriptionIV.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					//if ==0, so it's hide; must show
+					if (artAuthorDescriptionTV.getLayoutParams().height == 0)
+					{
+						//set and show text
+						artAuthorDescriptionTV.setText(curArtInfo.authorDescr);
+						LayoutParams descrParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+						LayoutParams.WRAP_CONTENT);
+						artAuthorDescriptionTV.setLayoutParams(descrParams);
+						//set btn image
+						imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
+						artAuthorDescriptionIV);
+					}
+					else
+					{
+						//set and show text
+						artAuthorDescriptionTV.setText(null);
+						LayoutParams descrParams0 = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
+						artAuthorDescriptionTV.setLayoutParams(descrParams0);
+						//set btn image
+						imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+						artAuthorDescriptionIV);
+					}
+				}
+			});
+
+		}
+		//set allArsList OnClick
+		if(this.curArtInfo.authorBlogUrl.equals("empty") || this.curArtInfo.authorBlogUrl.equals(""))
+		{
+			this.artAuthorArticlesIV.setOnClickListener(null);
+			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
+		}
+		else
+		{
+			this.artAuthorArticlesIV.setLayoutParams(iconsParams);
+			this.artAuthorArticlesIV.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					ArtsListAdapter.showAllAuthorsArticles(curArtInfo, act);
+				}
+			});
+		}
+		
+	}//setSizeAndTheme
+
 	//set text, tegs, authoe etc
-	private void fillFielsdsWithInfo(View rooView)
+	private void fillFielsdsWithInfo(View rootView)
 	{
 		this.artTextView.setText(this.curArtInfo.artText);
 
 		this.artTitleTV.setText(this.curArtInfo.title);
 		this.artAuthorTV.setText(this.curArtInfo.authorName);
-		this.artAuthorDescription.setText(this.curArtInfo.authorDescr);
+		this.artAuthorDescriptionTV.setText(this.curArtInfo.authorDescr);
 		this.artDateTV.setText(this.curArtInfo.pubDate);
-		this.artTegsMainTV.setText(this.curArtInfo.tegs_main);
-		
-		final float scale = act.getResources().getDisplayMetrics().density;
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
-		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-		LayoutParams params = new LayoutParams(pixels, pixels);
-		params.setMargins(5, 5, 5, 5);
-		this.artAuthorIV.setLayoutParams(params);
-		this.artAuthorArticlesIV.setLayoutParams(params);
-		this.artAuthorDescriptionIV.setLayoutParams(params);
-		
+		this.artTagsMainTV.setText(this.curArtInfo.tegs_main);
 
-		//UniversalImageLoader
-		File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
+		//		final float scale = act.getResources().getDisplayMetrics().density;
+		//		String scaleFactorString = pref.getString("scale", "1");
+		//		float scaleFactor = Float.valueOf(scaleFactorString);
+		//		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+		//		LayoutParams params = new LayoutParams(pixels, pixels);
+		//		params.setMargins(5, 5, 5, 5);
+		//		this.artAuthorIV.setLayoutParams(params);
+		//		this.artAuthorArticlesIV.setLayoutParams(params);
+		//		this.artAuthorDescriptionIV.setLayoutParams(params);
 
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
-		.diskCache(new UnlimitedDiscCache(cacheDir))
-		.build();
-
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.displayer(new RoundedBitmapDisplayer(10))
-		.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
-		.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
-		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
-		.cacheInMemory(true)
-		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.build();
-
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		if (!imageLoader.isInited())
-		{
-			imageLoader.init(config);
-		}
 		//down images
-		imageLoader.displayImage(this.curArtInfo.img, this.artAuthorIV, options);
-		imageLoader.displayImage("drawable://"+R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV, options);
-		imageLoader.displayImage("drawable://"+R.drawable.ic_keyboard_arrow_down_grey600_48dp, this.artAuthorDescriptionIV, options);
-		
+		imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
+		imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+		imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+		this.artAuthorDescriptionIV);
+
 		//fill bottom
-		this.setUpAllTegsLayout(rooView);
+		this.setUpAllTegsLayout(rootView);
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}

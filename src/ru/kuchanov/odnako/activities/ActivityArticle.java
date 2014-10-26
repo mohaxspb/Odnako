@@ -24,7 +24,7 @@ public class ActivityArticle extends ActionBarActivity
 {
 	AdView adView;
 
-	ArticleFragment artFrag;
+//	ArticleFragment artFrag;
 
 	ArtInfo curArtInfo;
 	int position;/* position in all art arr; need to show next/previous arts */
@@ -54,9 +54,13 @@ public class ActivityArticle extends ActionBarActivity
 		}
 
 		//find (CREATE NEW ONE) fragment and send it some info from intent 
-		this.artFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(
-		R.id.article);
-		this.artFrag = new ArticleFragment();
+		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article);
+//		if(curArtFrag==null)
+//		{
+//			this.artFrag = new ArticleFragment();
+//		}
+		ArticleFragment newArtFrag=new ArticleFragment();
+
 		Bundle bundle = new Bundle();
 		bundle.putInt("position", this.position);
 		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
@@ -74,11 +78,15 @@ public class ActivityArticle extends ActionBarActivity
 			}
 		}
 		// set Fragmentclass Arguments
-		artFrag.setArguments(bundle);
+		newArtFrag.setArguments(bundle);
 
 		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.article_container, artFrag);
-		transaction.addToBackStack(null);
+		if(curArtFrag!=null)
+		{
+			transaction.addToBackStack(null);
+			transaction.hide(curArtFrag);
+		}
+		transaction.add(R.id.article_container, newArtFrag);
 		transaction.commit();
 		//End of find fragment and send it some info from intent 
 
@@ -156,6 +164,25 @@ public class ActivityArticle extends ActionBarActivity
 		System.out.println("ActivityArticle onRestoreInstanceState");
 
 		this.restoreState(savedInstanceState);
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		System.out.println("ActivityArticle onBackPressed");
+		//check if there is no fragments in stack, so we need to finish Activity, not only fragment
+		System.out.println("this.getSupportFragmentManager().getBackStackEntryCount(): "
+		+ this.getSupportFragmentManager().getBackStackEntryCount());
+		if (this.getSupportFragmentManager().getBackStackEntryCount() == 0)
+		{
+			super.onBackPressed();
+			this.finish();
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+
 	}
 
 	private void restoreState(Bundle state)
