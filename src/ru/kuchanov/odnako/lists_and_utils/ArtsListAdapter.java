@@ -25,7 +25,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
@@ -41,7 +40,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -265,11 +263,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.preview.setTextSize(21 * scaleFactor);
 
 				// ART_IMG
-				//				DownloadImageTask downFlag = (DownloadImageTask) new DownloadImageTask((ImageView) holderMain.art_img, (ActionBarActivity) act);
-				//				downFlag.execute(p.img);
 				final float scale = act.getResources().getDisplayMetrics().density;
 				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-				//				holderMain.art_img.setScaleType(ScaleType.FIT_XY);
 				LayoutParams params = new LayoutParams(pixels, pixels);
 				params.setMargins(5, 5, 5, 5);
 				holderMain.art_img.setLayoutParams(params);
@@ -548,25 +543,9 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
 
-			// Create fragment and give it an argument for the selected article
-			//            ArticleFragment newFragment = new ArticleFragment();
-			//            Bundle args = new Bundle();
-			//            args.putInt(ArticleFragment.ARG_POSITION, position);
-			//            newFragment.setArguments(args);
-			CommentsFragment commentsFragment = new CommentsFragment();
 			ArticleFragment artFrag = (ArticleFragment) act.getSupportFragmentManager().findFragmentById(R.id.article);
 
 			FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
-
-			// Replace whatever is in the fragment_container view with this fragment,
-			// and add the transaction to the back stack so the user can navigate back
-			//            transaction.replace(R.id.article_comments_container, commentsFragment);
-			//            transaction.replace(R.id.article, commentsFragment);
-			//            transaction.addToBackStack(null);
-			FrameLayout fr = (FrameLayout) act.findViewById(R.id.article_comments_container);
-			//            int shownId=fr.getChildAt(0).getId();
-			//            System.out.println("artFrag==null: "+String.valueOf(artFrag==null));
-			//            System.out.println("artFrag.isHidden()==true: "+String.valueOf(artFrag.isHidden()==true));
 
 			if (!artFrag.isHidden())
 			{
@@ -587,7 +566,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				System.out.println("commFrag=null");
 				//do nothing
 			}
-			transaction.add(R.id.article_comments_container, commentsFragment);
+			transaction.add(R.id.article_comments_container, commFrag);
 
 			//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
 			// Commit the transaction
@@ -597,9 +576,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityComments.class);
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO,
-			artInfo.getArtInfoAsStringArray());
-			intent.putExtra(ActivityMain.EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION, position);
+			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
+			intent.putExtra("position", position);
 			act.startActivity(intent);
 		}
 	}
@@ -609,7 +587,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
 
 		//fill CUR_ART_INFO var 
-		ActivityMain.setCUR_ART_INFO(artInfo);
+//		ActivityMain.setCUR_ART_INFO(artInfo);
+		((ActivityMain)act).setCUR_ART_INFO(artInfo);
 
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -620,13 +599,16 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
 			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
+			
+			
 		}
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
 			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
 			intent.putExtra("position", position);
-			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
+//			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
+			ArrayList<ArtInfo> allArtsInfo=((ActivityMain)act).getAllArtsInfo();
 			if (allArtsInfo != null)
 			{
 				for (int i = 0; i < allArtsInfo.size(); i++)

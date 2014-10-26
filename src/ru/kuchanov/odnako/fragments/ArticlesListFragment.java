@@ -40,6 +40,9 @@ public class ArticlesListFragment extends Fragment
 	 * The current activated item position. Only used on tablets.
 	 */
 	private int mActivatedPosition = ListView.INVALID_POSITION;
+	
+	ArrayList<ArtInfo> allArtsInfo;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -63,25 +66,26 @@ public class ArticlesListFragment extends Fragment
 				
 		//fill Arraylist with artsInfo
 		//sample data now
-		ArrayList<ArtInfo> artsInfo = new ArrayList<ArtInfo>();
+		allArtsInfo = new ArrayList<ArtInfo>();
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
 			ArtInfo artInfo=new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i));
 			artInfo.updateArtInfoFromRSS("preview_"+String.valueOf(i), "date_"+String.valueOf(i));
 			artInfo.updateArtInfoFromARTICLE(i, i, "art_text_"+String.valueOf(i), "author_description_"+String.valueOf(i), "tegs_main_"+String.valueOf(i), "tegs_all_"+String.valueOf(i), String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!", "to_read_main_"+String.valueOf(i), "to_read_more_"+String.valueOf(i));
-			artsInfo.add(artInfo);
+			allArtsInfo.add(artInfo);
 		}
 		
 		ArtInfo artInfoTEST=new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/", "Разработчик");
 		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
 		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
 		
-		artsInfo.set(1, artInfoTEST);
+		allArtsInfo.set(1, artInfoTEST);
 		
-		ActivityMain.setAllArtsInfo(artsInfo);
+//		ActivityMain.setAllArtsInfo(artsInfo);
+		((ActivityMain)act).setAllArtsInfo(allArtsInfo);
 		
-		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, artsInfo, artsList);
+		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, allArtsInfo, artsList);
 
 		this.artsList.setAdapter(artsListAdapter);
 		///////

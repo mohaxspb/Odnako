@@ -6,17 +6,25 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -46,6 +54,9 @@ public class ArticleFragment extends Fragment
 	private TextView artTitleTV;
 	private TextView artAuthorTV;
 	private TextView artAuthorDescription;
+	
+	private TextView artDateTV;
+	private TextView artTegsMainTV;
 
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
@@ -109,13 +120,16 @@ public class ArticleFragment extends Fragment
 
 		//find all views
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
-		this.artTextView.setText(R.string.version_history);
+//		this.artTextView.setText(R.string.version_history);
 
 		this.scroll = (ScrollView) v.findViewById(R.id.art_scroll);
 
 		this.artTitleTV = (TextView) v.findViewById(R.id.art_title);
 		this.artAuthorTV = (TextView) v.findViewById(R.id.art_author);
 		this.artAuthorDescription = (TextView) v.findViewById(R.id.art_author_description);
+		
+		this.artDateTV = (TextView) v.findViewById(R.id.pub_date);
+		this.artTegsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
 
 		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
 		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
@@ -170,9 +184,7 @@ public class ArticleFragment extends Fragment
 //		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
 //		this.curArtInfo = artInfoTEST;
 
-		this.setUpAllTegsLayout(v);
-		this.setUpAlsoByTheme();
-		this.setUpAlsoToRead();
+		fillFielsdsWithInfo(v);
 		//end of find all views
 
 
@@ -210,7 +222,7 @@ public class ArticleFragment extends Fragment
 
 	}
 
-	private void setUpAllTegsLayout(View v)
+	private void setUpAllTegsLayout(View rooView)
 	{
 		String[] allTegs = this.curArtInfo.getAllTegsArr();
 		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
@@ -237,7 +249,7 @@ public class ArticleFragment extends Fragment
 			width=displayMetrics.widthPixels;
 		}
 		
-		int vPad=v.getPaddingLeft()+v.getPaddingRight();
+		int vPad=rooView.getPaddingLeft()+rooView.getPaddingRight();
 		int bPad=this.bottomPanel.getPaddingLeft()+this.bottomPanel.getPaddingRight();
 		int cPad=this.allTegsCard.getPaddingLeft()+this.allTegsCard.getPaddingRight();
 		int minusPaddings=vPad+bPad+cPad;
@@ -382,6 +394,61 @@ public class ArticleFragment extends Fragment
 		this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
 		this.artAuthorDescriptionIV.setLayoutParams(params);
 
+	}
+	//set text, tegs, authoe etc
+	private void fillFielsdsWithInfo(View rooView)
+	{
+		this.artTextView.setText(this.curArtInfo.artText);
+
+		this.artTitleTV.setText(this.curArtInfo.title);
+		this.artAuthorTV.setText(this.curArtInfo.authorName);
+		this.artAuthorDescription.setText(this.curArtInfo.authorDescr);
+		this.artDateTV.setText(this.curArtInfo.pubDate);
+		this.artTegsMainTV.setText(this.curArtInfo.tegs_main);
+		
+		final float scale = act.getResources().getDisplayMetrics().density;
+		String scaleFactorString = pref.getString("scale", "1");
+		float scaleFactor = Float.valueOf(scaleFactorString);
+		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+		LayoutParams params = new LayoutParams(pixels, pixels);
+		params.setMargins(5, 5, 5, 5);
+		this.artAuthorIV.setLayoutParams(params);
+		this.artAuthorArticlesIV.setLayoutParams(params);
+		this.artAuthorDescriptionIV.setLayoutParams(params);
+		
+
+		//UniversalImageLoader
+		File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
+
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
+		.diskCache(new UnlimitedDiscCache(cacheDir))
+		.build();
+
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+		.displayer(new RoundedBitmapDisplayer(10))
+		.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+		.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
+		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		if (!imageLoader.isInited())
+		{
+			imageLoader.init(config);
+		}
+		//down images
+		imageLoader.displayImage(this.curArtInfo.img, this.artAuthorIV, options);
+		imageLoader.displayImage("drawable://"+R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV, options);
+		imageLoader.displayImage("drawable://"+R.drawable.ic_keyboard_arrow_down_grey600_48dp, this.artAuthorDescriptionIV, options);
+		
+		//fill bottom
+		this.setUpAllTegsLayout(rooView);
+		this.setUpAlsoByTheme();
+		this.setUpAlsoToRead();
 	}
 
 	@Override

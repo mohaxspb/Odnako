@@ -44,7 +44,7 @@ public class ActivityComments extends ActionBarActivity
 		//adMob
 		adView = (AdView) this.findViewById(R.id.adView);
 		AddAds addAds = new AddAds(this, this.adView);
-		//addAds.addAd();
+		addAds.addAd();
 		//end of adMob
 	}
 

@@ -30,8 +30,8 @@ public class ActivityMain extends ActionBarActivity
 	SharedPreferences pref;
 	AdView adView;
 
-	private static ArrayList<ArtInfo> ALL_ARTS_INFO;
-	private static ArtInfo CUR_ART_INFO;
+	private ArrayList<ArtInfo> allArtsInfo;
+	private ArtInfo curArtInfo;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -73,7 +73,7 @@ public class ActivityMain extends ActionBarActivity
 		//adMob
 		adView = (AdView) this.findViewById(R.id.adView);
 		AddAds addAds = new AddAds(this, this.adView);
-		//addAds.addAd();
+		addAds.addAd();
 		//end of adMob
 	}
 	
@@ -105,17 +105,17 @@ public class ActivityMain extends ActionBarActivity
 		System.out.println("ActivityMain: onSaveInstanceState");
 
 		//save allArtsInfo
-		if (ActivityMain.ALL_ARTS_INFO != null)
+		if (this.allArtsInfo != null)
 		{
-			for (int i = 0; i < ActivityMain.ALL_ARTS_INFO.size(); i++)
+			for (int i = 0; i < this.allArtsInfo.size(); i++)
 			{
 				if (i < 10)
 				{
-					outState.putStringArray("ALL_ARTS_INFO_0" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsStringArray());
+					outState.putStringArray("ALL_ARTS_INFO_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
 				else
 				{
-					outState.putStringArray("ALL_ARTS_INFO_" + String.valueOf(i), ActivityMain.ALL_ARTS_INFO.get(i).getArtInfoAsStringArray());
+					outState.putStringArray("ALL_ARTS_INFO_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
 			}
 		}
@@ -124,9 +124,9 @@ public class ActivityMain extends ActionBarActivity
 			System.out.println("ActivityMain: onSaveInstanceState. ActivityMain.ALL_ARTS_INFO=null");
 		}
 		//save curArtInfo
-		if (ActivityMain.CUR_ART_INFO != null)
+		if (this.curArtInfo != null)
 		{
-			outState.putStringArray("CUR_ART_INFO", ActivityMain.CUR_ART_INFO.getArtInfoAsStringArray());
+			outState.putStringArray("CUR_ART_INFO", this.curArtInfo.getArtInfoAsStringArray());
 		}
 		else
 		{
@@ -146,7 +146,7 @@ public class ActivityMain extends ActionBarActivity
 		Collections.sort(keySetSortedArrList);
 		if (keySet.contains("ALL_ARTS_INFO_00"))
 		{
-			ActivityMain.ALL_ARTS_INFO = new ArrayList<ArtInfo>();
+			this.allArtsInfo = new ArrayList<ArtInfo>();
 			for (int i = 0; i < keySetSortedArrList.size(); i++)
 			{
 				String s = keySetSortedArrList.get(i);
@@ -154,11 +154,11 @@ public class ActivityMain extends ActionBarActivity
 				{
 					if (i < 10)
 					{
-						ActivityMain.ALL_ARTS_INFO.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_0" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_0" + String.valueOf(i))));
 					}
 					else
 					{
-						ActivityMain.ALL_ARTS_INFO.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_" + String.valueOf(i))));
 					}
 				}
 			}
@@ -171,8 +171,7 @@ public class ActivityMain extends ActionBarActivity
 		//restore curArtInfo
 		if (keySet.contains("CUR_ART_INFO"))
 		{
-			ActivityMain.CUR_ART_INFO = new ArtInfo(savedInstanceState.getStringArray("CUR_ART_INFO"));
-			System.out.println(ActivityMain.CUR_ART_INFO.img);
+			this.curArtInfo = new ArtInfo(savedInstanceState.getStringArray("CUR_ART_INFO"));
 		}
 		else
 		{
@@ -180,37 +179,71 @@ public class ActivityMain extends ActionBarActivity
 		}
 	}
 
+//	/**
+//	 * @return the curArtInfo
+//	 */
+//	public static ArrayList<ArtInfo> getAllArtsInfo()
+//	{
+//		return allArtsInfo;
+//	}
+//
+//	/**
+//	 * @param curArtInfo
+//	 *            the curArtInfo to set
+//	 */
+//	public static void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
+//	{
+//		ActivityMain.allArtsInfo = allArtsInfo;
+//	}
+//
+//	/**
+//	 * @return the cUR_ARTS_INFO
+//	 */
+//	public static ArtInfo getCUR_ART_INFO()
+//	{
+//		return CUR_ART_INFO;
+//	}
+//
+//	/**
+//	 * @param cUR_ARTS_INFO
+//	 *            the cUR_ARTS_INFO to set
+//	 */
+//	public static void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
+//	{
+//		CUR_ART_INFO = cUR_ARTS_INFO;
+//	}
+	
 	/**
 	 * @return the curArtInfo
 	 */
-	public static ArrayList<ArtInfo> getAllArtsInfo()
+	public ArrayList<ArtInfo> getAllArtsInfo()
 	{
-		return ALL_ARTS_INFO;
+		return this.allArtsInfo;
 	}
 
 	/**
 	 * @param curArtInfo
 	 *            the curArtInfo to set
 	 */
-	public static void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
+	public void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
 	{
-		ActivityMain.ALL_ARTS_INFO = allArtsInfo;
+		this.allArtsInfo = allArtsInfo;
 	}
 
 	/**
 	 * @return the cUR_ARTS_INFO
 	 */
-	public static ArtInfo getCUR_ART_INFO()
+	public ArtInfo getCUR_ART_INFO()
 	{
-		return CUR_ART_INFO;
+		return curArtInfo;
 	}
 
 	/**
 	 * @param cUR_ARTS_INFO
 	 *            the cUR_ARTS_INFO to set
 	 */
-	public static void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
+	public void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
 	{
-		CUR_ART_INFO = cUR_ARTS_INFO;
+		this.curArtInfo = cUR_ARTS_INFO;
 	}
 }

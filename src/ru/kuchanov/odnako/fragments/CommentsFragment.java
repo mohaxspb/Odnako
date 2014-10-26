@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -46,7 +45,8 @@ public class CommentsFragment extends Fragment
 
 		this.act = (ActionBarActivity) this.getActivity();
 
-		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+//		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
+//		this.curArtInfo=
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
