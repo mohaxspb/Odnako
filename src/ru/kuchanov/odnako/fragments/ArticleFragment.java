@@ -17,13 +17,16 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,10 +42,11 @@ import android.widget.Toast;
 public class ArticleFragment extends Fragment
 {
 	private ActionBarActivity act;
+	private LayoutInflater inflater;
 	private SharedPreferences pref;
 	private boolean twoPane;
 
-	ImageLoader imageLoader;
+	private ImageLoader imageLoader;
 
 	private TextView artTextView;
 
@@ -66,7 +70,7 @@ public class ArticleFragment extends Fragment
 	CardView alsoByThemeCard;
 	CardView alsoToReadCard;
 
-	ArtInfo curArtInfo;
+	private ArtInfo curArtInfo;
 	int position;/* position in all art arr; need to show next/previous arts */
 	ArrayList<ArtInfo> allArtsInfo;
 
@@ -74,13 +78,12 @@ public class ArticleFragment extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		System.out.println("ArticleFragment onCreate");
+		//		System.out.println("ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
 		this.imageLoader = UniversalImageLoader.get(act);
 
-		//		this.curArtInfo = ActivityMain.getCUR_ART_INFO();
 		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
 		this.position = this.getArguments().getInt("position");
 		//restore AllArtsInfo
@@ -116,10 +119,53 @@ public class ArticleFragment extends Fragment
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		System.out.println("ArticleFragment onCreateView");
+		//		System.out.println("ArticleFragment onCreateView");
 		View v = inflater.inflate(R.layout.fragment_art, container, false);
 
+		this.inflater = inflater;
+
 		//find all views
+
+		//test
+		//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
+		//		"http://yuriykuchanov.odnako.org/", "Разработчик");
+		//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
+		//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
+		//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
+		//		this.curArtInfo = artInfoTEST;
+
+		this.findViews(v);
+
+		this.fillFielsdsWithInfo(v);
+
+		//setting size of Images and text
+		this.setSizeAndTheme();
+		//End of setting size of Images and text
+
+		//scroll to previous position
+		if (savedInstanceState != null && savedInstanceState.keySet().contains("ARTICLE_SCROLL_POSITION"))
+		{
+			final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+			if (position != null)
+			{
+				if (position != null)
+				{
+					scroll.post(new Runnable()
+					{
+						public void run()
+						{
+							scroll.scrollTo(position[0], position[1]);
+						}
+					});
+				}
+			}
+		}
+
+		return v;
+	}
+
+	private void findViews(View v)
+	{
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
 		//		this.artTextView.setText(R.string.version_history);
 
@@ -152,7 +198,7 @@ public class ArticleFragment extends Fragment
 		}
 		this.shareCard.setOnClickListener(new OnClickListener()
 		{
-			
+
 			@Override
 			public void onClick(View v)
 			{
@@ -187,48 +233,12 @@ public class ArticleFragment extends Fragment
 		this.allTegsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
 		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
-
-		//test
-		//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
-		//		"http://yuriykuchanov.odnako.org/", "Разработчик");
-		//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-		//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
-		//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
-		//		this.curArtInfo = artInfoTEST;
-
-		this.fillFielsdsWithInfo(v);
-		//end of find all views
-
-		//setting size of Images and text
-		this.setSizeAndTheme();
-		//End of setting size of Images and text
-
-		//scroll to previous position
-		if (savedInstanceState != null && savedInstanceState.keySet().contains("ARTICLE_SCROLL_POSITION"))
-		{
-			final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-			if (position != null)
-			{
-				if (position != null)
-				{
-					scroll.post(new Runnable()
-					{
-						public void run()
-						{
-							scroll.scrollTo(position[0], position[1]);
-						}
-					});
-				}
-			}
-		}
-
-		return v;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		System.out.println("ArticleFragment onViewCreated");
+		//		System.out.println("ArticleFragment onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 
 	}
@@ -464,7 +474,7 @@ public class ArticleFragment extends Fragment
 
 		}
 		//set allArsList OnClick
-		if(this.curArtInfo.authorBlogUrl.equals("empty") || this.curArtInfo.authorBlogUrl.equals(""))
+		if (this.curArtInfo.authorBlogUrl.equals("empty") || this.curArtInfo.authorBlogUrl.equals(""))
 		{
 			this.artAuthorArticlesIV.setOnClickListener(null);
 			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
@@ -483,7 +493,31 @@ public class ArticleFragment extends Fragment
 			});
 		}
 		
+		//set share panel Size&Theme
+		ImageView[] icons=new ImageView[6];
+		TextView[] shareQ=new TextView[6];
+		for(int i=0; i<6; i++)
+		{
+			icons[i]=(ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act, "art_share_"+String.valueOf(i)));
+			LayoutParams iconsParamsWithGravityCV = new LayoutParams(iconPxels, iconPxels);
+			iconsParamsWithGravityCV.gravity=Gravity.CENTER_VERTICAL;
+			icons[i].setLayoutParams(iconsParamsWithGravityCV);
+			shareQ[i]=(TextView) this.shareCard.findViewById(this.getIdAssignedByR(act, "art_share_quont_"+String.valueOf(i)));
+			shareQ[i].setTextSize(25*scaleFactor);
+		}
+
 	}//setSizeAndTheme
+	
+	public int getIdAssignedByR(Context pContext, String pIdString)
+	{
+	    // Get the Context's Resources and Package Name
+	    Resources resources = pContext.getResources();
+	    String packageName  = pContext.getPackageName();
+
+	    // Determine the result and return it
+	    int result = resources.getIdentifier(pIdString, "id", packageName);
+	    return result;
+	}
 
 	//set text, tegs, authoe etc
 	private void fillFielsdsWithInfo(View rootView)
@@ -521,25 +555,63 @@ public class ArticleFragment extends Fragment
 	@Override
 	public void onAttach(Activity activity)
 	{
-		System.out.println("ArticleFragment onAttach");
+		//		System.out.println("ArticleFragment onAttach");
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-		System.out.println("ArticleFragment onDetach");
+		//		System.out.println("ArticleFragment onDetach");
 		super.onDetach();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		System.out.println("ArticleFragment onSaveInstanceState");
+		//		System.out.println("ArticleFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
 		//save scrollView position
+		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
+
+		//save allArtsInfo
+		if (this.allArtsInfo != null)
+		{
+			for (int i = 0; i < this.allArtsInfo.size(); i++)
+			{
+				if (i < 10)
+				{
+					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+				else
+				{
+					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+			}
+		}
+		else
+		{
+			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
+		}
+		//save curArtInfo
+		if (this.curArtInfo != null)
+		{
+			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
+		}
+		else
+		{
+			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
+		}
+	}
+
+	public ArtInfo getCurArtInfo()
+	{
+		this.curArtInfo=new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
+		return this.curArtInfo;
 	}
 
 }

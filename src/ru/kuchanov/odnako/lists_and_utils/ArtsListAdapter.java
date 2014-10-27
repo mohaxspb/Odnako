@@ -265,7 +265,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.art_img.setLayoutParams(params);
 				holderMain.art_img.setPadding(5, 5, 5, 5);
 
-				ImageLoader imageLoader=UniversalImageLoader.get(act);
+				ImageLoader imageLoader = UniversalImageLoader.get(act);
 				imageLoader.displayImage(p.img_art, holderMain.art_img);
 				//end of ART_IMG
 
@@ -470,7 +470,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 	}
 
 	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
-	{		
+	{
 		if (!p.authorBlogUrl.equals("empty") && !p.authorBlogUrl.equals(""))
 		{
 			Toast.makeText(act, "show all AuthorsArticles!", Toast.LENGTH_SHORT).show();
@@ -563,8 +563,11 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
 
 		//fill CUR_ART_INFO var 
-//		ActivityMain.setCUR_ART_INFO(artInfo);
-		((ActivityMain)act).setCUR_ART_INFO(artInfo);
+		//		ActivityMain.setCUR_ART_INFO(artInfo);
+		((ActivityMain) act).setCUR_ART_INFO(artInfo);
+		ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
+		.findFragmentById(R.id.articles_list);
+		artsListFrag.setActivatedPosition(position);
 
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -572,38 +575,37 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		if (twoPane)
 		{
 			//light clicked card
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
-			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
+//			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
+//			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
 			artsListFrag.setActivatedPosition(position);
-			
-			
+
 		}
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
 			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
 			intent.putExtra("position", position);
-//			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
-			ArrayList<ArtInfo> allArtsInfo=((ActivityMain)act).getAllArtsInfo();
+			//			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
+			ArrayList<ArtInfo> allArtsInfo = ((ActivityMain) act).getAllArtsInfo();
 			if (allArtsInfo != null)
 			{
 				for (int i = 0; i < allArtsInfo.size(); i++)
 				{
 					if (i < 10)
 					{
-						intent.getExtras().putStringArray("allArtsInfo_0" + String.valueOf(i),
+						intent.putExtra("allArtsInfo_0" + String.valueOf(i),
 						allArtsInfo.get(i).getArtInfoAsStringArray());
 					}
 					else
 					{
-						intent.getExtras().putStringArray("allArtsInfo_" + String.valueOf(i),
+						intent.putExtra("allArtsInfo_" + String.valueOf(i),
 						allArtsInfo.get(i).getArtInfoAsStringArray());
 					}
 				}
 			}
 			else
 			{
-				System.out.println("ActivityArticle: onSaveInstanceState. this.allArtsInfo=null");
+				System.out.println("showArticle: ((ActivityMain)act).getAllArtsInfo()=null");
 			}
 			act.startActivity(intent);
 		}

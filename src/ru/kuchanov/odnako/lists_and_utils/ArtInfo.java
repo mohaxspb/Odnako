@@ -1,7 +1,10 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import android.os.Bundle;
 
 public class ArtInfo implements Comparable<ArtInfo>
 {
@@ -364,6 +367,40 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.titles = titles;
 
 			this.dates = dates;
+		}
+	}
+
+	public static void writeAllArtsInfoToBundle(Bundle b, ArrayList<ArtInfo> allArtsInfo, ArtInfo curArtInfo)
+	{
+		//save allArtsInfo
+		if (allArtsInfo != null)
+		{
+			for (int i = 0; i < allArtsInfo.size(); i++)
+			{
+				if (i < 10)
+				{
+					b.putStringArray("allArtsInfo_0" + String.valueOf(i), allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+				else
+				{
+					b.putStringArray("allArtsInfo_" + String.valueOf(i), allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+			}
+		}
+		else
+		{
+			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
+		}
+		//save curArtInfo
+		if (curArtInfo != null)
+		{
+			b.putStringArray("curArtInfo", curArtInfo.getArtInfoAsStringArray());
+		}
+		else
+		{
+			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
 		}
 	}
 

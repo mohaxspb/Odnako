@@ -23,8 +23,8 @@ import android.support.v7.app.ActionBarActivity;
 
 public class ActivityMain extends ActionBarActivity
 {
-	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
-	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
+//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
+//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
 	
 	public boolean twoPane;
 	SharedPreferences pref;
@@ -111,26 +111,26 @@ public class ActivityMain extends ActionBarActivity
 			{
 				if (i < 10)
 				{
-					outState.putStringArray("ALL_ARTS_INFO_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
 				else
 				{
-					outState.putStringArray("ALL_ARTS_INFO_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
 			}
 		}
 		else
 		{
-			System.out.println("ActivityMain: onSaveInstanceState. ActivityMain.ALL_ARTS_INFO=null");
+			System.out.println("ActivityMain: onSaveInstanceState. allArtsInfo=null");
 		}
 		//save curArtInfo
 		if (this.curArtInfo != null)
 		{
-			outState.putStringArray("CUR_ART_INFO", this.curArtInfo.getArtInfoAsStringArray());
+			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
 		}
 		else
 		{
-			System.out.println("ActivityMain: onSaveInstanceState. ActivityMain.CUR_ART_INFO=null");
+			System.out.println("ActivityMain: onSaveInstanceState. curArtInfo=null");
 		}
 	}
 
@@ -144,75 +144,41 @@ public class ActivityMain extends ActionBarActivity
 		Set<String> keySet = savedInstanceState.keySet();
 		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
 		Collections.sort(keySetSortedArrList);
-		if (keySet.contains("ALL_ARTS_INFO_00"))
+		if (keySet.contains("allArtsInfo_00"))
 		{
 			this.allArtsInfo = new ArrayList<ArtInfo>();
 			for (int i = 0; i < keySetSortedArrList.size(); i++)
 			{
 				String s = keySetSortedArrList.get(i);
-				if (s.startsWith("ALL_ARTS_INFO_"))
+				if (s.startsWith("allArtsInfo_"))
 				{
 					if (i < 10)
 					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_0" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_0" + String.valueOf(i))));
 					}
 					else
 					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("ALL_ARTS_INFO_" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_" + String.valueOf(i))));
 					}
 				}
 			}
 		}
 		else
 		{
-			System.out.println("ActivityMain: onRestoreInstanceState. ActivityMain.ALL_ARTS_INFO=null");
+			System.out.println("ActivityMain: onRestoreInstanceState. allArtsInfo=null");
 		}
 
 		//restore curArtInfo
-		if (keySet.contains("CUR_ART_INFO"))
+		if (keySet.contains("curArtInfo"))
 		{
-			this.curArtInfo = new ArtInfo(savedInstanceState.getStringArray("CUR_ART_INFO"));
+			this.curArtInfo = new ArtInfo(savedInstanceState.getStringArray("curArtInfo"));
 		}
 		else
 		{
-			System.out.println("ActivityMain: onRestoreInstanceState. ActivityMain.CUR_ART_INFO=null");
+			System.out.println("ActivityMain: onRestoreInstanceState. curArtInfo=null");
 		}
 	}
 
-//	/**
-//	 * @return the curArtInfo
-//	 */
-//	public static ArrayList<ArtInfo> getAllArtsInfo()
-//	{
-//		return allArtsInfo;
-//	}
-//
-//	/**
-//	 * @param curArtInfo
-//	 *            the curArtInfo to set
-//	 */
-//	public static void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
-//	{
-//		ActivityMain.allArtsInfo = allArtsInfo;
-//	}
-//
-//	/**
-//	 * @return the cUR_ARTS_INFO
-//	 */
-//	public static ArtInfo getCUR_ART_INFO()
-//	{
-//		return CUR_ART_INFO;
-//	}
-//
-//	/**
-//	 * @param cUR_ARTS_INFO
-//	 *            the cUR_ARTS_INFO to set
-//	 */
-//	public static void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
-//	{
-//		CUR_ART_INFO = cUR_ARTS_INFO;
-//	}
-	
 	/**
 	 * @return the curArtInfo
 	 */

@@ -13,9 +13,12 @@ import java.util.Set;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.lists_and_utils.ViewPagerAdapter;
 import ru.kuchanov.odnako.utils.AddAds;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 
 import com.google.android.gms.ads.AdView;
@@ -24,7 +27,9 @@ public class ActivityArticle extends ActionBarActivity
 {
 	AdView adView;
 
-//	ArticleFragment artFrag;
+	//	ArticleFragment artFrag;
+	ViewPager pager;
+	PagerAdapter pagerAdapter;
 
 	ArtInfo curArtInfo;
 	int position;/* position in all art arr; need to show next/previous arts */
@@ -36,6 +41,8 @@ public class ActivityArticle extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_article);
+		
+		
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
@@ -50,44 +57,62 @@ public class ActivityArticle extends ActionBarActivity
 		//all is null, so start request for info
 		else
 		{
+			// TODO
 			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
+		
+		this.pager=(ViewPager) this.findViewById(R.id.article_container);
+		System.out.println("this.allArtsInfo.size()): "+this.allArtsInfo.size());
+		this.pagerAdapter=new ViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this.curArtInfo, this.position);
+		this.pager.setAdapter(pagerAdapter);
+		this.pager.setCurrentItem(position, true);
 
 		//find (CREATE NEW ONE) fragment and send it some info from intent 
-		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article);
+//		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article_container);
+//
+//		ArticleFragment newArtFrag = new ArticleFragment();
+//
+//		Bundle bundle = new Bundle();
+//		bundle.putInt("position", this.position);
+//		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
+//		for (int i = 0; i < this.allArtsInfo.size(); i++)
+//		{
+//			if (i < 10)
+//			{
+//				bundle.putStringArray("allArtsInfo_0" + String.valueOf(i),
+//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
+//			}
+//			else
+//			{
+//				bundle.putStringArray("allArtsInfo_" + String.valueOf(i),
+//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
+//			}
+//		}
+//		// set Fragmentclass Arguments
+//		newArtFrag.setArguments(bundle);
+//
+//		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+//		//check if there was artFrag and it's not the same as new (compare its ArtInfo.url) and has not empty url
+//		if (curArtFrag != null && !curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)
+//		&& !curArtFrag.getCurArtInfo().url.equals("") && !curArtFrag.getCurArtInfo().url.equals("empty"))
+//		{
+//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url): "
+//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)));
+//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(''): "
+//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("")));
+//			System.out.println("!curArtFrag.getCurArtInfo().url.equals('empty'): "
+//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("empty")));
+//			transaction.addToBackStack(null);
+//			transaction.hide(curArtFrag);
+//			
+//		}
 //		if(curArtFrag==null)
 //		{
-//			this.artFrag = new ArticleFragment();
+//			System.out.println("curArtFrag==null");
+//			transaction.add(R.id.article_container, newArtFrag);
 //		}
-		ArticleFragment newArtFrag=new ArticleFragment();
-
-		Bundle bundle = new Bundle();
-		bundle.putInt("position", this.position);
-		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-		for (int i = 0; i < this.allArtsInfo.size(); i++)
-		{
-			if (i < 10)
-			{
-				bundle.putStringArray("allArtsInfo_0" + String.valueOf(i),
-				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-			}
-			else
-			{
-				bundle.putStringArray("allArtsInfo_" + String.valueOf(i),
-				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-			}
-		}
-		// set Fragmentclass Arguments
-		newArtFrag.setArguments(bundle);
-
-		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-		if(curArtFrag!=null)
-		{
-			transaction.addToBackStack(null);
-			transaction.hide(curArtFrag);
-		}
-		transaction.add(R.id.article_container, newArtFrag);
-		transaction.commit();
+//		
+//		transaction.commit();
 		//End of find fragment and send it some info from intent 
 
 		//adMob
