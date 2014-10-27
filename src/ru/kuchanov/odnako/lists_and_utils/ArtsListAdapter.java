@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
@@ -507,46 +509,65 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 	{
 		Toast.makeText(act, "comments!", Toast.LENGTH_SHORT).show();
 
+		//light clicked card
+		ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
+		.findFragmentById(R.id.articles_list);
+		artsListFrag.setActivatedPosition(position);
+
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 
-		System.out.println("twoPane: " + twoPane);
 		if (twoPane)
 		{
-			//light clicked card
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
-			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
-			artsListFrag.setActivatedPosition(position);
+			//			//light clicked card
+			//			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
+			//			.findFragmentById(R.id.articles_list);
+			//			artsListFrag.setActivatedPosition(position);
+			//
+			//			ArticleFragment artFrag = (ArticleFragment) act.getSupportFragmentManager().findFragmentById(
+			//			R.id.article_comments_container);
+			//
+			//			FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
+			//
+			//			if (!artFrag.isHidden())
+			//			{
+			//				transaction.addToBackStack(null);
+			//				transaction.hide(artFrag);
+			//			}
+			//			//check if there is commFrag
+			//			CommentsFragment commFrag = (CommentsFragment) act.getSupportFragmentManager().findFragmentById(
+			//			R.id.article_comments_container);
+			//			if (commFrag != null)
+			//			{
+			//				System.out.println("commFrag!=null");
+			//				transaction.addToBackStack(null);
+			//				transaction.hide(commFrag);
+			//			}
+			//			else
+			//			{
+			//				System.out.println("commFrag=null");
+			//				//do nothing
+			//			}
+			//			transaction.add(R.id.article_comments_container, commFrag);
+			//
+			//			//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
+			//			// Commit the transaction
+			//			transaction.commit();
 
-			ArticleFragment artFrag = (ArticleFragment) act.getSupportFragmentManager().findFragmentById(R.id.article);
-
-			FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
-
-			if (!artFrag.isHidden())
+			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
+			if (pager.getAdapter().getClass().getSimpleName().equals(CommentsViewPagerAdapter.class.getSimpleName()))
 			{
-				transaction.addToBackStack(null);
-				transaction.hide(artFrag);
+				pager.setCurrentItem(position, true);
 			}
-			//check if there is commFrag
-			CommentsFragment commFrag = (CommentsFragment) act.getSupportFragmentManager().findFragmentById(
-			R.id.article_comments_container);
-			if (commFrag != null)
-			{
-				System.out.println("commFrag!=null");
-				transaction.addToBackStack(null);
-				transaction.hide(commFrag);
-			}
+			//so it's comments adapter and need to switch to artAdapter
 			else
 			{
-				System.out.println("commFrag=null");
-				//do nothing
+				PagerAdapter pagerAdapter = new CommentsViewPagerAdapter(act.getSupportFragmentManager(),
+				CommentInfo.getDefaultAllArtsCommentsInfo(30, 10), act);
+				pager.setAdapter(pagerAdapter);
+				pager.setCurrentItem(position, true);
 			}
-			transaction.add(R.id.article_comments_container, commFrag);
-
-			//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
-			// Commit the transaction
-			transaction.commit();
 
 		}
 		else
@@ -554,6 +575,27 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			Intent intent = new Intent(act, ActivityComments.class);
 			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
 			intent.putExtra("position", position);
+			ArrayList<ArtInfo> allArtsInfo = ((ActivityMain) act).getAllArtsInfo();
+			if (allArtsInfo != null)
+			{
+				for (int i = 0; i < allArtsInfo.size(); i++)
+				{
+					if (i < 10)
+					{
+						intent.putExtra("allArtsInfo_0" + String.valueOf(i),
+						allArtsInfo.get(i).getArtInfoAsStringArray());
+					}
+					else
+					{
+						intent.putExtra("allArtsInfo_" + String.valueOf(i),
+						allArtsInfo.get(i).getArtInfoAsStringArray());
+					}
+				}
+			}
+			else
+			{
+				System.out.println("showComments: ((ActivityMain)act).getAllArtsInfo()=null");
+			}
 			act.startActivity(intent);
 		}
 	}
@@ -563,7 +605,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
 
 		//fill CUR_ART_INFO var 
-		//		ActivityMain.setCUR_ART_INFO(artInfo);
 		((ActivityMain) act).setCUR_ART_INFO(artInfo);
 		ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
 		.findFragmentById(R.id.articles_list);
@@ -574,10 +615,19 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		if (twoPane)
 		{
-			//light clicked card
-//			ArticlesListFragment artsListFrag = (ArticlesListFragment) act
-//			.getSupportFragmentManager().findFragmentById(R.id.articles_list);
-			artsListFrag.setActivatedPosition(position);
+			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
+			if (pager.getAdapter().getClass().getSimpleName().equals(ArticleViewPagerAdapter.class.getSimpleName()))
+			{
+				pager.setCurrentItem(position, true);
+			}
+			//so it's comments adapter and need to switch to artAdapter
+			else
+			{
+				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
+				((ActivityMain) act).getAllArtsInfo(), act);
+				pager.setAdapter(pagerAdapter);
+				pager.setCurrentItem(position, true);
+			}
 
 		}
 		else
@@ -585,7 +635,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			Intent intent = new Intent(act, ActivityArticle.class);
 			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
 			intent.putExtra("position", position);
-			//			ArrayList<ArtInfo> allArtsInfo=ActivityMain.getAllArtsInfo();
 			ArrayList<ArtInfo> allArtsInfo = ((ActivityMain) act).getAllArtsInfo();
 			if (allArtsInfo != null)
 			{

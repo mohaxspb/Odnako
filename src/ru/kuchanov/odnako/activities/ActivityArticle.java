@@ -11,12 +11,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -62,10 +61,10 @@ public class ActivityArticle extends ActionBarActivity
 		}
 		
 		this.pager=(ViewPager) this.findViewById(R.id.article_container);
-		System.out.println("this.allArtsInfo.size()): "+this.allArtsInfo.size());
-		this.pagerAdapter=new ViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this.curArtInfo, this.position);
+		this.pagerAdapter=new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(position, true);
+		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//find (CREATE NEW ONE) fragment and send it some info from intent 
 //		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article_container);

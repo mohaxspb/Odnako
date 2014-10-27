@@ -39,7 +39,16 @@
                 tools:context="ru.kuchanov.odnako.activities.ActivityMain"
                 tools:layout="@android:layout/list_content" />
 
+            <android.support.v4.view.ViewPager
+                android:id="@+id/article_comments_container"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="2" >
+            </android.support.v4.view.ViewPager>
 
+            <!--
             <FrameLayout
                 android:id="@+id/article_comments_container"
                 android:layout_width="0dip"
@@ -56,17 +65,7 @@
                     tools:context="ru.kuchanov.odnako.activities.ActivityMain" />
                     
             </FrameLayout>
-
-
-            <!-- <fragment
-                android:id="@+id/article"
-                android:name="ru.kuchanov.odnako.fragments.ArticleFragment"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="2"
-                tools:context="ru.kuchanov.odnako.activities.ActivityMain" /> -->
+            -->
         </LinearLayout>
     </RelativeLayout>
 

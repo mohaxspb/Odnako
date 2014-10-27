@@ -32,7 +32,8 @@ public class CommentsFragment extends Fragment
 
 	ArtInfo curArtInfo;
 	
-	private ArrayList<CommentInfo> artCommentsInfoList;
+	private ArrayList<CommentInfo> curArtCommentsInfoList;
+	private ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo;
 	String[] defaultCommInfo;
 
 	private ListView commentsListView;
@@ -66,7 +67,7 @@ public class CommentsFragment extends Fragment
 		//end of find all views
 
 		//fill Arraylist with artsInfo
-		this.artCommentsInfoList= new ArrayList<CommentInfo>();
+		this.curArtCommentsInfoList= new ArrayList<CommentInfo>();
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
@@ -85,16 +86,16 @@ public class CommentsFragment extends Fragment
 			this.defaultCommInfo[11] = "5";
 			CommentInfo commentInfo=new CommentInfo(this.defaultCommInfo);
 			
-			this.artCommentsInfoList.add(commentInfo);
+			this.curArtCommentsInfoList.add(commentInfo);
 		}
 		
 		CommentInfo artInfoTEST=new CommentInfo("Юрий", "Тестовы коммент", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "1 сентября 1939", "Saint-Petersburg", "100", "0", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "100", "1000", "0", "5");
 		
-		artCommentsInfoList.set(1, artInfoTEST);
+		curArtCommentsInfoList.set(1, artInfoTEST);
 		//sample data now
 		
 
-		CommentsListAdapter commentsListAdapter = new CommentsListAdapter(this.act, R.layout.comment_card_view, this.artCommentsInfoList, this.commentsListView);
+		CommentsListAdapter commentsListAdapter = new CommentsListAdapter(this.act, R.layout.comment_card_view, this.curArtCommentsInfoList, this.commentsListView);
 
 		this.commentsListView.setAdapter(commentsListAdapter);
 		///////

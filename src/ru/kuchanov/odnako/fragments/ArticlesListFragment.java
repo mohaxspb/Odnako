@@ -161,6 +161,11 @@ public class ArticlesListFragment extends Fragment
 		mActivatedPosition = position;
 	}
 	
+	public void scrollToActivatedPosition()
+	{
+		this.artsList.smoothScrollToPosition(mActivatedPosition);
+	}
+	
 	public int getMyActivatedPosition()
 	{
 		return this.mActivatedPosition;

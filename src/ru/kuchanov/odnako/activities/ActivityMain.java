@@ -13,13 +13,19 @@ import java.util.Set;
 import com.google.android.gms.ads.AdView;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.ListView;
 
 public class ActivityMain extends ActionBarActivity
 {
@@ -29,9 +35,14 @@ public class ActivityMain extends ActionBarActivity
 	public boolean twoPane;
 	SharedPreferences pref;
 	AdView adView;
+	
+	ViewPager pager;
+	PagerAdapter pagerAdapter;
+	
 
 	private ArrayList<ArtInfo> allArtsInfo;
 	private ArtInfo curArtInfo;
+	int position;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -53,7 +64,7 @@ public class ActivityMain extends ActionBarActivity
 		//end of Set unreaded num of arts to zero
 
 		//check if there is two fragments. If so, set flag (twoPane) to true
-		if (findViewById(R.id.article) != null)
+		if (findViewById(R.id.article_comments_container) != null)
 		{
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
@@ -68,6 +79,20 @@ public class ActivityMain extends ActionBarActivity
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
 			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list)).setActivateOnItemClick(true);
+//			ArticleFragment artFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(
+//			R.id.article_comments_container);
+			this.pager=(ViewPager) this.findViewById(R.id.article_comments_container);
+			
+			//get position from listFrag
+			this.position=((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list)).getMyActivatedPosition();
+//			if(this.position==ListView.INVALID_POSITION)
+//			{
+//				this.position=0;
+//			}
+			this.pagerAdapter=new ArticleViewPagerAdapter(this.getSupportFragmentManager(), allArtsInfo, this);
+			this.pager.setAdapter(pagerAdapter);
+			this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
+			this.pager.setCurrentItem(position, true);
 		}
 
 		//adMob
@@ -105,33 +130,34 @@ public class ActivityMain extends ActionBarActivity
 		System.out.println("ActivityMain: onSaveInstanceState");
 
 		//save allArtsInfo
-		if (this.allArtsInfo != null)
-		{
-			for (int i = 0; i < this.allArtsInfo.size(); i++)
-			{
-				if (i < 10)
-				{
-					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-				else
-				{
-					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-			}
-		}
-		else
-		{
-			System.out.println("ActivityMain: onSaveInstanceState. allArtsInfo=null");
-		}
-		//save curArtInfo
-		if (this.curArtInfo != null)
-		{
-			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-		}
-		else
-		{
-			System.out.println("ActivityMain: onSaveInstanceState. curArtInfo=null");
-		}
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+//		if (this.allArtsInfo != null)
+//		{
+//			for (int i = 0; i < this.allArtsInfo.size(); i++)
+//			{
+//				if (i < 10)
+//				{
+//					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+//				}
+//				else
+//				{
+//					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+//				}
+//			}
+//		}
+//		else
+//		{
+//			System.out.println("ActivityMain: onSaveInstanceState. allArtsInfo=null");
+//		}
+//		//save curArtInfo
+//		if (this.curArtInfo != null)
+//		{
+//			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
+//		}
+//		else
+//		{
+//			System.out.println("ActivityMain: onSaveInstanceState. curArtInfo=null");
+//		}
 	}
 
 	@Override

@@ -573,7 +573,7 @@ public class ArticleFragment extends Fragment
 		super.onSaveInstanceState(outState);
 
 		//save scrollView position
-		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
+//		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		//save allArtsInfo

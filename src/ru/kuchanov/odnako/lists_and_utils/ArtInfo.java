@@ -292,7 +292,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("alsoToRead (to_read_main) var is empty!");
+//			System.out.println("alsoToRead (to_read_main) var is empty!");
 			alsoToRead = null;
 		}
 
@@ -320,7 +320,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("alsoToRead (to_read_more) var is empty!");
+//			System.out.println("alsoToRead (to_read_more) var is empty!");
 			alsoToRead = null;
 		}
 
