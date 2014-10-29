@@ -72,7 +72,7 @@ public class ArticlesListFragment extends Fragment
 		{
 			ArtInfo artInfo=new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i));
 			artInfo.updateArtInfoFromRSS("preview_"+String.valueOf(i), "date_"+String.valueOf(i));
-			artInfo.updateArtInfoFromARTICLE(i, i, "art_text_"+String.valueOf(i), "author_description_"+String.valueOf(i), "tegs_main_"+String.valueOf(i), "tegs_all_"+String.valueOf(i), String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!"+String.valueOf(i)+"!!!!", "to_read_main_"+String.valueOf(i), "to_read_more_"+String.valueOf(i), "empty");
+			artInfo.updateArtInfoFromARTICLE(i, i, "art_text_"+String.valueOf(i), "author_description_"+String.valueOf(i), "tegs_main_"+String.valueOf(i), "tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! ", String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! ", "to_read_main_"+String.valueOf(i), "to_read_more_"+String.valueOf(i), "empty");
 			allArtsInfo.add(artInfo);
 		}
 		
@@ -149,6 +149,7 @@ public class ArticlesListFragment extends Fragment
 
 	public void setActivatedPosition(int position)
 	{
+		System.out.println("setActivatedPosition(int position: "+position);
 		if (position == ListView.INVALID_POSITION)
 		{
 			artsList.setItemChecked(mActivatedPosition, false);

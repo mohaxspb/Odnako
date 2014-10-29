@@ -13,7 +13,6 @@ import java.util.Set;
 import com.google.android.gms.ads.AdView;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
@@ -29,16 +28,15 @@ import android.widget.ListView;
 
 public class ActivityMain extends ActionBarActivity
 {
-//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
-//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
-	
+	//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
+	//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
+
 	public boolean twoPane;
 	SharedPreferences pref;
 	AdView adView;
-	
+
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
-	
 
 	private ArrayList<ArtInfo> allArtsInfo;
 	private ArtInfo curArtInfo;
@@ -78,21 +76,37 @@ public class ActivityMain extends ActionBarActivity
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list)).setActivateOnItemClick(true);
-//			ArticleFragment artFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(
-//			R.id.article_comments_container);
-			this.pager=(ViewPager) this.findViewById(R.id.article_comments_container);
-			
+			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list))
+			.setActivateOnItemClick(true);
+			//
+			//
+			this.pager = (ViewPager) this.findViewById(R.id.article_comments_container);
+
 			//get position from listFrag
-			this.position=((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list)).getMyActivatedPosition();
-//			if(this.position==ListView.INVALID_POSITION)
-//			{
-//				this.position=0;
-//			}
-			this.pagerAdapter=new ArticleViewPagerAdapter(this.getSupportFragmentManager(), allArtsInfo, this);
+			this.position = ((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list))
+			.getMyActivatedPosition();
+			if(this.position==ListView.INVALID_POSITION)
+			{
+				this.position=0;
+			}
+			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list))
+			.setActivatedPosition(position);
+			this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), allArtsInfo, this);
 			this.pager.setAdapter(pagerAdapter);
 			this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 			this.pager.setCurrentItem(position, true);
+			this.pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+			{
+				@Override
+				public void onPageSelected(int position)
+				{
+					ArticlesListFragment artsListFrag = (ArticlesListFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.articles_list);
+					//setActivPosition to curItem of pager
+					artsListFrag.setActivatedPosition(position);
+					artsListFrag.scrollToActivatedPosition();
+				}
+			});
 		}
 
 		//adMob
@@ -101,7 +115,7 @@ public class ActivityMain extends ActionBarActivity
 		addAds.addAd();
 		//end of adMob
 	}
-	
+
 	@Override
 	public void onPause()
 	{
@@ -131,33 +145,33 @@ public class ActivityMain extends ActionBarActivity
 
 		//save allArtsInfo
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
-//		if (this.allArtsInfo != null)
-//		{
-//			for (int i = 0; i < this.allArtsInfo.size(); i++)
-//			{
-//				if (i < 10)
-//				{
-//					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
-//				}
-//				else
-//				{
-//					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
-//				}
-//			}
-//		}
-//		else
-//		{
-//			System.out.println("ActivityMain: onSaveInstanceState. allArtsInfo=null");
-//		}
-//		//save curArtInfo
-//		if (this.curArtInfo != null)
-//		{
-//			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-//		}
-//		else
-//		{
-//			System.out.println("ActivityMain: onSaveInstanceState. curArtInfo=null");
-//		}
+		//		if (this.allArtsInfo != null)
+		//		{
+		//			for (int i = 0; i < this.allArtsInfo.size(); i++)
+		//			{
+		//				if (i < 10)
+		//				{
+		//					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+		//				}
+		//				else
+		//				{
+		//					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i).getArtInfoAsStringArray());
+		//				}
+		//			}
+		//		}
+		//		else
+		//		{
+		//			System.out.println("ActivityMain: onSaveInstanceState. allArtsInfo=null");
+		//		}
+		//		//save curArtInfo
+		//		if (this.curArtInfo != null)
+		//		{
+		//			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
+		//		}
+		//		else
+		//		{
+		//			System.out.println("ActivityMain: onSaveInstanceState. curArtInfo=null");
+		//		}
 	}
 
 	@Override
@@ -180,11 +194,13 @@ public class ActivityMain extends ActionBarActivity
 				{
 					if (i < 10)
 					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_0" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_0"
+						+ String.valueOf(i))));
 					}
 					else
 					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_" + String.valueOf(i))));
+						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_"
+						+ String.valueOf(i))));
 					}
 				}
 			}

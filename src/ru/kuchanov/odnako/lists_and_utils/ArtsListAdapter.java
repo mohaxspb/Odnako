@@ -9,9 +9,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.ArticleFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
-import ru.kuchanov.odnako.fragments.CommentsFragment;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
@@ -20,7 +18,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -57,6 +54,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 	ArrayList<ArtInfo> orig;
 	SharedPreferences pref;
 
+	boolean twoPane;
+
 	public ArtsListAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> artsInfo,
 	ListView artsListView)
 	{
@@ -66,6 +65,9 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.artsListView = artsListView;
+
+		pref = PreferenceManager.getDefaultSharedPreferences(act);
+		twoPane = pref.getBoolean("twoPane", false);
 	}
 
 	@SuppressLint("DefaultLocale")
@@ -200,7 +202,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 										ArtsListAdapter.shareUrl(p.url, act);
 										return true;
 									case R.id.show_comments:
-										ArtsListAdapter.showComments(p, position, act);
+										ArtsListAdapter.showComments(artsInfo, position, act);
 										return true;
 									default:
 										return false;
@@ -236,11 +238,9 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showArticle(p, position, act);
+						ArtsListAdapter.showArticle(artsInfo, position, act);
 					}
 				});
-
-				pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 				String scaleFactorString = pref.getString("scale", "1");
 				float scaleFactor = Float.valueOf(scaleFactorString);
@@ -253,7 +253,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showArticle(p, position, act);
+						ArtsListAdapter.showArticle(artsInfo, position, act);
 					}
 				});
 
@@ -375,7 +375,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showComments(p, position, act);
+						ArtsListAdapter.showComments(artsInfo, position, act);
 					}
 				});
 				holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
@@ -384,7 +384,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showComments(p, position, act);
+						ArtsListAdapter.showComments(artsInfo, position, act);
 					}
 				});
 				////end of comments btn
@@ -505,14 +505,17 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
 	}
 
-	public static void showComments(ArtInfo artInfo, int position, ActionBarActivity act)
+	public static void showComments(ArrayList<ArtInfo> allArtsInfo, int position, ActionBarActivity act)
 	{
 		Toast.makeText(act, "comments!", Toast.LENGTH_SHORT).show();
 
-		//light clicked card
-		ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
-		.findFragmentById(R.id.articles_list);
-		artsListFrag.setActivatedPosition(position);
+		//light clicked card if we can find frag from @param act 
+		if (act.getClass().getSimpleName().equals("ActivityMain"))
+		{
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
+			.findFragmentById(R.id.articles_list);
+			artsListFrag.setActivatedPosition(position);
+		}
 
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -520,40 +523,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 		if (twoPane)
 		{
-			//			//light clicked card
-			//			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
-			//			.findFragmentById(R.id.articles_list);
-			//			artsListFrag.setActivatedPosition(position);
-			//
-			//			ArticleFragment artFrag = (ArticleFragment) act.getSupportFragmentManager().findFragmentById(
-			//			R.id.article_comments_container);
-			//
-			//			FragmentTransaction transaction = act.getSupportFragmentManager().beginTransaction();
-			//
-			//			if (!artFrag.isHidden())
-			//			{
-			//				transaction.addToBackStack(null);
-			//				transaction.hide(artFrag);
-			//			}
-			//			//check if there is commFrag
-			//			CommentsFragment commFrag = (CommentsFragment) act.getSupportFragmentManager().findFragmentById(
-			//			R.id.article_comments_container);
-			//			if (commFrag != null)
-			//			{
-			//				System.out.println("commFrag!=null");
-			//				transaction.addToBackStack(null);
-			//				transaction.hide(commFrag);
-			//			}
-			//			else
-			//			{
-			//				System.out.println("commFrag=null");
-			//				//do nothing
-			//			}
-			//			transaction.add(R.id.article_comments_container, commFrag);
-			//
-			//			//            System.out.println("shownId: "+shownId+"/ count: "+fr.getChildCount());
-			//			// Commit the transaction
-			//			transaction.commit();
 
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
 			if (pager.getAdapter().getClass().getSimpleName().equals(CommentsViewPagerAdapter.class.getSimpleName()))
@@ -564,7 +533,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			else
 			{
 				PagerAdapter pagerAdapter = new CommentsViewPagerAdapter(act.getSupportFragmentManager(),
-				CommentInfo.getDefaultAllArtsCommentsInfo(30, 10), act);
+				allArtsInfo, CommentInfo.getDefaultAllArtsCommentsInfo(30, 10), act);
 				pager.setAdapter(pagerAdapter);
 				pager.setCurrentItem(position, true);
 			}
@@ -573,48 +542,40 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityComments.class);
-			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
+			intent.putExtra("curArtInfo", allArtsInfo.get(position).getArtInfoAsStringArray());
 			intent.putExtra("position", position);
-			ArrayList<ArtInfo> allArtsInfo = ((ActivityMain) act).getAllArtsInfo();
-			if (allArtsInfo != null)
+			for (int i = 0; i < allArtsInfo.size(); i++)
 			{
-				for (int i = 0; i < allArtsInfo.size(); i++)
+				if (i < 10)
 				{
-					if (i < 10)
-					{
-						intent.putExtra("allArtsInfo_0" + String.valueOf(i),
-						allArtsInfo.get(i).getArtInfoAsStringArray());
-					}
-					else
-					{
-						intent.putExtra("allArtsInfo_" + String.valueOf(i),
-						allArtsInfo.get(i).getArtInfoAsStringArray());
-					}
+					intent.putExtra("allArtsInfo_0" + String.valueOf(i),
+					allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
-			}
-			else
-			{
-				System.out.println("showComments: ((ActivityMain)act).getAllArtsInfo()=null");
+				else
+				{
+					intent.putExtra("allArtsInfo_" + String.valueOf(i),
+					allArtsInfo.get(i).getArtInfoAsStringArray());
+				}
 			}
 			act.startActivity(intent);
 		}
 	}
 
-	protected static void showArticle(ArtInfo artInfo, int position, ActionBarActivity act)
+	public static void showArticle(ArrayList<ArtInfo> allArtsInfo, int position, ActionBarActivity act)
 	{
 		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
 
 		//fill CUR_ART_INFO var 
-		((ActivityMain) act).setCUR_ART_INFO(artInfo);
-		ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
-		.findFragmentById(R.id.articles_list);
-		artsListFrag.setActivatedPosition(position);
+		//		((ActivityMain) act).setCUR_ART_INFO(artInfo);
 
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		if (twoPane)
 		{
+			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
+			.findFragmentById(R.id.articles_list);
+			artsListFrag.setActivatedPosition(position);
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
 			if (pager.getAdapter().getClass().getSimpleName().equals(ArticleViewPagerAdapter.class.getSimpleName()))
 			{
@@ -633,28 +594,20 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
-			intent.putExtra("curArtInfo", artInfo.getArtInfoAsStringArray());
+			intent.putExtra("curArtInfo", allArtsInfo.get(position).getArtInfoAsStringArray());
 			intent.putExtra("position", position);
-			ArrayList<ArtInfo> allArtsInfo = ((ActivityMain) act).getAllArtsInfo();
-			if (allArtsInfo != null)
+			for (int i = 0; i < allArtsInfo.size(); i++)
 			{
-				for (int i = 0; i < allArtsInfo.size(); i++)
+				if (i < 10)
 				{
-					if (i < 10)
-					{
-						intent.putExtra("allArtsInfo_0" + String.valueOf(i),
-						allArtsInfo.get(i).getArtInfoAsStringArray());
-					}
-					else
-					{
-						intent.putExtra("allArtsInfo_" + String.valueOf(i),
-						allArtsInfo.get(i).getArtInfoAsStringArray());
-					}
+					intent.putExtra("allArtsInfo_0" + String.valueOf(i),
+					allArtsInfo.get(i).getArtInfoAsStringArray());
 				}
-			}
-			else
-			{
-				System.out.println("showArticle: ((ActivityMain)act).getAllArtsInfo()=null");
+				else
+				{
+					intent.putExtra("allArtsInfo_" + String.valueOf(i),
+					allArtsInfo.get(i).getArtInfoAsStringArray());
+				}
 			}
 			act.startActivity(intent);
 		}
@@ -665,7 +618,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		TextView title;
 		TextView author_name;
 		ImageView art_img;
-		//		CardView card_img;
 		ImageView save;
 		ImageView read;
 		ImageView comms;
@@ -677,15 +629,14 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		ImageView settings;
 		ViewGroup top_lin_lay;
 
-		ArticleHolder(TextView title, TextView author, /* CardView card_img, */ImageView img,
-		ImageView save, ImageView read, ImageView comms, ImageView share, TextView num_of_comms,
-		TextView num_of_shares, TextView date, TextView preview, ImageView settings,
+		ArticleHolder(TextView title, TextView author, ImageView img, ImageView save, ImageView read, ImageView comms,
+		ImageView share, TextView num_of_comms, TextView num_of_shares, TextView date, TextView preview,
+		ImageView settings,
 		ViewGroup top_lin_lay)
 		{
 			this.title = title;
 			this.author_name = author;
 			this.art_img = img;
-			//			this.card_img=card_img;
 			this.save = save;
 			this.read = read;
 			this.comms = comms;
@@ -698,23 +649,4 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 			this.top_lin_lay = top_lin_lay;
 		}
 	}
-
-	//	public static Fragment getTopVisibleFragment(ViewGroup container, ActionBarActivity act)
-	//	{
-	//		Fragment frag=null;
-	//		int fragStackLenght;
-	//		int topFragId;
-	//		
-	//		fragStackLenght=act.getSupportFragmentManager().getBackStackEntryCount();
-	//		System.out.println("fragStackLenght: "+fragStackLenght);
-	//		fragStackLenght=container.getChildCount();
-	//		System.out.println("fragStackLenght: "+fragStackLenght);
-	//		
-	//		topFragId=container.getChildAt(container.getChildCount()-1).getId();
-	//		
-	//		frag=act.getSupportFragmentManager().findFragmentById(topFragId);
-	//		
-	//		
-	//		return frag;
-	//	}
 }

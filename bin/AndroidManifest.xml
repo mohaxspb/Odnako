@@ -107,7 +107,7 @@
             android:label="@string/check_new" />
 
         <receiver
-            android:name="ru.kuchanov.odnako.onboot.BootBroadReciver"
+            android:name="ru.kuchanov.odnako.recivers.BootBroadReciver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>

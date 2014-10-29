@@ -26,12 +26,11 @@ public class ActivityArticle extends ActionBarActivity
 {
 	AdView adView;
 
-	//	ArticleFragment artFrag;
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
 	ArtInfo curArtInfo;
-	int position;/* position in all art arr; need to show next/previous arts */
+	int position;
 	ArrayList<ArtInfo> allArtsInfo;
 
 	protected void onCreate(Bundle savedInstanceState)
@@ -149,36 +148,8 @@ public class ActivityArticle extends ActionBarActivity
 		System.out.println("ActivityArticle: onSaveInstanceState");
 
 		//save allArtsInfo
-		if (this.allArtsInfo != null)
-		{
-			for (int i = 0; i < this.allArtsInfo.size(); i++)
-			{
-				if (i < 10)
-				{
-					outState.putStringArray("allArtsInfo_0" + String.valueOf(i),
-					this.allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-				else
-				{
-					outState.putStringArray("allArtsInfo_" + String.valueOf(i),
-					this.allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-			}
-		}
-		else
-		{
-			System.out.println("ActivityArticle: onSaveInstanceState. this.allArtsInfo=null");
-		}
-		//save curArtInfo
-		if (this.curArtInfo != null)
-		{
-			outState.putStringArray("curArtInfo",
-			this.curArtInfo.getArtInfoAsStringArray());
-		}
-		else
-		{
-			System.out.println("ActivityArticle: onSaveInstanceState. this.curArtInfo=null");
-		}
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		
 	}
 
 	@Override
@@ -195,17 +166,17 @@ public class ActivityArticle extends ActionBarActivity
 	{
 		System.out.println("ActivityArticle onBackPressed");
 		//check if there is no fragments in stack, so we need to finish Activity, not only fragment
-		System.out.println("this.getSupportFragmentManager().getBackStackEntryCount(): "
-		+ this.getSupportFragmentManager().getBackStackEntryCount());
-		if (this.getSupportFragmentManager().getBackStackEntryCount() == 0)
-		{
-			super.onBackPressed();
-			this.finish();
-		}
-		else
-		{
-			super.onBackPressed();
-		}
+//		System.out.println("this.getSupportFragmentManager().getBackStackEntryCount(): "
+//		+ this.getSupportFragmentManager().getBackStackEntryCount());
+//		if (this.getSupportFragmentManager().getBackStackEntryCount() == 0)
+//		{
+//			super.onBackPressed();
+//			this.finish();
+//		}
+//		else
+//		{
+//			super.onBackPressed();
+//		}
 
 	}
 

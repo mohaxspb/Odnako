@@ -8,9 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.ArticleFragment;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -41,18 +39,11 @@ public class ArticleViewPagerAdapter extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		// TODO setposition in List
-		System.out.println("ArtViewPagerAdapter position: "+position);
 		ArticleFragment artFrag = new ArticleFragment();
 		Bundle b = new Bundle();
 		ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, this.allArtsInfo.get(position));
 		b.putInt("position", position);
 		artFrag.setArguments(b);
-		
-		ArticlesListFragment artsListFrag = (ArticlesListFragment) this.act.getSupportFragmentManager()
-		.findFragmentById(R.id.articles_list);
-		artsListFrag.setActivatedPosition(position-1);
-		artsListFrag.scrollToActivatedPosition();
 
 		return artFrag;
 	}
@@ -60,7 +51,6 @@ public class ArticleViewPagerAdapter extends FragmentStatePagerAdapter
 	@Override
 	public int getCount()
 	{
-		// TODO Auto-generated method stub
 		return this.allArtsInfo.size();
 	}
 

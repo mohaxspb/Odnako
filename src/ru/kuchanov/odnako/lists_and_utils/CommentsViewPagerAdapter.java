@@ -8,8 +8,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.fragments.CommentsFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,16 +20,19 @@ import android.support.v7.app.ActionBarActivity;
 public class CommentsViewPagerAdapter extends FragmentStatePagerAdapter
 {
 	ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo;
+	
+	ArrayList<ArtInfo> allArtsInfo;
 
 	ActionBarActivity act;
 	SharedPreferences pref;
 	boolean twoPane;
 
-	public CommentsViewPagerAdapter(FragmentManager fm, ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo,
+	public CommentsViewPagerAdapter(FragmentManager fm, ArrayList<ArtInfo> allArtsInfo, ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo,
 	ActionBarActivity act)
 	{
 		super(fm);
 		this.allArtsCommentsInfo = allArtsCommentsInfo;
+		this.allArtsInfo=allArtsInfo;
 		this.act = act;
 
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -43,14 +44,10 @@ public class CommentsViewPagerAdapter extends FragmentStatePagerAdapter
 	{
 		// TODO setposition in List
 		CommentsFragment commrag = new CommentsFragment();
-		//		Bundle b = new Bundle();
-		//		ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, this.allArtsInfo.get(position));
-		//		b.putInt("position", position);
-		//		artFrag.setArguments(b);
-
-		ArticlesListFragment artsListFrag = (ArticlesListFragment) this.act.getSupportFragmentManager()
-		.findFragmentById(R.id.articles_list);
-		artsListFrag.setActivatedPosition(position);
+		Bundle b = new Bundle();
+		ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, this.allArtsInfo.get(position));
+		b.putInt("position", position);
+		commrag.setArguments(b);
 
 		return commrag;
 	}

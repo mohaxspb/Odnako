@@ -115,6 +115,7 @@ public class ArticleFragment extends Fragment
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
+		
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -186,7 +187,13 @@ public class ArticleFragment extends Fragment
 		//inflate bottom panels
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 		int width = displayMetrics.widthPixels;
-		if (width < 800)
+		int minWidth=800;
+//		if(twoPane) we must set width to width/4*3 
+		if(twoPane)
+		{
+			width=displayMetrics.widthPixels/3*2;
+		}
+		if (width < minWidth)
 		{
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);
@@ -215,17 +222,7 @@ public class ArticleFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				if (twoPane)
-				{
-					ArticlesListFragment atsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
-					.findFragmentById(R.id.articles_list);
-
-					ArtsListAdapter.showComments(curArtInfo, atsListFrag.getMyActivatedPosition(), act);
-				}
-				else
-				{
-					ArtsListAdapter.showComments(curArtInfo, -1, act);
-				}
+				ArtsListAdapter.showComments(allArtsInfo, position, act);
 			}
 		});
 		this.bottomPanel.addView(this.commentsBottomBtn);
@@ -296,7 +293,7 @@ public class ArticleFragment extends Fragment
 					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
 				}
 				//plus 10*2 (2xpaddings of each tag
-				curLinChildrenWidth += curLinLay.getChildCount() * 10;
+				curLinChildrenWidth += curLinLay.getChildCount() * 10*2;
 				if (i == 0)
 				{
 					curLinLay.getChildAt(1).measure(0, 0);
@@ -492,31 +489,33 @@ public class ArticleFragment extends Fragment
 				}
 			});
 		}
-		
+
 		//set share panel Size&Theme
-		ImageView[] icons=new ImageView[6];
-		TextView[] shareQ=new TextView[6];
-		for(int i=0; i<6; i++)
+		ImageView[] icons = new ImageView[6];
+		TextView[] shareQ = new TextView[6];
+		for (int i = 0; i < 6; i++)
 		{
-			icons[i]=(ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act, "art_share_"+String.valueOf(i)));
+			icons[i] = (ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act,
+			"art_share_" + String.valueOf(i)));
 			LayoutParams iconsParamsWithGravityCV = new LayoutParams(iconPxels, iconPxels);
-			iconsParamsWithGravityCV.gravity=Gravity.CENTER_VERTICAL;
+			iconsParamsWithGravityCV.gravity = Gravity.CENTER_VERTICAL;
 			icons[i].setLayoutParams(iconsParamsWithGravityCV);
-			shareQ[i]=(TextView) this.shareCard.findViewById(this.getIdAssignedByR(act, "art_share_quont_"+String.valueOf(i)));
-			shareQ[i].setTextSize(25*scaleFactor);
+			shareQ[i] = (TextView) this.shareCard.findViewById(this.getIdAssignedByR(act,
+			"art_share_quont_" + String.valueOf(i)));
+			shareQ[i].setTextSize(25 * scaleFactor);
 		}
 
 	}//setSizeAndTheme
-	
+
 	public int getIdAssignedByR(Context pContext, String pIdString)
 	{
-	    // Get the Context's Resources and Package Name
-	    Resources resources = pContext.getResources();
-	    String packageName  = pContext.getPackageName();
+		// Get the Context's Resources and Package Name
+		Resources resources = pContext.getResources();
+		String packageName = pContext.getPackageName();
 
-	    // Determine the result and return it
-	    int result = resources.getIdentifier(pIdString, "id", packageName);
-	    return result;
+		// Determine the result and return it
+		int result = resources.getIdentifier(pIdString, "id", packageName);
+		return result;
 	}
 
 	//set text, tegs, authoe etc
@@ -555,14 +554,14 @@ public class ArticleFragment extends Fragment
 	@Override
 	public void onAttach(Activity activity)
 	{
-		//		System.out.println("ArticleFragment onAttach");
+//		System.out.println("ArticleFragment onAttach position: "+this.position);
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-		//		System.out.println("ArticleFragment onDetach");
+//		System.out.println("ArticleFragment onDetach");
 		super.onDetach();
 	}
 
@@ -573,7 +572,7 @@ public class ArticleFragment extends Fragment
 		super.onSaveInstanceState(outState);
 
 		//save scrollView position
-//		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
+		//		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		//save allArtsInfo
@@ -610,7 +609,7 @@ public class ArticleFragment extends Fragment
 
 	public ArtInfo getCurArtInfo()
 	{
-		this.curArtInfo=new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
+		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
 		return this.curArtInfo;
 	}
 
