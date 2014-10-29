@@ -2518,7 +2518,7 @@ containing a value of this type.
         public static final int download_menu_dark=0x7f0e0005;
         public static final int download_menu_ligth=0x7f0e0006;
         public static final int main_dark=0x7f0e0007;
-        public static final int main_ligth=0x7f0e0008;
+        public static final int main_light=0x7f0e0008;
     }
     public static final class string {
         public static final int ARTICLE_AD_UNIT_ID=0x7f0b005a;

@@ -31,6 +31,7 @@ public class ArticlesListFragment extends Fragment
 	ActionBarActivity act;
 	Context ctx;
 
+	private ArtsListAdapter artsListAdapter;
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -89,9 +90,9 @@ public class ArticlesListFragment extends Fragment
 //		ActivityMain.setAllArtsInfo(artsInfo);
 		((ActivityMain)act).setAllArtsInfo(allArtsInfo);
 		
-		ArtsListAdapter artsListAdapter = new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, allArtsInfo, artsList);
+		setArtsListAdapter(new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, allArtsInfo, artsList));
 
-		this.artsList.setAdapter(artsListAdapter);
+		this.artsList.setAdapter(getArtsListAdapter());
 		///////
 
 		return v;
@@ -170,5 +171,21 @@ public class ArticlesListFragment extends Fragment
 	public int getMyActivatedPosition()
 	{
 		return this.mActivatedPosition;
+	}
+
+	/**
+	 * @return the artsListAdapter
+	 */
+	public ArtsListAdapter getArtsListAdapter()
+	{
+		return artsListAdapter;
+	}
+
+	/**
+	 * @param artsListAdapter the artsListAdapter to set
+	 */
+	public void setArtsListAdapter(ArtsListAdapter artsListAdapter)
+	{
+		this.artsListAdapter = artsListAdapter;
 	}
 }

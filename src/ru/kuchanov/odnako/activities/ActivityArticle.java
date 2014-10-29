@@ -161,25 +161,6 @@ public class ActivityArticle extends ActionBarActivity
 		this.restoreState(savedInstanceState);
 	}
 
-	@Override
-	public void onBackPressed()
-	{
-		System.out.println("ActivityArticle onBackPressed");
-		//check if there is no fragments in stack, so we need to finish Activity, not only fragment
-//		System.out.println("this.getSupportFragmentManager().getBackStackEntryCount(): "
-//		+ this.getSupportFragmentManager().getBackStackEntryCount());
-//		if (this.getSupportFragmentManager().getBackStackEntryCount() == 0)
-//		{
-//			super.onBackPressed();
-//			this.finish();
-//		}
-//		else
-//		{
-//			super.onBackPressed();
-//		}
-
-	}
-
 	private void restoreState(Bundle state)
 	{
 		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));

@@ -81,7 +81,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PrefActivity"
+            android:name="ru.kuchanov.odnako.activities.ActivityPreference"
             android:label="@string/settings_title" >
         </activity>
 
