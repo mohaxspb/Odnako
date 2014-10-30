@@ -52,11 +52,14 @@ public class ActivityMain extends ActionBarActivity
 		System.out.println("ActivityMain onCreate");
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.layout_activity_main);
+//		this.setContentView(R.layout.layout_activity_main);
 
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//end of get default settings to get all settings later
+		
+		this.setAppearence();
 
 		//Set unreaded num of arts to zero
 		//it's for new arts motification
@@ -76,7 +79,6 @@ public class ActivityMain extends ActionBarActivity
 			twoPane = true;
 
 			//save it to pref, to be able to read it without calling Activity
-			this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 			this.pref.edit().putBoolean("twoPane", twoPane).commit();
 
 			// In two-pane mode, list items should be given the
@@ -337,6 +339,22 @@ public class ActivityMain extends ActionBarActivity
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	protected void setAppearence()
+	{
+		if (pref.getString("theme", "dark").equals("dark"))
+		{
+//			this.setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
+			this.setTheme(R.style.ThemeDark);
+			this.setContentView(R.layout.layout_activity_main);
+		}
+		else
+		{
+//			this.setTheme(R.style.Theme_AppCompat_Light);
+			this.setTheme(R.style.ThemeLight);
+			this.setContentView(R.layout.layout_activity_main);
 		}
 	}
 	

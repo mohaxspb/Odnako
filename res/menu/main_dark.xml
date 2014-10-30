@@ -2,83 +2,84 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_overflow_dark"
         android:orderInCategory="200"
-        android:showAsAction="never"
         android:title="@string/action_settings"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/design"
-        android:icon="@drawable/ic_action_overflow_light"
-        android:orderInCategory="210"
-        android:showAsAction="never"
-        android:title="@string/design"
-        app:showAsAction="never">
+        app:showAsAction="always">
         <menu>
-            <group>
+            <item
+                android:id="@+id/action_settings"
+                android:icon="@drawable/ic_settings_white_48dp"
+                android:orderInCategory="200"
+                android:title="@string/action_settings"
+                app:showAsAction="always">
+            </item>
+
+            <group android:menuCategory="container" >
                 <item
                     android:id="@+id/theme"
+                    android:icon="@drawable/ic_color_lens_white_48dp"
                     android:orderInCategory="110"
-                    android:showAsAction="never"
-                    android:title="@string/theme">
-                    <menu>
+                    android:title="@string/theme"
+                    app:showAsAction="always">
+                    <menu android:menuCategory="container" >
                         <group android:checkableBehavior="single" >
                             <item
                                 android:id="@+id/theme_ligth"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/ligth"/>
+                                android:title="@string/ligth"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/theme_dark"
                                 android:orderInCategory="120"
-                                android:showAsAction="never"
-                                android:title="@string/dark"/>
+                                android:title="@string/dark"
+                                app:showAsAction="never"/>
                         </group>
                     </menu>
                 </item>
                 <item
                     android:id="@+id/arts_list_size"
+                    android:icon="@drawable/ic_format_size_white_48dp"
                     android:orderInCategory="120"
-                    android:showAsAction="never"
-                    android:title="@string/text_scale">
+                    android:title="@string/text_scale"
+                    app:showAsAction="never">
                     <menu>
                         <group android:checkableBehavior="single" >
                             <item
                                 android:id="@+id/artslist_05"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_min"/>
+                                android:title="@string/artslist_min"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_075"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_mina"/>
+                                android:title="@string/artslist_mina"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_1"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_minb"/>
+                                android:title="@string/artslist_minb"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_125"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_minc"/>
+                                android:title="@string/artslist_minc"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_15"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_mind"/>
+                                android:title="@string/artslist_mind"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_175"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_mine"/>
+                                android:title="@string/artslist_mine"
+                                app:showAsAction="never"/>
                             <item
                                 android:id="@+id/artslist_2"
                                 android:orderInCategory="110"
-                                android:showAsAction="never"
-                                android:title="@string/artslist_ming"/>
+                                android:title="@string/artslist_ming"
+                                app:showAsAction="never"/>
                         </group>
                     </menu>
                 </item>
@@ -87,9 +88,8 @@
     </item>
     <item
         android:id="@+id/refresh"
-        android:icon="@drawable/ic_action_refresh_dark"
+        android:icon="@drawable/ic_autorenew_white_48dp"
         android:orderInCategory="100"
-        android:showAsAction="always"
         android:title="@string/refresh"
         app:showAsAction="always"/>
 

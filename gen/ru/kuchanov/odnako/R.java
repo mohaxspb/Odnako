@@ -2197,55 +2197,61 @@ containing a value of this type.
         public static final int ic_action_refresh_ligth=0x7f020059;
         public static final int ic_action_search_dark=0x7f02005a;
         public static final int ic_action_search_light=0x7f02005b;
-        public static final int ic_color_lens_grey600_48dp=0x7f02005c;
-        public static final int ic_color_lens_white_48dp=0x7f02005d;
-        public static final int ic_comment_grey600_48dp=0x7f02005e;
-        public static final int ic_comment_white_48dp=0x7f02005f;
-        public static final int ic_crop_original_grey600_48dp=0x7f020060;
-        public static final int ic_crop_original_white_48dp=0x7f020061;
-        public static final int ic_drafts_grey600_48dp=0x7f020062;
-        public static final int ic_drafts_white_48dp=0x7f020063;
-        public static final int ic_drawer=0x7f020064;
-        public static final int ic_file_download_grey600_48dp=0x7f020065;
-        public static final int ic_file_download_white_48dp=0x7f020066;
-        public static final int ic_format_size_grey600_48dp=0x7f020067;
-        public static final int ic_format_size_white_48dp=0x7f020068;
-        public static final int ic_keyboard_arrow_down_grey600_48dp=0x7f020069;
-        public static final int ic_keyboard_arrow_down_white_48dp=0x7f02006a;
-        public static final int ic_keyboard_arrow_left_grey600_48dp=0x7f02006b;
-        public static final int ic_keyboard_arrow_left_white_48dp=0x7f02006c;
-        public static final int ic_keyboard_arrow_right_grey600_48dp=0x7f02006d;
-        public static final int ic_keyboard_arrow_right_white_48dp=0x7f02006e;
-        public static final int ic_keyboard_arrow_up_grey600_48dp=0x7f02006f;
-        public static final int ic_keyboard_arrow_up_white_48dp=0x7f020070;
-        public static final int ic_launcher=0x7f020071;
-        public static final int ic_list_grey600_48dp=0x7f020072;
-        public static final int ic_list_white_48dp=0x7f020073;
-        public static final int ic_markunread_grey600_48dp=0x7f020074;
-        public static final int ic_markunread_white_48dp=0x7f020075;
-        public static final int ic_plusone_medium_off_client=0x7f020076;
-        public static final int ic_plusone_small_off_client=0x7f020077;
-        public static final int ic_plusone_standard_off_client=0x7f020078;
-        public static final int ic_plusone_tall_off_client=0x7f020079;
-        public static final int ic_save_grey600_48dp=0x7f02007a;
-        public static final int ic_save_white_48dp=0x7f02007b;
-        public static final int ic_settings_grey600_48dp=0x7f02007c;
-        public static final int ic_settings_white_48dp=0x7f02007d;
-        public static final int ic_share_grey600_48dp=0x7f02007e;
-        public static final int ic_share_white_48dp=0x7f02007f;
-        public static final int info_box_blue=0x7f020080;
-        public static final int powered_by_google_dark=0x7f020081;
-        public static final int powered_by_google_light=0x7f020082;
-        public static final int social_facebook=0x7f020083;
-        public static final int social_google=0x7f020084;
-        public static final int social_livejournal=0x7f020085;
-        public static final int social_odnoklassniki=0x7f020086;
-        public static final int social_twitter=0x7f020087;
-        public static final int social_vkontakte=0x7f020088;
-        public static final int spinner_default_holo_dark_am=0x7f020089;
-        public static final int spinner_default_holo_light_am=0x7f02008a;
-        public static final int view_as_list_dark=0x7f02008b;
-        public static final int view_as_list_light=0x7f02008c;
+        public static final int ic_autorenew_grey600_48dp=0x7f02005c;
+        public static final int ic_autorenew_white_48dp=0x7f02005d;
+        public static final int ic_color_lens_grey600_48dp=0x7f02005e;
+        public static final int ic_color_lens_white_48dp=0x7f02005f;
+        public static final int ic_comment_grey600_48dp=0x7f020060;
+        public static final int ic_comment_white_48dp=0x7f020061;
+        public static final int ic_crop_original_grey600_48dp=0x7f020062;
+        public static final int ic_crop_original_white_48dp=0x7f020063;
+        public static final int ic_drafts_grey600_48dp=0x7f020064;
+        public static final int ic_drafts_white_48dp=0x7f020065;
+        public static final int ic_drawer=0x7f020066;
+        public static final int ic_file_download_grey600_48dp=0x7f020067;
+        public static final int ic_file_download_white_48dp=0x7f020068;
+        public static final int ic_format_size_grey600_48dp=0x7f020069;
+        public static final int ic_format_size_white_48dp=0x7f02006a;
+        public static final int ic_keyboard_arrow_down_grey600_48dp=0x7f02006b;
+        public static final int ic_keyboard_arrow_down_white_48dp=0x7f02006c;
+        public static final int ic_keyboard_arrow_left_grey600_48dp=0x7f02006d;
+        public static final int ic_keyboard_arrow_left_white_48dp=0x7f02006e;
+        public static final int ic_keyboard_arrow_right_grey600_48dp=0x7f02006f;
+        public static final int ic_keyboard_arrow_right_white_48dp=0x7f020070;
+        public static final int ic_keyboard_arrow_up_grey600_48dp=0x7f020071;
+        public static final int ic_keyboard_arrow_up_white_48dp=0x7f020072;
+        public static final int ic_launcher=0x7f020073;
+        public static final int ic_list_grey600_48dp=0x7f020074;
+        public static final int ic_list_white_48dp=0x7f020075;
+        public static final int ic_markunread_grey600_48dp=0x7f020076;
+        public static final int ic_markunread_white_48dp=0x7f020077;
+        public static final int ic_plusone_medium_off_client=0x7f020078;
+        public static final int ic_plusone_small_off_client=0x7f020079;
+        public static final int ic_plusone_standard_off_client=0x7f02007a;
+        public static final int ic_plusone_tall_off_client=0x7f02007b;
+        public static final int ic_save_grey600_48dp=0x7f02007c;
+        public static final int ic_save_white_48dp=0x7f02007d;
+        public static final int ic_settings_grey600_48dp=0x7f02007e;
+        public static final int ic_settings_white_48dp=0x7f02007f;
+        public static final int ic_share_grey600_48dp=0x7f020080;
+        public static final int ic_share_white_48dp=0x7f020081;
+        public static final int info_box_blue=0x7f020082;
+        public static final int list_focused=0x7f020083;
+        public static final int list_pressed=0x7f020084;
+        public static final int menu_dropdown_panel=0x7f020085;
+        public static final int powered_by_google_dark=0x7f020086;
+        public static final int powered_by_google_light=0x7f020087;
+        public static final int selectable_background=0x7f020088;
+        public static final int social_facebook=0x7f020089;
+        public static final int social_google=0x7f02008a;
+        public static final int social_livejournal=0x7f02008b;
+        public static final int social_odnoklassniki=0x7f02008c;
+        public static final int social_twitter=0x7f02008d;
+        public static final int social_vkontakte=0x7f02008e;
+        public static final int spinner_default_holo_dark_am=0x7f02008f;
+        public static final int spinner_default_holo_light_am=0x7f020090;
+        public static final int view_as_list_dark=0x7f020091;
+        public static final int view_as_list_light=0x7f020092;
     }
     public static final class id {
         public static final int action_bar=0x7f0a0044;
@@ -2758,15 +2764,6 @@ containing a value of this type.
     }
     public static final class style {
         /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
-
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     
@@ -2779,10 +2776,6 @@ containing a value of this type.
  API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f0c00f3;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
-         */
-        public static final int AppTheme=0x7f0c00f4;
         public static final int Base_TextAppearance_AppCompat=0x7f0c0098;
         public static final int Base_TextAppearance_AppCompat_Body1=0x7f0c00a3;
         public static final int Base_TextAppearance_AppCompat_Body2=0x7f0c00a2;
@@ -2930,6 +2923,8 @@ containing a value of this type.
         public static final int CardView=0x7f0c00eb;
         public static final int CardView_Dark=0x7f0c00ed;
         public static final int CardView_Light=0x7f0c00ec;
+        public static final int OdnakoDropDownListView=0x7f0c00f6;
+        public static final int OdnakoPopupMenu=0x7f0c00f5;
         public static final int Platform_AppCompat=0x7f0c00c9;
         public static final int Platform_AppCompat_Dialog=0x7f0c00cb;
         public static final int Platform_AppCompat_Light=0x7f0c00ca;
@@ -3019,6 +3014,8 @@ containing a value of this type.
         public static final int Theme_AppCompat_Light_NoActionBar=0x7f0c00be;
         public static final int Theme_AppCompat_NoActionBar=0x7f0c00bd;
         public static final int Theme_IAPTheme=0x7f0c00ee;
+        public static final int ThemeDark=0x7f0c00f4;
+        public static final int ThemeLight=0x7f0c00f7;
         public static final int ThemeOverlay_AppCompat=0x7f0c00c4;
         /**  Theme overlay that replaces the normal control color, which by default is the same as the
          secondary text color, with the primary text color. 
