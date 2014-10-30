@@ -12,6 +12,7 @@ import android.preference.PreferenceActivity;
 
 public class ActivityPreference extends PreferenceActivity
 {
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{

@@ -236,18 +236,18 @@ public class ActivityMain extends ActionBarActivity
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
 			case R.id.theme:
-//				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
-//				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
-//				String curTheme = pref.getString("theme", "dark");
-//				System.out.println(curTheme);
-//				if (!curTheme.equals("dark"))
-//				{
-//					ligthThemeMenuItem.setChecked(true);
-//				}
-//				else
-//				{
-//					darkThemeMenuItem.setChecked(true);
-//				}
+				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
+				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
+				String curTheme = pref.getString("theme", "dark");
+				System.out.println(curTheme);
+				if (!curTheme.equals("dark"))
+				{
+					ligthThemeMenuItem.setChecked(true);
+				}
+				else
+				{
+					darkThemeMenuItem.setChecked(true);
+				}
 				return true;
 			case R.id.theme_ligth:
 				this.pref.edit().putString("theme", "ligth").commit();
@@ -259,7 +259,8 @@ public class ActivityMain extends ActionBarActivity
 				this.pref.edit().putString("theme", "dark").commit();
 				
 				this.myRecreate();
-				return true;
+				return super.onOptionsItemSelected(item);
+//				return true;
 			case R.id.arts_list_size:
 				MenuItem artsListItem = item.getSubMenu().findItem(R.id.artslist_05);
 				MenuItem artsListaItem = item.getSubMenu().findItem(R.id.artslist_075);
