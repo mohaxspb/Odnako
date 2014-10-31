@@ -26,13 +26,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -74,6 +72,8 @@ public class ArticleFragment extends Fragment
 	int position;/* position in all art arr; need to show next/previous arts */
 	ArrayList<ArtInfo> allArtsInfo;
 
+	private boolean artAuthorDescrIsShown = false;
+
 	@Override
 	public void onCreate(Bundle savedState)
 	{
@@ -81,6 +81,23 @@ public class ArticleFragment extends Fragment
 		//		System.out.println("ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
+
+		//restore info
+		Bundle stateFromArgs = this.getArguments();
+		if (stateFromArgs != null)
+		{
+			this.restoreState(stateFromArgs);
+		}
+		else if (savedState != null)
+		{
+			this.restoreState(savedState);
+		}
+		//all is null, so start request for info
+		else
+		{
+			// TODO
+			System.out.println("ActivityArticle: all bundles are null, so make request for info");
+		}
 
 		this.imageLoader = UniversalImageLoader.get(act);
 
@@ -115,7 +132,7 @@ public class ArticleFragment extends Fragment
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
-		
+
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -126,15 +143,6 @@ public class ArticleFragment extends Fragment
 		this.inflater = inflater;
 
 		//find all views
-
-		//test
-		//		ArtInfo artInfoTEST = new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg",
-		//		"http://yuriykuchanov.odnako.org/", "Разработчик");
-		//		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-		//		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид !!!! ещё тег",
-		//		"10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date");
-		//		this.curArtInfo = artInfoTEST;
-
 		this.findViews(v);
 
 		this.fillFielsdsWithInfo(v);
@@ -187,11 +195,11 @@ public class ArticleFragment extends Fragment
 		//inflate bottom panels
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 		int width = displayMetrics.widthPixels;
-		int minWidth=800;
-//		if(twoPane) we must set width to width/4*3 
-		if(twoPane)
+		int minWidth = 800;
+		//		if(twoPane) we must set width to width/4*3 
+		if (twoPane)
 		{
-			width=displayMetrics.widthPixels/3*2;
+			width = displayMetrics.widthPixels / 3 * 2;
 		}
 		if (width < minWidth)
 		{
@@ -213,6 +221,19 @@ public class ArticleFragment extends Fragment
 				Toast.makeText(act, "share!", Toast.LENGTH_SHORT).show();
 			}
 		});
+		//setShareIcon
+		ImageView shareIcon = (ImageView) this.shareCard.findViewById(R.id.art_share_all);
+		System.out.println("shareIcon==null: "+String.valueOf(shareIcon==null));
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+//			this.imageLoader.displayImage("drawable://" + R.drawable.ic_share_white_48dp, shareIcon);
+			shareIcon.setImageResource(R.drawable.ic_share_white_48dp);//.setImageDrawable(this.act.getDrawable(R.drawable.ic_share_white_48dp));
+		}
+		else
+		{
+//			this.imageLoader.displayImage("drawable://" + R.drawable.ic_share_grey600_48dp, shareIcon);
+			shareIcon.setImageResource(R.drawable.ic_share_grey600_48dp);
+		}
 
 		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
 		//set onClickListener
@@ -293,7 +314,7 @@ public class ArticleFragment extends Fragment
 					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
 				}
 				//plus 10*2 (2xpaddings of each tag
-				curLinChildrenWidth += curLinLay.getChildCount() * 10*2;
+				curLinChildrenWidth += curLinLay.getChildCount() * 10 * 2;
 				if (i == 0)
 				{
 					curLinLay.getChildAt(1).measure(0, 0);
@@ -433,10 +454,23 @@ public class ArticleFragment extends Fragment
 		}
 		else
 		{
+			this.artAuthorDescriptionTV.setText(this.curArtInfo.authorDescr);
 			//restore size
-			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
-			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
+//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
+//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
 			this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
+			if (this.pref.getString("theme", "dark").equals("dark"))
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+			}
+			else
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
+			}
 
 			this.artAuthorDescriptionIV.setOnClickListener(new OnClickListener()
 			{
@@ -444,29 +478,9 @@ public class ArticleFragment extends Fragment
 				@Override
 				public void onClick(View v)
 				{
-					//if ==0, so it's hide; must show
-					if (artAuthorDescriptionTV.getLayoutParams().height == 0)
-					{
-						//set and show text
-						artAuthorDescriptionTV.setText(curArtInfo.authorDescr);
-						LayoutParams descrParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-						LayoutParams.WRAP_CONTENT);
-						artAuthorDescriptionTV.setLayoutParams(descrParams);
-						//set btn image
-						imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
-						artAuthorDescriptionIV);
-					}
-					else
-					{
-						//set and show text
-						artAuthorDescriptionTV.setText(null);
-						LayoutParams descrParams0 = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-						artAuthorDescriptionTV.setLayoutParams(descrParams0);
-						//set btn image
-						imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-						artAuthorDescriptionIV);
-					}
+					artAuthorDescrBehavior();
 				}
+
 			});
 
 		}
@@ -491,21 +505,66 @@ public class ArticleFragment extends Fragment
 		}
 
 		//set share panel Size&Theme
-		ImageView[] icons = new ImageView[6];
-		TextView[] shareQ = new TextView[6];
-		for (int i = 0; i < 6; i++)
-		{
-			icons[i] = (ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act,
-			"art_share_" + String.valueOf(i)));
-			LayoutParams iconsParamsWithGravityCV = new LayoutParams(iconPxels, iconPxels);
-			iconsParamsWithGravityCV.gravity = Gravity.CENTER_VERTICAL;
-			icons[i].setLayoutParams(iconsParamsWithGravityCV);
-			shareQ[i] = (TextView) this.shareCard.findViewById(this.getIdAssignedByR(act,
-			"art_share_quont_" + String.valueOf(i)));
-			shareQ[i].setTextSize(25 * scaleFactor);
-		}
+		//		ImageView[] icons = new ImageView[6];
+		//		TextView[] shareQ = new TextView[6];
+		//		for (int i = 0; i < 6; i++)
+		//		{
+		//			icons[i] = (ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act,
+		//			"art_share_" + String.valueOf(i)));
+		//			LayoutParams iconsParamsWithGravityCV = new LayoutParams(iconPxels, iconPxels);
+		//			iconsParamsWithGravityCV.gravity = Gravity.CENTER_VERTICAL;
+		//			icons[i].setLayoutParams(iconsParamsWithGravityCV);
+		//			shareQ[i] = (TextView) this.shareCard.findViewById(this.getIdAssignedByR(act,
+		//			"art_share_quont_" + String.valueOf(i)));
+		//			shareQ[i].setTextSize(25 * scaleFactor);
+		//		}
 
 	}//setSizeAndTheme
+
+	private void artAuthorDescrBehavior()
+	{
+		if (!artAuthorDescrIsShown)
+		{
+			//set and show text
+			LayoutParams descrParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+			LayoutParams.WRAP_CONTENT);
+			artAuthorDescriptionTV.setLayoutParams(descrParams);
+			//set btn image
+			if (pref.getString("theme", "dark").equals("dark"))
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_white_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
+			}
+			else
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_grey600_48dp);
+			}
+			artAuthorDescrIsShown = !artAuthorDescrIsShown;
+		}
+		else
+		{
+			LayoutParams descrParams0 = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
+			artAuthorDescriptionTV.setLayoutParams(descrParams0);
+			//set btn image
+			if (pref.getString("theme", "dark").equals("dark"))
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+			}
+			else
+			{
+//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+//				artAuthorDescriptionIV);
+				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
+				
+			}
+			artAuthorDescrIsShown = !artAuthorDescrIsShown;
+		}
+	}
 
 	public int getIdAssignedByR(Context pContext, String pIdString)
 	{
@@ -529,21 +588,23 @@ public class ArticleFragment extends Fragment
 		this.artDateTV.setText(this.curArtInfo.pubDate);
 		this.artTagsMainTV.setText(this.curArtInfo.tegs_main);
 
-		//		final float scale = act.getResources().getDisplayMetrics().density;
-		//		String scaleFactorString = pref.getString("scale", "1");
-		//		float scaleFactor = Float.valueOf(scaleFactorString);
-		//		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-		//		LayoutParams params = new LayoutParams(pixels, pixels);
-		//		params.setMargins(5, 5, 5, 5);
-		//		this.artAuthorIV.setLayoutParams(params);
-		//		this.artAuthorArticlesIV.setLayoutParams(params);
-		//		this.artAuthorDescriptionIV.setLayoutParams(params);
-
 		//down images
-		imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
-		imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
-		imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-		this.artAuthorDescriptionIV);
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, UniversalImageLoader.getDarkOptions());
+			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
+//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+//			this.artAuthorDescriptionIV);
+			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+		}
+		else
+		{
+			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
+			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+//			this.artAuthorDescriptionIV);
+			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
+		}
 
 		//fill bottom
 		this.setUpAllTegsLayout(rootView);
@@ -554,14 +615,14 @@ public class ArticleFragment extends Fragment
 	@Override
 	public void onAttach(Activity activity)
 	{
-//		System.out.println("ArticleFragment onAttach position: "+this.position);
+		//		System.out.println("ArticleFragment onAttach position: "+this.position);
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-//		System.out.println("ArticleFragment onDetach");
+		//		System.out.println("ArticleFragment onDetach");
 		super.onDetach();
 	}
 
@@ -572,38 +633,41 @@ public class ArticleFragment extends Fragment
 		super.onSaveInstanceState(outState);
 
 		//save scrollView position
-		//		System.out.println("ArticleFragment onSaveInstanceState scroll==null: "+String.valueOf(scroll==null));
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
-		//save allArtsInfo
-		if (this.allArtsInfo != null)
+		outState.putInt("position", this.position);
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, getCurArtInfo());
+	}
+
+	private void restoreState(Bundle state)
+	{
+		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		this.position = state.getInt("position");
+		//restore AllArtsInfo
+		this.allArtsInfo = new ArrayList<ArtInfo>();
+		Set<String> keySet = state.keySet();
+		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+		Collections.sort(keySetSortedArrList);
+		for (int i = 0; i < keySetSortedArrList.size(); i++)
 		{
-			for (int i = 0; i < this.allArtsInfo.size(); i++)
+			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
 			{
 				if (i < 10)
 				{
-					outState.putStringArray("allArtsInfo_0" + String.valueOf(i), this.allArtsInfo.get(i)
-					.getArtInfoAsStringArray());
+					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
+					+ String.valueOf(i))));
 				}
 				else
 				{
-					outState.putStringArray("allArtsInfo_" + String.valueOf(i), this.allArtsInfo.get(i)
-					.getArtInfoAsStringArray());
+					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
+					+ String.valueOf(i))));
 				}
+
 			}
-		}
-		else
-		{
-			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
-		}
-		//save curArtInfo
-		if (this.curArtInfo != null)
-		{
-			outState.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-		}
-		else
-		{
-			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
+			else
+			{
+				break;
+			}
 		}
 	}
 

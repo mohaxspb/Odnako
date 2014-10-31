@@ -2515,14 +2515,13 @@ containing a value of this type.
         public static final int also_to_read=0x7f030019;
         public static final int also_to_read_art_lay=0x7f03001a;
         public static final int arts_list_card_view=0x7f03001b;
-        public static final int arts_list_card_view_dark=0x7f03001c;
-        public static final int comment_card_view=0x7f03001d;
-        public static final int comments_bottom_btn_layout=0x7f03001e;
-        public static final int fragment_art=0x7f03001f;
-        public static final int fragment_arts_list=0x7f030020;
-        public static final int fragment_comments_list=0x7f030021;
-        public static final int layout_activity_article=0x7f030022;
-        public static final int layout_activity_comments=0x7f030023;
+        public static final int comment_card_view=0x7f03001c;
+        public static final int comments_bottom_btn_layout=0x7f03001d;
+        public static final int fragment_art=0x7f03001e;
+        public static final int fragment_arts_list=0x7f03001f;
+        public static final int fragment_comments_list=0x7f030020;
+        public static final int layout_activity_article=0x7f030021;
+        public static final int layout_activity_comments=0x7f030022;
         /** 
     Layout alias to replace the single-pane version of the layout with a
     two-pane version on Large screens.
@@ -2538,12 +2537,12 @@ containing a value of this type.
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     
          */
-        public static final int layout_activity_main=0x7f030024;
-        public static final int layout_activity_main_large=0x7f030025;
-        public static final int share_panel=0x7f030026;
-        public static final int share_panel_landscape=0x7f030027;
-        public static final int support_simple_spinner_dropdown_item=0x7f030028;
-        public static final int teg_card=0x7f030029;
+        public static final int layout_activity_main=0x7f030023;
+        public static final int layout_activity_main_large=0x7f030024;
+        public static final int share_panel=0x7f030025;
+        public static final int share_panel_landscape=0x7f030026;
+        public static final int support_simple_spinner_dropdown_item=0x7f030027;
+        public static final int teg_card=0x7f030028;
     }
     public static final class menu {
         public static final int art_card_menu_ligth=0x7f0e0000;
