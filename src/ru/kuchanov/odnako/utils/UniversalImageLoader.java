@@ -55,4 +55,19 @@ public class UniversalImageLoader
 		return imageLoader;
 		
 	}
+	
+	public static DisplayImageOptions getDarkOptions()
+	{
+		return new DisplayImageOptions.Builder()
+	
+	.displayer(new RoundedBitmapDisplayer(10))
+	.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+	.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
+	.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+	.cacheInMemory(true)
+	.cacheOnDisk(true)
+	.considerExifParams(true)
+	.bitmapConfig(Bitmap.Config.RGB_565)
+	.build();
+	}
 }

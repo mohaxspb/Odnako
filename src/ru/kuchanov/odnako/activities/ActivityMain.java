@@ -50,7 +50,7 @@ public class ActivityMain extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
-		super.onCreate(savedInstanceState);
+		
 
 //		this.setContentView(R.layout.layout_activity_main);
 
@@ -60,6 +60,12 @@ public class ActivityMain extends ActionBarActivity
 		//end of get default settings to get all settings later
 		
 		this.setAppearence();
+		
+		//call super after setTheme to set it 0_0
+		super.onCreate(savedInstanceState);
+		
+		//then setContent?
+		this.setContentView(R.layout.layout_activity_main);
 
 		//Set unreaded num of arts to zero
 		//it's for new arts motification
@@ -346,15 +352,13 @@ public class ActivityMain extends ActionBarActivity
 	{
 		if (pref.getString("theme", "dark").equals("dark"))
 		{
-//			this.setTheme(R.style.Theme_AppCompat_Light_DarkActionBar);
 			this.setTheme(R.style.ThemeDark);
-			this.setContentView(R.layout.layout_activity_main);
+//			this.setContentView(R.layout.layout_activity_main);
 		}
 		else
 		{
-//			this.setTheme(R.style.Theme_AppCompat_Light);
 			this.setTheme(R.style.ThemeLight);
-			this.setContentView(R.layout.layout_activity_main);
+//			this.setContentView(R.layout.layout_activity_main);
 		}
 	}
 	

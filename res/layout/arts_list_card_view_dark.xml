@@ -8,9 +8,9 @@
     android:focusable="false"
     card_view:cardBackgroundColor="?cardBackGroundColor"
     card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="5dp">
-    <!-- 
-    card_view:cardBackgroundColor="@android:color/white" -->
+    card_view:cardElevation="5dp" >
+
+<!--     card_view:cardBackgroundColor="@android:color/white" -->
 
     <LinearLayout
         android:id="@+id/art_card_main_lin"
@@ -44,14 +44,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/title"
-                    android:textColor="@android:color/black"
+                    android:textColor="?android:textColorPrimary"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/art_card_date_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/date" />
+                    android:text="@string/date"
+                    android:textColor="?android:textColorSecondary" />
             </LinearLayout>
 
             <ImageView
@@ -71,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="@string/preview"
-            android:textColor="@android:color/black" />
+            android:textColor="?android:textColorPrimary" />
 
         <!-- bottom linlay -->
 
@@ -114,7 +115,8 @@
                         android:id="@+id/num_of_comms"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:text="@string/zero" />
+                        android:text="@string/zero"
+                        android:textColor="?android:textColorPrimary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -127,7 +129,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/author"
-                android:textColor="@android:color/black"
+                android:textColor="?android:textColorPrimary"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -163,7 +165,8 @@
                         android:id="@+id/num_of_sharings"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:text="@string/zero" />
+                        android:text="@string/zero" 
+                        android:textColor="?android:textColorPrimary"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

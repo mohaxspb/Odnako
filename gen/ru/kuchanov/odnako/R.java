@@ -464,6 +464,10 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int cameraZoom=0x7f0100bc;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int cardBackGroundColor=0x7f0100d5;
         /**  Background color for CardView. 
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
@@ -740,6 +744,15 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int contentPaddingTop=0x7f0100b2;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int customAttr=0x7f0100d4;
         /**  Specifies a layout for custom navigation. Overrides navigationMode. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1836,19 +1849,19 @@ containing a value of this type.
         public static final int abc_config_showMenuShortcutsWhenKeyboardPresent=0x7f060003;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f070055;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f070056;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f07005f;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f070060;
         public static final int abc_input_method_navigation_guard=0x7f070003;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f070057;
-        public static final int abc_primary_text_disable_only_material_light=0x7f070058;
-        public static final int abc_primary_text_material_dark=0x7f070059;
-        public static final int abc_primary_text_material_light=0x7f07005a;
-        public static final int abc_search_url_text=0x7f07005b;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f070061;
+        public static final int abc_primary_text_disable_only_material_light=0x7f070062;
+        public static final int abc_primary_text_material_dark=0x7f070063;
+        public static final int abc_primary_text_material_light=0x7f070064;
+        public static final int abc_search_url_text=0x7f070065;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
-        public static final int abc_secondary_text_material_dark=0x7f07005c;
-        public static final int abc_secondary_text_material_light=0x7f07005d;
+        public static final int abc_secondary_text_material_dark=0x7f070066;
+        public static final int abc_secondary_text_material_light=0x7f070067;
         public static final int accent_material_dark=0x7f07000f;
         public static final int accent_material_light=0x7f07000e;
         public static final int background_floating_material_dark=0x7f070006;
@@ -1893,8 +1906,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f07003b;
         public static final int common_signin_btn_light_text_focused=0x7f07003c;
         public static final int common_signin_btn_light_text_pressed=0x7f07003a;
-        public static final int common_signin_btn_text_dark=0x7f07005e;
-        public static final int common_signin_btn_text_light=0x7f07005f;
+        public static final int common_signin_btn_text_dark=0x7f070068;
+        public static final int common_signin_btn_text_light=0x7f070069;
         public static final int cur_theme=0x7f070051;
         public static final int dim_foreground_disabled_material_dark=0x7f07001c;
         public static final int dim_foreground_disabled_material_light=0x7f07001d;
@@ -1916,6 +1929,16 @@ containing a value of this type.
         public static final int material_blue_grey_950=0x7f070030;
         public static final int material_deep_teal_200=0x7f07002c;
         public static final int material_deep_teal_500=0x7f07002d;
+        public static final int material_grey_100=0x7f07005d;
+        public static final int material_grey_200=0x7f07005c;
+        public static final int material_grey_300=0x7f07005b;
+        public static final int material_grey_400=0x7f07005a;
+        public static final int material_grey_50=0x7f07005e;
+        public static final int material_grey_500=0x7f070059;
+        public static final int material_grey_600=0x7f070058;
+        public static final int material_grey_700=0x7f070057;
+        public static final int material_grey_800=0x7f070056;
+        public static final int material_grey_900=0x7f070055;
         public static final int my_color_dark=0x7f07004c;
         public static final int my_color_light=0x7f07004d;
         public static final int odnako=0x7f07004e;
@@ -1958,8 +1981,8 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f070046;
         public static final int wallet_holo_blue_light=0x7f07004a;
         public static final int wallet_link_text_light=0x7f07004b;
-        public static final int wallet_primary_text_holo_light=0x7f070060;
-        public static final int wallet_secondary_text_holo_dark=0x7f070061;
+        public static final int wallet_primary_text_holo_light=0x7f07006a;
+        public static final int wallet_secondary_text_holo_dark=0x7f07006b;
         public static final int white=0x7f07004f;
     }
     public static final class dimen {
@@ -2492,13 +2515,14 @@ containing a value of this type.
         public static final int also_to_read=0x7f030019;
         public static final int also_to_read_art_lay=0x7f03001a;
         public static final int arts_list_card_view=0x7f03001b;
-        public static final int comment_card_view=0x7f03001c;
-        public static final int comments_bottom_btn_layout=0x7f03001d;
-        public static final int fragment_art=0x7f03001e;
-        public static final int fragment_arts_list=0x7f03001f;
-        public static final int fragment_comments_list=0x7f030020;
-        public static final int layout_activity_article=0x7f030021;
-        public static final int layout_activity_comments=0x7f030022;
+        public static final int arts_list_card_view_dark=0x7f03001c;
+        public static final int comment_card_view=0x7f03001d;
+        public static final int comments_bottom_btn_layout=0x7f03001e;
+        public static final int fragment_art=0x7f03001f;
+        public static final int fragment_arts_list=0x7f030020;
+        public static final int fragment_comments_list=0x7f030021;
+        public static final int layout_activity_article=0x7f030022;
+        public static final int layout_activity_comments=0x7f030023;
         /** 
     Layout alias to replace the single-pane version of the layout with a
     two-pane version on Large screens.
@@ -2514,12 +2538,12 @@ containing a value of this type.
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     
          */
-        public static final int layout_activity_main=0x7f030023;
-        public static final int layout_activity_main_large=0x7f030024;
-        public static final int share_panel=0x7f030025;
-        public static final int share_panel_landscape=0x7f030026;
-        public static final int support_simple_spinner_dropdown_item=0x7f030027;
-        public static final int teg_card=0x7f030028;
+        public static final int layout_activity_main=0x7f030024;
+        public static final int layout_activity_main_large=0x7f030025;
+        public static final int share_panel=0x7f030026;
+        public static final int share_panel_landscape=0x7f030027;
+        public static final int support_simple_spinner_dropdown_item=0x7f030028;
+        public static final int teg_card=0x7f030029;
     }
     public static final class menu {
         public static final int art_card_menu_ligth=0x7f0e0000;
@@ -2593,7 +2617,7 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000d;
         public static final int accept=0x7f0b0011;
         public static final int action_settings=0x7f0b0043;
-        public static final int ads_on_advantages=0x7f0b0070;
+        public static final int ads_on_advantages=0x7f0b0071;
         public static final int allLoadInfoMessage=0x7f0b0056;
         public static final int also_by_theme=0x7f0b003b;
         public static final int also_to_read=0x7f0b003c;
@@ -2601,13 +2625,13 @@ containing a value of this type.
         public static final int art_text_scale=0x7f0b0061;
         public static final int article=0x7f0b0033;
         public static final int arts_list=0x7f0b0034;
-        public static final int artslist_min=0x7f0b0064;
-        public static final int artslist_mina=0x7f0b0065;
-        public static final int artslist_minb=0x7f0b0066;
-        public static final int artslist_minc=0x7f0b0067;
-        public static final int artslist_mind=0x7f0b0068;
-        public static final int artslist_mine=0x7f0b0069;
-        public static final int artslist_ming=0x7f0b006a;
+        public static final int artslist_min=0x7f0b0065;
+        public static final int artslist_mina=0x7f0b0066;
+        public static final int artslist_minb=0x7f0b0067;
+        public static final int artslist_minc=0x7f0b0068;
+        public static final int artslist_mind=0x7f0b0069;
+        public static final int artslist_mine=0x7f0b006a;
+        public static final int artslist_ming=0x7f0b006b;
         public static final int author=0x7f0b0038;
         public static final int author_descr=0x7f0b0039;
         public static final int auto_load=0x7f0b0055;
@@ -2725,12 +2749,12 @@ containing a value of this type.
         public static final int downBtn=0x7f0b0050;
         public static final int download_all=0x7f0b0051;
         public static final int downloadings=0x7f0b0047;
-        public static final int drawer_close=0x7f0b006c;
-        public static final int drawer_open=0x7f0b006b;
+        public static final int drawer_close=0x7f0b006d;
+        public static final int drawer_open=0x7f0b006c;
         public static final int hello_world=0x7f0b004b;
-        public static final int help_me=0x7f0b006f;
+        public static final int help_me=0x7f0b0070;
         public static final int ligth=0x7f0b005e;
-        public static final int mail_to_me_summary=0x7f0b006e;
+        public static final int mail_to_me_summary=0x7f0b006f;
         public static final int mark_as_read=0x7f0b003f;
         public static final int more_comm=0x7f0b004a;
         public static final int next=0x7f0b0048;
@@ -2740,11 +2764,11 @@ containing a value of this type.
         public static final int on=0x7f0b0057;
         public static final int preview=0x7f0b0037;
         public static final int previous=0x7f0b0049;
-        public static final int pro_ver_adv=0x7f0b0071;
+        public static final int pro_ver_adv=0x7f0b0072;
         public static final int quontity=0x7f0b004f;
         public static final int refresh=0x7f0b0045;
         public static final int search_author=0x7f0b004c;
-        public static final int settings_title=0x7f0b006d;
+        public static final int settings_title=0x7f0b006e;
         public static final int share=0x7f0b004d;
         public static final int share_link=0x7f0b0040;
         public static final int show_comments=0x7f0b0041;
@@ -2754,8 +2778,9 @@ containing a value of this type.
         public static final int text_scale=0x7f0b0062;
         public static final int theme=0x7f0b0060;
         public static final int title=0x7f0b0035;
-        public static final int version_history=0x7f0b0073;
-        public static final int version_history_summary=0x7f0b0072;
+        public static final int transition_art_card=0x7f0b0064;
+        public static final int version_history=0x7f0b0074;
+        public static final int version_history_summary=0x7f0b0073;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */
@@ -2763,18 +2788,6 @@ containing a value of this type.
         public static final int zero=0x7f0b0042;
     }
     public static final class style {
-        /** 
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    
- API 11 theme customizations can go here. 
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
-         */
         public static final int AppBaseTheme=0x7f0c00f3;
         public static final int Base_TextAppearance_AppCompat=0x7f0c0098;
         public static final int Base_TextAppearance_AppCompat_Body1=0x7f0c00a3;
@@ -2924,7 +2937,9 @@ containing a value of this type.
         public static final int CardView_Dark=0x7f0c00ed;
         public static final int CardView_Light=0x7f0c00ec;
         public static final int OdnakoDropDownListView=0x7f0c00f6;
+        public static final int OdnakoDropDownListViewLight=0x7f0c00f9;
         public static final int OdnakoPopupMenu=0x7f0c00f5;
+        public static final int OdnakoPopupMenuLight=0x7f0c00f8;
         public static final int Platform_AppCompat=0x7f0c00c9;
         public static final int Platform_AppCompat_Dialog=0x7f0c00cb;
         public static final int Platform_AppCompat_Light=0x7f0c00ca;
@@ -4131,6 +4146,29 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name ru.kuchanov.odnako:textAllCaps
         */
         public static final int CompatTextView_textAllCaps = 0;
+        /** Attributes that can be used with a CustomTheme.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #CustomTheme_cardBackGroundColor ru.kuchanov.odnako:cardBackGroundColor}</code></td><td></td></tr>
+           </table>
+           @see #CustomTheme_cardBackGroundColor
+         */
+        public static final int[] CustomTheme = {
+            0x7f0100d5
+        };
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#cardBackGroundColor}
+          attribute's value can be found in the {@link #CustomTheme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name ru.kuchanov.odnako:cardBackGroundColor
+        */
+        public static final int CustomTheme_cardBackGroundColor = 0;
         /** Attributes that can be used with a DrawerArrowToggle.
            <p>Includes the following attributes:</p>
            <table>
@@ -8033,5 +8071,33 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name ru.kuchanov.odnako:maskedWalletDetailsTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsTextAppearance = 4;
+        /** Attributes that can be used with a cardBackGroundColor.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #cardBackGroundColor_customAttr ru.kuchanov.odnako:customAttr}</code></td><td></td></tr>
+           </table>
+           @see #cardBackGroundColor_customAttr
+         */
+        public static final int[] cardBackGroundColor = {
+            0x7f0100d4
+        };
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#customAttr}
+          attribute's value can be found in the {@link #cardBackGroundColor} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:customAttr
+        */
+        public static final int cardBackGroundColor_customAttr = 0;
     };
 }
