@@ -154,43 +154,22 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				if (convertView == null)
 				{
 					ViewGroup vg;
-					if(this.pref.getString("theme", "dark").equals("dark"))
-					{
-						vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view_dark, new LinearLayout(act));
-						holderMain = new ArticleHolder(
-						(TextView) vg.findViewById(R.id.art_card_title_tv),
-						(TextView) vg.findViewById(R.id.author_name),
-						(ImageView) vg.findViewById(R.id.art_card_img),
-						(ImageView) vg.findViewById(R.id.save_img),
-						(ImageView) vg.findViewById(R.id.read_img),
-						(ImageView) vg.findViewById(R.id.comments_img),
-						(ImageView) vg.findViewById(R.id.share_img),
-						(TextView) vg.findViewById(R.id.num_of_comms),
-						(TextView) vg.findViewById(R.id.num_of_sharings),
-						(TextView) vg.findViewById(R.id.art_card_date_tv),
-						(TextView) vg.findViewById(R.id.art_card_preview_tv),
-						(ImageView) vg.findViewById(R.id.art_card_settings),
-						(ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay));
-					}
-					else
-					{
-						vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view, new LinearLayout(act));
-						holderMain = new ArticleHolder(
-						(TextView) vg.findViewById(R.id.art_card_title_tv),
-						(TextView) vg.findViewById(R.id.author_name),
-						(ImageView) vg.findViewById(R.id.art_card_img),
-						(ImageView) vg.findViewById(R.id.save_img),
-						(ImageView) vg.findViewById(R.id.read_img),
-						(ImageView) vg.findViewById(R.id.comments_img),
-						(ImageView) vg.findViewById(R.id.share_img),
-						(TextView) vg.findViewById(R.id.num_of_comms),
-						(TextView) vg.findViewById(R.id.num_of_sharings),
-						(TextView) vg.findViewById(R.id.art_card_date_tv),
-						(TextView) vg.findViewById(R.id.art_card_preview_tv),
-						(ImageView) vg.findViewById(R.id.art_card_settings),
-						(ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay));
-					}
-					
+					vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.arts_list_card_view,
+					new LinearLayout(act));
+					holderMain = new ArticleHolder(
+					(TextView) vg.findViewById(R.id.art_card_title_tv),
+					(TextView) vg.findViewById(R.id.author_name),
+					(ImageView) vg.findViewById(R.id.art_card_img),
+					(ImageView) vg.findViewById(R.id.save_img),
+					(ImageView) vg.findViewById(R.id.read_img),
+					(ImageView) vg.findViewById(R.id.comments_img),
+					(ImageView) vg.findViewById(R.id.share_img),
+					(TextView) vg.findViewById(R.id.num_of_comms),
+					(TextView) vg.findViewById(R.id.num_of_sharings),
+					(TextView) vg.findViewById(R.id.art_card_date_tv),
+					(TextView) vg.findViewById(R.id.art_card_preview_tv),
+					(ImageView) vg.findViewById(R.id.art_card_settings),
+					(ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay));
 
 					vg.setTag(holderMain);
 					view = vg;
@@ -202,7 +181,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 					holderMain = (ArticleHolder) convertView.getTag();
 				}
 				ImageLoader imageLoader = UniversalImageLoader.get(act);
-				if(this.pref.getString("theme", "dark").equals("dark"))
+				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
 					imageLoader.displayImage("drawable://" + R.drawable.ic_action_overflow_dark, holderMain.settings);
 				}
@@ -210,7 +189,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				{
 					imageLoader.displayImage("drawable://" + R.drawable.ic_action_overflow_light, holderMain.settings);
 				}
-				
 
 				//popUp menu in cardView
 				holderMain.settings.setOnClickListener(new OnClickListener()
@@ -252,15 +230,22 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				//light checked item in listView
 				ArticlesListFragment artsListFrag = (ArticlesListFragment) act
 				.getSupportFragmentManager().findFragmentById(R.id.articles_list);
-
-				if (artsListFrag.getMyActivatedPosition() == position)
+				if (this.artsListView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE)
 				{
-					view.setBackgroundColor(act.getResources().getColor(R.color.blue));
+					if (artsListFrag.getMyActivatedPosition() == position)
+					{
+						view.setBackgroundColor(act.getResources().getColor(R.color.blue));
+					}
+					else
+					{
+						view.setBackgroundColor(Color.TRANSPARENT);
+					}
 				}
 				else
 				{
 					view.setBackgroundColor(Color.TRANSPARENT);
 				}
+
 				////////
 
 				//Title of article
@@ -299,8 +284,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				holderMain.art_img.setLayoutParams(params);
 				holderMain.art_img.setPadding(5, 5, 5, 5);
 
-//				ImageLoader imageLoader = UniversalImageLoader.get(act);
-				if(this.pref.getString("theme", "dark").equals("dark"))
+				//				ImageLoader imageLoader = UniversalImageLoader.get(act);
+				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
 					imageLoader.displayImage(p.img_art, holderMain.art_img, UniversalImageLoader.getDarkOptions());
 				}

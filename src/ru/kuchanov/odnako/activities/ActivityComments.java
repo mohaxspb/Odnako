@@ -18,7 +18,9 @@ import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -26,43 +28,44 @@ import android.support.v7.app.ActionBarActivity;
 public class ActivityComments extends ActionBarActivity
 {
 	ActionBarActivity act;
-	
+	SharedPreferences pref;
+
 	AdView adView;
 
-//	ArticleFragment artFrag;
-	
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
 	ArtInfo curArtInfo;
 	int position;
 	ArrayList<ArtInfo> allArtsInfo;
-	
+
 	ArrayList<CommentInfo> curArtCommentsInfoList;
 	ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityArticle onCreate");
+
+		//get default settings to get all settings later
+		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
+		//end of get default settings to get all settings later
+
+		//set theme before super and set content to apply it
+		if (pref.getString("theme", "dark").equals("dark"))
+		{
+			this.setTheme(R.style.ThemeDark);
+		}
+		else
+		{
+			this.setTheme(R.style.ThemeLight);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_comments);
-		
-		this.act=this;
 
-		//find (CREATE NEW ONE) fragment and send it some info from intent 
-		//this.artFrag=(ArticleFragment)this.getSupportFragmentManager().findFragmentById(R.id.article);
-		//		this.artFrag=new ArticleFragment();
-		//		Bundle bundle = new Bundle();
-		//		bundle.putString("edttext", "From Activity");
-		//		// set Fragmentclass Arguments
-		//		artFrag.setArguments(bundle);
-		//		
-		//		FragmentTransaction transaction=this.getSupportFragmentManager().beginTransaction();
-		//		transaction.replace(R.id.article, artFrag);
-		//		transaction.addToBackStack(null);
-		//		transaction.commit();
-		//End of find fragment and send it some info from intent 
+		this.act = this;
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
@@ -80,13 +83,14 @@ public class ActivityComments extends ActionBarActivity
 			// TODO
 			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
-		
+
 		//def all comms info setting
-		this.allArtsCommentsInfo=CommentInfo.getDefaultAllArtsCommentsInfo(this.allArtsInfo.size(), 15);
+		this.allArtsCommentsInfo = CommentInfo.getDefaultAllArtsCommentsInfo(this.allArtsInfo.size(), 15);
 		////
 
 		this.pager = (ViewPager) this.findViewById(R.id.comments_container);
-		this.pagerAdapter = new CommentsViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this.allArtsCommentsInfo, act);
+		this.pagerAdapter = new CommentsViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo,
+		this.allArtsCommentsInfo, act);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(position, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -132,7 +136,7 @@ public class ActivityComments extends ActionBarActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("ActivityArticle onRestoreInstanceState");
 	}
-	
+
 	private void restoreState(Bundle state)
 	{
 		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));

@@ -188,4 +188,9 @@ public class ArticlesListFragment extends Fragment
 	{
 		this.artsListAdapter = artsListAdapter;
 	}
+	
+	public ListView getArtsListView()
+	{
+		return this.artsList;
+	}
 }

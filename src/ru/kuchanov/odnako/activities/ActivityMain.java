@@ -51,15 +51,20 @@ public class ActivityMain extends ActionBarActivity
 	{
 		System.out.println("ActivityMain onCreate");
 		
-
-//		this.setContentView(R.layout.layout_activity_main);
-
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//end of get default settings to get all settings later
 		
-		this.setAppearence();
+		//set theme before super and set content to apply it
+		if (pref.getString("theme", "dark").equals("dark"))
+		{
+			this.setTheme(R.style.ThemeDark);
+		}
+		else
+		{
+			this.setTheme(R.style.ThemeLight);
+		}
 		
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
@@ -348,19 +353,6 @@ public class ActivityMain extends ActionBarActivity
 		}
 	}
 	
-	protected void setAppearence()
-	{
-		if (pref.getString("theme", "dark").equals("dark"))
-		{
-			this.setTheme(R.style.ThemeDark);
-//			this.setContentView(R.layout.layout_activity_main);
-		}
-		else
-		{
-			this.setTheme(R.style.ThemeLight);
-//			this.setContentView(R.layout.layout_activity_main);
-		}
-	}
 	
 	@SuppressLint("NewApi")
 	protected void myRecreate()

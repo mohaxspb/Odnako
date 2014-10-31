@@ -15,7 +15,9 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +26,9 @@ import com.google.android.gms.ads.AdView;
 
 public class ActivityArticle extends ActionBarActivity
 {
+	ActionBarActivity act;
+	SharedPreferences pref;
+	
 	AdView adView;
 
 	ViewPager pager;
@@ -36,11 +41,25 @@ public class ActivityArticle extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityArticle onCreate");
+
+		//get default settings to get all settings later
+		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
+		//end of get default settings to get all settings later
+
+		//set theme before super and set content to apply it
+		if (pref.getString("theme", "dark").equals("dark"))
+		{
+			this.setTheme(R.style.ThemeDark);
+		}
+		else
+		{
+			this.setTheme(R.style.ThemeLight);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_article);
-		
-		
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
@@ -58,59 +77,59 @@ public class ActivityArticle extends ActionBarActivity
 			// TODO
 			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
-		
-		this.pager=(ViewPager) this.findViewById(R.id.article_container);
-		this.pagerAdapter=new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this);
+
+		this.pager = (ViewPager) this.findViewById(R.id.article_container);
+		this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(position, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//find (CREATE NEW ONE) fragment and send it some info from intent 
-//		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article_container);
-//
-//		ArticleFragment newArtFrag = new ArticleFragment();
-//
-//		Bundle bundle = new Bundle();
-//		bundle.putInt("position", this.position);
-//		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-//		for (int i = 0; i < this.allArtsInfo.size(); i++)
-//		{
-//			if (i < 10)
-//			{
-//				bundle.putStringArray("allArtsInfo_0" + String.valueOf(i),
-//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-//			}
-//			else
-//			{
-//				bundle.putStringArray("allArtsInfo_" + String.valueOf(i),
-//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-//			}
-//		}
-//		// set Fragmentclass Arguments
-//		newArtFrag.setArguments(bundle);
-//
-//		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-//		//check if there was artFrag and it's not the same as new (compare its ArtInfo.url) and has not empty url
-//		if (curArtFrag != null && !curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)
-//		&& !curArtFrag.getCurArtInfo().url.equals("") && !curArtFrag.getCurArtInfo().url.equals("empty"))
-//		{
-//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url): "
-//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)));
-//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(''): "
-//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("")));
-//			System.out.println("!curArtFrag.getCurArtInfo().url.equals('empty'): "
-//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("empty")));
-//			transaction.addToBackStack(null);
-//			transaction.hide(curArtFrag);
-//			
-//		}
-//		if(curArtFrag==null)
-//		{
-//			System.out.println("curArtFrag==null");
-//			transaction.add(R.id.article_container, newArtFrag);
-//		}
-//		
-//		transaction.commit();
+		//		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article_container);
+		//
+		//		ArticleFragment newArtFrag = new ArticleFragment();
+		//
+		//		Bundle bundle = new Bundle();
+		//		bundle.putInt("position", this.position);
+		//		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
+		//		for (int i = 0; i < this.allArtsInfo.size(); i++)
+		//		{
+		//			if (i < 10)
+		//			{
+		//				bundle.putStringArray("allArtsInfo_0" + String.valueOf(i),
+		//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
+		//			}
+		//			else
+		//			{
+		//				bundle.putStringArray("allArtsInfo_" + String.valueOf(i),
+		//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
+		//			}
+		//		}
+		//		// set Fragmentclass Arguments
+		//		newArtFrag.setArguments(bundle);
+		//
+		//		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+		//		//check if there was artFrag and it's not the same as new (compare its ArtInfo.url) and has not empty url
+		//		if (curArtFrag != null && !curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)
+		//		&& !curArtFrag.getCurArtInfo().url.equals("") && !curArtFrag.getCurArtInfo().url.equals("empty"))
+		//		{
+		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url): "
+		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)));
+		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(''): "
+		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("")));
+		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals('empty'): "
+		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("empty")));
+		//			transaction.addToBackStack(null);
+		//			transaction.hide(curArtFrag);
+		//			
+		//		}
+		//		if(curArtFrag==null)
+		//		{
+		//			System.out.println("curArtFrag==null");
+		//			transaction.add(R.id.article_container, newArtFrag);
+		//		}
+		//		
+		//		transaction.commit();
 		//End of find fragment and send it some info from intent 
 
 		//adMob
@@ -149,7 +168,7 @@ public class ActivityArticle extends ActionBarActivity
 
 		//save allArtsInfo
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
-		
+
 	}
 
 	@Override
