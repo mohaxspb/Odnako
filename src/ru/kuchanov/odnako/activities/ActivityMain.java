@@ -16,7 +16,6 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
 import android.annotation.SuppressLint;
@@ -50,12 +49,12 @@ public class ActivityMain extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
-		
+
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//end of get default settings to get all settings later
-		
+
 		//set theme before super and set content to apply it
 		if (pref.getString("theme", "dark").equals("dark"))
 		{
@@ -65,10 +64,10 @@ public class ActivityMain extends ActionBarActivity
 		{
 			this.setTheme(R.style.ThemeLight);
 		}
-		
+
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
-		
+
 		//then setContent?
 		this.setContentView(R.layout.layout_activity_main);
 
@@ -103,9 +102,9 @@ public class ActivityMain extends ActionBarActivity
 			//get position from listFrag
 			this.position = ((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list))
 			.getMyActivatedPosition();
-			if(this.position==ListView.INVALID_POSITION)
+			if (this.position == ListView.INVALID_POSITION)
 			{
-				this.position=0;
+				this.position = 0;
 			}
 			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.articles_list))
 			.setActivatedPosition(position);
@@ -211,34 +210,17 @@ public class ActivityMain extends ActionBarActivity
 			System.out.println("ActivityMain: onRestoreInstanceState. curArtInfo=null");
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		this.pref=PreferenceManager.getDefaultSharedPreferences(this);
-		if (pref.getString("theme", "dark").equals("dark"))
-		{
-			getMenuInflater().inflate(R.menu.main_dark, menu);
-		}
-		else
-		{
-			getMenuInflater().inflate(R.menu.main_light, menu);
-		}
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		ArticlesListFragment artsListFrag = (ArticlesListFragment) this.getSupportFragmentManager().findFragmentById(
-		R.id.articles_list);
-		ArtsListAdapter adapter=artsListFrag.getArtsListAdapter();
-		
-		SharedPreferences prefArtsList = PreferenceManager.getDefaultSharedPreferences(this);
-		String curArtsListSize = prefArtsList.getString("scale", "1");
-//		System.out.println(curArtsListSize);
-		
-//		SharedPreferences prefForScale = PreferenceManager.getDefaultSharedPreferences(this);
 		switch (item.getItemId())
 		{
 			case R.id.refresh:
@@ -270,90 +252,123 @@ public class ActivityMain extends ActionBarActivity
 			case R.id.theme_dark:
 				System.out.println("theme_dark");
 				this.pref.edit().putString("theme", "dark").commit();
-				
+
 				this.myRecreate();
 				return super.onOptionsItemSelected(item);
+				//				return true;
+//			case R.id.arts_list_size:
+//				MenuItem artsListItem = item.getSubMenu().findItem(R.id.artslist_05);
+//				MenuItem artsListaItem = item.getSubMenu().findItem(R.id.artslist_075);
+//				MenuItem artsListbItem = item.getSubMenu().findItem(R.id.artslist_1);
+//				MenuItem artsListcItem = item.getSubMenu().findItem(R.id.artslist_125);
+//				MenuItem artsListdItem = item.getSubMenu().findItem(R.id.artslist_15);
+//				MenuItem artsListeItem = item.getSubMenu().findItem(R.id.artslist_175);
+//				MenuItem artsListgItem = item.getSubMenu().findItem(R.id.artslist_2);
+//
+//				if (curArtsListSize.equals("0.5"))
+//				{
+//					artsListItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("0.75"))
+//				{
+//					artsListaItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("1"))
+//				{
+//					artsListbItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("1.25"))
+//				{
+//					artsListcItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("1.5"))
+//				{
+//					artsListdItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("1.75"))
+//				{
+//					artsListeItem.setChecked(true);
+//				}
+//				else if (curArtsListSize.equals("2"))
+//				{
+//					artsListgItem.setChecked(true);
+//				}
 //				return true;
-			case R.id.arts_list_size:
-				MenuItem artsListItem = item.getSubMenu().findItem(R.id.artslist_05);
-				MenuItem artsListaItem = item.getSubMenu().findItem(R.id.artslist_075);
-				MenuItem artsListbItem = item.getSubMenu().findItem(R.id.artslist_1);
-				MenuItem artsListcItem = item.getSubMenu().findItem(R.id.artslist_125);
-				MenuItem artsListdItem = item.getSubMenu().findItem(R.id.artslist_15);
-				MenuItem artsListeItem = item.getSubMenu().findItem(R.id.artslist_175);
-				MenuItem artsListgItem = item.getSubMenu().findItem(R.id.artslist_2);
-
-				
-				if (curArtsListSize.equals("0.5"))
-				{
-					artsListItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("0.75"))
-				{
-					artsListaItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("1"))
-				{
-					artsListbItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("1.25"))
-				{
-					artsListcItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("1.5"))
-				{
-					artsListdItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("1.75"))
-				{
-					artsListeItem.setChecked(true);
-				}
-				else if (curArtsListSize.equals("2"))
-				{
-					artsListgItem.setChecked(true);
-				}
-				return true;
-			case R.id.artslist_05:
-				prefArtsList.edit().putString("scale", "0.5").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_075:
-				prefArtsList.edit().putString("scale", "0.75").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_1:
-				prefArtsList.edit().putString("scale", "1").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_125:
-				prefArtsList.edit().putString("scale", "1.25").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_15:
-				prefArtsList.edit().putString("scale", "1.5").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_175:
-				prefArtsList.edit().putString("scale", "1.75").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
-			case R.id.artslist_2:
-				prefArtsList.edit().putString("scale", "2").commit();
-				try	{adapter.notifyDataSetChanged();}
-				catch(Exception e){};
-				return true;
+//			case R.id.artslist_05:
+//				prefArtsList.edit().putString("scale", "0.5").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_075:
+//				prefArtsList.edit().putString("scale", "0.75").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_1:
+//				prefArtsList.edit().putString("scale", "1").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_125:
+//				prefArtsList.edit().putString("scale", "1.25").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_15:
+//				prefArtsList.edit().putString("scale", "1.5").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_175:
+//				prefArtsList.edit().putString("scale", "1.75").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
+//			case R.id.artslist_2:
+//				prefArtsList.edit().putString("scale", "2").commit();
+//				try
+//				{
+//					adapter.notifyDataSetChanged();
+//				} catch (Exception e)
+//				{
+//				}
+//				;
+//				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	
+
 	@SuppressLint("NewApi")
 	protected void myRecreate()
 	{

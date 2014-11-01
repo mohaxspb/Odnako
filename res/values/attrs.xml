@@ -7,5 +7,12 @@
     <declare-styleable name="CustomTheme">
         <attr name="cardBackGroundColor" format="reference" />
     </declare-styleable>
+    
+        <attr name="themeIcon" format="reference" />
+        <attr name="overflowIcon" format="reference" />
+        <attr name="settingsIcon" format="reference" />
+        <attr name="refreshIcon" format="reference" />
+        <attr name="commentsIcon" format="reference" />
+        <attr name="shareIcon" format="reference" />
 
 </resources>

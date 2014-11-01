@@ -21,6 +21,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.Spanned;
@@ -29,7 +30,9 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
@@ -141,6 +144,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		return position;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
@@ -181,15 +185,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 					holderMain = (ArticleHolder) convertView.getTag();
 				}
 				ImageLoader imageLoader = UniversalImageLoader.get(act);
-				if (this.pref.getString("theme", "dark").equals("dark"))
-				{
-					imageLoader.displayImage("drawable://" + R.drawable.ic_action_overflow_dark, holderMain.settings);
-				}
-				else
-				{
-					imageLoader.displayImage("drawable://" + R.drawable.ic_action_overflow_light, holderMain.settings);
-				}
-
 				//popUp menu in cardView
 				holderMain.settings.setOnClickListener(new OnClickListener()
 				{
@@ -275,6 +270,32 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				});
 
 				holderMain.preview.setTextSize(21 * scaleFactor);
+				////end of preview
+				
+				//name of author
+				if (!p.authorName.equals("default"))
+				{
+					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
+					holderMain.author_name.setText(spannedContent);
+
+				}
+				else if (p.authorName.equals("default"))
+				{
+					holderMain.author_name.setText(null);
+				}
+
+				holderMain.author_name.setTextSize(21 * scaleFactor);
+
+				holderMain.author_name.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showAllAuthorsArticles(p, act);
+					}
+				});
+				//end of name of author
 
 				// ART_IMG
 				final float scale = act.getResources().getDisplayMetrics().density;
@@ -320,6 +341,10 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
 				paramsForIcons.setMargins(5, 5, 5, 5);
 				paramsForIcons.gravity = Gravity.CENTER;
+				
+				LayoutParams paramsForIconsBottomGravity = new LayoutParams(pixelsForIcons, pixelsForIcons);
+				paramsForIconsBottomGravity.setMargins(5, 5, 5, 5);
+				paramsForIconsBottomGravity.gravity=Gravity.BOTTOM;
 
 				holderMain.save.setScaleType(ScaleType.FIT_XY);
 				holderMain.save.setLayoutParams(paramsForIcons);
@@ -382,49 +407,9 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				}
 				////end read Img
 
-				//comments btn
-				holderMain.comms.setScaleType(ScaleType.FIT_XY);
-				holderMain.comms.setLayoutParams(paramsForIcons);
-
-				if (pref.getString("theme", "dark").equals("dark"))
-				{
-					holderMain.comms.setImageResource(R.drawable.ic_comment_white_48dp);
-				}
-				else
-				{
-					holderMain.comms.setImageResource(R.drawable.ic_comment_grey600_48dp);
-				}
-
-				holderMain.comms.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						ArtsListAdapter.showComments(artsInfo, position, act);
-					}
-				});
-				holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
-				holderMain.num_of_comms.setTextSize(21 * scaleFactor);
-				holderMain.num_of_comms.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						ArtsListAdapter.showComments(artsInfo, position, act);
-					}
-				});
-				////end of comments btn
+				
 				//share btn
-				holderMain.share.setScaleType(ScaleType.FIT_XY);
-				holderMain.share.setLayoutParams(paramsForIcons);
-
-				if (pref.getString("theme", "dark").equals("dark"))
-				{
-					holderMain.share.setImageResource(R.drawable.ic_share_white_48dp);
-				}
-				else
-				{
-					holderMain.share.setImageResource(R.drawable.ic_share_grey600_48dp);
-				}
-
+				holderMain.share.setLayoutParams(paramsForIconsBottomGravity);
 				holderMain.share.setOnClickListener(new OnClickListener()
 				{
 					public void onClick(View v)
@@ -432,7 +417,8 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 						ArtsListAdapter.shareUrl(p.url, act);
 					}
 				});
-
+				holderMain.num_of_shares.setLayoutParams(paramsForIconsBottomGravity);
+				holderMain.num_of_shares.setGravity(Gravity.BOTTOM);
 				holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
 				holderMain.num_of_shares.setTextSize(21 * scaleFactor);
 				holderMain.num_of_shares.setOnClickListener(new OnClickListener()
@@ -443,36 +429,88 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 					}
 				});
 				////end of share btn
-
-				//name of author
-				if (!p.authorName.equals("default"))
+				
+				//comments btn
+				holderMain.comms.setLayoutParams(paramsForIconsBottomGravity);
+				holderMain.comms.setOnClickListener(new OnClickListener()
 				{
-					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
-					holderMain.author_name.setText(spannedContent);
-
-				}
-				else if (p.authorName.equals("default"))
-				{
-					holderMain.author_name.setText(null);
-				}
-
-				//				LayoutParams layParams = new LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
-				//				layParams.setMargins(5, 5, 5, 5);
-				//				holderMain.author_name.setLayoutParams(layParams);
-				//				holderMain.author_name.setGravity(Gravity.CENTER_VERTICAL);
-
-				holderMain.author_name.setTextSize(21 * scaleFactor);
-
-				holderMain.author_name.setOnClickListener(new OnClickListener()
-				{
-
-					@Override
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showAllAuthorsArticles(p, act);
+						ArtsListAdapter.showComments(artsInfo, position, act);
 					}
 				});
-				//end of name of author
+				holderMain.num_of_comms.setLayoutParams(paramsForIconsBottomGravity);
+				holderMain.num_of_comms.setGravity(Gravity.BOTTOM);
+				holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
+				holderMain.num_of_comms.setTextSize(21 * scaleFactor);
+				holderMain.num_of_comms.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						ArtsListAdapter.showComments(artsInfo, position, act);
+					}
+				});
+//				set comm.y coord to share.y coord
+//				ViewGroup testVG=(ViewGroup)view.findViewById(R.id.art_card_save_share_lin);
+//				testVG.measure(0, 0);
+//				int newHeight=testVG.getMeasuredHeight();
+//				System.out.println("newHeight: "+newHeight);
+//								
+//				LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, newHeight);
+//				lp.gravity=Gravity.BOTTOM;
+//				LinearLayout.LayoutParams lp1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//				lp1.gravity=Gravity.BOTTOM;
+//				((ViewGroup)holderMain.comms.getParent().getParent()).setLayoutParams(lp);
+//				((ViewGroup)holderMain.comms.getParent()).setLayoutParams(lp1);
+				
+				
+				final ViewGroup commReadLin =((ViewGroup)holderMain.comms.getParent().getParent());
+				commReadLin.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener()
+				{
+
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout()
+					{
+						// Check if your view has been laid out yet
+						if (commReadLin.getHeight() > 0)
+						{
+							// If it has been, we will search the view hierarchy for the view that is responsible for the extra space. 
+							CardView dialogLayout = findShareLinearLayout(commReadLin);
+							if (dialogLayout == null)
+							{
+								// Could find it. Unexpected.
+
+							}
+							else
+							{
+								
+								
+								View child1 = dialogLayout.findViewById(R.id.art_card_save_share_lin);
+								if (child1 != commReadLin)
+								{
+									// remove height
+									LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child1.getLayoutParams();
+									child1.measure(0, 0);
+									lp.height = child1.getMeasuredHeight();
+									lp.gravity=Gravity.BOTTOM;
+									commReadLin.setLayoutParams(lp);
+								}
+								else
+								{
+									System.out.println("customView, Fuck");
+								}
+							}
+
+							// Done with the listener
+							commReadLin.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+						}
+					}
+
+				});
+				////end of comments btn
+
+				
 
 				//Date
 				holderMain.date.setText(p.pubDate);
@@ -493,6 +531,29 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				return view;
 
 		}
+	}
+	
+	public static CardView findShareLinearLayout(View view)
+	{
+		ViewParent parent = (ViewParent) view.getParent();
+		if (parent != null)
+		{
+			if (parent instanceof CardView)
+			{
+				// Found it
+				return (CardView) parent;
+
+			}
+			else if (parent instanceof View)
+			{
+				// Keep looking
+				return findShareLinearLayout((View) parent);
+
+			}
+		}
+
+		// Couldn't find it
+		return null;
 	}
 
 	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)

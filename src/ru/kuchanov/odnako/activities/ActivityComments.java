@@ -18,12 +18,16 @@ import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class ActivityComments extends ActionBarActivity
 {
@@ -46,6 +50,7 @@ public class ActivityComments extends ActionBarActivity
 	{
 		System.out.println("ActivityArticle onCreate");
 
+		this.act = this;
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -64,8 +69,6 @@ public class ActivityComments extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_comments);
-
-		this.act = this;
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
@@ -100,6 +103,66 @@ public class ActivityComments extends ActionBarActivity
 		AddAds addAds = new AddAds(this, this.adView);
 		addAds.addAd();
 		//end of adMob
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_comments, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_settings:
+				item.setIntent(new Intent(this, ActivityPreference.class));
+				return super.onOptionsItemSelected(item);
+			case R.id.theme:
+				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
+				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
+				String curTheme = pref.getString("theme", "dark");
+				System.out.println(curTheme);
+				if (!curTheme.equals("dark"))
+				{
+					ligthThemeMenuItem.setChecked(true);
+				}
+				else
+				{
+					darkThemeMenuItem.setChecked(true);
+				}
+				return true;
+			case R.id.theme_ligth:
+				this.pref.edit().putString("theme", "ligth").commit();
+				System.out.println("theme_ligth");
+				this.myRecreate();
+				return true;
+			case R.id.theme_dark:
+				System.out.println("theme_dark");
+				this.pref.edit().putString("theme", "dark").commit();
+
+				this.myRecreate();
+				return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@SuppressLint("NewApi")
+	protected void myRecreate()
+	{
+		if (android.os.Build.VERSION.SDK_INT >= 11)
+		{
+			super.recreate();
+		}
+		else
+		{
+			finish();
+			startActivity(getIntent());
+		}
 	}
 
 	@Override

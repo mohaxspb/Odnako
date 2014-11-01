@@ -13,14 +13,19 @@ import java.util.Set;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.AddAds;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.ads.AdView;
 
@@ -28,7 +33,7 @@ public class ActivityArticle extends ActionBarActivity
 {
 	ActionBarActivity act;
 	SharedPreferences pref;
-	
+
 	AdView adView;
 
 	ViewPager pager;
@@ -42,9 +47,10 @@ public class ActivityArticle extends ActionBarActivity
 	{
 		System.out.println("ActivityArticle onCreate");
 
+		this.act=this;
 		//get default settings to get all settings later
-		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
-		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
+		PreferenceManager.setDefaultValues(act, R.xml.pref, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 		//end of get default settings to get all settings later
 
 		//set theme before super and set content to apply it
@@ -84,59 +90,77 @@ public class ActivityArticle extends ActionBarActivity
 		this.pager.setCurrentItem(position, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
-		//find (CREATE NEW ONE) fragment and send it some info from intent 
-		//		ArticleFragment curArtFrag = (ArticleFragment) this.getSupportFragmentManager().findFragmentById(R.id.article_container);
-		//
-		//		ArticleFragment newArtFrag = new ArticleFragment();
-		//
-		//		Bundle bundle = new Bundle();
-		//		bundle.putInt("position", this.position);
-		//		bundle.putStringArray("curArtInfo", this.curArtInfo.getArtInfoAsStringArray());
-		//		for (int i = 0; i < this.allArtsInfo.size(); i++)
-		//		{
-		//			if (i < 10)
-		//			{
-		//				bundle.putStringArray("allArtsInfo_0" + String.valueOf(i),
-		//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-		//			}
-		//			else
-		//			{
-		//				bundle.putStringArray("allArtsInfo_" + String.valueOf(i),
-		//				this.allArtsInfo.get(i).getArtInfoAsStringArray());
-		//			}
-		//		}
-		//		// set Fragmentclass Arguments
-		//		newArtFrag.setArguments(bundle);
-		//
-		//		FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-		//		//check if there was artFrag and it's not the same as new (compare its ArtInfo.url) and has not empty url
-		//		if (curArtFrag != null && !curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)
-		//		&& !curArtFrag.getCurArtInfo().url.equals("") && !curArtFrag.getCurArtInfo().url.equals("empty"))
-		//		{
-		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url): "
-		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals(newArtFrag.getCurArtInfo().url)));
-		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals(''): "
-		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("")));
-		//			System.out.println("!curArtFrag.getCurArtInfo().url.equals('empty'): "
-		//			+ String.valueOf(!curArtFrag.getCurArtInfo().url.equals("empty")));
-		//			transaction.addToBackStack(null);
-		//			transaction.hide(curArtFrag);
-		//			
-		//		}
-		//		if(curArtFrag==null)
-		//		{
-		//			System.out.println("curArtFrag==null");
-		//			transaction.add(R.id.article_container, newArtFrag);
-		//		}
-		//		
-		//		transaction.commit();
-		//End of find fragment and send it some info from intent 
-
 		//adMob
 		adView = (AdView) this.findViewById(R.id.adView);
 		AddAds addAds = new AddAds(this, this.adView);
 		addAds.addAd();
 		//end of adMob
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_article, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.comments:
+				ArtsListAdapter.showComments(allArtsInfo, position, act);
+				return true;
+			case R.id.share:
+				ArtsListAdapter.shareUrl(this.curArtInfo.url, this.act);
+				return true;
+			case R.id.action_settings:
+				item.setIntent(new Intent(this, ActivityPreference.class));
+				return super.onOptionsItemSelected(item);
+			case R.id.theme:
+				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
+				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
+				String curTheme = pref.getString("theme", "dark");
+				System.out.println(curTheme);
+				if (!curTheme.equals("dark"))
+				{
+					ligthThemeMenuItem.setChecked(true);
+				}
+				else
+				{
+					darkThemeMenuItem.setChecked(true);
+				}
+				return true;
+			case R.id.theme_ligth:
+				this.pref.edit().putString("theme", "ligth").commit();
+				System.out.println("theme_ligth");
+				this.myRecreate();
+				return true;
+			case R.id.theme_dark:
+				System.out.println("theme_dark");
+				this.pref.edit().putString("theme", "dark").commit();
+
+				this.myRecreate();
+				return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@SuppressLint("NewApi")
+	protected void myRecreate()
+	{
+		if (android.os.Build.VERSION.SDK_INT >= 11)
+		{
+			super.recreate();
+		}
+		else
+		{
+			finish();
+			startActivity(getIntent());
+		}
 	}
 
 	@Override

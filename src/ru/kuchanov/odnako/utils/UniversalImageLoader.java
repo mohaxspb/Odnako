@@ -31,7 +31,7 @@ public class UniversalImageLoader
 
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.displayer(new RoundedBitmapDisplayer(10))
-		.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+		.showImageOnLoading(R.drawable.ic_autorenew_grey600_48dp)
 		.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
 		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
 		.cacheInMemory(true)
@@ -61,7 +61,7 @@ public class UniversalImageLoader
 		return new DisplayImageOptions.Builder()
 	
 	.displayer(new RoundedBitmapDisplayer(10))
-	.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
+	.showImageOnLoading(R.drawable.ic_autorenew_white_48dp)
 	.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
 	.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
 	.cacheInMemory(true)

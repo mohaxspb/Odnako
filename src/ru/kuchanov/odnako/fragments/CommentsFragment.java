@@ -20,7 +20,6 @@ import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -80,33 +79,6 @@ public class CommentsFragment extends Fragment
 		this.commentsListView = (ListView) v.findViewById(R.id.comments_list_view);
 		//end of find all views
 
-		//fill Arraylist with artsInfo
-		//		this.curArtCommentsInfoList= new ArrayList<CommentInfo>();
-		//		int sampleNum = 30;
-		//		for (int i = 0; i < sampleNum; i++)
-		//		{
-		//			defaultCommInfo=new String[12];
-		//			this.defaultCommInfo[0] = "name_"+String.valueOf(i);
-		//			this.defaultCommInfo[1] = "comment_text_"+String.valueOf(i);
-		//			this.defaultCommInfo[2] = "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg";
-		//			this.defaultCommInfo[3] = "1 сентября 1939";
-		//			this.defaultCommInfo[4] = "Saint-Petersburg";
-		//			this.defaultCommInfo[5] = String.valueOf(i);
-		//			this.defaultCommInfo[6] = String.valueOf(i);
-		//			this.defaultCommInfo[7] = "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg";
-		//			this.defaultCommInfo[8] = "data_pid";
-		//			this.defaultCommInfo[9] = "id";
-		//			this.defaultCommInfo[10] = "0";
-		//			this.defaultCommInfo[11] = "5";
-		//			CommentInfo commentInfo=new CommentInfo(this.defaultCommInfo);
-		//			
-		//			this.curArtCommentsInfoList.add(commentInfo);
-		//		}
-		//		
-		//		CommentInfo artInfoTEST=new CommentInfo("Юрий", "Тестовы коммент", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "1 сентября 1939", "Saint-Petersburg", "100", "0", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "100", "1000", "0", "5");
-		//		
-		//		curArtCommentsInfoList.set(1, artInfoTEST);
-		//		//sample data now
 		this.curArtCommentsInfoList = CommentInfo.getDefaultArtsCommentsInfo(20);
 
 		CommentsListAdapter commentsListAdapter = new CommentsListAdapter(this.act, R.layout.comment_card_view,
@@ -126,7 +98,7 @@ public class CommentsFragment extends Fragment
 		return v;
 	}
 
-	@SuppressLint("NewApi")
+	//	@SuppressLint("NewApi")
 	private void addHeader(LayoutInflater inflater)
 	{
 		View vg = inflater.inflate(R.layout.arts_list_card_view, commentsListView, false);
@@ -182,7 +154,15 @@ public class CommentsFragment extends Fragment
 		art_img.setPadding(5, 5, 5, 5);
 
 		ImageLoader imageLoader = UniversalImageLoader.get(act);
-		imageLoader.displayImage(this.curArtInfo.img_art, art_img);
+		if(this.pref.getString("theme", "dark").equals("dark"))
+		{
+			imageLoader.displayImage(this.curArtInfo.img_art, art_img, UniversalImageLoader.getDarkOptions());
+		}
+		else
+		{
+			imageLoader.displayImage(this.curArtInfo.img_art, art_img);
+		}
+		
 		//end of ART_IMG
 
 		//SaveImg

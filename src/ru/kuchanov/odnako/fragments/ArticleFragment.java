@@ -592,7 +592,8 @@ public class ArticleFragment extends Fragment
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
 			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, UniversalImageLoader.getDarkOptions());
-			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
+//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
+			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
 //			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
 //			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
@@ -600,7 +601,8 @@ public class ArticleFragment extends Fragment
 		else
 		{
 			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
-			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_grey600_48dp);
 //			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
 //			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);

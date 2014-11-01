@@ -6,23 +6,16 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.io.File;
-
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -116,37 +109,12 @@ public class CommentDialogFragment extends DialogFragment
 		commText.setMovementMethod(LinkMovementMethod.getInstance());
 
 		// FLAG
-		File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
-
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
-		.diskCache(new UnlimitedDiscCache(cacheDir))
-		.build();
-
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.displayer(new RoundedBitmapDisplayer(10))
-		.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
-		.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
-		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
-		.cacheInMemory(true)
-		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.build();
-
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		if (!imageLoader.isInited())
-		{
-			imageLoader.init(config);
-		}
-		imageLoader.displayImage(this.curCommentInfo.flag, flag, options);
+		ImageLoader imageLoader = UniversalImageLoader.get(act);
+		imageLoader.displayImage(this.curCommentInfo.flag, flag);
 		//end of FLAG
 
 		// AVA
-		if (!imageLoader.isInited())
-		{
-			imageLoader.init(config);
-		}
-		imageLoader.displayImage(this.curCommentInfo.avaImg, ava, options);
+		imageLoader.displayImage(this.curCommentInfo.avaImg, ava);
 		// AVA
 
 		time_city.setText(this.curCommentInfo.time + " " + this.curCommentInfo.city);

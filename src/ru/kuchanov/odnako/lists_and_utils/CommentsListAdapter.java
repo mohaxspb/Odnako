@@ -1,20 +1,14 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.CommentDialogFragment;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.app.ActionBarActivity;
@@ -178,46 +172,18 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 				});
 
 				// FLAG
-				File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
-
-				ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
-				.diskCache(new UnlimitedDiscCache(cacheDir))
-				.build();
-
-				DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.displayer(new RoundedBitmapDisplayer(10))
-				.showImageOnLoading(R.drawable.ic_action_refresh_ligth)
-				.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
-				.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
-				.cacheInMemory(true)
-				.cacheOnDisk(true)
-				.considerExifParams(true)
-				.bitmapConfig(Bitmap.Config.RGB_565)
-				.build();
-
-				ImageLoader imageLoader = ImageLoader.getInstance();
-				if (!imageLoader.isInited())
-				{
-					imageLoader.init(config);
-				}
-				imageLoader.displayImage(p.flag, holderMain.flag, options);
+				
+				ImageLoader imageLoader = UniversalImageLoader.get(act);
+				imageLoader.displayImage(p.flag, holderMain.flag);
 				//end of FLAG
 
 				// AVA
-				if (!imageLoader.isInited())
-				{
-					imageLoader.init(config);
-				}
-				imageLoader.displayImage(p.avaImg, holderMain.avaImg, options);
+				imageLoader.displayImage(p.avaImg, holderMain.avaImg);
 				// AVA
 
 				holderMain.time_city.setText(p.time + " " + p.city);
 
 				// Karma
-//				String colored = "<font color=\'#00FF00\'>" + p.like + "</font> | "
-//				+ "<font color=\'#FF0000\'>" + p.dislike + "</font>";
-//				Spanned spannedContentKarma = Html.fromHtml(colored);
-//				holderMain.like_dislike.setText(spannedContentKarma);
 				//set karma's parent gravity to bottom, for known issue in Dialog
 				LinearLayout vg=(LinearLayout) holderMain.like.getParent();
 				LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

@@ -18,7 +18,14 @@
         <item name="dropDownListViewStyle">@style/OdnakoDropDownListView</item>
         <item name="actionMenuTextAppearance">@color/material_grey_400</item>
         <item name="android:textColor">@color/material_grey_300</item>
+        <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_800</item>
+        <item name="themeIcon">@drawable/ic_color_lens_white_48dp</item>
+        <item name="overflowIcon">@drawable/ic_action_overflow_dark</item>
+        <item name="settingsIcon">@drawable/ic_settings_white_48dp</item>
+        <item name="refreshIcon">@drawable/ic_autorenew_white_48dp</item>
+        <item name="commentsIcon">@drawable/ic_comment_white_48dp</item>
+        <item name="shareIcon">@drawable/ic_share_white_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
@@ -47,7 +54,14 @@
         <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLight</item>
         <item name="actionMenuTextAppearance">@color/material_grey_800</item>
         <item name="android:textColor">@color/material_grey_800</item>
+        <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_50</item>
+        <item name="themeIcon">@drawable/ic_color_lens_grey600_48dp</item>
+        <item name="overflowIcon">@drawable/ic_action_overflow_light</item>
+        <item name="settingsIcon">@drawable/ic_settings_grey600_48dp</item>
+        <item name="refreshIcon">@drawable/ic_autorenew_grey600_48dp</item>
+        <item name="commentsIcon">@drawable/ic_comment_grey600_48dp</item>
+        <item name="shareIcon">@drawable/ic_share_grey600_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

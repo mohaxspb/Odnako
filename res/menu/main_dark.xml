@@ -18,7 +18,7 @@
             <group android:menuCategory="container" >
                 <item
                     android:id="@+id/theme"
-                    android:icon="@drawable/ic_color_lens_white_48dp"
+                    android:icon="?themeIcon"
                     android:orderInCategory="110"
                     android:title="@string/theme"
                     app:showAsAction="always">

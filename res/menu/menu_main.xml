@@ -1,0 +1,50 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:icon="?overflowIcon"
+        android:orderInCategory="200"
+        android:title="@string/action_settings"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_settings"
+                android:icon="?settingsIcon"
+                android:orderInCategory="200"
+                android:title="@string/action_settings"
+                app:showAsAction="always">
+            </item>
+
+            <group android:menuCategory="container" >
+                <item
+                    android:id="@+id/theme"
+                    android:icon="?themeIcon"
+                    android:orderInCategory="110"
+                    android:title="@string/theme"
+                    app:showAsAction="always">
+                    <menu android:menuCategory="container" >
+                        <group android:checkableBehavior="single" >
+                            <item
+                                android:id="@+id/theme_ligth"
+                                android:orderInCategory="110"
+                                android:title="@string/ligth"
+                                app:showAsAction="never"/>
+                            <item
+                                android:id="@+id/theme_dark"
+                                android:orderInCategory="120"
+                                android:title="@string/dark"
+                                app:showAsAction="never"/>
+                        </group>
+                    </menu>
+                </item>
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/refresh"
+        android:icon="?refreshIcon"
+        android:orderInCategory="100"
+        android:title="@string/refresh"
+        app:showAsAction="always"/>
+
+</menu>
