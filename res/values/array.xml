@@ -24,6 +24,7 @@
         <item>Человекостроение</item>
         <item>Миропорядок</item>
     </string-array>
+    
     <string-array name="menu_items_links">
         <item>Авторы</item>
         <item>Категории</item>

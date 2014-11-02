@@ -98,7 +98,6 @@ public class CommentsFragment extends Fragment
 		return v;
 	}
 
-	//	@SuppressLint("NewApi")
 	private void addHeader(LayoutInflater inflater)
 	{
 		View vg = inflater.inflate(R.layout.arts_list_card_view, commentsListView, false);

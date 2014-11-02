@@ -10,35 +10,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-import com.google.android.gms.ads.AdView;
+import ru.kuchanov.odnako.lists_and_utils.Shakespeare;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.download.ParseForAllAuthors;
+import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
-import ru.kuchanov.odnako.utils.AddAds;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ActivityMain extends ActionBarActivity
+public class ActivityMain extends ActivityBase//ActionBarActivity
 {
-	//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_CUR_ART_INFO = "extra_message_from_main_to_article_cur_art_info";
-	//	public static final String EXTRA_MESSAGE_FROM_MAIN_TO_ARTICLE_POSITION = "extra_message_from_main_to_article_position";
-
-	public boolean twoPane;
-	SharedPreferences pref;
-	AdView adView;
-
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
@@ -49,6 +45,7 @@ public class ActivityMain extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
+		this.act = this;
 
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
@@ -68,8 +65,25 @@ public class ActivityMain extends ActionBarActivity
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 
-		//then setContent?
 		this.setContentView(R.layout.layout_activity_main);
+
+		//drawer settings
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_new);
+		mDrawer = (ListView) findViewById(R.id.start_drawer);
+		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
+		// The drawer title must be set in order to announce state changes when
+		// accessibility is turned on. This is typically a simple description,
+		// e.g. "Navigation".
+		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+		Shakespeare.TITLES));
+		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		// ActionBarDrawerToggle provides convenient helpers for tying together the
+		// prescribed interactions between a top-level sliding drawer and the action bar.
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+		////End of drawer settings
 
 		//Set unreaded num of arts to zero
 		//it's for new arts motification
@@ -125,26 +139,9 @@ public class ActivityMain extends ActionBarActivity
 				}
 			});
 		}
-
 		//adMob
-		adView = (AdView) this.findViewById(R.id.adView);
-		AddAds addAds = new AddAds(this, this.adView);
-		addAds.addAd();
+		this.AddAds();
 		//end of adMob
-	}
-
-	@Override
-	public void onPause()
-	{
-		adView.pause();
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		adView.destroy();
-		super.onDestroy();
 	}
 
 	@Override
@@ -221,11 +218,19 @@ public class ActivityMain extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		/* The action bar home/up action should open or close the drawer.
+		 * mDrawerToggle will take care of this. */
+		if (mDrawerToggle.onOptionsItemSelected(item))
+		{
+			return true;
+		}
 		switch (item.getItemId())
 		{
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
+				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[0]);
+				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[1]);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -243,6 +248,10 @@ public class ActivityMain extends ActionBarActivity
 				{
 					darkThemeMenuItem.setChecked(true);
 				}
+				ParseForAllCategories parse=new ParseForAllCategories(act);
+				parse.execute("http://odnako.org/");
+				ParseForAllAuthors parse1=new ParseForAllAuthors(act);
+				parse1.execute("http://odnako.org/authors/");
 				return true;
 			case R.id.theme_ligth:
 				this.pref.edit().putString("theme", "ligth").commit();
@@ -252,134 +261,10 @@ public class ActivityMain extends ActionBarActivity
 			case R.id.theme_dark:
 				System.out.println("theme_dark");
 				this.pref.edit().putString("theme", "dark").commit();
-
 				this.myRecreate();
 				return super.onOptionsItemSelected(item);
-				//				return true;
-//			case R.id.arts_list_size:
-//				MenuItem artsListItem = item.getSubMenu().findItem(R.id.artslist_05);
-//				MenuItem artsListaItem = item.getSubMenu().findItem(R.id.artslist_075);
-//				MenuItem artsListbItem = item.getSubMenu().findItem(R.id.artslist_1);
-//				MenuItem artsListcItem = item.getSubMenu().findItem(R.id.artslist_125);
-//				MenuItem artsListdItem = item.getSubMenu().findItem(R.id.artslist_15);
-//				MenuItem artsListeItem = item.getSubMenu().findItem(R.id.artslist_175);
-//				MenuItem artsListgItem = item.getSubMenu().findItem(R.id.artslist_2);
-//
-//				if (curArtsListSize.equals("0.5"))
-//				{
-//					artsListItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("0.75"))
-//				{
-//					artsListaItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("1"))
-//				{
-//					artsListbItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("1.25"))
-//				{
-//					artsListcItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("1.5"))
-//				{
-//					artsListdItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("1.75"))
-//				{
-//					artsListeItem.setChecked(true);
-//				}
-//				else if (curArtsListSize.equals("2"))
-//				{
-//					artsListgItem.setChecked(true);
-//				}
-//				return true;
-//			case R.id.artslist_05:
-//				prefArtsList.edit().putString("scale", "0.5").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_075:
-//				prefArtsList.edit().putString("scale", "0.75").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_1:
-//				prefArtsList.edit().putString("scale", "1").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_125:
-//				prefArtsList.edit().putString("scale", "1.25").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_15:
-//				prefArtsList.edit().putString("scale", "1.5").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_175:
-//				prefArtsList.edit().putString("scale", "1.75").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
-//			case R.id.artslist_2:
-//				prefArtsList.edit().putString("scale", "2").commit();
-//				try
-//				{
-//					adapter.notifyDataSetChanged();
-//				} catch (Exception e)
-//				{
-//				}
-//				;
-//				return true;
 			default:
 				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@SuppressLint("NewApi")
-	protected void myRecreate()
-	{
-		if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-			super.recreate();
-		}
-		else
-		{
-			finish();
-			startActivity(getIntent());
 		}
 	}
 
@@ -416,4 +301,5 @@ public class ActivityMain extends ActionBarActivity
 	{
 		this.curArtInfo = cUR_ARTS_INFO;
 	}
+
 }

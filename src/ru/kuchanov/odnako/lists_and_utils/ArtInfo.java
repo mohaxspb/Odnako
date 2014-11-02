@@ -403,5 +403,34 @@ public class ArtInfo implements Comparable<ArtInfo>
 			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
 		}
 	}
+	
+	public static ArtInfo getDefaultArtInfo()
+	{
+		String[] AllInfo=new String[17];
+		
+		AllInfo[0] = "url";
+		AllInfo[1] = "title";
+		AllInfo[2] = "img_art";
+		AllInfo[3] = "authorBlogUrl";
+		AllInfo[4] = "authorName";
+
+		AllInfo[5] = "preview";
+		AllInfo[6] = "pubDate";
+
+		AllInfo[7] = String.valueOf("10");
+		AllInfo[8] = String.valueOf("10");
+		AllInfo[9] = "artText";
+		AllInfo[10] = "authorDescr";
+		AllInfo[11] = "tegs_main";
+		AllInfo[12] = "tegs_all";
+		AllInfo[13] = "share_quont";
+		AllInfo[14] = "to_read_main";
+		AllInfo[15] = "to_read_more";
+		AllInfo[16] = "img_author";
+		
+		ArtInfo defArtInfo=new ArtInfo(AllInfo);
+		
+		return defArtInfo;
+	}
 
 }

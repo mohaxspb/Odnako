@@ -40,7 +40,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ExpandableListView
+    <!-- <ExpandableListView
         android:id="@+id/exListViewNew"
         android:layout_width="240dp"
         android:layout_height="match_parent"
@@ -49,6 +49,11 @@
         android:divider="@android:color/transparent"
         android:groupIndicator="@null"
         android:indicatorLeft="250dp"
-        android:indicatorRight="300dp" />
+        android:indicatorRight="300dp" /> -->
+        <ListView android:id="@+id/start_drawer"
+              android:layout_width="300dp"
+              android:layout_height="match_parent"
+              android:layout_gravity="start"
+              android:background="?colorPrimary"/>
 
 </android.support.v4.widget.DrawerLayout>

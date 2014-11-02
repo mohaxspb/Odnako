@@ -17,14 +17,24 @@ public final class R {
         public static final int abc_slide_out_top=0x7f040005;
     }
     public static final class array {
+        /**  descriptions 
+         */
+        public static final int all_authors_descriptions=0x7f0d0011;
+        /**  imgs 
+         */
+        public static final int all_authors_imgs=0x7f0d0010;
+        public static final int all_authors_names=0x7f0d000e;
+        public static final int all_authors_urls=0x7f0d000f;
+        public static final int all_categories=0x7f0d000c;
+        public static final int all_categories_urls=0x7f0d000d;
         public static final int authors=0x7f0d0001;
         public static final int authors_links=0x7f0d0004;
         public static final int categories=0x7f0d0002;
         public static final int categories_links=0x7f0d0005;
         public static final int categories_to_load=0x7f0d0006;
         public static final int categories_to_load_links=0x7f0d0007;
-        public static final int entries=0x7f0d000c;
-        public static final int entry_values=0x7f0d000d;
+        public static final int entries=0x7f0d0012;
+        public static final int entry_values=0x7f0d0013;
         public static final int files_dir=0x7f0d0008;
         public static final int files_dir_values=0x7f0d0009;
         public static final int menu_items=0x7f0d0000;
@@ -33,15 +43,15 @@ public final class R {
         public static final int notif_period_values=0x7f0d000b;
         /**  Масштаб картинок и текста для главной 
          */
-        public static final int scale=0x7f0d0011;
+        public static final int scale=0x7f0d0017;
         /**  Масштаб для статей 
          */
-        public static final int scale_art=0x7f0d0013;
-        public static final int scale_values=0x7f0d0012;
-        public static final int scale_values_art=0x7f0d0014;
-        public static final int theme=0x7f0d000e;
-        public static final int theme_str_arr=0x7f0d0010;
-        public static final int theme_values=0x7f0d000f;
+        public static final int scale_art=0x7f0d0019;
+        public static final int scale_values=0x7f0d0018;
+        public static final int scale_values_art=0x7f0d001a;
+        public static final int theme=0x7f0d0014;
+        public static final int theme_str_arr=0x7f0d0016;
+        public static final int theme_values=0x7f0d0015;
     }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
@@ -2305,7 +2315,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0a0041;
         public static final int action_mode_bar_stub=0x7f0a0040;
         public static final int action_mode_close_button=0x7f0a0033;
-        public static final int action_settings=0x7f0a00a2;
+        public static final int action_settings=0x7f0a00a3;
         public static final int activity_chooser_view_content=0x7f0a0034;
         public static final int adView=0x7f0a0088;
         public static final int all_tegs_lin=0x7f0a0052;
@@ -2334,35 +2344,35 @@ containing a value of this type.
         public static final int art_card_top_lin_lay=0x7f0a005a;
         public static final int art_comments_bottom_btn=0x7f0a0075;
         public static final int art_scroll=0x7f0a0076;
-        public static final int art_share_0=0x7f0a0092;
-        public static final int art_share_1=0x7f0a0094;
-        public static final int art_share_2=0x7f0a0096;
-        public static final int art_share_3=0x7f0a0098;
-        public static final int art_share_4=0x7f0a009a;
-        public static final int art_share_5=0x7f0a009c;
-        public static final int art_share_all=0x7f0a0091;
-        public static final int art_share_quont_0=0x7f0a0093;
-        public static final int art_share_quont_1=0x7f0a0095;
-        public static final int art_share_quont_2=0x7f0a0097;
-        public static final int art_share_quont_3=0x7f0a0099;
-        public static final int art_share_quont_4=0x7f0a009b;
-        public static final int art_share_quont_5=0x7f0a009d;
+        public static final int art_share_0=0x7f0a0093;
+        public static final int art_share_1=0x7f0a0095;
+        public static final int art_share_2=0x7f0a0097;
+        public static final int art_share_3=0x7f0a0099;
+        public static final int art_share_4=0x7f0a009b;
+        public static final int art_share_5=0x7f0a009d;
+        public static final int art_share_all=0x7f0a0092;
+        public static final int art_share_quont_0=0x7f0a0094;
+        public static final int art_share_quont_1=0x7f0a0096;
+        public static final int art_share_quont_2=0x7f0a0098;
+        public static final int art_share_quont_3=0x7f0a009a;
+        public static final int art_share_quont_4=0x7f0a009c;
+        public static final int art_share_quont_5=0x7f0a009e;
         public static final int art_tags_main=0x7f0a0080;
         public static final int art_text=0x7f0a0081;
         public static final int art_title=0x7f0a0077;
         public static final int article_comments_container=0x7f0a0090;
         public static final int article_container=0x7f0a0089;
-        public static final int articles_list=0x7f0a008e;
+        public static final int articles_list=0x7f0a008f;
         public static final int arts_list_refresh=0x7f0a0083;
-        public static final int arts_list_size=0x7f0a00a7;
+        public static final int arts_list_size=0x7f0a00a8;
         public static final int arts_list_view=0x7f0a0084;
-        public static final int artslist_05=0x7f0a00a8;
-        public static final int artslist_075=0x7f0a00a9;
-        public static final int artslist_1=0x7f0a00aa;
-        public static final int artslist_125=0x7f0a00ab;
-        public static final int artslist_15=0x7f0a00ac;
-        public static final int artslist_175=0x7f0a00ad;
-        public static final int artslist_2=0x7f0a00ae;
+        public static final int artslist_05=0x7f0a00a9;
+        public static final int artslist_075=0x7f0a00aa;
+        public static final int artslist_1=0x7f0a00ab;
+        public static final int artslist_125=0x7f0a00ac;
+        public static final int artslist_15=0x7f0a00ad;
+        public static final int artslist_175=0x7f0a00ae;
+        public static final int artslist_2=0x7f0a00af;
         public static final int author_name=0x7f0a0066;
         public static final int ava=0x7f0a0070;
         public static final int beginning=0x7f0a001b;
@@ -2378,7 +2388,7 @@ containing a value of this type.
         public static final int classic=0x7f0a002e;
         public static final int collapseActionView=0x7f0a0015;
         public static final int comm_text=0x7f0a0071;
-        public static final int comments=0x7f0a00af;
+        public static final int comments=0x7f0a00b0;
         public static final int comments_container=0x7f0a008b;
         public static final int comments_fragment=0x7f0a0085;
         public static final int comments_img=0x7f0a0069;
@@ -2386,18 +2396,18 @@ containing a value of this type.
         public static final int date=0x7f0a0057;
         public static final int decor_content_parent=0x7f0a0042;
         public static final int default_activity_button=0x7f0a0037;
-        public static final int design=0x7f0a00a3;
+        public static final int design=0x7f0a00a4;
         public static final int dialog=0x7f0a0019;
         public static final int disableHome=0x7f0a000d;
         public static final int dislike=0x7f0a0074;
         public static final int divider=0x7f0a0073;
         public static final int drawer_layout=0x7f0a0087;
-        public static final int drawer_layout_new=0x7f0a008c;
+        public static final int drawer_layout_new=0x7f0a008d;
         public static final int dropdown=0x7f0a001a;
         public static final int edit_query=0x7f0a0046;
         public static final int end=0x7f0a001c;
-        public static final int exListView=0x7f0a008a;
-        public static final int exListViewNew=0x7f0a008f;
+        public static final int exListView=0x7f0a008c;
+        public static final int exListViewNew=0x7f0a0091;
         public static final int expand_activities_button=0x7f0a0035;
         public static final int expanded_menu=0x7f0a003b;
         public static final int first_tegs_lin=0x7f0a0053;
@@ -2414,10 +2424,10 @@ containing a value of this type.
         public static final int like=0x7f0a0072;
         public static final int listMode=0x7f0a000a;
         public static final int list_item=0x7f0a0038;
-        public static final int main_lin=0x7f0a008d;
-        public static final int mark_as_read=0x7f0a009f;
+        public static final int main_lin=0x7f0a008e;
+        public static final int mark_as_read=0x7f0a00a0;
         public static final int match_parent=0x7f0a002a;
-        public static final int menu_item_share=0x7f0a00b0;
+        public static final int menu_item_share=0x7f0a00b1;
         public static final int middle=0x7f0a001d;
         public static final int monochrome=0x7f0a0030;
         public static final int name=0x7f0a006c;
@@ -2432,7 +2442,7 @@ containing a value of this type.
         public static final int pub_date=0x7f0a007c;
         public static final int radio=0x7f0a003e;
         public static final int read_img=0x7f0a0068;
-        public static final int refresh=0x7f0a00b1;
+        public static final int refresh=0x7f0a00b2;
         public static final int sandbox=0x7f0a0026;
         public static final int satellite=0x7f0a0021;
         public static final int save_img=0x7f0a0063;
@@ -2447,23 +2457,24 @@ containing a value of this type.
         public static final int search_src_text=0x7f0a004d;
         public static final int search_voice_btn=0x7f0a0051;
         public static final int selectionDetails=0x7f0a0029;
-        public static final int share=0x7f0a00b2;
+        public static final int share=0x7f0a00b3;
         public static final int share_img=0x7f0a0064;
-        public static final int share_link=0x7f0a00a0;
+        public static final int share_link=0x7f0a00a1;
         public static final int shortcut=0x7f0a003d;
         public static final int showCustom=0x7f0a0010;
         public static final int showHome=0x7f0a0011;
         public static final int showTitle=0x7f0a0012;
-        public static final int show_comments=0x7f0a00a1;
+        public static final int show_comments=0x7f0a00a2;
         public static final int split_action_bar=0x7f0a0004;
+        public static final int start_drawer=0x7f0a008a;
         public static final int strict_sandbox=0x7f0a0027;
         public static final int submit_area=0x7f0a004f;
         public static final int tabMode=0x7f0a000c;
-        public static final int teg_tv=0x7f0a009e;
+        public static final int teg_tv=0x7f0a009f;
         public static final int terrain=0x7f0a0022;
-        public static final int theme=0x7f0a00a4;
-        public static final int theme_dark=0x7f0a00a6;
-        public static final int theme_ligth=0x7f0a00a5;
+        public static final int theme=0x7f0a00a5;
+        public static final int theme_dark=0x7f0a00a7;
+        public static final int theme_ligth=0x7f0a00a6;
         public static final int time_city=0x7f0a006e;
         public static final int title=0x7f0a003a;
         public static final int top=0x7f0a001f;

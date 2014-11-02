@@ -14,28 +14,24 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.Shakespeare;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
-import ru.kuchanov.odnako.utils.AddAds;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.google.android.gms.ads.AdView;
-
-public class ActivityArticle extends ActionBarActivity
+public class ActivityArticle extends ActivityBase//ActionBarActivity
 {
-	ActionBarActivity act;
-	SharedPreferences pref;
-
-	AdView adView;
-
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
@@ -47,7 +43,7 @@ public class ActivityArticle extends ActionBarActivity
 	{
 		System.out.println("ActivityArticle onCreate");
 
-		this.act=this;
+		this.act = this;
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(act, R.xml.pref, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -66,6 +62,24 @@ public class ActivityArticle extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_article);
+
+		//drawer settings
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawer = (ListView) findViewById(R.id.start_drawer);
+		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
+		// The drawer title must be set in order to announce state changes when
+		// accessibility is turned on. This is typically a simple description,
+		// e.g. "Navigation".
+		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+		Shakespeare.TITLES));
+		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		// ActionBarDrawerToggle provides convenient helpers for tying together the
+		// prescribed interactions between a top-level sliding drawer and the action bar.
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+		////End of drawer settings
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
@@ -90,10 +104,9 @@ public class ActivityArticle extends ActionBarActivity
 		this.pager.setCurrentItem(position, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
+
 		//adMob
-		adView = (AdView) this.findViewById(R.id.adView);
-		AddAds addAds = new AddAds(this, this.adView);
-		addAds.addAd();
+		this.AddAds();
 		//end of adMob
 	}
 
@@ -108,6 +121,12 @@ public class ActivityArticle extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		/* The action bar home/up action should open or close the drawer.
+		 * mDrawerToggle will take care of this. */
+		if (mDrawerToggle.onOptionsItemSelected(item))
+		{
+			return true;
+		}
 		switch (item.getItemId())
 		{
 			case R.id.comments:

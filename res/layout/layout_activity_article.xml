@@ -17,7 +17,8 @@
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/ARTICLE_AD_UNIT_ID" />
-        <android.support.v4.view.ViewPager
+
+        <android.support.v4.view.ViewPager
             android:id="@+id/article_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,7 +26,8 @@
             android:layout_marginRight="5dp" />
     </RelativeLayout>
 
-    <ExpandableListView
+    <!--
+         <ExpandableListView
         android:id="@+id/exListView"
         android:layout_width="240dp"
         android:layout_height="match_parent"
@@ -35,5 +37,13 @@
         android:groupIndicator="@null"
         android:indicatorLeft="250dp"
         android:indicatorRight="300dp" />
+    -->
+
+    <ListView
+        android:id="@+id/start_drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?colorPrimary" />
 
 </android.support.v4.widget.DrawerLayout>

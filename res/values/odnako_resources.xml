@@ -1,0 +1,1564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="all_categories">
+        <item>Азия</item>
+        <item>Армия</item>
+        <item>Арт</item>
+        <item>Африка</item>
+        <item>Безопасность</item>
+        <item>Белоруссия</item>
+        <item>БИЗНЕС</item>
+        <item>Ближний Восток</item>
+        <item>Борьба идей</item>
+        <item>Власть</item>
+        <item>Внешняя политика</item>
+        <item>Внешняя политика</item>
+        <item>Война</item>
+        <item>Вооружения</item>
+        <item>Воспитание</item>
+        <item>Вузы</item>
+        <item>Выборы</item>
+        <item>Гражданская активность</item>
+        <item>Демография</item>
+        <item>Европа</item>
+        <item>Заграница</item>
+        <item>Законодательство</item>
+        <item>Здравоохранение</item>
+        <item>Игры</item>
+        <item>Индия</item>
+        <item>Интернет</item>
+        <item>Информационное пространство</item>
+        <item>Инфраструктура и транспорт</item>
+        <item>Искусство</item>
+        <item>Казахстан</item>
+        <item>Катастрофы</item>
+        <item>Кино</item>
+        <item>Китай</item>
+        <item>Книги</item>
+        <item>Конфликты</item>
+        <item>Культура</item>
+        <item>Культурная политика</item>
+        <item>Латинская Америка</item>
+        <item>Местное самоуправление</item>
+        <item>Миграция</item>
+        <item>Мировой кризис</item>
+        <item>Молдавия</item>
+        <item>Музыка</item>
+        <item>Наука и технологии</item>
+        <item>Нравы</item>
+        <item>Оборонная промышленность</item>
+        <item>Образование</item>
+        <item>Общество</item>
+        <item>Океания</item>
+        <item>Политика</item>
+        <item>Пресса</item>
+        <item>Преступления</item>
+        <item>Производство</item>
+        <item>Протесты</item>
+        <item>Путин</item>
+        <item>Работа</item>
+        <item>Регионы</item>
+        <item>Религия</item>
+        <item>Репрессии</item>
+        <item>Сельское хозяйство</item>
+        <item>Спорт</item>
+        <item>Средняя Азия</item>
+        <item>США</item>
+        <item>Таможенный Союз</item>
+        <item>Театр</item>
+        <item>Телевидение</item>
+        <item>Украина</item>
+        <item>Финансовая политика</item>
+        <item>Школа</item>
+        <item>Экономика</item>
+        <item>Энергетика (ТЭК)</item>
+        <item>Япония</item>
+    </string-array>
+    <string-array name="all_categories_urls">
+        <item>http://aziya.odnako.org/</item>
+        <item>http://armiya.odnako.org/</item>
+        <item>http://art73.odnako.org/</item>
+        <item>http://afrika.odnako.org/</item>
+        <item>http://bezopasnost.odnako.org/</item>
+        <item>http://belorussiya.odnako.org/</item>
+        <item>http://biznes.odnako.org/</item>
+        <item>http://blizhniyvostok.odnako.org/</item>
+        <item>http://borbaidey.odnako.org/</item>
+        <item>http://vlast.odnako.org/</item>
+        <item>http://vneshnyayapolitika.odnako.org/</item>
+        <item>http://vneshnyayapolitika94.odnako.org/</item>
+        <item>http://voyna.odnako.org/</item>
+        <item>http://vooruzheniya.odnako.org/</item>
+        <item>http://vospitanie.odnako.org/</item>
+        <item>http://vuzi.odnako.org/</item>
+        <item>http://vibori.odnako.org/</item>
+        <item>http://grazhdanskayaaktivnost.odnako.org/</item>
+        <item>http://demografiya.odnako.org/</item>
+        <item>http://evropa.odnako.org/</item>
+        <item>http://zagranica.odnako.org/</item>
+        <item>http://zakonodatelstvo.odnako.org/</item>
+        <item>http://zdravoohranenie.odnako.org/</item>
+        <item>http://igri.odnako.org/</item>
+        <item>http://indiya.odnako.org/</item>
+        <item>http://internet.odnako.org/</item>
+        <item>http://informacionnoeprostranstvo.odnako.org/</item>
+        <item>http://infrastrukturaitransport.odnako.org/</item>
+        <item>http://iskusstvo.odnako.org/</item>
+        <item>http://kazahstan.odnako.org/</item>
+        <item>http://katastrofi.odnako.org/</item>
+        <item>http://kino.odnako.org/</item>
+        <item>http://kitay.odnako.org/</item>
+        <item>http://knigi.odnako.org/</item>
+        <item>http://konflikti.odnako.org/</item>
+        <item>http://kultura.odnako.org/</item>
+        <item>http://kulturnayapolitika.odnako.org/</item>
+        <item>http://latinskayaamerika.odnako.org/</item>
+        <item>http://mestnoesamoupravlenie.odnako.org/</item>
+        <item>http://migraciya.odnako.org/</item>
+        <item>http://mirovoykrizis.odnako.org/</item>
+        <item>http://moldaviya.odnako.org/</item>
+        <item>http://muzika.odnako.org/</item>
+        <item>http://naukaitehnologii.odnako.org/</item>
+        <item>http://nravi.odnako.org/</item>
+        <item>http://oboronnayapromishlennost.odnako.org/</item>
+        <item>http://obrazovanie.odnako.org/</item>
+        <item>http://obshchestvo.odnako.org/</item>
+        <item>http://okeaniya.odnako.org/</item>
+        <item>http://politika.odnako.org/</item>
+        <item>http://pressa.odnako.org/</item>
+        <item>http://prestupleniya.odnako.org/</item>
+        <item>http://proizvodstvo.odnako.org/</item>
+        <item>http://protesti.odnako.org/</item>
+        <item>http://putin.odnako.org/</item>
+        <item>http://rabota.odnako.org/</item>
+        <item>http://regioni.odnako.org/</item>
+        <item>http://religiya.odnako.org/</item>
+        <item>http://repressii.odnako.org/</item>
+        <item>http://selskoehozyaystvo.odnako.org/</item>
+        <item>http://sport.odnako.org/</item>
+        <item>http://srednyayaaziya.odnako.org/</item>
+        <item>http://ssha.odnako.org/</item>
+        <item>http://tamozhenniysoyuz.odnako.org/</item>
+        <item>http://teatr.odnako.org/</item>
+        <item>http://televidenie.odnako.org/</item>
+        <item>http://ukraine.odnako.org/</item>
+        <item>http://finansovayapolitika.odnako.org/</item>
+        <item>http://shkola.odnako.org/</item>
+        <item>http://ekonomika.odnako.org/</item>
+        <item>http://energetikatek.odnako.org/</item>
+        <item>http://yaponiya.odnako.org/</item>
+    </string-array>
+    <string-array name="all_authors_names">
+        <item>Станислав Бескаравайный</item>
+        <item>Семён Уралов, Иван Зацарин</item>
+        <item>Ярослав Евтихиев</item>
+        <item>Сергей Кайдаров</item>
+        <item>Евгений Анисимов</item>
+        <item>Акмарал Абен</item>
+        <item>Алексей Баранов</item>
+        <item>Алексей Пушков</item>
+        <item>Максим Равреба</item>
+        <item>Наталья Захарова</item>
+        <item>Гагик (Тер) Арутюнян</item>
+        <item>Анатолий Аббасов</item>
+        <item>Павел Агапов</item>
+        <item>Olga A. Agarkova</item>
+        <item>Артём Акопян</item>
+        <item>Борис Александровский</item>
+        <item>Григорий Андреев</item>
+        <item>Рустам Арифджанов</item>
+        <item>Бахтияр Ахмедханов</item>
+        <item>Владимир Бабьяк</item>
+        <item>Лусинэ Бадалян</item>
+        <item>Евгений &quot;BadComedian&quot; Баженов</item>
+        <item>Денис Баклагин</item>
+        <item>Баранов Алексей Николаевич</item>
+        <item>Юрий Баранчик</item>
+        <item>Роман Барзыкин</item>
+        <item>Дмитрий Батюк</item>
+        <item>Дмитрий Бахур</item>
+        <item>Алёна Баянова</item>
+        <item>Светлана Бегунова</item>
+        <item>Александр Бедрицкий</item>
+        <item>билл</item>
+        <item>Алексей Беляев</item>
+        <item>Владимир Берхин</item>
+        <item>Дмитрий Бжезинский</item>
+        <item>Эдуард Биров</item>
+        <item>Михаил Богданов</item>
+        <item>Игорь Богданов</item>
+        <item>Василий Боков</item>
+        <item>Григорий Болдырев</item>
+        <item>Вадим Бондарь</item>
+        <item>Тимур Боровков</item>
+        <item>Лоуренс Брам</item>
+        <item>Лев Бруни</item>
+        <item>Артём Бузила</item>
+        <item>Владимир Букарский</item>
+        <item>Андрей Бунич</item>
+        <item>Андрей Ваджра</item>
+        <item>Искандер Валитов</item>
+        <item>Александр Васильев</item>
+        <item>Александр Васильев</item>
+        <item>Анатолий Вассерман</item>
+        <item>Елена Вербина</item>
+        <item>Лев Вершинин</item>
+        <item>Антон Вершинин</item>
+        <item>Сергей Веселовский</item>
+        <item>Андрей Виноградов</item>
+        <item>Герман Витрук</item>
+        <item>Егор Волков</item>
+        <item>Волынец Ирина</item>
+        <item>Вадим Воробьёв</item>
+        <item>Маринэ Восканян</item>
+        <item>Павел Восточный</item>
+        <item>Антон Врадий</item>
+        <item>Игорь Гаслов</item>
+        <item>Армен Гаспарян</item>
+        <item>Рамиль Гатауллин</item>
+        <item>Юрий Геращенко</item>
+        <item>Вениамин Гинодман</item>
+        <item>Елена Гладкова</item>
+        <item>Сергей Глазьев</item>
+        <item>Александр Гончаров *Красс*</item>
+        <item>Иван Гооге</item>
+        <item>Александр Горбенко</item>
+        <item>Семён &quot;777&quot; Горбунков</item>
+        <item>Денис Горелов</item>
+        <item>Ульяна Гортинская</item>
+        <item>Артём Горячкин</item>
+        <item>Дмитрий Графов</item>
+        <item>Римма Грачёва</item>
+        <item>Амирам Григоров</item>
+        <item>Елена Громова</item>
+        <item>Владислав Гулевич</item>
+        <item>Анатолий Гусев</item>
+        <item>Анна Данковцева</item>
+        <item>Денис Дворников</item>
+        <item>Михаил Делягин</item>
+        <item>Дмитрий Джангиров</item>
+        <item>Гейдар Джемаль</item>
+        <item>Алексей Дзермант</item>
+        <item>Андрей Добров</item>
+        <item>Евгений Додолев</item>
+        <item>Константин Долгов</item>
+        <item>Александр Дремлюгин</item>
+        <item>Александр Дугин</item>
+        <item>Александр Дюков</item>
+        <item>Денис Емельянов</item>
+        <item>Дмитрий Ермолаев</item>
+        <item>Николай Ершов-Осадченко</item>
+        <item>Андрей Жадаев</item>
+        <item>Валентин Жаронкин</item>
+        <item>Алексей Завьялов</item>
+        <item>Михаил Задорнов</item>
+        <item>Иван Зайцев</item>
+        <item>Михаил Зайцев</item>
+        <item>Иван Зацарин</item>
+        <item>Ильсур Зиннатуллин</item>
+        <item>Виктор Зотин</item>
+        <item>Игорь Зубов</item>
+        <item>Алексей Иванов</item>
+        <item>Ярослав Игнатовский</item>
+        <item>Ян Ижогин</item>
+        <item>Рауф Измайлов</item>
+        <item>Ираклий Какабадзе</item>
+        <item>Виктор Каменев</item>
+        <item>Андрей Каменецкий</item>
+        <item>Максим Кантор</item>
+        <item>Василий Кваша</item>
+        <item>Тим Керби</item>
+        <item>Сергей Кизима</item>
+        <item>Владимир Кикило</item>
+        <item>Виктор Кириллов</item>
+        <item>Илья Киселёв</item>
+        <item>Иван Клименко</item>
+        <item>Владислав Клочков</item>
+        <item>Андрей Кобяков</item>
+        <item>Анатолий Ковалевский</item>
+        <item>Александр Коваль</item>
+        <item>Иштван Ковач</item>
+        <item>Владимир Козин</item>
+        <item>Виталий Колтовский</item>
+        <item>Данаил Кондов</item>
+        <item>Александр Кондрашов</item>
+        <item>Максим Конин</item>
+        <item>Валерий Коновалюк</item>
+        <item>Максим Кононенко</item>
+        <item>Дмитрий Королёв</item>
+        <item>Юрий Кофнер</item>
+        <item>Сергей Кохичко</item>
+        <item>Алексей Кравецкий</item>
+        <item>Сергей Крайнев</item>
+        <item>Илья Крамник</item>
+        <item>Олег Краснов</item>
+        <item>Вероника Крашенинникова</item>
+        <item>Виктор Криворотов</item>
+        <item>Олег Кропотов</item>
+        <item>Леонид Крутаков</item>
+        <item>Людмила Кудреватова</item>
+        <item>Геннадий Кудряшов</item>
+        <item>Андрей Кузнецов</item>
+        <item>Александр Кузьмин</item>
+        <item>Алексей Кулаков</item>
+        <item>Дмитрий Куликов</item>
+        <item>Евгений Куликов</item>
+        <item>Андрей Куприков</item>
+        <item>Кирилл Курбатов</item>
+        <item>Сергей Кургинян</item>
+        <item>Вячеслав Курицын</item>
+        <item>Джульетто Кьеза</item>
+        <item>Полина Лаврентьева</item>
+        <item>Вячеслав Лактюшкин</item>
+        <item>Константин Лапин</item>
+        <item>Чокан Лаумулин</item>
+        <item>Игорь Лебединский</item>
+        <item>Дмитрий Левыкин</item>
+        <item>Генри Лезин</item>
+        <item>Дмитрий Лекух</item>
+        <item>Михаил Леонтьев</item>
+        <item>Анатоль Ливен</item>
+        <item>Иван Лизан</item>
+        <item>Владимир Липилин</item>
+        <item>Юрий Липчевский</item>
+        <item>Георгий Лодочник</item>
+        <item>Сергей Лукьяненко</item>
+        <item>Сергей Лунёв</item>
+        <item>Ильдус Лутфуллин</item>
+        <item>Лыгин Аркадий</item>
+        <item>Дмитрий Лысков</item>
+        <item>Руслан Ляпин</item>
+        <item>Святослав Мазур</item>
+        <item>Нина Майоршина</item>
+        <item>Олег Макаренко</item>
+        <item>Константин Макиенко</item>
+        <item>Аркадий Малер</item>
+        <item>Виктор Мараховский</item>
+        <item>Иеромонах Макарий (Маркиш)</item>
+        <item>Алексей Марочкин</item>
+        <item>Елена Мартысевич</item>
+        <item>Владимир Мединский</item>
+        <item>Тьерри Мейсан</item>
+        <item>Майя Милонова</item>
+        <item>Станислав Минаков</item>
+        <item>Евгений Мирошниченко</item>
+        <item>Фёдор Михалычев</item>
+        <item>Сергей Михеев</item>
+        <item>Андрей Морозов</item>
+        <item>Иван Москаль</item>
+        <item>Денис Московских</item>
+        <item>Василий Муравицкий</item>
+        <item>Александр Муталенко</item>
+        <item>Алексей Мухин</item>
+        <item>Кирилл Неймарк</item>
+        <item>Роман Некрасов</item>
+        <item>Алексей Николаев</item>
+        <item>Сергей Никулин</item>
+        <item>Наталья Новопашина</item>
+        <item>Олег Ногинский</item>
+        <item>Роман Носиков</item>
+        <item>Оленев_Юрий</item>
+        <item>Игорь Ольвин</item>
+        <item>Александр Орлов</item>
+        <item>Алексей Орлов</item>
+        <item>Дмитрий Отрута</item>
+        <item>Владимир Палицын</item>
+        <item>Кирилл Пальшин</item>
+        <item>Андрей Паршев</item>
+        <item>Сергей Пауков</item>
+        <item>Юрий Пахомов</item>
+        <item>Наталья Перевалова</item>
+        <item>Денис Перешнев</item>
+        <item>Александр Перлин</item>
+        <item>Дмитрий Песков</item>
+        <item>Пётр Петриковский</item>
+        <item>Алексей Петров</item>
+        <item>Сергей Пикин</item>
+        <item>Борис Подопригора</item>
+        <item>Александр Позин</item>
+        <item>Авраам Покой</item>
+        <item>Владимир Полуев</item>
+        <item>Павел Полуян</item>
+        <item>Константин Посторонко</item>
+        <item>Сергей Правосудов</item>
+        <item>Захар Прилепин</item>
+        <item>Александр Проханов</item>
+        <item>Тамара Пузанова</item>
+        <item>Владимир Пустовалов</item>
+        <item>Дмитрий Goblin Пучков</item>
+        <item>Аркадий Пчемьян</item>
+        <item>Александр Пылаев</item>
+        <item>Игорь Пыхалов</item>
+        <item>Валерий Рашкин</item>
+        <item>ОТ РЕДАКЦИИ</item>
+        <item>Михаил Ремизов</item>
+        <item>Александр Ретинский</item>
+        <item>Роберт Робертсон</item>
+        <item>Александр Роджерс</item>
+        <item>Ирина Розенберг</item>
+        <item>Александр Румянцев</item>
+        <item>Борислав Русских</item>
+        <item>Иван Рыбаков</item>
+        <item>Сергей Рымденок</item>
+        <item>Сергей Рябинин</item>
+        <item>Андрей Рябов</item>
+        <item>Михаил Савеличев</item>
+        <item>Леонид Савин</item>
+        <item>Евгений Савченко</item>
+        <item>Павел Садовников</item>
+        <item>Герман Садулаев</item>
+        <item>Андрей Саенко</item>
+        <item>Василий Сапожников-Турышев</item>
+        <item>Евгений Сатановский</item>
+        <item>Андрей Сафонов</item>
+        <item>Максим Сафронов</item>
+        <item>Дмитрий Севостьянов</item>
+        <item>Денис Селезнёв</item>
+        <item>Ольгерд Семёнов</item>
+        <item>Андрей Семьянинов</item>
+        <item>Тимофей Сергейцев</item>
+        <item>Сергей Сердюков</item>
+        <item>Маргарита Симоньян</item>
+        <item>Александр Синкевич</item>
+        <item>Владимир Сирин</item>
+        <item>Игорь Слисаренко</item>
+        <item>Олег Слюсаренко</item>
+        <item>Алексей Смирнов</item>
+        <item>Олег Смолин</item>
+        <item>Александр Собко</item>
+        <item>Юрий Соколов</item>
+        <item>Андрей Сорокин</item>
+        <item>Николай Стариков</item>
+        <item>Сергей Степанов</item>
+        <item>Арсений Степанов</item>
+        <item>Юрий Сторчак</item>
+        <item>Александр Стругов</item>
+        <item>Александр Субцельный</item>
+        <item>Евгений Супер</item>
+        <item>Сергей Сургаев &quot;Алтаец&quot;</item>
+        <item>Александр Сырбачев</item>
+        <item>Виктор Тамберг</item>
+        <item>Алла Таран</item>
+        <item>Глеб Таргонский</item>
+        <item>Александр Теньков</item>
+        <item>Александр Терентьев-мл.</item>
+        <item>Наталия Теряева</item>
+        <item>Анатолий Тин</item>
+        <item>Сергей Тихомиров</item>
+        <item>Юрий Ткачёв</item>
+        <item>Инга Токманцева</item>
+        <item>Борис Толчинский</item>
+        <item>Константин Тосхопоран</item>
+        <item>Виталий Третьяков</item>
+        <item>Юрий Тюрдьо</item>
+        <item>Анатолий Тюрин</item>
+        <item>Семён Уралов</item>
+        <item>Владислав Уткин</item>
+        <item>Александр Феникс</item>
+        <item>Сергей Филатов</item>
+        <item>Елена Филиппова</item>
+        <item>Владимир Фомин</item>
+        <item>Иван Фомин</item>
+        <item>Александр Френкель</item>
+        <item>Андрей Фроленков</item>
+        <item>Александр Фролов</item>
+        <item>Сергей Фролов</item>
+        <item>Олег Хавич</item>
+        <item>Михаил Хазин</item>
+        <item>Айк Халатян</item>
+        <item>Сергей Хелемендик</item>
+        <item>Вероника Хлебникова</item>
+        <item>Игорь Цуканов</item>
+        <item>Александр Чаусов</item>
+        <item>Елена Чаусова</item>
+        <item>Дмитрий Чегин</item>
+        <item>Дмитрий Чередайко</item>
+        <item>Дмитрий Черноморский</item>
+        <item>Владислав Чижма</item>
+        <item>Егор Чурилов</item>
+        <item>Ксения Шайнова</item>
+        <item>Арина Шарапова</item>
+        <item>Анатолий Шарий</item>
+        <item>Данил Шишкин</item>
+        <item>Андрей Шишков</item>
+        <item>Николай Шмелёв</item>
+        <item>Владислав Шпаков</item>
+        <item>Александр Шпаковский</item>
+        <item>Владимир Шульгин</item>
+        <item>Сергей Шунков</item>
+        <item>Александр Шустов</item>
+        <item>Владимир Щербаков</item>
+        <item>Авигдор Эскин</item>
+        <item>Туоба Ю</item>
+        <item>Михаил Юзбашев</item>
+        <item>Борис Юлин</item>
+        <item>Михаил Юрьев</item>
+        <item>Александр Юрьев</item>
+        <item>Александр Юсуповский</item>
+        <item>Сергей Юхин</item>
+        <item>Татьяна Яковенко</item>
+        <item>Егор Яковлев</item>
+        <item>Евгений Ячменцев</item>
+    </string-array>
+    <string-array name="all_authors_urls">
+        <item>http://neukazano132.odnako.org</item>
+        <item>http://urzac.odnako.org</item>
+        <item>http://evtihievyaroslavpetrovich.odnako.org</item>
+        <item>http://sergeykaydarov.odnako.org</item>
+        <item>http://evgeniyanisimov.odnako.org</item>
+        <item>http://akmaralabenova.odnako.org</item>
+        <item>http://alekseybaranov.odnako.org</item>
+        <item>http://pushkov.odnako.org</item>
+        <item>http://maksimravreba.odnako.org</item>
+        <item>http://natalyazaharova.odnako.org</item>
+        <item>http://gagikterarutyunyan.odnako.org</item>
+        <item>http://abbasovanatoliy.odnako.org</item>
+        <item>http://pavelagapov.odnako.org</item>
+        <item>http://olgaaagarkova.odnako.org</item>
+        <item>http://akopian.odnako.org</item>
+        <item>http://odessit.odnako.org</item>
+        <item>http://17872.odnako.org</item>
+        <item>http://rustamarifzhanov.odnako.org</item>
+        <item>http://bahtiyarahmedhanov.odnako.org</item>
+        <item>http://babyak.odnako.org</item>
+        <item>http://lusinebadalyan.odnako.org</item>
+        <item>http://badcomedian.odnako.org</item>
+        <item>http://baklagindenis.odnako.org</item>
+        <item>http://baranovalekseynikolaevich.odnako.org</item>
+        <item>http://yuriybaranchik.odnako.org</item>
+        <item>http://romanbarzikin.odnako.org</item>
+        <item>http://dmitriybatyuk.odnako.org</item>
+        <item>http://bahurdmitriyanatolevich.odnako.org</item>
+        <item>http://alyonabayanova.odnako.org</item>
+        <item>http://svetlanabegunova.odnako.org</item>
+        <item>http://aleksandrbedrickiy.odnako.org</item>
+        <item>http://belinskiyandreyolegovich.odnako.org</item>
+        <item>http://alekseybelyaev25494.odnako.org</item>
+        <item>http://vladimirberhin.odnako.org</item>
+        <item>http://dmitriybzhezinskiy.odnako.org</item>
+        <item>http://eduardbirov.odnako.org</item>
+        <item>http://mihailbogdanov.odnako.org</item>
+        <item>http://bogdanovigorolegovich.odnako.org</item>
+        <item>http://vasiliybokov.odnako.org</item>
+        <item>http://grigoriyboldirev.odnako.org</item>
+        <item>http://vadimbondar.odnako.org</item>
+        <item>http://timurkorobov.odnako.org</item>
+        <item>http://lourensbram.odnako.org</item>
+        <item>http://levbruni.odnako.org</item>
+        <item>http://artembuzila.odnako.org</item>
+        <item>http://bukarskiyvladimirvalerevich.odnako.org</item>
+        <item>http://andreybunich.odnako.org</item>
+        <item>http://andreyvadzhra.odnako.org</item>
+        <item>http://iskandervalitov.odnako.org</item>
+        <item>http://aleksandrvasilev.odnako.org</item>
+        <item>http://vasilevaleksandryurevich.odnako.org</item>
+        <item>http://awas.odnako.org</item>
+        <item>http://elenaverbina.odnako.org</item>
+        <item>http://vershinin.odnako.org</item>
+        <item>http://toshaveric.odnako.org</item>
+        <item>http://veselovskiysergey.odnako.org</item>
+        <item>http://andreyvinogradov.odnako.org</item>
+        <item>http://germanvitruk.odnako.org</item>
+        <item>http://egorvolkov.odnako.org</item>
+        <item>http://volinecirinavladimirovna.odnako.org</item>
+        <item>http://vadimvorobyov.odnako.org</item>
+        <item>http://marinevoskanyan.odnako.org</item>
+        <item>http://pavelvostochniy.odnako.org</item>
+        <item>http://antonvradiy33085.odnako.org</item>
+        <item>http://Гаслов.odnako.org</item>
+        <item>http://armengasparyan.odnako.org</item>
+        <item>http://ramilgataullin.odnako.org</item>
+        <item>http://yuriygerashchenko.odnako.org</item>
+        <item>http://veniaminginodman.odnako.org</item>
+        <item>http://elenagladkova.odnako.org</item>
+        <item>http://glazev.odnako.org</item>
+        <item>http://aleksandrgoncharovkrass.odnako.org</item>
+        <item>http://4509.odnako.org</item>
+        <item>http://aleksandr5875.odnako.org</item>
+        <item>http://semengorbunkov.odnako.org</item>
+        <item>http://denisgorelov.odnako.org</item>
+        <item>http://ulyanagortinskaya.odnako.org</item>
+        <item>http://artyomgoryachkin.odnako.org</item>
+        <item>http://dmitrygrafov.odnako.org</item>
+        <item>http://neukazano321.odnako.org</item>
+        <item>http://grigorov.odnako.org</item>
+        <item>http://gromovaelenaalekseevna.odnako.org</item>
+        <item>http://vladislavgulevich.odnako.org</item>
+        <item>http://anatoliygusev.odnako.org</item>
+        <item>http://dankovcevaanna.odnako.org</item>
+        <item>http://denisdvornikov.odnako.org</item>
+        <item>http://delyagin.odnako.org</item>
+        <item>http://dmitriydzhangirov.odnako.org</item>
+        <item>http://geydardzhemal.odnako.org</item>
+        <item>http://alekseydzermant.odnako.org</item>
+        <item>http://andreydobrov.odnako.org</item>
+        <item>http://evgeniydodolev.odnako.org</item>
+        <item>http://konstantindolgov.odnako.org</item>
+        <item>http://aleksandrdremlyugin.odnako.org</item>
+        <item>http://aleksandrdugin.odnako.org</item>
+        <item>http://aleksandrdyukov.odnako.org</item>
+        <item>http://denisemelianov.odnako.org</item>
+        <item>http://dmitriyermolaev.odnako.org</item>
+        <item>http://nikolayershovosadchenko.odnako.org</item>
+        <item>http://andreyzhadaev.odnako.org</item>
+        <item>http://valentinzharonkin.odnako.org</item>
+        <item>http://zavyalovap.odnako.org</item>
+        <item>http://mihailzadornov.odnako.org</item>
+        <item>http://ivanzaycev.odnako.org</item>
+        <item>http://mzaycev.odnako.org</item>
+        <item>http://ivanzacarin.odnako.org</item>
+        <item>http://zinnatullinin.odnako.org</item>
+        <item>http://zotinviktoraleksandrovich.odnako.org</item>
+        <item>http://igorzubov.odnako.org</item>
+        <item>http://alekseyivanov.odnako.org</item>
+        <item>http://ignatovskiyyaroslavrinatovich.odnako.org</item>
+        <item>http://yanvalerevich.odnako.org</item>
+        <item>http://7828.odnako.org</item>
+        <item>http://iraklikakabadze.odnako.org</item>
+        <item>http://kamenev.odnako.org</item>
+        <item>http://andreykameneckiy.odnako.org</item>
+        <item>http://maksimkantor.odnako.org</item>
+        <item>http://vasiliykvasha.odnako.org</item>
+        <item>http://timkerbi.odnako.org</item>
+        <item>http://sergeykizima.odnako.org</item>
+        <item>http://kikilovladimirivanovich.odnako.org</item>
+        <item>http://viktorkirillov.odnako.org</item>
+        <item>http://ilyakiselyov.odnako.org</item>
+        <item>http://Klimenko.odnako.org</item>
+        <item>http://vladislavklochkov.odnako.org</item>
+        <item>http://andreykobyakov.odnako.org</item>
+        <item>http://echinosor.odnako.org</item>
+        <item>http://kovalaleksandrivanovich.odnako.org</item>
+        <item>http://4486.odnako.org</item>
+        <item>http://vladimirkozin.odnako.org</item>
+        <item>http://koltovskiyvitaliy.odnako.org</item>
+        <item>http://dkondov.odnako.org</item>
+        <item>http://aleksandrkondrashov.odnako.org</item>
+        <item>http://koninmaksim.odnako.org</item>
+        <item>http://valeriykonovalyuk.odnako.org</item>
+        <item>http://maksimkononenko.odnako.org</item>
+        <item>http://dmitriykorolev.odnako.org</item>
+        <item>http://yuriykofner30981.odnako.org</item>
+        <item>http://sergeykohichko.odnako.org</item>
+        <item>http://alekseykraveckiy.odnako.org</item>
+        <item>http://sergeykraynev.odnako.org</item>
+        <item>http://ilyakramnik15898.odnako.org</item>
+        <item>http://olegkrasnov.odnako.org</item>
+        <item>http://veronikakrasheninnikova.odnako.org</item>
+        <item>http://viktorkrivorotov.odnako.org</item>
+        <item>http://alekskr.odnako.org</item>
+        <item>http://leonidkrutakov.odnako.org</item>
+        <item>http://kudrevatovalyudmilanikolaevna.odnako.org</item>
+        <item>http://gingen.odnako.org</item>
+        <item>http://andreykuznecov.odnako.org</item>
+        <item>http://neukazano477.odnako.org</item>
+        <item>http://kulakovalekseystanislavovich.odnako.org</item>
+        <item>http://dmitriykulikov.odnako.org</item>
+        <item>http://kulikovevgeniystanislavovich.odnako.org</item>
+        <item>http://andreykuprikov.odnako.org</item>
+        <item>http://kirillkurbatov.odnako.org</item>
+        <item>http://kurginyan.odnako.org</item>
+        <item>http://vyacheslavkuricin.odnako.org</item>
+        <item>http://dzhulettokeza.odnako.org</item>
+        <item>http://polinalavrenteva.odnako.org</item>
+        <item>http://vyacheslavlaktyushkin.odnako.org</item>
+        <item>http://konstantinaleksandrovichlapin.odnako.org</item>
+        <item>http://chokanlaumulin.odnako.org</item>
+        <item>http://mishkin.odnako.org</item>
+        <item>http://dmitriylevikin.odnako.org</item>
+        <item>http://lezingenridmitrievich.odnako.org</item>
+        <item>http://lekuh.odnako.org</item>
+        <item>http://leontev.odnako.org</item>
+        <item>http://anatolliven.odnako.org</item>
+        <item>http://lizanivanyurevich.odnako.org</item>
+        <item>http://vladimirlipilin.odnako.org</item>
+        <item>http://yuriylipchevskiy.odnako.org</item>
+        <item>http://22727.odnako.org</item>
+        <item>http://lukianenko.odnako.org</item>
+        <item>http://sergeylunev.odnako.org</item>
+        <item>http://Ildus_Lutfullin.odnako.org</item>
+        <item>http://liginarkadiy.odnako.org</item>
+        <item>http://Лысков.odnako.org</item>
+        <item>http://lyapinruslanalekseevich.odnako.org</item>
+        <item>http://svyatoslavmazur.odnako.org</item>
+        <item>http://mayorshinanina.odnako.org</item>
+        <item>http://olegmakarenko.odnako.org</item>
+        <item>http://konstantinmakienko.odnako.org</item>
+        <item>http://arcadiymaler.odnako.org</item>
+        <item>http://viktormarahovskiy.odnako.org</item>
+        <item>http://ieromonahmakariymarkish.odnako.org</item>
+        <item>http://andzhey.odnako.org</item>
+        <item>http://elenapremudrova.odnako.org</item>
+        <item>http://vladimirmedinskiy.odnako.org</item>
+        <item>http://terrimeysan.odnako.org</item>
+        <item>http://7434.odnako.org</item>
+        <item>http://stanislavminakov.odnako.org</item>
+        <item>http://miroshnichenkoevgeniy.odnako.org</item>
+        <item>http://fyodormihalichev.odnako.org</item>
+        <item>http://sergeymiheev.odnako.org</item>
+        <item>http://andreymorozov.odnako.org</item>
+        <item>http://ivanmoskal.odnako.org</item>
+        <item>http://moskovskihdenis.odnako.org</item>
+        <item>http://vasiliymuravickiy.odnako.org</item>
+        <item>http://mutalenkoaleksandr.odnako.org</item>
+        <item>http://alexeymuhin.odnako.org</item>
+        <item>http://kirillneymark.odnako.org</item>
+        <item>http://romannekrasov.odnako.org</item>
+        <item>http://alekseynikolaev20011.odnako.org</item>
+        <item>http://sergeynikulin.odnako.org</item>
+        <item>http://natalyanovopashina.odnako.org</item>
+        <item>http://olegnoginskiy.odnako.org</item>
+        <item>http://romannosikov.odnako.org</item>
+        <item>http://yuriyolenev.odnako.org</item>
+        <item>http://igorby.odnako.org</item>
+        <item>http://17709.odnako.org</item>
+        <item>http://alexeyorlov.odnako.org</item>
+        <item>http://dmitriyotruta.odnako.org</item>
+        <item>http://vladimirpalicin.odnako.org</item>
+        <item>http://kirillpalshin.odnako.org</item>
+        <item>http://andreiparshev.odnako.org</item>
+        <item>http://sergeypaukov.odnako.org</item>
+        <item>http://yuriypahomov.odnako.org</item>
+        <item>http://natalyaperevalova.odnako.org</item>
+        <item>http://pereshnevdenissergeevich.odnako.org</item>
+        <item>http://aleksandrperlin.odnako.org</item>
+        <item>http://dmitriypeskov.odnako.org</item>
+        <item>http://pyotrpetrikovskiy.odnako.org</item>
+        <item>http://ptarakang.odnako.org</item>
+        <item>http://sergeypikin113587.odnako.org</item>
+        <item>http://borispodoprigora.odnako.org</item>
+        <item>http://pozinaleksandrgennadevich.odnako.org</item>
+        <item>http://ab-pokoj.odnako.org</item>
+        <item>http://vladimirpoluev.odnako.org</item>
+        <item>http://pavelpoluyan.odnako.org</item>
+        <item>http://konstantinpostoronko26453.odnako.org</item>
+        <item>http://sergeypravosudov.odnako.org</item>
+        <item>http://prilepin.odnako.org</item>
+        <item>http://aleksandrprohanov.odnako.org</item>
+        <item>http://fenechka.odnako.org</item>
+        <item>http://vladimirpustovalov.odnako.org</item>
+        <item>http://puchkov.odnako.org</item>
+        <item>http://arkadiypchemyan.odnako.org</item>
+        <item>http://aleksandrpilaev114406.odnako.org</item>
+        <item>http://igorpihalov.odnako.org</item>
+        <item>http://valeriyrashkin.odnako.org</item>
+        <item>http://Однако.odnako.org</item>
+        <item>http://remizov.odnako.org</item>
+        <item>http://retinskiyaleksandrpetrovich.odnako.org</item>
+        <item>http://4781.odnako.org</item>
+        <item>http://aleksandrrodzhers105153.odnako.org</item>
+        <item>http://irinarozenberg.odnako.org</item>
+        <item>http://a68.odnako.org</item>
+        <item>http://julianassange.odnako.org</item>
+        <item>http://insolator.odnako.org</item>
+        <item>http://Sergej_Rymdenok.odnako.org</item>
+        <item>http://ryabininsergeyanatolevich.odnako.org</item>
+        <item>http://andreyryabov.odnako.org</item>
+        <item>http://savelichevmihailvalerevich.odnako.org</item>
+        <item>http://leonidsavin35180.odnako.org</item>
+        <item>http://evgeniysavchenko.odnako.org</item>
+        <item>http://pavelsadovnikov.odnako.org</item>
+        <item>http://germansadulaev.odnako.org</item>
+        <item>http://saenkoandrey.odnako.org</item>
+        <item>http://vasiliysapozhnikovtrushev.odnako.org</item>
+        <item>http://evgeniysatanovskiy.odnako.org</item>
+        <item>http://andreysafonov.odnako.org</item>
+        <item>http://maksimsafronov.odnako.org</item>
+        <item>http://dmitriysevostyanov.odnako.org</item>
+        <item>http://denisseleznyov.odnako.org</item>
+        <item>http://olgerdsemyonov.odnako.org</item>
+        <item>http://sema2012.odnako.org</item>
+        <item>http://timofeysergeycev.odnako.org</item>
+        <item>http://sergeyserdyukov.odnako.org</item>
+        <item>http://margaritasimonyan.odnako.org</item>
+        <item>http://aleksandrsinkevich.odnako.org</item>
+        <item>http://vladimirsirin.odnako.org</item>
+        <item>http://igorslisarenko.odnako.org</item>
+        <item>http://olegslyusarenko.odnako.org</item>
+        <item>http://smirnovalekseyviktorovich.odnako.org</item>
+        <item>http://olegsmolin.odnako.org</item>
+        <item>http://aleksandrsobko.odnako.org</item>
+        <item>http://yuriysokolov.odnako.org</item>
+        <item>http://andreysorokin.odnako.org</item>
+        <item>http://nikolaystarikov.odnako.org</item>
+        <item>http://stepanovsergeyviktorovich.odnako.org</item>
+        <item>http://arseniystepanov9021.odnako.org</item>
+        <item>http://yuriystorchak.odnako.org</item>
+        <item>http://strugov.odnako.org</item>
+        <item>http://aleksandrsubcelniy.odnako.org</item>
+        <item>http://e-super.odnako.org</item>
+        <item>http://altaec.odnako.org</item>
+        <item>http://sirbachevaleksandrvladimirovi.odnako.org</item>
+        <item>http://tambergviktorvernerovich.odnako.org</item>
+        <item>http://alla_taran.odnako.org</item>
+        <item>http://targonskiyglebolegovich.odnako.org</item>
+        <item>http://aleksandrtenkov.odnako.org</item>
+        <item>http://aleksandrterentevml.odnako.org</item>
+        <item>http://nataliyateryaeva.odnako.org</item>
+        <item>http://6657.odnako.org</item>
+        <item>http://tihomirovsergeygeorgievich.odnako.org</item>
+        <item>http://yuriytkachyov.odnako.org</item>
+        <item>http://ingatokmanceva.odnako.org</item>
+        <item>http://boristolchinskiy.odnako.org</item>
+        <item>http://konstantintoshoporan.odnako.org</item>
+        <item>http://vitaliytretyakov.odnako.org</item>
+        <item>http://yuriytyurdo.odnako.org</item>
+        <item>http://mturin.odnako.org</item>
+        <item>http://uralov.odnako.org</item>
+        <item>http://utkinvladislav.odnako.org</item>
+        <item>http://aleksandrfeniks.odnako.org</item>
+        <item>http://sergeyfilatov.odnako.org</item>
+        <item>http://10151.odnako.org</item>
+        <item>http://4min.odnako.org</item>
+        <item>http://ivanfomin.odnako.org</item>
+        <item>http://aleksandrfrenkel.odnako.org</item>
+        <item>http://lonebeast.odnako.org</item>
+        <item>http://aleksandrfrolov.odnako.org</item>
+        <item>http://sergeyfrolov.odnako.org</item>
+        <item>http://oleghavich.odnako.org</item>
+        <item>http://khazin.odnako.org</item>
+        <item>http://aykhalatyan.odnako.org</item>
+        <item>http://chelemendik.odnako.org</item>
+        <item>http://veronikakhlebnikova.odnako.org</item>
+        <item>http://igorcukanov.odnako.org</item>
+        <item>http://a4ausov.odnako.org</item>
+        <item>http://Чаусова.odnako.org</item>
+        <item>http://dmitriychegin.odnako.org</item>
+        <item>http://dmitriycheredayko.odnako.org</item>
+        <item>http://chernomorskiydmitriy.odnako.org</item>
+        <item>http://chizhmavladislavsergeevich.odnako.org</item>
+        <item>http://egorchurilov.odnako.org</item>
+        <item>http://ksiu.odnako.org</item>
+        <item>http://arinasharapova.odnako.org</item>
+        <item>http://anatoliyshariy.odnako.org</item>
+        <item>http://danilshishkin.odnako.org</item>
+        <item>http://andreyshishkov.odnako.org</item>
+        <item>http://nikolayshmelev.odnako.org</item>
+        <item>http://8047.odnako.org</item>
+        <item>http://aleksandrshpakovskiy.odnako.org</item>
+        <item>http://vladimirshulgin.odnako.org</item>
+        <item>http://sergeyshunkov.odnako.org</item>
+        <item>http://aleksandrshustov.odnako.org</item>
+        <item>http://vladimirshcherbakov.odnako.org</item>
+        <item>http://avigdoreskin.odnako.org</item>
+        <item>http://tuobasyu.odnako.org</item>
+        <item>http://mihailyuzbashev.odnako.org</item>
+        <item>http://borisyulin.odnako.org</item>
+        <item>http://mz59.odnako.org</item>
+        <item>http://5629.odnako.org</item>
+        <item>http://aleksandryusupovskiy.odnako.org</item>
+        <item>http://sergeyyuhin.odnako.org</item>
+        <item>http://tatyanayakovenko.odnako.org</item>
+        <item>http://egoryakovlev.odnako.org</item>
+        <item>http://evgeniyyachmencev.odnako.org</item>
+    </string-array>
+    <!-- imgs -->
+    <string-array name="all_authors_imgs">
+        <item><![CDATA[/i/75_75/users/132/132-1481-132.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/105783/105783-1481-105783.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15877/15877-1481-15877.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/30071/30071-1481-30071.png]]></item>
+        <item><![CDATA[/i/75_75/users/30833/30833-1481-30833.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/101565/101565-1481-101565.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/102196/102196-1481-102196.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/106408/106408-1481-106408.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/107618/107618-1481-107618.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/107943/107943-1481-107943.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/110784/110784-1481-110784.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/27958/27958-1481-27958.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4427/4427-1481-4427.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9759/9759-1481-9759.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15537/15537-1481-15537.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4821/4821-1481-4821.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/17872/17872-1481-17872.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4944/4944-1481-4944.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4289/4289-1481-4289.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15667/15667-1481-15667.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13611/13611-1481-13611.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22541/22541-1481-22541.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7995/7995-1481-7995.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8933/8933-1481-8933.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/23955/23955-1481-23955.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4339/4339-1481-4339.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7012/7012-1481-7012.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4802/4802-1481-4802.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34413/34413-1481-34413.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/100148/100148-1481-100148.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/101461/101461-1481-101461.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8558/8558-1481-8558.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/25494/25494-1481-25494.png]]></item>
+        <item><![CDATA[/i/75_75/users/23629/23629-1481-23629.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/1767/1767-1481-1767.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4356/4356-1481-4356.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4940/4940-1481-4940.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1761/1761-1481-1761.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/3852/3852-1481-3852.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5039/5039-1481-5039.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/21746/21746-1481-21746.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34960/34960-1481-34960.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5043/5043-1481-5043.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/27351/27351-1481-27351.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4573/4573-1481-4573.png]]></item>
+        <item><![CDATA[/i/75_75/users/34636/34636-1481-34636.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4193/4193-1481-4193.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4355/4355-1481-4355.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1759/1759-1481-1759.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/20962/20962-1481-20962.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4219/4219-1481-4219.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5042/5042-1481-5042.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14429/14429-1481-14429.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/23190/23190-1481-23190.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5114/5114-1481-5114.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4262/4262-1481-4262.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4520/4520-1481-4520.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5396/5396-1481-5396.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/31041/31041-1481-31041.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4614/4614-1481-4614.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5038/5038-1481-5038.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/23897/23897-1481-23897.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33085/33085-1481-33085.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19737/19737-1481-19737.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/28285/28285-1481-28285.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33321/33321-1481-33321.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1792/1792-1481-1792.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4947/4947-1481-4947.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15613/15613-1481-15613.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1754/1754-1481-1754.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4065/4065-1481-4065.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4509/4509-1481-4509.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5875/5875-1481-5875.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5230/5230-1481-5230.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/15612/15612-1481-15612.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1760/1760-1481-1760.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/321/321-1481-321.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/17744/17744-1481-17744.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8039/8039-1481-8039.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5678/5678-1481-5678.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/4394/4394-1481-4394.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/10615/10615-1481-10615.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4869/4869-1481-4869.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4522/4522-1481-4522.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/24775/24775-1481-24775.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4948/4948-1481-4948.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/100787/100787-1481-100787.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4949/4949-1481-4949.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4950/4950-1481-4950.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12454/12454-1481-12454.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4543/4543-1481-4543.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4951/4951-1481-4951.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4094/4094-1481-4094.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/31739/31739-1481-31739.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6956/6956-1481-6956.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14515/14515-1481-14515.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33520/33520-1481-33520.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1746/1746-1481-1746.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14436/14436-1481-14436.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/21573/21573-1481-21573.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4367/4367-1481-4367.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/31854/31854-1481-31854.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4659/4659-1481-4659.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14273/14273-1481-14273.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/32910/32910-1481-32910.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1752/1752-1481-1752.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/29565/29565-1481-29565.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7779/7779-1481-7779.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7828/7828-1481-7828.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34958/34958-1481-34958.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/7933/7933-1481-7933.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22551/22551-1481-22551.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33807/33807-1481-33807.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18720/18720-1481-18720.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18820/18820-1481-18820.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34313/34313-1481-34313.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22758/22758-1481-22758.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6379/6379-1481-6379.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14494/14494-1481-14494.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/14340/14340-1481-14340.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9536/9536-1481-9536.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5020/5020-1481-5020.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9502/9502-1481-9502.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6619/6619-1481-6619.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4486/4486-1481-4486.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35438/35438-1481-35438.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5955/5955-1481-5955.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/34709/34709-1481-34709.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19395/19395-1481-19395.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12214/12214-1481-12214.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34931/34931-1481-34931.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/5874/5874-1481-5874.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/30981/30981-1481-30981.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6812/6812-1481-6812.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4097/4097-1481-4097.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4642/4642-1481-4642.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15898/15898-1481-15898.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/29311/29311-1481-29311.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34377/34377-1481-34377.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13612/13612-1481-13612.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6707/6707-1481-6707.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/108252/108252-1481-108252.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7781/7781-1481-7781.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7413/7413-1481-7413.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5112/5112-1481-5112.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/477/477-1481-477.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/5468/5468-1481-5468.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1798/1798-1481-1798.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/28848/28848-1481-28848.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/25111/25111-1481-25111.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4568/4568-1481-4568.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5027/5027-1481-5027.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5023/5023-1481-5023.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/107634/107634-1481-107634.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/29013/29013-1481-29013.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34274/34274-1481-34274.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/16909/16909-1481-16909.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/113996/113996-1481-113996.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13863/13863-1481-13863.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22241/22241-1481-22241.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8446/8446-1481-8446.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1756/1756-1481-1756.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1751/1751-1481-1751.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/103201/103201-1481-103201.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12893/12893-1481-12893.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/18364/18364-1481-18364.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22727/22727-1481-22727.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8501/8501-1481-8501.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15760/15760-1481-15760.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5653/5653-1481-5653.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/107896/107896-1481-107896.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18569/18569-1481-18569.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13286/13286-1481-13286.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/28671/28671-1481-28671.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/29101/29101-1481-29101.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34474/34474-1481-34474.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4013/4013-1481-4013.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34346/34346-1481-34346.png]]></item>
+        <item><![CDATA[/i/75_75/users/1769/1769-1481-1769.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33795/33795-1481-33795.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6686/6686-1481-6686.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12426/12426-1481-12426.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15983/15983-1481-15983.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/27858/27858-1481-27858.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7434/7434-1481-7434.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11862/11862-1481-11862.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7980/7980-1481-7980.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5412/5412-1481-5412.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34378/34378-1481-34378.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4420/4420-1481-4420.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15033/15033-1481-15033.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/3291/3291-1481-3291.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/29314/29314-1481-29314.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/20437/20437-1481-20437.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35011/35011-1481-35011.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/4720/4720-1481-4720.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/111634/111634-1481-111634.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/20011/20011-1481-20011.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1758/1758-1481-1758.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/11948/11948-1481-11948.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4001/4001-1481-4001.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4041/4041-1481-4041.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13771/13771-1481-13771.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/17709/17709-1481-17709.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33329/33329-1481-33329.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4363/4363-1481-4363.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/20586/20586-1481-20586.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33124/33124-1481-33124.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34292/34292-1481-34292.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4368/4368-1481-4368.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4349/4349-1481-4349.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/25827/25827-1481-25827.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7864/7864-1481-7864.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9041/9041-1481-9041.png]]></item>
+        <item><![CDATA[/i/75_75/users/106648/106648-1481-106648.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/5980/5980-1481-5980.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5949/5949-1481-5949.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/113587/113587-1481-113587.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5025/5025-1481-5025.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4843/4843-1481-4843.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4304/4304-1481-4304.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15202/15202-1481-15202.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11860/11860-1481-11860.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/26453/26453-1481-26453.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/114032/114032-1481-114032.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18094/18094-1481-18094.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19218/19218-1481-19218.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19998/19998-1481-19998.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/10002/10002-1481-10002.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/16860/16860-1481-16860.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4623/4623-1481-4623.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/114406/114406-1481-114406.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35487/35487-1481-35487.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/113794/113794-1481-113794.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11065/11065-1481-11065.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34472/34472-1481-34472.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6951/6951-1481-6951.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4781/4781-1481-4781.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/105153/105153-1481-105153.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/6347/6347-1481-6347.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8070/8070-1481-8070.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4325/4325-1481-4325.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/290/290-1481-290.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/16107/16107-1481-16107.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4699/4699-1481-4699.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11056/11056-1481-11056.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35180/35180-1481-35180.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/30495/30495-1481-30495.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/22508/22508-1481-22508.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4199/4199-1481-4199.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/105505/105505-1481-105505.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4291/4291-1481-4291.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/33272/33272-1481-33272.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/27528/27528-1481-27528.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7386/7386-1481-7386.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8979/8979-1481-8979.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/114391/114391-1481-114391.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/113594/113594-1481-113594.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15503/15503-1481-15503.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4329/4329-1481-4329.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/34959/34959-1481-34959.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/103851/103851-1481-103851.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/109081/109081-1481-109081.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6924/6924-1481-6924.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4723/4723-1481-4723.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/15258/15258-1481-15258.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7055/7055-1481-7055.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34338/34338-1481-34338.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/21153/21153-1481-21153.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11217/11217-1481-11217.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1750/1750-1481-1750.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35402/35402-1481-35402.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6124/6124-1481-6124.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9021/9021-1481-9021.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4673/4673-1481-4673.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1749/1749-1481-1749.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19484/19484-1481-19484.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5283/5283-1481-5283.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4741/4741-1481-4741.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12124/12124-1481-12124.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/9232/9232-1481-9232.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/24494/24494-1481-24494.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6398/6398-1481-6398.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6396/6396-1481-6396.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5044/5044-1481-5044.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12774/12774-1481-12774.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6657/6657-1481-6657.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12628/12628-1481-12628.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34588/34588-1481-34588.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34295/34295-1481-34295.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/9574/9574-1481-9574.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/25426/25426-1481-25426.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/16793/16793-1481-16793.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1747/1747-1481-1747.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/100784/100784-1481-100784.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1748/1748-1481-1748.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/19628/19628-1481-19628.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/27864/27864-1481-27864.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35178/35178-1481-35178.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/10151/10151-1481-10151.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6426/6426-1481-6426.png]]></item>
+        <item><![CDATA[/i/75_75/users/25164/25164-1481-25164.jpg]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[/i/75_75/users/6769/6769-1481-6769.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/13585/13585-1481-13585.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/20459/20459-1481-20459.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/109079/109079-1481-109079.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/1787/1787-1481-1787.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/112452/112452-1481-112452.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6647/6647-1481-6647.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4945/4945-1481-4945.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/103200/103200-1481-103200.gif]]></item>
+        <item><![CDATA[/i/75_75/users/15572/15572-1481-15572.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18063/18063-1481-18063.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6490/6490-1481-6490.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12127/12127-1481-12127.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19050/19050-1481-19050.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/25247/25247-1481-25247.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/105888/105888-1481-105888.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/3772/3772-1481-3772.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11447/11447-1481-11447.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/12436/12436-1481-12436.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4422/4422-1481-4422.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11588/11588-1481-11588.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34675/34675-1481-34675.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/8047/8047-1481-8047.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/106284/106284-1481-106284.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/35295/35295-1481-35295.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/11922/11922-1481-11922.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/34122/34122-1481-34122.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/19532/19532-1481-19532.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/18736/18736-1481-18736.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7038/7038-1481-7038.png]]></item>
+        <item><![CDATA[/i/75_75/users/7839/7839-1481-7839.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/7230/7230-1481-7230.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5323/5323-1481-5323.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/5629/5629-1481-5629.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/6532/6532-1481-6532.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4675/4675-1481-4675.jpeg]]></item>
+        <item><![CDATA[/i/75_75/users/9525/9525-1481-9525.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/4709/4709-1481-4709.jpg]]></item>
+        <item><![CDATA[/i/75_75/users/26767/26767-1481-26767.jpg]]></item>
+    </string-array>
+
+    <!-- descriptions -->
+    <string-array name="all_authors_descriptions">
+        <item><![CDATA[доцент]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Менеджер]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Предприниматель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Учёный, публицист]]></item>
+        <item><![CDATA[Видеоблогер]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Корреспондент]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Учитель, психолог]]></item>
+        <item><![CDATA[Редактор новостей «Однако. Евразия»]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Блогер, публицист]]></item>
+        <item><![CDATA[Сопредседатель городского родительского комитета СПб]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Директор Центра интеграционных стратегий]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Президент Союза предпринимателей и арендаторов России]]></item>
+        <item><![CDATA[Блогер, публицист]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Ведущий научный сотрудник Института Дальнего Востока РАН]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Корреспондент]]></item>
+        <item><![CDATA[Академик, советник президента России]]></item>
+        <item><![CDATA[Преподаватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Корреспондент]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Член Общественной палаты РФ]]></item>
+        <item><![CDATA[Экономист, публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Философ, социолог, политолог, публицист]]></item>
+        <item><![CDATA[Историк, публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Заместитель главного редактора еженедельника &quot;Российские Вести&quot;]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Корреспондент]]></item>
+        <item><![CDATA[Писатель, художник]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Доктор политических наук ]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Студент-историк]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Заместитель главного редактора]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Редактор отдела &quot;Телевидение&quot; «Литературной газеты»]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Народный депутат Верховной рады Украины]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Гендиректор Института внешнеполитических исследований и инициатив]]></item>
+        <item><![CDATA[Учёный, публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Социальный педагог]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Кандидат юридических наук, доцент РАНХиГУ при Президенте РФ]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Итальянский журналист, автор книг, экс-депутат Европейского парламента ]]></item>
+        <item><![CDATA[Корреспондент]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Председатель редакционного совета]]></item>
+        <item><![CDATA[колумнист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Блогер]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[редактор]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[-]]></item>
+        <item><![CDATA[Министр культуры РФ]]></item>
+        <item><![CDATA[Политолог, конспиролог]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Политолог, Президент Центра политической конъюнктуры России ]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Генеральный директор Центра политической информации]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Инженер, аспирант]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Академик УН Украины]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Директор Института национальной энергетики]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[Писатель, главный редактор газеты &quot;Завтра&quot;]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Президент Института национальной стратегии ]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Шеф-редактор альманаха &quot;Однако&quot;]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Начальник отдела]]></item>
+        <item><![CDATA[Архитектор]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Главный редактор журнала и портала «Геополитика»]]></item>
+        <item><![CDATA[Губернатор Белгородской области]]></item>
+        <item><![CDATA[Редактор-райтер]]></item>
+        <item><![CDATA[Писатель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Президент Института Ближнего Востока]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Технический директор международного консорциума «Северный поток»]]></item>
+        <item><![CDATA[руководитель Russia Today]]></item>
+        <item><![CDATA[Координатор проекта \&quot;Цитадель\&quot;]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Первый заместитель председателя Комитета Госдумы РФ по образованию]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Издательский директор группы «Однако»]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Генеральный директор]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Редактор отдела новостей]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Редактор отдела «Заграница»]]></item>
+        <item><![CDATA[консультант при дирекции Объединенного института ядерных исследований]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Шеф-редактор «Однако. Евразия»]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель журнала «Международная жизнь» ]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Писатель, публицист]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[Редактор отдела технологий и телекоммуникаций газеты «Ведомости». Родился в Москве в 1976 г. В 1998 г. окончил Московский государственный университет печати. Журналистскую карьеру начал в 1995 г. в деловой газете «Бизнес MN». Затем работал в «Российской газете» (1998-2000), информационном агентстве AK&amp;M (2000-2001), журнале «Русский фокус» (2001-2004). В «Ведомости» пришел в августе 2004 г.]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Директор Института Европы РАН]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Обозреватель]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[Колумнист]]></item>
+        <item><![CDATA[Публицист]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+        <item><![CDATA[empty]]></item>
+    </string-array>
+
+</resources>
