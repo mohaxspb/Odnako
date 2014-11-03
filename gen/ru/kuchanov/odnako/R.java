@@ -573,6 +573,10 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int cardUseCompatPadding=0x7f0100ad;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int categoriesMoreIcon=0x7f0100e5;
         /**  Close button icon 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1497,6 +1501,10 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int state_above_anchor=0x7f010097;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int subjectIcon=0x7f0100e4;
         /**  Background for the section containing the action (e.g. voice search) 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -2306,31 +2314,35 @@ containing a value of this type.
         public static final int ic_markunread_white_48dp=0x7f020070;
         public static final int ic_person_grey600_48dp=0x7f020071;
         public static final int ic_person_white_48dp=0x7f020072;
-        public static final int ic_plusone_medium_off_client=0x7f020073;
-        public static final int ic_plusone_small_off_client=0x7f020074;
-        public static final int ic_plusone_standard_off_client=0x7f020075;
-        public static final int ic_plusone_tall_off_client=0x7f020076;
-        public static final int ic_save_grey600_48dp=0x7f020077;
-        public static final int ic_save_white_48dp=0x7f020078;
-        public static final int ic_settings_grey600_48dp=0x7f020079;
-        public static final int ic_settings_white_48dp=0x7f02007a;
-        public static final int ic_share_grey600_48dp=0x7f02007b;
-        public static final int ic_share_white_48dp=0x7f02007c;
-        public static final int info_box_blue=0x7f02007d;
-        public static final int list_focused=0x7f02007e;
-        public static final int list_pressed=0x7f02007f;
-        public static final int menu_dropdown_panel=0x7f020080;
-        public static final int powered_by_google_dark=0x7f020081;
-        public static final int powered_by_google_light=0x7f020082;
-        public static final int selectable_background=0x7f020083;
-        public static final int social_facebook=0x7f020084;
-        public static final int social_google=0x7f020085;
-        public static final int social_livejournal=0x7f020086;
-        public static final int social_odnoklassniki=0x7f020087;
-        public static final int social_twitter=0x7f020088;
-        public static final int social_vkontakte=0x7f020089;
-        public static final int spinner_default_holo_dark_am=0x7f02008a;
-        public static final int spinner_default_holo_light_am=0x7f02008b;
+        public static final int ic_playlist_add_grey600_48dp=0x7f020073;
+        public static final int ic_playlist_add_white_48dp=0x7f020074;
+        public static final int ic_plusone_medium_off_client=0x7f020075;
+        public static final int ic_plusone_small_off_client=0x7f020076;
+        public static final int ic_plusone_standard_off_client=0x7f020077;
+        public static final int ic_plusone_tall_off_client=0x7f020078;
+        public static final int ic_save_grey600_48dp=0x7f020079;
+        public static final int ic_save_white_48dp=0x7f02007a;
+        public static final int ic_settings_grey600_48dp=0x7f02007b;
+        public static final int ic_settings_white_48dp=0x7f02007c;
+        public static final int ic_share_grey600_48dp=0x7f02007d;
+        public static final int ic_share_white_48dp=0x7f02007e;
+        public static final int ic_subject_grey600_48dp=0x7f02007f;
+        public static final int ic_subject_white_48dp=0x7f020080;
+        public static final int info_box_blue=0x7f020081;
+        public static final int list_focused=0x7f020082;
+        public static final int list_pressed=0x7f020083;
+        public static final int menu_dropdown_panel=0x7f020084;
+        public static final int powered_by_google_dark=0x7f020085;
+        public static final int powered_by_google_light=0x7f020086;
+        public static final int selectable_background=0x7f020087;
+        public static final int social_facebook=0x7f020088;
+        public static final int social_google=0x7f020089;
+        public static final int social_livejournal=0x7f02008a;
+        public static final int social_odnoklassniki=0x7f02008b;
+        public static final int social_twitter=0x7f02008c;
+        public static final int social_vkontakte=0x7f02008d;
+        public static final int spinner_default_holo_dark_am=0x7f02008e;
+        public static final int spinner_default_holo_light_am=0x7f02008f;
     }
     public static final class id {
         public static final int action_bar=0x7f0a0044;
@@ -2805,7 +2817,7 @@ containing a value of this type.
         public static final int divider=0x7f0b0063;
         public static final int downBtn=0x7f0b0050;
         public static final int download_all=0x7f0b0051;
-        public static final int downloadings=0x7f0b0047;
+        public static final int downloads=0x7f0b0047;
         public static final int drawer_close=0x7f0b006e;
         public static final int drawer_open=0x7f0b006d;
         public static final int hello_world=0x7f0b004b;

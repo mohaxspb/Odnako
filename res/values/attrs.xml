@@ -25,5 +25,7 @@
     <attr name="authorsMoreIcon" format="reference" />
     <attr name="downloadIcon" format="reference" />
     <attr name="asListIcon" format="reference" />
+    <attr name="subjectIcon" format="reference" />
+    <attr name="categoriesMoreIcon" format="reference" />
 
 </resources>

@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.activities;
 import com.google.android.gms.ads.AdView;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.lists_and_utils.Shakespeare;
 import ru.kuchanov.odnako.utils.AddAds;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -20,23 +19,24 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
 public class ActivityBase extends ActionBarActivity
 {
 	protected ActionBarActivity act;
 	protected boolean twoPane;
 	protected SharedPreferences pref;
-	
+
 	AdView adView;
 
 	///drawer
 	protected DrawerLayout mDrawerLayout;
-	protected ListView mDrawer;
+	protected ExpandableListView mDrawer;
 	protected ActionBarHelper mActionBar;
 	protected ActionBarDrawerToggle mDrawerToggle;
+	protected boolean drawerOpened=false;
 	///drawer
+	
 
 	protected void AddAds()
 	{
@@ -135,16 +135,16 @@ public class ActivityBase extends ActionBarActivity
 	 * changing the primary content text. The drawer is closed when a selection
 	 * is made.
 	 */
-	protected class DrawerItemClickListener implements ListView.OnItemClickListener
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-		{
-			//           mContent.setText(Shakespeare.DIALOGUE[position]);
-			mActionBar.setTitle(Shakespeare.TITLES[position]);
-			mDrawerLayout.closeDrawer(mDrawer);
-		}
-	}
+//	protected class DrawerItemClickListener implements ListView.OnItemClickListener
+//	{
+//		@Override
+//		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+//		{
+//			//           mContent.setText(Shakespeare.DIALOGUE[position]);
+//			mActionBar.setTitle(Shakespeare.TITLES[position]);
+//			mDrawerLayout.closeDrawer(mDrawer);
+//		}
+//	}
 
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
@@ -163,6 +163,7 @@ public class ActivityBase extends ActionBarActivity
 		private final ActionBar mActionBar;
 		private CharSequence mDrawerTitle;
 		private CharSequence mTitle;
+		
 
 		ActionBarHelper()
 		{
@@ -183,6 +184,7 @@ public class ActivityBase extends ActionBarActivity
 		public void onDrawerClosed()
 		{
 			mActionBar.setTitle(mTitle);
+			drawerOpened=false;
 		}
 
 		/**
@@ -194,6 +196,7 @@ public class ActivityBase extends ActionBarActivity
 		public void onDrawerOpened()
 		{
 			mActionBar.setTitle(mDrawerTitle);
+			drawerOpened=true;
 		}
 
 		public void setTitle(CharSequence title)
@@ -201,4 +204,6 @@ public class ActivityBase extends ActionBarActivity
 			mTitle = title;
 		}
 	}
+
+	
 }

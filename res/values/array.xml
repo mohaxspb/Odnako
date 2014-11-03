@@ -4,8 +4,6 @@
     <string-array name="menu_items">
         <item>Авторы</item>
         <item>Категории</item>
-        <item>Лента обновлений</item>
-        <item>Новости</item>
         <item>Загрузки</item>
         <item>Настройки</item>
     </string-array>
@@ -23,13 +21,14 @@
         <item>Евразия</item>
         <item>Человекостроение</item>
         <item>Миропорядок</item>
+        <item>Лента обновлений</item>
+        <item>Новости</item>
+        <item>Все категории</item>
     </string-array>
     
     <string-array name="menu_items_links">
         <item>Авторы</item>
         <item>Категории</item>
-        <item>www.odnako.org/blogs</item>
-        <item>novosti.odnako.org</item>
         <item>Загрузки</item>
         <item>Настройки</item>
     </string-array>
@@ -47,6 +46,9 @@
         <item>eurasia.odnako.org</item>
         <item>chelovekostroenie.odnako.org</item>
         <item>miroporyadok.odnako.org</item>
+        <item>www.odnako.org/blogs</item>
+        <item>novosti.odnako.org</item>
+        <item>Все категории</item>
     </string-array>
     <string-array name="categories_to_load">
         <item>Лента обновлений</item>

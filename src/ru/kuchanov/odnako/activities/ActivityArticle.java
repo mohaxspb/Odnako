@@ -14,7 +14,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.Shakespeare;
+import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -28,7 +28,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ActivityArticle extends ActivityBase//ActionBarActivity
 {
@@ -65,15 +67,17 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 
 		//drawer settings
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawer = (ListView) findViewById(R.id.start_drawer);
+		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
 		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
 		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-		Shakespeare.TITLES));
-		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+//		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+//		Shakespeare.TITLES));
+//		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+		mDrawer.setOnItemClickListener((OnItemClickListener) new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
+		
 		mActionBar = createActionBarHelper();
 		mActionBar.init();
 		// ActionBarDrawerToggle provides convenient helpers for tying together the

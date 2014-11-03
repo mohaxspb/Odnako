@@ -16,6 +16,8 @@ import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
+import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
@@ -23,6 +25,7 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -31,10 +34,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase
 {
@@ -45,8 +51,10 @@ public class ActivityMain extends ActivityBase
 	private ArtInfo curArtInfo;
 	int position;
 
-	ExpandableListView mDrawer;
+//	ExpandableListView mDrawer;
 
+	private int backPressedQ;
+	
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
@@ -110,13 +118,16 @@ public class ActivityMain extends ActivityBase
 		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
 		ExpListAdapter expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
 		mDrawer.setAdapter(expAdapter);
-		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+		mDrawer.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
+		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
+		mDrawer.setOnGroupClickListener(new DrawerGroupClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.expandGroup(1);
 		mActionBar = createActionBarHelper();
 		mActionBar.init();
 		// ActionBarDrawerToggle provides convenient helpers for tying together the
 		// prescribed interactions between a top-level sliding drawer and the action bar.
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+//		mDrawerToggle.
 		////End of drawer settings
 
 		//Set unreaded num of arts to zero
@@ -334,6 +345,43 @@ public class ActivityMain extends ActivityBase
 	public void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
 	{
 		this.curArtInfo = cUR_ARTS_INFO;
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		//super.onBackPressed();
+		if (this.backPressedQ == 1)
+		{
+			this.backPressedQ = 0;
+			super.onBackPressed();
+			this.finish();
+		}
+		else
+		{
+			if(drawerOpened)
+			{
+				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			}
+			else
+			{
+				this.backPressedQ++;
+				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+			}
+		}
+		//Обнуление счётчика через 5 секунд
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Do something after 5s = 5000ms
+				backPressedQ = 0;
+				//checkNew();
+			}
+		}, 5000);
+		//Обнуление счётчика через 5 секунд
 	}
 
 }
