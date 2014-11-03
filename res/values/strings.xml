@@ -51,6 +51,7 @@
     <string name="art_text_scale">Размер  текста в статьях</string>
     <string name="text_scale">Размер  шрифта</string>
     <string name="divider">|</string>
+    <string name="img">картинка</string>
     
     <string name="transition_art_card">trans_art_card</string>
 

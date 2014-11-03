@@ -10,15 +10,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-import ru.kuchanov.odnako.lists_and_utils.Shakespeare;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseForAllAuthors;
 import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
+import ru.kuchanov.odnako.utils.DipToPx;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,12 +29,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
-public class ActivityMain extends ActivityBase//ActionBarActivity
+public class ActivityMain extends ActivityBase
 {
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
@@ -41,6 +44,8 @@ public class ActivityMain extends ActivityBase//ActionBarActivity
 	private ArrayList<ArtInfo> allArtsInfo;
 	private ArtInfo curArtInfo;
 	int position;
+
+	ExpandableListView mDrawer;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -69,15 +74,44 @@ public class ActivityMain extends ActivityBase//ActionBarActivity
 
 		//drawer settings
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_new);
-		mDrawer = (ListView) findViewById(R.id.start_drawer);
+		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
+		//set Drawer width
+		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
+		int displayWidth = displayMetrics.widthPixels;
+		int actionBarHeight = TypedValue.complexToDimensionPixelSize(56, getResources().getDisplayMetrics());//=this.getSupportActionBar().getHeight();
+		// Calculate ActionBar height
+		TypedValue tv = new TypedValue();
+		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+		{
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+		}
+		DrawerLayout.LayoutParams lp = (android.support.v4.widget.DrawerLayout.LayoutParams) mDrawer.getLayoutParams();
+		int drawerWidth;
+		this.twoPane=this.pref.getBoolean("twoPane", false);
+		if (this.twoPane)
+		{
+			drawerWidth=displayMetrics.widthPixels/3;
+			if(drawerWidth<DipToPx.convert(320, act))
+			{
+				drawerWidth=(int) DipToPx.convert(320, act);
+			}
+		}
+		else
+		{
+			drawerWidth = displayWidth - actionBarHeight;
+		}
+		lp.width = drawerWidth;
+		mDrawer.setLayoutParams(lp);
+		////end of set Drawer width
 		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
 		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-		Shakespeare.TITLES));
+		ExpListAdapter expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
+		mDrawer.setAdapter(expAdapter);
 		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
+		mDrawer.expandGroup(1);
 		mActionBar = createActionBarHelper();
 		mActionBar.init();
 		// ActionBarDrawerToggle provides convenient helpers for tying together the
@@ -248,9 +282,9 @@ public class ActivityMain extends ActivityBase//ActionBarActivity
 				{
 					darkThemeMenuItem.setChecked(true);
 				}
-				ParseForAllCategories parse=new ParseForAllCategories(act);
+				ParseForAllCategories parse = new ParseForAllCategories(act);
 				parse.execute("http://odnako.org/");
-				ParseForAllAuthors parse1=new ParseForAllAuthors(act);
+				ParseForAllAuthors parse1 = new ParseForAllAuthors(act);
 				parse1.execute("http://odnako.org/authors/");
 				return true;
 			case R.id.theme_ligth:

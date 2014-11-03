@@ -49,6 +49,7 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.commentsListView = commentsListView;
+		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 	}
 
 	public void notifyDataSetChanged()
@@ -92,17 +93,8 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 				if (convertView == null)
 				{
 					ViewGroup vg;
-					pref = PreferenceManager.getDefaultSharedPreferences(act);
-					if (pref.getString("theme", "dark").equals("dark"))
-					{
-						vg = (ViewGroup) LayoutInflater.from(act).inflate(
-						R.layout.comment_card_view, this.commentsListView, false);
-					}
-					else
-					{
-						vg = (ViewGroup) LayoutInflater.from(act).inflate(
-						R.layout.comment_card_view, this.commentsListView, false);
-					}
+					vg = (ViewGroup) LayoutInflater.from(act).inflate(R.layout.comment_card_view,
+					this.commentsListView, false);
 					holderMain = new CommHolder((CardView) vg.findViewById(R.id.card),
 					(TextView) vg.findViewById(R.id.name), (ImageView) vg.findViewById(R.id.flag),
 					(TextView) vg.findViewById(R.id.time_city),
@@ -158,7 +150,7 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 
 				//setText
 				String commentText;
-				commentText="<p>" + p.txt + "</p>";
+				commentText = "<p>" + p.txt + "</p>";
 				Spanned spannedContent = Html.fromHtml(commentText);
 				holderMain.txt.setText(spannedContent);
 				holderMain.txt.setMovementMethod(LinkMovementMethod.getInstance());
@@ -172,7 +164,7 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 				});
 
 				// FLAG
-				
+
 				ImageLoader imageLoader = UniversalImageLoader.get(act);
 				imageLoader.displayImage(p.flag, holderMain.flag);
 				//end of FLAG
@@ -185,8 +177,8 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 
 				// Karma
 				//set karma's parent gravity to bottom, for known issue in Dialog
-				LinearLayout vg=(LinearLayout) holderMain.like.getParent();
-				LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				LinearLayout vg = (LinearLayout) holderMain.like.getParent();
+				LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				vg.setLayoutParams(params);
 				vg.setGravity(Gravity.RIGHT);
 				holderMain.like.setText(p.like);
@@ -230,7 +222,7 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 			this.txt = txt;
 			this.flag = flag;
 			this.time_city = time_city;
-			this.like=like;
+			this.like = like;
 			this.dislike = dislike;
 			this.avaImg = avaImg;
 		}

@@ -26,6 +26,17 @@
         <item name="refreshIcon">@drawable/ic_autorenew_white_48dp</item>
         <item name="commentsIcon">@drawable/ic_comment_white_48dp</item>
         <item name="shareIcon">@drawable/ic_share_white_48dp</item>
+        <!-- arrows -->
+        <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_white_48dp</item>
+        <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_white_48dp</item>
+        <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_white_48dp</item>
+        <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_white_48dp</item>
+        <!-- more -->
+        <item name="authorsIcon">@drawable/ic_group_white_48dp</item>
+        <item name="authorIcon">@drawable/ic_person_white_48dp</item>
+        <item name="authorsMoreIcon">@drawable/ic_group_add_white_48dp</item>
+        <item name="downloadIcon">@drawable/ic_file_download_white_48dp</item>
+        <item name="asListIcon">@drawable/ic_list_white_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
@@ -62,6 +73,17 @@
         <item name="refreshIcon">@drawable/ic_autorenew_grey600_48dp</item>
         <item name="commentsIcon">@drawable/ic_comment_grey600_48dp</item>
         <item name="shareIcon">@drawable/ic_share_grey600_48dp</item>
+        <!-- arrows -->
+        <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_grey600_48dp</item>
+        <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_grey600_48dp</item>
+        <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_grey600_48dp</item>
+        <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_grey600_48dp</item>
+        <!-- more -->
+        <item name="authorsIcon">@drawable/ic_group_grey600_48dp</item>
+        <item name="authorIcon">@drawable/ic_person_grey600_48dp</item>
+        <item name="authorsMoreIcon">@drawable/ic_group_add_grey600_48dp</item>
+        <item name="downloadIcon">@drawable/ic_file_download_grey600_48dp</item>
+        <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">
@@ -74,4 +96,5 @@
         <item name="android:background">@color/material_grey_400</item>
         <item name="actionMenuTextColor">@color/material_grey_800</item>
     </style>
+
 </resources>
