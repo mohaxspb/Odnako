@@ -14,6 +14,7 @@ import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,6 +58,32 @@ public class ActivityMain extends ActivityBase
 
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
+		
+		Bundle stateFromIntent = this.getIntent().getExtras();
+		if (stateFromIntent != null)
+		{
+			this.restoreState(stateFromIntent);
+			
+			int[] intArr;
+			intArr=stateFromIntent.getIntArray("groupChildPosition");
+			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
+			
+			this.restoreGroupChildPosition(stateFromIntent);
+//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
+			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
+		}
+		else if (savedInstanceState != null)
+		{
+			this.restoreState(savedInstanceState);
+			this.restoreGroupChildPosition(savedInstanceState);
+			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
+		}
+		//all is null, so start request for info
+		else
+		{
+			// TODO
+			System.out.println("ActivityArticle: all bundles are null, so make request for info");
+		}
 
 		this.setContentView(R.layout.layout_activity_main);
 

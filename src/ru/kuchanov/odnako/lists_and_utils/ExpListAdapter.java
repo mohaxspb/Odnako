@@ -178,7 +178,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			holderMain = (MyHolder) convertView.getTag();
 		}
 		///light checked item
-		if(this.act instanceof ActivityDownloads && groupPosition==2)
+		if (this.act instanceof ActivityDownloads && groupPosition == 2)
 		{
 			Resources.Theme themes = act.getTheme();
 			TypedValue storedValueInTheme = new TypedValue();
@@ -285,12 +285,11 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			view = convertView;
 			holderMain = (MyHolder) convertView.getTag();
 		}
-		//light selected
+		//		light selected
 		if (act instanceof ActivityMain || act instanceof ActivityArticle || act instanceof ActivityComments)
 		{
 			int[] curGrChPos = new int[] { groupPosition, childPosition };
 			int[] activityGrChPos = ((ActivityBase) this.act).getGroupChildPosition();
-//			System.out.println("childGroupPos: "+activityGrChPos[0]+"/ "+activityGrChPos[1]);
 			if (Arrays.equals(curGrChPos, activityGrChPos))
 			{
 				Resources.Theme themes = act.getTheme();
@@ -309,6 +308,28 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		{
 			view.setBackgroundColor(Color.TRANSPARENT);
 		}
+
+		//test
+		//		ExpandableListView ELV = (ExpandableListView) act.findViewById(R.id.start_drawer);
+		//		final long groupChildPositionSelected = /* ((ExpandableListView)parent) */ELV.getSelectedPosition();
+		//		switch (ExpandableListView.getPackedPositionType(groupChildPositionSelected))
+		//		{
+		//			case ExpandableListView.PACKED_POSITION_TYPE_CHILD:
+		//				System.out.println("position type: child");
+		//			break;
+		//
+		//			case ExpandableListView.PACKED_POSITION_TYPE_GROUP:
+		//				System.out.println("position type: group");
+		//			break;
+		//
+		//			case ExpandableListView.PACKED_POSITION_TYPE_NULL:
+		//				System.out.println("position type: null");
+		//			break;
+		//		}
+		//		final int groupPos1 = ExpandableListView.getPackedPositionGroup(groupChildPositionSelected);//(groupChildFlatPosition);
+		//		final int childPos1 = ExpandableListView.getPackedPositionChild(groupChildPositionSelected);
+		//		System.out.println("FROM_ADAPTER_groupPos1: " + groupPos1 + "/ childPos1: " + childPos1);
+
 		/////////
 		//text and it's size
 		holderMain.text.setText(mGroups.get(groupPosition).get(childPosition));
@@ -342,8 +363,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				}
 			break;
 		}
-		LinearLayout.LayoutParams lp=(LayoutParams) holderMain.left.getLayoutParams();
-		lp.setMargins((int)DipToPx.convert(30, act), 0, 0, 0);
+		LinearLayout.LayoutParams lp = (LayoutParams) holderMain.left.getLayoutParams();
+		lp.setMargins((int) DipToPx.convert(30, act), 0, 0, 0);
 		holderMain.left.setLayoutParams(lp);
 
 		return view;

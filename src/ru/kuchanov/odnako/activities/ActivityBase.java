@@ -129,7 +129,7 @@ public class ActivityBase extends ActionBarActivity
 		//set Drawer width
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 		int displayWidth = displayMetrics.widthPixels;
-		int actionBarHeight = TypedValue.complexToDimensionPixelSize(56, getResources().getDisplayMetrics());//=this.getSupportActionBar().getHeight();
+		int actionBarHeight = 56;//TypedValue.complexToDimensionPixelSize(56, getResources().getDisplayMetrics());//=this.getSupportActionBar().getHeight();
 		// Calculate ActionBar height
 		TypedValue tv = new TypedValue();
 		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
@@ -209,8 +209,7 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void saveGroupChildPosition(Bundle state)
 	{
-		state.putIntArray("groupChildPosition", groupChildPosition);//.putInt("groupPosition", groupChildPosition[0]);
-		//		state.putInt("childPosition", groupChildPosition[1]);
+		state.putIntArray("groupChildPosition", groupChildPosition);
 	}
 
 	protected void restoreGroupChildPosition(Bundle state)

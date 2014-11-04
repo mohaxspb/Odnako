@@ -24,22 +24,17 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 	@Override
 	public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
 	{
+		//test
+		final long packedPosition = parent.getExpandableListPosition(groupPosition);
+		final int groupPosition1 = ExpandableListView.getPackedPositionGroup(packedPosition);
+		System.out.println("onGroupClick_groupPosition1: "+groupPosition1);
 		//downloads
 		if (groupPosition == 2)
 		{
-			//			mDrawerList.setSelectedGroup(groupPosition);//.setItemChecked(groupPosition, true);
-
-//			mDrawerList.setSelectedGroup(groupPosition);
-//
-//			((ActivityMain) this.act).setGroupChildPosition(groupPosition, childPosition);
-//
-//			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
-
+			
+			
 			mDrawerLayout.closeDrawer(mDrawerList);
 			Intent intent = new Intent(act, ActivityDownloads.class);
-//			Bundle b=new Bundle();
-//			b.putIntArray("groupChildPosition", new int[]{groupPosition, -1});
-//			intent.putExtras(b);
 			act.startActivity(intent);
 		}
 		//settings
