@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityArticle;
+import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityComments;
+import ru.kuchanov.odnako.activities.ActivityDownloads;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.utils.DipToPx;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -12,15 +17,14 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class ExpListAdapter extends BaseExpandableListAdapter
@@ -174,22 +178,14 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			holderMain = (MyHolder) convertView.getTag();
 		}
 		///light checked item
-		//		if (((ExpandableListView)parent).getch.getCheckedItemPosition()==groupPosition)
-		//		if (((ExpandableListView)parent).getCheckedItemPositions().==groupPosition)
-		//		{
-		//			view.setBackgroundColor(act.getResources().getColor(R.color.blue));
-		//		}
-		//		else
-		//		{
-		//			view.setBackgroundColor(Color.TRANSPARENT);
-		//		}
-
-		//		.setDrawSelectorOnTop(true);
-
-		if (((ExpandableListView) parent).getSelectedPosition() == ExpandableListView
-		.getPackedPositionForGroup(groupPosition))
+		if(this.act instanceof ActivityDownloads && groupPosition==2)
 		{
-			view.setBackgroundColor(act.getResources().getColor(R.color.blue));
+			Resources.Theme themes = act.getTheme();
+			TypedValue storedValueInTheme = new TypedValue();
+			if (themes.resolveAttribute(R.attr.selectorColor, storedValueInTheme, true))
+			{
+				view.setBackgroundColor(storedValueInTheme.data);
+			}
 		}
 		else
 		{
@@ -290,10 +286,11 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			holderMain = (MyHolder) convertView.getTag();
 		}
 		//light selected
-		if (this.act instanceof ActivityMain)
+		if (act instanceof ActivityMain || act instanceof ActivityArticle || act instanceof ActivityComments)
 		{
 			int[] curGrChPos = new int[] { groupPosition, childPosition };
-			int[] activityGrChPos = ((ActivityMain) this.act).getGroupChildPosition();
+			int[] activityGrChPos = ((ActivityBase) this.act).getGroupChildPosition();
+//			System.out.println("childGroupPos: "+activityGrChPos[0]+"/ "+activityGrChPos[1]);
 			if (Arrays.equals(curGrChPos, activityGrChPos))
 			{
 				Resources.Theme themes = act.getTheme();
@@ -344,8 +341,10 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 					holderMain.left.setImageDrawable(drawableAsList);
 				}
 			break;
-
 		}
+		LinearLayout.LayoutParams lp=(LayoutParams) holderMain.left.getLayoutParams();
+		lp.setMargins((int)DipToPx.convert(30, act), 0, 0, 0);
+		holderMain.left.setLayoutParams(lp);
 
 		return view;
 	}

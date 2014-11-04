@@ -27,15 +27,25 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 		//downloads
 		if (groupPosition == 2)
 		{
-//			mDrawerList.setSelectedGroup(groupPosition);//.setItemChecked(groupPosition, true);
+			//			mDrawerList.setSelectedGroup(groupPosition);//.setItemChecked(groupPosition, true);
+
+//			mDrawerList.setSelectedGroup(groupPosition);
+//
+//			((ActivityMain) this.act).setGroupChildPosition(groupPosition, childPosition);
+//
+//			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
+
 			mDrawerLayout.closeDrawer(mDrawerList);
 			Intent intent = new Intent(act, ActivityDownloads.class);
+//			Bundle b=new Bundle();
+//			b.putIntArray("groupChildPosition", new int[]{groupPosition, -1});
+//			intent.putExtras(b);
 			act.startActivity(intent);
 		}
 		//settings
 		else if (groupPosition == 3)
 		{
-//			mDrawerList.setItemChecked(groupPosition, true);
+			//			mDrawerList.setItemChecked(groupPosition, true);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			Intent intent = new Intent(act, ActivityPreference.class);
 			act.startActivity(intent);

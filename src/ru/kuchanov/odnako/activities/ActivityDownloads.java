@@ -42,54 +42,10 @@ public class ActivityDownloads extends ActivityBase
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.layout_activity_main);
+		this.setContentView(R.layout.activity_downloads);
 
-//		//drawer settings
-//		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_new);
-//		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
-//		//set Drawer width
-//		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
-//		int displayWidth = displayMetrics.widthPixels;
-//		int actionBarHeight = TypedValue.complexToDimensionPixelSize(56, getResources().getDisplayMetrics());//=this.getSupportActionBar().getHeight();
-//		// Calculate ActionBar height
-//		TypedValue tv = new TypedValue();
-//		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-//		{
-//			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-//		}
-//		DrawerLayout.LayoutParams lp = (android.support.v4.widget.DrawerLayout.LayoutParams) mDrawer.getLayoutParams();
-//		int drawerWidth;
-//		this.twoPane=this.pref.getBoolean("twoPane", false);
-//		if (this.twoPane)
-//		{
-//			drawerWidth=displayMetrics.widthPixels/3;
-//			if(drawerWidth<DipToPx.convert(320, act))
-//			{
-//				drawerWidth=(int) DipToPx.convert(320, act);
-//			}
-//		}
-//		else
-//		{
-//			drawerWidth = displayWidth - actionBarHeight;
-//		}
-//		lp.width = drawerWidth;
-//		mDrawer.setLayoutParams(lp);
-//		////end of set Drawer width
-//		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
-//		// The drawer title must be set in order to announce state changes when
-//		// accessibility is turned on. This is typically a simple description,
-//		// e.g. "Navigation".
-//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-//		ExpListAdapter expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
-//		mDrawer.setAdapter(expAdapter);
-//		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
-//		mDrawer.expandGroup(1);
-//		mActionBar = createActionBarHelper();
-//		mActionBar.init();
-//		// ActionBarDrawerToggle provides convenient helpers for tying together the
-//		// prescribed interactions between a top-level sliding drawer and the action bar.
-//		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
-////		mDrawerToggle.
+		//drawer settings
+		this.setNavDrawer();
 		////End of drawer settings
 
 		//adMob

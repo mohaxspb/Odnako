@@ -89,6 +89,7 @@
         <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_grey600_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_grey600_48dp</item>
+        <!--  -->
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

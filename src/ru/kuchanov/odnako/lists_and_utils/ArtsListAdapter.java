@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -271,7 +273,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 				holderMain.preview.setTextSize(21 * scaleFactor);
 				////end of preview
-				
+
 				//name of author
 				if (!p.authorName.equals("default"))
 				{
@@ -341,10 +343,10 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
 				paramsForIcons.setMargins(5, 5, 5, 5);
 				paramsForIcons.gravity = Gravity.CENTER;
-				
+
 				LayoutParams paramsForIconsBottomGravity = new LayoutParams(pixelsForIcons, pixelsForIcons);
 				paramsForIconsBottomGravity.setMargins(5, 5, 5, 5);
-				paramsForIconsBottomGravity.gravity=Gravity.BOTTOM;
+				paramsForIconsBottomGravity.gravity = Gravity.BOTTOM;
 
 				holderMain.save.setScaleType(ScaleType.FIT_XY);
 				holderMain.save.setLayoutParams(paramsForIcons);
@@ -407,7 +409,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 				}
 				////end read Img
 
-				
 				//share btn
 				holderMain.share.setLayoutParams(paramsForIconsBottomGravity);
 				holderMain.share.setOnClickListener(new OnClickListener()
@@ -429,7 +430,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 					}
 				});
 				////end of share btn
-				
+
 				//comments btn
 				holderMain.comms.setLayoutParams(paramsForIconsBottomGravity);
 				holderMain.comms.setOnClickListener(new OnClickListener()
@@ -450,21 +451,20 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 						ArtsListAdapter.showComments(artsInfo, position, act);
 					}
 				});
-//				set comm.y coord to share.y coord
-//				ViewGroup testVG=(ViewGroup)view.findViewById(R.id.art_card_save_share_lin);
-//				testVG.measure(0, 0);
-//				int newHeight=testVG.getMeasuredHeight();
-//				System.out.println("newHeight: "+newHeight);
-//								
-//				LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, newHeight);
-//				lp.gravity=Gravity.BOTTOM;
-//				LinearLayout.LayoutParams lp1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//				lp1.gravity=Gravity.BOTTOM;
-//				((ViewGroup)holderMain.comms.getParent().getParent()).setLayoutParams(lp);
-//				((ViewGroup)holderMain.comms.getParent()).setLayoutParams(lp1);
-				
-				
-				final ViewGroup commReadLin =((ViewGroup)holderMain.comms.getParent().getParent());
+				//				set comm.y coord to share.y coord
+				//				ViewGroup testVG=(ViewGroup)view.findViewById(R.id.art_card_save_share_lin);
+				//				testVG.measure(0, 0);
+				//				int newHeight=testVG.getMeasuredHeight();
+				//				System.out.println("newHeight: "+newHeight);
+				//								
+				//				LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, newHeight);
+				//				lp.gravity=Gravity.BOTTOM;
+				//				LinearLayout.LayoutParams lp1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				//				lp1.gravity=Gravity.BOTTOM;
+				//				((ViewGroup)holderMain.comms.getParent().getParent()).setLayoutParams(lp);
+				//				((ViewGroup)holderMain.comms.getParent()).setLayoutParams(lp1);
+
+				final ViewGroup commReadLin = ((ViewGroup) holderMain.comms.getParent().getParent());
 				commReadLin.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener()
 				{
 
@@ -484,8 +484,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 							}
 							else
 							{
-								
-								
+
 								View child1 = dialogLayout.findViewById(R.id.art_card_save_share_lin);
 								if (child1 != commReadLin)
 								{
@@ -493,7 +492,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 									LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child1.getLayoutParams();
 									child1.measure(0, 0);
 									lp.height = child1.getMeasuredHeight();
-									lp.gravity=Gravity.BOTTOM;
+									lp.gravity = Gravity.BOTTOM;
 									commReadLin.setLayoutParams(lp);
 								}
 								else
@@ -509,8 +508,6 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 				});
 				////end of comments btn
-
-				
 
 				//Date
 				holderMain.date.setText(p.pubDate);
@@ -532,7 +529,7 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 
 		}
 	}
-	
+
 	public static CardView findShareLinearLayout(View view)
 	{
 		ViewParent parent = (ViewParent) view.getParent();
@@ -679,21 +676,27 @@ public class ArtsListAdapter extends ArrayAdapter<ArtInfo> implements Filterable
 		else
 		{
 			Intent intent = new Intent(act, ActivityArticle.class);
-			intent.putExtra("curArtInfo", allArtsInfo.get(position).getArtInfoAsStringArray());
-			intent.putExtra("position", position);
-			for (int i = 0; i < allArtsInfo.size(); i++)
-			{
-				if (i < 10)
-				{
-					intent.putExtra("allArtsInfo_0" + String.valueOf(i),
-					allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-				else
-				{
-					intent.putExtra("allArtsInfo_" + String.valueOf(i),
-					allArtsInfo.get(i).getArtInfoAsStringArray());
-				}
-			}
+			//			intent.putExtra("curArtInfo", allArtsInfo.get(position).getArtInfoAsStringArray());
+			//			intent.putExtra("position", position);
+			//			for (int i = 0; i < allArtsInfo.size(); i++)
+			//			{
+			//				if (i < 10)
+			//				{
+			//					intent.putExtra("allArtsInfo_0" + String.valueOf(i),
+			//					allArtsInfo.get(i).getArtInfoAsStringArray());
+			//				}
+			//				else
+			//				{
+			//					intent.putExtra("allArtsInfo_" + String.valueOf(i),
+			//					allArtsInfo.get(i).getArtInfoAsStringArray());
+			//				}
+			//			}
+			Bundle b = new Bundle();
+			b.putInt("position", position);
+			ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, allArtsInfo.get(position));
+			b.putIntArray("groupChildPosition", ((ActivityBase)act).getGroupChildPosition());
+			intent.putExtras(b);
+
 			act.startActivity(intent);
 
 		}

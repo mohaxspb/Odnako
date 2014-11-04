@@ -6,9 +6,9 @@
 
     <ImageView
         android:id="@+id/img_left"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
         android:contentDescription="@string/img"
         android:src="?arrowLeftIcon" />
 
@@ -18,13 +18,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="4"
+        android:gravity="center|left"
         android:textColor="?android:textColorPrimary"
+        android:textSize="21sp"
         android:textStyle="bold" />
-    <ImageView
+
+    <ImageView
         android:id="@+id/img_right"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:contentDescription="@string/img" />
+        android:layout_gravity="center"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/img"
+        android:src="?arrowRightIcon" />
 
 </LinearLayout>

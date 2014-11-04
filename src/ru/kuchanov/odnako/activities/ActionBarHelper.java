@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ExpandableListView;
@@ -62,7 +61,6 @@ public class ActionBarHelper
 	{
 		mActionBar.setTitle(mDrawerTitle);
 		drawerOpened = true;
-
 	}
 
 	public void setTitle(CharSequence title)

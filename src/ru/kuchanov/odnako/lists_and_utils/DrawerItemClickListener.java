@@ -1,8 +1,5 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.util.ArrayList;
-
-import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 
 import android.content.Intent;
@@ -18,41 +15,39 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	private ExpandableListView mDrawerList;
 	ActionBarActivity act;
 
-	//	ArrayList<ArrayList<String>> groups;
-	//	ArrayList<ArrayList<String>> groupsLinks;
-
 	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, ActionBarActivity act)
 	{
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;
 		this.act = act;
-		//		this.groups = groups;
-		//		this.groupsLinks = groupsLinks;
 	}
 
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
 	{
-		if (this.act instanceof ActivityMain)
+		if (act instanceof ActivityMain)
 		{
 
 			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 			
-			//write group &child positions to activity
-			Bundle b=((ActivityBase)this.act).getActivityBundleToWriteSomething();
-			b.putInt("groupPosition", groupPosition);
-			b.putInt("childPosition", childPosition);
+			((ActivityMain)this.act).setGroupChildPosition(groupPosition, childPosition);
+			
+			((ExpListAdapter)mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
 			
 			mDrawerLayout.closeDrawer(mDrawerList);
 			// TODO
 		}
 		else
 		{
-			mDrawerList.setItemChecked(childPosition, true);
+			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			// TODO
-			Intent intentToMain = new Intent(act, ActivityMain.class);
-			act.startActivity(intentToMain);
+			Intent intent = new Intent(act, ActivityMain.class);
+			Bundle b=new Bundle();
+			b.putInt("groupPosition", groupPosition);
+			b.putInt("childPosition", childPosition);
+			intent.putExtras(b);
+			act.startActivity(intent);
 		}
 
 		return true;

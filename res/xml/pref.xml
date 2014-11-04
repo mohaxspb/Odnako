@@ -52,7 +52,7 @@
             android:key="notification"
             android:summaryOff="Уведомления отключены"
             android:summaryOn="Уведомления включены"
-            android:title="Уведомления" >
+            android:title="Уведомления">
         </CheckBoxPreference>
         <CheckBoxPreference
             android:defaultValue="true"

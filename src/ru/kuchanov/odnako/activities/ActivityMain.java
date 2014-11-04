@@ -7,8 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseForAllAuthors;
@@ -16,29 +14,17 @@ import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
-import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
-import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
-import ru.kuchanov.odnako.utils.DipToPx;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,14 +33,8 @@ public class ActivityMain extends ActivityBase
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
-	private ArrayList<ArtInfo> allArtsInfo;
-	private ArtInfo curArtInfo;
-	int position;
-
-//	ExpandableListView mDrawer;
-
 	private int backPressedQ;
-	
+
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
@@ -79,7 +59,6 @@ public class ActivityMain extends ActivityBase
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.layout_activity_main);
-
 
 		//setNavDraw
 		this.setNavDrawer();
@@ -158,6 +137,9 @@ public class ActivityMain extends ActivityBase
 
 		//save allArtsInfo
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		//		System.out.println("curArtInfo: "+curArtInfo.toString());
+
+		this.saveGroupChildPosition(outState);
 	}
 
 	@Override
@@ -166,45 +148,8 @@ public class ActivityMain extends ActivityBase
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("ActivityMain onRestoreInstanceState");
 
-		//restore All_arts_info
-		Set<String> keySet = savedInstanceState.keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		if (keySet.contains("allArtsInfo_00"))
-		{
-			this.allArtsInfo = new ArrayList<ArtInfo>();
-			for (int i = 0; i < keySetSortedArrList.size(); i++)
-			{
-				String s = keySetSortedArrList.get(i);
-				if (s.startsWith("allArtsInfo_"))
-				{
-					if (i < 10)
-					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_0"
-						+ String.valueOf(i))));
-					}
-					else
-					{
-						this.allArtsInfo.add(new ArtInfo(savedInstanceState.getStringArray("allArtsInfo_"
-						+ String.valueOf(i))));
-					}
-				}
-			}
-		}
-		else
-		{
-			System.out.println("ActivityMain: onRestoreInstanceState. allArtsInfo=null");
-		}
-
-		//restore curArtInfo
-		if (keySet.contains("curArtInfo"))
-		{
-			this.curArtInfo = new ArtInfo(savedInstanceState.getStringArray("curArtInfo"));
-		}
-		else
-		{
-			System.out.println("ActivityMain: onRestoreInstanceState. curArtInfo=null");
-		}
+		this.restoreState(savedInstanceState);
+		this.restoreGroupChildPosition(savedInstanceState);
 	}
 
 	@Override
@@ -300,7 +245,18 @@ public class ActivityMain extends ActivityBase
 	{
 		this.curArtInfo = cUR_ARTS_INFO;
 	}
-	
+
+	/* Called whenever we call supportInvalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
+		menu.findItem(R.id.refresh).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 	@Override
 	public void onBackPressed()
 	{
@@ -313,7 +269,7 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			if(drawerOpened)
+			if (this.mActionBar.drawerOpened)
 			{
 				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
 			}

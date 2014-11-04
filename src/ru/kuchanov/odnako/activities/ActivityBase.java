@@ -6,7 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
+
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.DemoDrawerListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
@@ -20,11 +25,11 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
 
@@ -43,11 +48,13 @@ public class ActivityBase extends ActionBarActivity
 	protected ExpandableListView mDrawer;
 	protected ActionBarHelper mActionBar;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	protected boolean drawerOpened = false;
 	protected Bundle additionalBundle;
-	protected int[] groupChildPosition;
-
+	protected int[] groupChildPosition = new int[] { -1, -1 };
 	///drawer
+
+	protected ArtInfo curArtInfo = null;
+	protected int position = -1;
+	protected ArrayList<ArtInfo> allArtsInfo = null;
 
 	protected void AddAds()
 	{
@@ -63,6 +70,17 @@ public class ActivityBase extends ActionBarActivity
 	{
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	/* Called whenever we call supportInvalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
+		//		menu.findItem(R.id.comments).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -101,7 +119,7 @@ public class ActivityBase extends ActionBarActivity
 			startActivity(getIntent());
 		}
 	}
-	
+
 	//set Navigatin drawer
 	protected void setNavDrawer()
 	{
@@ -120,13 +138,13 @@ public class ActivityBase extends ActionBarActivity
 		}
 		DrawerLayout.LayoutParams lp = (android.support.v4.widget.DrawerLayout.LayoutParams) mDrawer.getLayoutParams();
 		int drawerWidth;
-		this.twoPane=this.pref.getBoolean("twoPane", false);
+		this.twoPane = this.pref.getBoolean("twoPane", false);
 		if (this.twoPane)
 		{
-			drawerWidth=displayMetrics.widthPixels/3;
-			if(drawerWidth<DipToPx.convert(320, act))
+			drawerWidth = displayMetrics.widthPixels / 3;
+			if (drawerWidth < DipToPx.convert(320, act))
 			{
-				drawerWidth=(int) DipToPx.convert(320, act);
+				drawerWidth = (int) DipToPx.convert(320, act);
 			}
 		}
 		else
@@ -140,7 +158,21 @@ public class ActivityBase extends ActionBarActivity
 		mActionBar.init();
 		// ActionBarDrawerToggle provides convenient helpers for tying together the
 		// prescribed interactions between a top-level sliding drawer and the action bar.
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
+		{
+			public void onDrawerClosed(View view)
+			{
+				//				getSupportActionBar().setTitle(mTitle);
+				supportInvalidateOptionsMenu();
+			}
+
+			public void onDrawerOpened(View drawerView)
+			{
+				//				getSupportActionBar().setTitle(mDrawerTitle);
+				supportInvalidateOptionsMenu();
+			}
+		};
+		;
 		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mActionBar, this.mDrawerToggle));
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
@@ -152,10 +184,10 @@ public class ActivityBase extends ActionBarActivity
 		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.setOnGroupClickListener(new DrawerGroupClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.expandGroup(1);
-		
-		
+
 		////End of drawer settings
 	}
+
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
@@ -165,26 +197,68 @@ public class ActivityBase extends ActionBarActivity
 		return new ActionBarHelper(act, this.mDrawer);
 	}
 
-	
-	
-	//add some info to Bundle
-	public Bundle getActivityBundleToWriteSomething()
-	{
-		if(this.additionalBundle==null)
-		{
-			this.additionalBundle=new Bundle();
-		}
-		return additionalBundle;
-	}
-	
 	public int[] getGroupChildPosition()
 	{
-		if(groupChildPosition==null)
-		{
-			groupChildPosition=new int[]{-1, -1};
-			groupChildPosition=new int[]{1, 3};
-		}
-		return groupChildPosition;
+		return this.groupChildPosition;
 	}
 
+	public void setGroupChildPosition(int group, int child)
+	{
+		groupChildPosition = new int[] { group, child };
+	}
+
+	protected void saveGroupChildPosition(Bundle state)
+	{
+		state.putIntArray("groupChildPosition", groupChildPosition);//.putInt("groupPosition", groupChildPosition[0]);
+		//		state.putInt("childPosition", groupChildPosition[1]);
+	}
+
+	protected void restoreGroupChildPosition(Bundle state)
+	{
+		//		groupChildPosition[0] = state.getInt("groupPosition");
+		//		groupChildPosition[1] = state.getInt("childPosition");
+		this.groupChildPosition = state.getIntArray("groupChildPosition");
+	}
+
+	protected void restoreState(Bundle state)
+	{
+		if (state.containsKey("curArtInfo"))
+		{
+			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		}
+		if (state.containsKey("position"))
+		{
+			this.position = state.getInt("position");
+		}
+		if (state.containsKey("allArtsInfo_00"))
+		{
+			//restore AllArtsInfo
+			this.allArtsInfo = new ArrayList<ArtInfo>();
+			Set<String> keySet = state.keySet();
+			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+			Collections.sort(keySetSortedArrList);
+			for (int i = 0; i < keySetSortedArrList.size(); i++)
+			{
+				if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
+				{
+					if (i < 10)
+					{
+						this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
+						+ String.valueOf(i))));
+					}
+					else
+					{
+						this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
+						+ String.valueOf(i))));
+					}
+
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+	}
 }

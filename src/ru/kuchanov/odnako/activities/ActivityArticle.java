@@ -6,40 +6,25 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
+import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class ActivityArticle extends ActivityBase//ActionBarActivity
 {
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
-
-	ArtInfo curArtInfo;
-	int position;
-	ArrayList<ArtInfo> allArtsInfo;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -65,33 +50,26 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 
 		this.setContentView(R.layout.layout_activity_article);
 
-//		//drawer settings
-//		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
-//		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
-//		// The drawer title must be set in order to announce state changes when
-//		// accessibility is turned on. This is typically a simple description,
-//		// e.g. "Navigation".
-//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-//		mDrawer.setOnItemClickListener((OnItemClickListener) new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
-//		
-//		mActionBar = createActionBarHelper();
-//		mActionBar.init();
-//		// ActionBarDrawerToggle provides convenient helpers for tying together the
-//		// prescribed interactions between a top-level sliding drawer and the action bar.
-//		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
-		this.setNavDrawer();
-//		////End of drawer settings
-
+		System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
 		if (stateFromIntent != null)
 		{
 			this.restoreState(stateFromIntent);
+			
+			int[] intArr;
+			intArr=stateFromIntent.getIntArray("groupChildPosition");
+			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
+			
+			this.restoreGroupChildPosition(stateFromIntent);
+//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
+			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
+			this.restoreGroupChildPosition(savedInstanceState);
+			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
 		//all is null, so start request for info
 		else
@@ -100,16 +78,31 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
 
+		//drawer settings
+		this.setNavDrawer();
+		////End of drawer settings
+
 		this.pager = (ViewPager) this.findViewById(R.id.article_container);
 		this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(position, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
-
 		//adMob
 		this.AddAds();
 		//end of adMob
+	}
+	
+	/* Called whenever we call supportInvalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
+		menu.findItem(R.id.comments).setVisible(!drawerOpen);
+		menu.findItem(R.id.share).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -223,37 +216,5 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		System.out.println("ActivityArticle onRestoreInstanceState");
 
 		this.restoreState(savedInstanceState);
-	}
-
-	private void restoreState(Bundle state)
-	{
-		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
-		this.position = state.getInt("position");
-		//restore AllArtsInfo
-		this.allArtsInfo = new ArrayList<ArtInfo>();
-		Set<String> keySet = state.keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		for (int i = 0; i < keySetSortedArrList.size(); i++)
-		{
-			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-			{
-				if (i < 10)
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
-					+ String.valueOf(i))));
-				}
-				else
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
-					+ String.valueOf(i))));
-				}
-
-			}
-			else
-			{
-				break;
-			}
-		}
 	}
 }
