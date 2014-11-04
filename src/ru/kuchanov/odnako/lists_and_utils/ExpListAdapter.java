@@ -1,20 +1,25 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +50,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		cat = this.act.getResources().getStringArray(R.array.menu_items);
 
 		this.setThemeDependedDrawables();
+
 	}
 
 	private void setThemeDependedDrawables()
@@ -177,24 +183,17 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		//		{
 		//			view.setBackgroundColor(Color.TRANSPARENT);
 		//		}
-		SparseBooleanArray a = ((ExpandableListView) parent).getCheckedItemPositions();
 
-		StringBuffer sb = new StringBuffer("");
-		for (int i = 0; i < a.size(); i++)
+		//		.setDrawSelectorOnTop(true);
+
+		if (((ExpandableListView) parent).getSelectedPosition() == ExpandableListView
+		.getPackedPositionForGroup(groupPosition))
 		{
-
-			if (a.valueAt(i))
-			{
-				int idx = a.keyAt(i);
-				//	 
-				//	            if (sb.length() > 0)
-				//	                sb.append(", ");
-				//	 
-				//	 
-				//	            String s = (String)this.getListView().getAdapter().getItem(idx);
-				//	            sb.append(s);
-//				if()
-			}
+			view.setBackgroundColor(act.getResources().getColor(R.color.blue));
+		}
+		else
+		{
+			view.setBackgroundColor(Color.TRANSPARENT);
 		}
 		///////
 
@@ -273,6 +272,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView,
 	ViewGroup parent)
 	{
+
 		View view = null;
 		MyHolder holderMain;
 		if (convertView == null)
@@ -289,6 +289,30 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			view = convertView;
 			holderMain = (MyHolder) convertView.getTag();
 		}
+		//light selected
+		if (this.act instanceof ActivityMain)
+		{
+			int[] curGrChPos = new int[] { groupPosition, childPosition };
+			int[] activityGrChPos = ((ActivityMain) this.act).getGroupChildPosition();
+			if (Arrays.equals(curGrChPos, activityGrChPos))
+			{
+				Resources.Theme themes = act.getTheme();
+				TypedValue storedValueInTheme = new TypedValue();
+				if (themes.resolveAttribute(R.attr.selectorColor, storedValueInTheme, true))
+				{
+					view.setBackgroundColor(storedValueInTheme.data);
+				}
+			}
+			else
+			{
+				view.setBackgroundColor(Color.TRANSPARENT);
+			}
+		}
+		else
+		{
+			view.setBackgroundColor(Color.TRANSPARENT);
+		}
+		/////////
 		//text and it's size
 		holderMain.text.setText(mGroups.get(groupPosition).get(childPosition));
 		String scaleFactorString = pref.getString("scale", "1");

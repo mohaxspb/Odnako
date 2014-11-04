@@ -65,25 +65,23 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 
 		this.setContentView(R.layout.layout_activity_article);
 
-		//drawer settings
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
-		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
-		// The drawer title must be set in order to announce state changes when
-		// accessibility is turned on. This is typically a simple description,
-		// e.g. "Navigation".
-		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-//		mDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-//		Shakespeare.TITLES));
-//		mDrawer.setOnItemClickListener(new DrawerItemClickListener());
-		mDrawer.setOnItemClickListener((OnItemClickListener) new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
-		
-		mActionBar = createActionBarHelper();
-		mActionBar.init();
-		// ActionBarDrawerToggle provides convenient helpers for tying together the
-		// prescribed interactions between a top-level sliding drawer and the action bar.
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
-		////End of drawer settings
+//		//drawer settings
+//		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
+//		mDrawerLayout.setDrawerListener(new DemoDrawerListener());
+//		// The drawer title must be set in order to announce state changes when
+//		// accessibility is turned on. This is typically a simple description,
+//		// e.g. "Navigation".
+//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+//		mDrawer.setOnItemClickListener((OnItemClickListener) new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
+//		
+//		mActionBar = createActionBarHelper();
+//		mActionBar.init();
+//		// ActionBarDrawerToggle provides convenient helpers for tying together the
+//		// prescribed interactions between a top-level sliding drawer and the action bar.
+//		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+		this.setNavDrawer();
+//		////End of drawer settings
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();

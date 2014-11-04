@@ -6,20 +6,29 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import com.google.android.gms.ads.AdView;
-
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.lists_and_utils.DemoDrawerListener;
+import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
+import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
+import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.utils.AddAds;
+import ru.kuchanov.odnako.utils.DipToPx;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ExpandableListView;
+
+import com.google.android.gms.ads.AdView;
 
 public class ActivityBase extends ActionBarActivity
 {
@@ -34,9 +43,11 @@ public class ActivityBase extends ActionBarActivity
 	protected ExpandableListView mDrawer;
 	protected ActionBarHelper mActionBar;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	protected boolean drawerOpened=false;
+	protected boolean drawerOpened = false;
+	protected Bundle additionalBundle;
+	protected int[] groupChildPosition;
+
 	///drawer
-	
 
 	protected void AddAds()
 	{
@@ -77,45 +88,6 @@ public class ActivityBase extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	/**
-	 * A drawer listener can be used to respond to drawer events such as
-	 * becoming fully opened or closed. You should always prefer to perform
-	 * expensive operations such as drastic relayout when no animation is
-	 * currently in progress, either before or after the drawer animates.
-	 * 
-	 * When using ActionBarDrawerToggle, all DrawerLayout listener methods
-	 * should be forwarded if the ActionBarDrawerToggle is not used as the
-	 * DrawerLayout listener directly.
-	 */
-	protected class DemoDrawerListener implements DrawerLayout.DrawerListener
-	{
-		@Override
-		public void onDrawerOpened(View drawerView)
-		{
-			mDrawerToggle.onDrawerOpened(drawerView);
-			mActionBar.onDrawerOpened();
-		}
-
-		@Override
-		public void onDrawerClosed(View drawerView)
-		{
-			mDrawerToggle.onDrawerClosed(drawerView);
-			mActionBar.onDrawerClosed();
-		}
-
-		@Override
-		public void onDrawerSlide(View drawerView, float slideOffset)
-		{
-			mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
-		}
-
-		@Override
-		public void onDrawerStateChanged(int newState)
-		{
-			mDrawerToggle.onDrawerStateChanged(newState);
-		}
-	}
-
 	@SuppressLint("NewApi")
 	protected void myRecreate()
 	{
@@ -129,81 +101,90 @@ public class ActivityBase extends ActionBarActivity
 			startActivity(getIntent());
 		}
 	}
-
-	/**
-	 * This list item click listener implements very simple view switching by
-	 * changing the primary content text. The drawer is closed when a selection
-	 * is made.
-	 */
-//	protected class DrawerItemClickListener implements ListView.OnItemClickListener
-//	{
-//		@Override
-//		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//		{
-//			//           mContent.setText(Shakespeare.DIALOGUE[position]);
-//			mActionBar.setTitle(Shakespeare.TITLES[position]);
-//			mDrawerLayout.closeDrawer(mDrawer);
-//		}
-//	}
-
+	
+	//set Navigatin drawer
+	protected void setNavDrawer()
+	{
+		//drawer settings
+		mDrawerLayout = (DrawerLayout) this.act.findViewById(R.id.drawer_layout);
+		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
+		//set Drawer width
+		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
+		int displayWidth = displayMetrics.widthPixels;
+		int actionBarHeight = TypedValue.complexToDimensionPixelSize(56, getResources().getDisplayMetrics());//=this.getSupportActionBar().getHeight();
+		// Calculate ActionBar height
+		TypedValue tv = new TypedValue();
+		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+		{
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+		}
+		DrawerLayout.LayoutParams lp = (android.support.v4.widget.DrawerLayout.LayoutParams) mDrawer.getLayoutParams();
+		int drawerWidth;
+		this.twoPane=this.pref.getBoolean("twoPane", false);
+		if (this.twoPane)
+		{
+			drawerWidth=displayMetrics.widthPixels/3;
+			if(drawerWidth<DipToPx.convert(320, act))
+			{
+				drawerWidth=(int) DipToPx.convert(320, act);
+			}
+		}
+		else
+		{
+			drawerWidth = displayWidth - actionBarHeight;
+		}
+		lp.width = drawerWidth;
+		mDrawer.setLayoutParams(lp);
+		////end of set Drawer width
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		// ActionBarDrawerToggle provides convenient helpers for tying together the
+		// prescribed interactions between a top-level sliding drawer and the action bar.
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mActionBar, this.mDrawerToggle));
+		// The drawer title must be set in order to announce state changes when
+		// accessibility is turned on. This is typically a simple description,
+		// e.g. "Navigation".
+		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+		ExpListAdapter expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
+		mDrawer.setAdapter(expAdapter);
+		mDrawer.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
+		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
+		mDrawer.setOnGroupClickListener(new DrawerGroupClickListener(mDrawerLayout, mDrawer, act));
+		mDrawer.expandGroup(1);
+		
+		
+		////End of drawer settings
+	}
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
 	 */
 	protected ActionBarHelper createActionBarHelper()
 	{
-		return new ActionBarHelper();
-	}
-
-	/**
-	 * Action bar helper for use on ICS and newer devices.
-	 */
-	protected class ActionBarHelper
-	{
-		private final ActionBar mActionBar;
-		private CharSequence mDrawerTitle;
-		private CharSequence mTitle;
-		
-
-		ActionBarHelper()
-		{
-			mActionBar = getSupportActionBar();
-		}
-
-		public void init()
-		{
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setDisplayShowHomeEnabled(false);
-			mTitle = mDrawerTitle = getTitle();
-		}
-
-		/**
-		 * When the drawer is closed we restore the action bar state reflecting
-		 * the specific contents in view.
-		 */
-		public void onDrawerClosed()
-		{
-			mActionBar.setTitle(mTitle);
-			drawerOpened=false;
-		}
-
-		/**
-		 * When the drawer is open we set the action bar to a generic title. The
-		 * action bar should only contain data relevant at the top level of the
-		 * nav hierarchy represented by the drawer, as the rest of your content
-		 * will be dimmed down and non-interactive.
-		 */
-		public void onDrawerOpened()
-		{
-			mActionBar.setTitle(mDrawerTitle);
-			drawerOpened=true;
-		}
-
-		public void setTitle(CharSequence title)
-		{
-			mTitle = title;
-		}
+		return new ActionBarHelper(act, this.mDrawer);
 	}
 
 	
+	
+	//add some info to Bundle
+	public Bundle getActivityBundleToWriteSomething()
+	{
+		if(this.additionalBundle==null)
+		{
+			this.additionalBundle=new Bundle();
+		}
+		return additionalBundle;
+	}
+	
+	public int[] getGroupChildPosition()
+	{
+		if(groupChildPosition==null)
+		{
+			groupChildPosition=new int[]{-1, -1};
+			groupChildPosition=new int[]{1, 3};
+		}
+		return groupChildPosition;
+	}
+
 }

@@ -26,24 +26,13 @@
             android:layout_marginRight="5dp" />
     </RelativeLayout>
 
-    <!--
-         <ExpandableListView
-        android:id="@+id/exListView"
+    <ExpandableListView
+        android:id="@+id/start_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?colorPrimary"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:groupIndicator="@null"
-        android:indicatorLeft="250dp"
-        android:indicatorRight="300dp" />
-    -->
-
-    <ListView
-        android:id="@+id/start_drawer"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="?colorPrimary" />
+        android:groupIndicator="@null" />
 
 </android.support.v4.widget.DrawerLayout>

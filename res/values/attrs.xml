@@ -7,6 +7,8 @@
     <declare-styleable name="CustomTheme">
         <attr name="cardBackGroundColor" format="reference" />
     </declare-styleable>
+    
+     <attr name="selectorColor" format="reference|color" />
 
     <attr name="themeIcon" format="reference" />
     <attr name="overflowIcon" format="reference" />

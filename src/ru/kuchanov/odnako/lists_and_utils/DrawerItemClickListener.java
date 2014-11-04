@@ -2,9 +2,11 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -16,16 +18,16 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	private ExpandableListView mDrawerList;
 	ActionBarActivity act;
 
-//	ArrayList<ArrayList<String>> groups;
-//	ArrayList<ArrayList<String>> groupsLinks;
+	//	ArrayList<ArrayList<String>> groups;
+	//	ArrayList<ArrayList<String>> groupsLinks;
 
 	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, ActionBarActivity act)
 	{
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;
 		this.act = act;
-//		this.groups = groups;
-//		this.groupsLinks = groupsLinks;
+		//		this.groups = groups;
+		//		this.groupsLinks = groupsLinks;
 	}
 
 	@Override
@@ -33,7 +35,14 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	{
 		if (this.act instanceof ActivityMain)
 		{
-			mDrawerList.setItemChecked(childPosition, true);
+
+			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
+			
+			//write group &child positions to activity
+			Bundle b=((ActivityBase)this.act).getActivityBundleToWriteSomething();
+			b.putInt("groupPosition", groupPosition);
+			b.putInt("childPosition", childPosition);
+			
 			mDrawerLayout.closeDrawer(mDrawerList);
 			// TODO
 		}

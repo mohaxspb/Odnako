@@ -4,7 +4,7 @@
 
     <style name="ThemeDark" parent="Theme.AppCompat">
         <item name="android:windowBackground">@color/material_grey_700</item>
-        <!-- <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item> -->
+        <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_300</item>
         <item name="android:textColorPrimaryInverse">@color/material_grey_300</item>
         <item name="android:textColorSecondary">@color/material_grey_400</item>
@@ -54,6 +54,7 @@
 
     <style name="ThemeLight" parent="Theme.AppCompat.Light">
         <item name="android:windowBackground">@color/material_grey_300</item>
+        <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_800</item>
         <item name="android:textColorPrimaryInverse">@color/material_grey_800</item>
         <item name="actionMenuTextColor">@color/material_grey_800</item>
