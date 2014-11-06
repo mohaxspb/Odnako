@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Настройки уведомлений -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="notificationSettings"
+    android:summary="Настройка периодичности, звука, вибрации"
+    android:title="@string/notifications_settings" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:enabled="true"
+        android:key="notification"
+        android:summaryOff="Уведомления отключены"
+        android:summaryOn="Уведомления включены"
+        android:title="@string/notifications" >
+    </CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:dependency="notification"
+        android:enabled="true"
+        android:key="vibration"
+        android:summaryOff="Вибрация отключена"
+        android:summaryOn="Вибрация включена"
+        android:title="@string/vibration" >
+    </CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:dependency="notification"
+        android:enabled="true"
+        android:key="sound"
+        android:summaryOff="Звук отключён"
+        android:summaryOn="Звук включён"
+        android:title="@string/sound" >
+    </CheckBoxPreference>
+
+    <ListPreference
+        android:defaultValue="60"
+        android:dependency="notification"
+        android:entries="@array/notif_period"
+        android:entryValues="@array/notif_period_values"
+        android:key="notif_period"
+        android:summary="Периодичность проверок на новые статьи"
+        android:title="@string/notifications_period" >
+    </ListPreference>
+
+</PreferenceScreen>

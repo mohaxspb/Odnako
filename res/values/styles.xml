@@ -2,6 +2,7 @@
 
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
+    <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDark" parent="Theme.AppCompat">
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -24,7 +25,7 @@
         <item name="overflowIcon">@drawable/ic_action_overflow_dark</item>
         <item name="settingsIcon">@drawable/ic_settings_white_48dp</item>
         <item name="refreshIcon">@drawable/ic_autorenew_white_48dp</item>
-        <item name="commentsIcon">@drawable/ic_comment_white_48dp</item>
+        <item name="commentsIcon">@drawable/ic_forum_white_48dp</item>
         <item name="shareIcon">@drawable/ic_share_white_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_white_48dp</item>
@@ -39,6 +40,17 @@
         <item name="asListIcon">@drawable/ic_list_white_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_white_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_white_48dp</item>
+        <item name="vibrationIcon">@drawable/ic_vibration_white_48dp</item>
+        <item name="systemSettingsIcon">@drawable/ic_storage_white_48dp</item>
+        <item name="aboutIcon">@drawable/ic_info_white_48dp</item>
+
+        <!-- more and more -->
+        <item name="marketDownlodIcon">@drawable/ic_shop_white_48dp</item>
+        <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_white_48dp</item>
+        <item name="folderIcon">@drawable/ic_folder_special_white_48dp</item>
+        <item name="textSizeIcon">@drawable/ic_format_size_white_48dp</item>
+        <item name="openInBrowserIcon">@drawable/ic_open_in_browser_white_48dp</item>
+        <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
@@ -74,7 +86,7 @@
         <item name="overflowIcon">@drawable/ic_action_overflow_light</item>
         <item name="settingsIcon">@drawable/ic_settings_grey600_48dp</item>
         <item name="refreshIcon">@drawable/ic_autorenew_grey600_48dp</item>
-        <item name="commentsIcon">@drawable/ic_comment_grey600_48dp</item>
+        <item name="commentsIcon">@drawable/ic_forum_grey600_48dp</item>
         <item name="shareIcon">@drawable/ic_share_grey600_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_grey600_48dp</item>
@@ -89,7 +101,17 @@
         <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_grey600_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_grey600_48dp</item>
-        <!--  -->
+        <item name="vibrationIcon">@drawable/ic_vibration_grey600_48dp</item>
+        <item name="systemSettingsIcon">@drawable/ic_storage_grey600_48dp</item>
+        <item name="aboutIcon">@drawable/ic_info_grey600_48dp</item>
+        
+        <!-- more and more -->
+        <item name="marketDownlodIcon">@drawable/ic_shop_grey600_48dp</item>
+        <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_grey600_48dp</item>
+        <item name="folderIcon">@drawable/ic_folder_special_grey600_48dp</item>
+        <item name="textSizeIcon">@drawable/ic_format_size_grey600_48dp</item>
+        <item name="openInBrowserIcon">@drawable/ic_open_in_browser_grey600_48dp</item>
+        <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

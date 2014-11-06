@@ -3,22 +3,23 @@
 
     <string name="app_name">Однако</string>
     <string name="article">Статья</string>
-    <string name="arts_list">Список статей</string>
     <string name="title">Заголовок</string>
     <string name="date">Дата</string>
     <string name="preview">Краткое содержание</string>
     <string name="author">Автор</string>
-    <string name="author_descr">Об авторе</string>
     <string name="tegs">Теги</string>
     <string name="also_by_theme">Также по теме "ТЕМА":</string>
     <string name="also_to_read">Также смотрите:</string>
-    <string name="num_of_comms">Количество комментариев</string>
-    <string name="num_of_shares">Количество поделившихся</string>
     <string name="mark_as_read">Отметить прочитанной</string>
     <string name="share_link">Поделиться ссылкой</string>
     <string name="show_comments">Читать комментарии</string>
     <string name="zero">0</string>
     <string name="action_settings">Настройки</string>
+    <string name="settings">Настройки</string>
+    <string name="num_of_comms">Количество комментариев</string>
+    <string name="num_of_shares">Количество поделившихся</string>
+    <string name="author_descr">Об авторе</string>
+    <string name="arts_list">Список статей</string>
     <string name="design">Внешний вид</string>
     <string name="refresh">Обновить</string>
     <string name="comments">Комментарии</string>
@@ -29,6 +30,13 @@
     <string name="hello_world">Hello world!</string>
     <string name="search_author">Поиск автора</string>
     <string name="share">Поделиться</string>
+    <string name="notifications_settings">Настройки уведомлений</string>
+    <string name="notifications">Уведомления</string>
+    <string name="notifications_period">Периодичность уведолений</string>
+    <string name="vibration">Вибрация</string>
+    <string name="sound">Звук</string>
+    <string name="system_settings">Системные настройки</string>
+    <string name="about">О приложении</string>
     <string name="category">Раздел</string>
     <string name="quontity">Количество</string>
     <string name="downBtn">Скачать</string>
@@ -52,8 +60,7 @@
     <string name="text_scale">Размер  шрифта</string>
     <string name="divider">|</string>
     <string name="img">картинка</string>
-    
-    <string name="transition_art_card">trans_art_card</string>
+    <string name="sending_app">Отправлено из приложения \"Однако. Новости и Аналитика\" для Android.</string>
 
     <string-array name="entries">
         <item>30</item>

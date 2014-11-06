@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Настройки уведомлений -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="systemSettings"
+    android:summary="Папка хранения картинок и статей, обновлление при запуске"
+    android:title="@string/system_settings" >
+
+     <!-- Папка хранения файлов -->
+    <ListPreference
+        android:icon="?folderIcon"
+        android:defaultValue="/data/data/ru.kuchanov.odnako/files"
+        android:entries="@array/files_dir"
+        android:entryValues="@array/files_dir_values"
+        android:key="filesDir"
+        android:summary="В приложении или на карте памяти"
+        android:title="Папка для хранения файлов" >
+    </ListPreference>
+
+    <!-- Обновлять при запуске -->
+
+    <CheckBoxPreference
+        android:icon="?refreshIcon"
+        android:defaultValue="true"
+        android:enabled="true"
+        android:key="refresh"
+        android:summaryOff="НЕ обновляюсь при запуске"
+        android:summaryOn="ОБНОВЛЯЮСЬ при запуске"
+        android:title="Обновлять при запуске" >
+    </CheckBoxPreference>
+
+</PreferenceScreen>

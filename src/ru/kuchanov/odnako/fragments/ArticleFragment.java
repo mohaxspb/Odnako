@@ -201,7 +201,7 @@ public class ArticleFragment extends Fragment
 		{
 			width = displayMetrics.widthPixels / 3 * 2;
 		}
-		if (width < minWidth)
+		if (width <= minWidth)
 		{
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);

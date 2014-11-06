@@ -93,9 +93,14 @@
         </activity>
         <activity
             android:name="ru.kuchanov.odnako.activities.ActivityPreference"
+            android:enabled="true"
             android:label="@string/settings_title" >
+            <intent-filter>
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
         </activity>
 
+        <!--
         <service
             android:name="ru.kuchanov.odnako.download.MyService"
             android:enabled="true"
@@ -116,6 +121,7 @@
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/check_new" />
+        -->
 
         <receiver
             android:name="ru.kuchanov.odnako.recivers.BootBroadReciver"
@@ -125,6 +131,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <!--
         <receiver
             android:name="ru.kuchanov.odnako.download.TimerReciver"
             android:enabled="true"
@@ -133,6 +140,7 @@
                 <action android:name="action_2" />
             </intent-filter>
         </receiver>
+        -->
     </application>
 
 </manifest>

@@ -68,7 +68,7 @@ public class ActivityComments extends ActionBarActivity
 
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.layout_activity_comments);
+		this.setContentView(R.layout.activity_comments);
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();

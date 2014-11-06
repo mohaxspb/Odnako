@@ -184,6 +184,7 @@ public class ActivityBase extends ActionBarActivity
 		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.setOnGroupClickListener(new DrawerGroupClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.expandGroup(1);
+		((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 
 		////End of drawer settings
 	}

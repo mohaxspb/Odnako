@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="design"
+    android:summary="Выбор размера шрифтов, темы"
+    android:title="@string/design" >
+
+    <!-- Масштаб картинок и текста на главной -->
+
+    <ListPreference
+        android:defaultValue="0.75"
+        android:entries="@array/scale"
+        android:entryValues="@array/scale_values"
+        android:key="scale"
+        android:summary="От 0.5х до 2х"
+        android:title="Размер интерфейса и текста" >
+    </ListPreference>
+
+    <!-- Масштаб текста в статьях -->
+
+    <ListPreference
+        android:icon="?textSizeIcon"
+        android:defaultValue="0.75"
+        android:entries="@array/scale_art"
+        android:entryValues="@array/scale_values_art"
+        android:key="scale_art"
+        android:summary="От 0.5х до 2х"
+        android:title="@string/art_text_scale" >
+    </ListPreference>
+
+    <!-- Выбор темы -->
+
+    <ListPreference
+        android:icon="?themeIcon"
+        android:defaultValue="ligth"
+        android:entries="@array/theme"
+        android:entryValues="@array/theme_values"
+        android:key="theme"
+        android:summary="Поверните экран для применения"
+        android:title="Выбор темы приложения" >
+    </ListPreference>
+
+</PreferenceScreen>

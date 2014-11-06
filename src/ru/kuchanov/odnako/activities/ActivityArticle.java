@@ -48,7 +48,7 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.layout_activity_article);
+		this.setContentView(R.layout.activity_article);
 
 		System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		//restore state

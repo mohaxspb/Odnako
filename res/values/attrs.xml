@@ -29,5 +29,14 @@
     <attr name="asListIcon" format="reference" />
     <attr name="subjectIcon" format="reference" />
     <attr name="categoriesMoreIcon" format="reference" />
+    <attr name="vibrationIcon" format="reference" />
+    <attr name="systemSettingsIcon" format="reference" />
+    <attr name="aboutIcon" format="reference" />
+    <attr name="marketDownlodIcon" format="reference" />
+    <attr name="marketDOWNLOADEDIcon" format="reference" />
+    <attr name="folderIcon" format="reference" />
+    <attr name="textSizeIcon" format="reference" />
+    <attr name="openInBrowserIcon" format="reference" />
+    <attr name="mailToMeIcon" format="reference" />
 
 </resources>
