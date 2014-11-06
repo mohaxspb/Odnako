@@ -104,7 +104,7 @@
         <item name="vibrationIcon">@drawable/ic_vibration_grey600_48dp</item>
         <item name="systemSettingsIcon">@drawable/ic_storage_grey600_48dp</item>
         <item name="aboutIcon">@drawable/ic_info_grey600_48dp</item>
-        
+
         <!-- more and more -->
         <item name="marketDownlodIcon">@drawable/ic_shop_grey600_48dp</item>
         <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_grey600_48dp</item>
@@ -125,4 +125,16 @@
         <item name="actionMenuTextColor">@color/material_grey_800</item>
     </style>
 
+    <style name="ThemeLightPreference" parent="ThemeLight">
+         <item name="android:windowBackground">@color/material_grey_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+    
+    <style name="ThemeDarkPreference" parent="ThemeDark">
+         <item name="android:windowBackground">@color/material_grey_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+    
 </resources>

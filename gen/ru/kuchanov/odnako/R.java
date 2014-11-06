@@ -2420,8 +2420,8 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0a0041;
         public static final int action_mode_bar_stub=0x7f0a0040;
         public static final int action_mode_close_button=0x7f0a0033;
-        public static final int action_settings=0x7f0a00a4;
-        public static final int action_settings_all=0x7f0a00a5;
+        public static final int action_settings=0x7f0a00a5;
+        public static final int action_settings_all=0x7f0a00a6;
         public static final int activity_chooser_view_content=0x7f0a0034;
         public static final int adView=0x7f0a0053;
         public static final int all_tegs_lin=0x7f0a005b;
@@ -2486,7 +2486,7 @@ containing a value of this type.
         public static final int classic=0x7f0a002e;
         public static final int collapseActionView=0x7f0a0015;
         public static final int comm_text=0x7f0a007a;
-        public static final int comments=0x7f0a00a9;
+        public static final int comments=0x7f0a00aa;
         public static final int comments_container=0x7f0a0056;
         public static final int comments_fragment=0x7f0a0091;
         public static final int comments_img=0x7f0a0072;
@@ -2522,7 +2522,7 @@ containing a value of this type.
         public static final int listMode=0x7f0a000a;
         public static final int list_item=0x7f0a0038;
         public static final int main_lin=0x7f0a0058;
-        public static final int mark_as_read=0x7f0a00a1;
+        public static final int mark_as_read=0x7f0a00a2;
         public static final int match_parent=0x7f0a002a;
         public static final int middle=0x7f0a001d;
         public static final int monochrome=0x7f0a0030;
@@ -2538,7 +2538,7 @@ containing a value of this type.
         public static final int pub_date=0x7f0a0088;
         public static final int radio=0x7f0a003e;
         public static final int read_img=0x7f0a0071;
-        public static final int refresh=0x7f0a00ab;
+        public static final int refresh=0x7f0a00ac;
         public static final int sandbox=0x7f0a0026;
         public static final int satellite=0x7f0a0021;
         public static final int save_img=0x7f0a006c;
@@ -2553,14 +2553,14 @@ containing a value of this type.
         public static final int search_src_text=0x7f0a004d;
         public static final int search_voice_btn=0x7f0a0051;
         public static final int selectionDetails=0x7f0a0029;
-        public static final int share=0x7f0a00aa;
+        public static final int share=0x7f0a00ab;
         public static final int share_img=0x7f0a006d;
-        public static final int share_link=0x7f0a00a2;
+        public static final int share_link=0x7f0a00a3;
         public static final int shortcut=0x7f0a003d;
         public static final int showCustom=0x7f0a0010;
         public static final int showHome=0x7f0a0011;
         public static final int showTitle=0x7f0a0012;
-        public static final int show_comments=0x7f0a00a3;
+        public static final int show_comments=0x7f0a00a4;
         public static final int split_action_bar=0x7f0a0004;
         public static final int start_drawer=0x7f0a0055;
         public static final int strict_sandbox=0x7f0a0027;
@@ -2569,11 +2569,12 @@ containing a value of this type.
         public static final int teg_tv=0x7f0a00a0;
         public static final int terrain=0x7f0a0022;
         public static final int text=0x7f0a0080;
-        public static final int theme=0x7f0a00a6;
-        public static final int theme_dark=0x7f0a00a8;
-        public static final int theme_ligth=0x7f0a00a7;
+        public static final int theme=0x7f0a00a7;
+        public static final int theme_dark=0x7f0a00a9;
+        public static final int theme_ligth=0x7f0a00a8;
         public static final int time_city=0x7f0a0077;
         public static final int title=0x7f0a003a;
+        public static final int toolbar=0x7f0a00a1;
         public static final int top=0x7f0a001f;
         public static final int up=0x7f0a0001;
         public static final int useLogo=0x7f0a0013;
@@ -2667,6 +2668,7 @@ containing a value of this type.
         public static final int share_panel_landscape=0x7f030028;
         public static final int support_simple_spinner_dropdown_item=0x7f030029;
         public static final int teg_card=0x7f03002a;
+        public static final int toolbar_preference=0x7f03002b;
     }
     public static final class menu {
         public static final int art_card_menu_ligth=0x7f0e0000;
@@ -3161,7 +3163,9 @@ containing a value of this type.
         /**  Odnako custom dark theme with material_grey_colors 
          */
         public static final int ThemeDark=0x7f0c00f4;
+        public static final int ThemeDarkPreference=0x7f0c00fb;
         public static final int ThemeLight=0x7f0c00f7;
+        public static final int ThemeLightPreference=0x7f0c00fa;
         public static final int ThemeOverlay_AppCompat=0x7f0c00c4;
         /**  Theme overlay that replaces the normal control color, which by default is the same as the
          secondary text color, with the primary text color. 
