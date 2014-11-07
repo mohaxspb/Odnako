@@ -232,7 +232,15 @@ public class ActivityPreference extends PreferenceActivity implements SharedPref
 	@Override
 	public boolean onIsMultiPane()
 	{
-		return true;
+		if(this.getResources().getBoolean(R.bool.isTablet))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 	
 	@SuppressLint("NewApi")

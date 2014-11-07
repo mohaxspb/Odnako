@@ -2,8 +2,12 @@
 
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
-    <!-- Odnako custom dark theme with material_grey_colors -->
-    <style name="ThemeDark" parent="Theme.AppCompat">
+    <!-- Odnako custom dark theme with material_grey_colors --><!-- 
+    <style name="ThemeDark" parent="Theme.AppCompat"> -->
+    <style name="ThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_300</item>
@@ -64,7 +68,8 @@
         <item name="actionMenuTextColor">@color/material_grey_400</item>
     </style>
 
-    <style name="ThemeLight" parent="Theme.AppCompat.Light">
+    <!-- <style name="ThemeLight" parent="Theme.AppCompat.Light"> -->
+    <style name="ThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/material_grey_300</item>
         <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_800</item>

@@ -22,16 +22,20 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdView;
 
@@ -42,11 +46,16 @@ public class ActivityBase extends ActionBarActivity
 	protected SharedPreferences pref;
 
 	AdView adView;
+	
+	//Toolbar
+	Toolbar toolbar;
+	////End of Toolbar
 
 	///drawer
 	protected DrawerLayout mDrawerLayout;
 	protected ExpandableListView mDrawer;
-	protected ActionBarHelper mActionBar;
+//	protected ActionBarHelper mActionBar;
+	protected boolean drawerOpened;
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected Bundle additionalBundle;
 	protected int[] groupChildPosition = new int[] { -1, -1 };
@@ -77,7 +86,7 @@ public class ActivityBase extends ActionBarActivity
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		// If the nav drawer is open, hide action items related to the content view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(Gravity.START);
 		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
 		//		menu.findItem(R.id.comments).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
@@ -154,26 +163,50 @@ public class ActivityBase extends ActionBarActivity
 		lp.width = drawerWidth;
 		mDrawer.setLayoutParams(lp);
 		////end of set Drawer width
-		mActionBar = createActionBarHelper();
-		mActionBar.init();
+//		mActionBar = createActionBarHelper();
+//		mActionBar.init();
+		
+		///////////////////////////////////////////////
+		// As we're using a Toolbar, we should retrieve it and set it
+	    // to be our ActionBar
+	    toolbar = (Toolbar) findViewById(R.id.toolbar);
+//	    toolbar.seton
+//	    toolbar.setLogo(R.drawable.ic_launcher);
+	    setSupportActionBar(toolbar);
+
+	    // Now retrieve the DrawerLayout so that we can set the status bar color.
+	    // This only takes effect on Lollipop, or when using translucentStatusBar
+	    // on KitKat.
+//	    DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+	    
+	    ////////////////////////////////
+	    
 		// ActionBarDrawerToggle provides convenient helpers for tying together the
 		// prescribed interactions between a top-level sliding drawer and the action bar.
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
 		{
+			
+
 			public void onDrawerClosed(View view)
 			{
 				//				getSupportActionBar().setTitle(mTitle);
+//				drawerOpened=false;
 				supportInvalidateOptionsMenu();
+				drawerOpened=false;
 			}
 
 			public void onDrawerOpened(View drawerView)
 			{
 				//				getSupportActionBar().setTitle(mDrawerTitle);
+				
 				supportInvalidateOptionsMenu();
+				drawerOpened=true;
 			}
 		};
-		;
-		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mActionBar, this.mDrawerToggle));
+//		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mDrawerToggle));
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+//		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mActionBar, this.mDrawerToggle));
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".

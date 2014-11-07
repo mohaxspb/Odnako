@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
-import ru.kuchanov.odnako.activities.ActionBarHelper;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
@@ -24,12 +23,46 @@ import android.view.View;
 public class DemoDrawerListener implements DrawerLayout.DrawerListener
 {
 
-	protected ActionBarHelper mActionBar;
+//	protected ActionBarHelper mActionBar;
+//	protected ActionBarDrawerToggle mDrawerToggle;
+//
+//	public DemoDrawerListener(ActionBarHelper mActionBar, ActionBarDrawerToggle mDrawerToggle)
+//	{
+//		this.mActionBar = mActionBar;
+//		this.mDrawerToggle = mDrawerToggle;
+//	}
+//
+//	@Override
+//	public void onDrawerOpened(View drawerView)
+//	{
+//		mDrawerToggle.onDrawerOpened(drawerView);
+//		mActionBar.onDrawerOpened();
+//	}
+//
+//	@Override
+//	public void onDrawerClosed(View drawerView)
+//	{
+//		mDrawerToggle.onDrawerClosed(drawerView);
+//		mActionBar.onDrawerClosed();
+//	}
+//
+//	@Override
+//	public void onDrawerSlide(View drawerView, float slideOffset)
+//	{
+//		mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
+//	}
+//
+//	@Override
+//	public void onDrawerStateChanged(int newState)
+//	{
+//		mDrawerToggle.onDrawerStateChanged(newState);
+//	}
+	
+	/////////////test
 	protected ActionBarDrawerToggle mDrawerToggle;
 
-	public DemoDrawerListener(ActionBarHelper mActionBar, ActionBarDrawerToggle mDrawerToggle)
+	public DemoDrawerListener(ActionBarDrawerToggle mDrawerToggle)
 	{
-		this.mActionBar = mActionBar;
 		this.mDrawerToggle = mDrawerToggle;
 	}
 
@@ -37,14 +70,12 @@ public class DemoDrawerListener implements DrawerLayout.DrawerListener
 	public void onDrawerOpened(View drawerView)
 	{
 		mDrawerToggle.onDrawerOpened(drawerView);
-		mActionBar.onDrawerOpened();
 	}
 
 	@Override
 	public void onDrawerClosed(View drawerView)
 	{
 		mDrawerToggle.onDrawerClosed(drawerView);
-		mActionBar.onDrawerClosed();
 	}
 
 	@Override

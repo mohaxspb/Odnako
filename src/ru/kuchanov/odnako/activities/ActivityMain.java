@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -63,18 +64,18 @@ public class ActivityMain extends ActivityBase
 		{
 			this.restoreState(stateFromIntent);
 
-//			int[] intArr;
-//			intArr = stateFromIntent.getIntArray("groupChildPosition");
-//			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
+			//			int[] intArr;
+			//			intArr = stateFromIntent.getIntArray("groupChildPosition");
+			//			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
 
 			this.restoreGroupChildPosition(stateFromIntent);
-//			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
+			//			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
-			
+
 		}
 		//all is null, so start request for info
 		else
@@ -87,7 +88,7 @@ public class ActivityMain extends ActivityBase
 
 		//setNavDraw
 		this.setNavDrawer();
-		
+
 		//End of setNavDraw
 
 		//Set unreaded num of arts to zero
@@ -200,8 +201,8 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[0]);
-				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[1]);
+				ArticlesListFragment artsListFrag=(ArticlesListFragment) this.getSupportFragmentManager().findFragmentById(R.id.main_lin);
+//				((RecyclerView) artsListFrag.getArtsListView()).setFilterText("title");
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -296,7 +297,8 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			if (this.mActionBar.drawerOpened)
+			//			if (drawerOpened)
+			if (mDrawerLayout.isDrawerOpen(Gravity.START))
 			{
 				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
 			}
@@ -305,6 +307,15 @@ public class ActivityMain extends ActivityBase
 				this.backPressedQ++;
 				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
 			}
+			//			if (this.mActionBar.drawerOpened)
+			//			{
+			//				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			//			}
+			//			else
+			//			{
+			//				this.backPressedQ++;
+			//				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+			//			}
 		}
 		//Обнуление счётчика через 5 секунд
 		final Handler handler = new Handler();

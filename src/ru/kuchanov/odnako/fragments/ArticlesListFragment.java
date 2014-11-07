@@ -11,27 +11,42 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListRecyclerViewAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView.ItemAnimator;
+import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar.LayoutParams;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
 
 public class ArticlesListFragment extends Fragment
 {
 
-	private ListView artsList;
-	
+	//	private ListView artsList;
+	private RecyclerView artsList;
+
 	ActionBarActivity act;
 	Context ctx;
 
-	private ArtsListAdapter artsListAdapter;
+	//////
+
+	int mLastFirstVisibleItem = 0;
+
+	//	private ArtsListAdapter artsListAdapter;
+	private ArtsListRecyclerViewAdapter artsListAdapter;
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -41,18 +56,17 @@ public class ArticlesListFragment extends Fragment
 	 * The current activated item position. Only used on tablets.
 	 */
 	private int mActivatedPosition = ListView.INVALID_POSITION;
-	
+
 	ArrayList<ArtInfo> allArtsInfo;
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
-		
-		this.act=(ActionBarActivity) this.getActivity();
-		this.ctx=this.act;
+
+		this.act = (ActionBarActivity) this.getActivity();
+		this.ctx = this.act;
 	}
 
 	@Override
@@ -60,40 +74,114 @@ public class ArticlesListFragment extends Fragment
 	{
 		System.out.println("ArticlesListFragment onCreateView");
 		//inflate root view
-		View v=inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
+		View v = inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
 
 		///////
-		this.artsList = (ListView) v.findViewById(R.id.arts_list_view);
-				
+		//		this.artsList = (ListView) v.findViewById(R.id.arts_list_view);
+		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
+
 		//fill Arraylist with artsInfo
 		//sample data now
 		allArtsInfo = new ArrayList<ArtInfo>();
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
-			ArtInfo artInfo=new ArtInfo("url_"+String.valueOf(i), "title_"+String.valueOf(i), "", "author_blog_link_"+String.valueOf(i), "author_name_"+String.valueOf(i));
-			artInfo.updateArtInfoFromRSS("preview_"+String.valueOf(i), "date_"+String.valueOf(i));
-			artInfo.updateArtInfoFromARTICLE(i, i, "art_text_"+String.valueOf(i), "author_description_"+String.valueOf(i), "tegs_main_"+String.valueOf(i), "tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! "+"tegs_all_"+String.valueOf(i)+" !!!! ", String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! "+String.valueOf(i)+" !!!! ", "to_read_main_"+String.valueOf(i), "to_read_more_"+String.valueOf(i), "empty");
+			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i), "",
+			"author_blog_link_" + String.valueOf(i), "author_name_" + String.valueOf(i));
+			artInfo.updateArtInfoFromRSS("preview_" + String.valueOf(i), "date_" + String.valueOf(i));
+			artInfo.updateArtInfoFromARTICLE(
+			i,
+			i,
+			"art_text_" + String.valueOf(i),
+			"author_description_" + String.valueOf(i),
+			"tegs_main_" + String.valueOf(i),
+			"tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_"
+			+ String.valueOf(i) + " !!!! " + "tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_"
+			+ String.valueOf(i) + " !!!! ",
+			String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! "
+			+ String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! ",
+			"to_read_main_" + String.valueOf(i), "to_read_more_" + String.valueOf(i), "empty");
 			allArtsInfo.add(artInfo);
 		}
-		
-		ArtInfo artInfoTEST=new ArtInfo("http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/", "Разработчик testetsetstetstestetstestetstetstetsetstetstetste setstestet");
+
+		ArtInfo artInfoTEST = new ArtInfo(
+		"http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/",
+		"Разработчик testetsetstetstestetstestetstetstetsetstetstetste setstestet");
 		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
-		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "Описание автора", "Интернет", "Интернет !!!! Андроид", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date", "url !!!! title !!!! date !!!! url !!!! title !!!! date", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
+		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history),
+		"Описание автора", "Интернет", "Интернет !!!! Андроид", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10",
+		"url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date",
+		"url !!!! title !!!! date !!!! url !!!! title !!!! date",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
 		allArtsInfo.set(1, artInfoTEST);
 		//one more
-		ArtInfo artInfoTEST2=new ArtInfo("", "Заголовок статьи", "", "empty", "Разработчик");
+		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "", "empty", "Разработчик");
 		artInfoTEST2.updateArtInfoFromRSS("test_preview", "2 сентября 1945");
-		artInfoTEST2.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "empty", "empty", "empty", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "empty", "empty", "https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
+		artInfoTEST2.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "empty",
+		"empty", "empty", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "empty", "empty",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
 		allArtsInfo.set(2, artInfoTEST2);
-		
-//		ActivityMain.setAllArtsInfo(artsInfo);
-		((ActivityMain)act).setAllArtsInfo(allArtsInfo);
-		
-		setArtsListAdapter(new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view, allArtsInfo, artsList));
 
-		this.artsList.setAdapter(getArtsListAdapter());
+		//		ActivityMain.setAllArtsInfo(artsInfo);
+		((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+		//
+		//		setArtsListAdapter(new ArtsListAdapter((ActionBarActivity) getActivity(), R.layout.arts_list_card_view,
+		//		allArtsInfo, artsList));
+		//
+		//		this.artsList.setAdapter(getArtsListAdapter());
+		this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
+		this.artsList.setAdapter(artsListAdapter);
+		this.artsList.setItemAnimator(new DefaultItemAnimator());
+		this.artsList.setLayoutManager(new LinearLayoutManager(act));
+		LayoutManager mManager = this.artsList.getLayoutManager();
+		ItemAnimator anim = this.artsList.getItemAnimator();
+		//		artsListAdapter
 		///////
+
+		//test
+		this.artsList.setOnScrollListener(new OnScrollListener()
+		{
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+			{
+				switch (newState)
+				{
+					case (RecyclerView.SCROLL_STATE_DRAGGING):
+						System.out.println("dragging");
+					break;
+					case (RecyclerView.SCROLL_STATE_IDLE):
+						System.out.println("SCROLL_STATE_IDLE");
+					break;
+					case (RecyclerView.SCROLL_STATE_SETTLING):
+						System.out.println("SCROLL_STATE_SETTLING");
+					break;
+				}
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int x, int y)
+			{
+//				System.out.println("onScrolled: x/y: "+x+"/"+y);
+				Toolbar toolbar=(Toolbar) act.findViewById(R.id.toolbar);
+//				android.support.v7.widget.Toolbar.LayoutParams lp=(android.support.v7.widget.Toolbar.LayoutParams) toolbar.getLayoutParams();
+//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
+//				lp.height-=y;
+//				toolbar.setLayoutParams(lp);
+				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
+				if(lp.height<100)
+				{
+					toolbar.setY(toolbar.getY()-y/2);
+				}
+				else
+				{
+					lp.height-=y;
+					toolbar.setLayoutParams(lp);
+				}
+				
+				
+			}
+		});
+		////test
 
 		return v;
 	}
@@ -145,29 +233,30 @@ public class ArticlesListFragment extends Fragment
 	{
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		artsList.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
+		//		artsList.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
+		//		this.artsList.seti
 	}
 
 	public void setActivatedPosition(int position)
 	{
-		System.out.println("setActivatedPosition(int position: "+position);
+		System.out.println("setActivatedPosition(int position: " + position);
 		if (position == ListView.INVALID_POSITION)
 		{
-			artsList.setItemChecked(mActivatedPosition, false);
+			//			artsList.setItemChecked(mActivatedPosition, false);
 		}
 		else
 		{
-			artsList.setItemChecked(position, true);
+			//			artsList.setItemChecked(position, true);
 		}
 
 		mActivatedPosition = position;
 	}
-	
+
 	public void scrollToActivatedPosition()
 	{
 		this.artsList.smoothScrollToPosition(mActivatedPosition);
 	}
-	
+
 	public int getMyActivatedPosition()
 	{
 		return this.mActivatedPosition;
@@ -176,20 +265,21 @@ public class ArticlesListFragment extends Fragment
 	/**
 	 * @return the artsListAdapter
 	 */
-	public ArtsListAdapter getArtsListAdapter()
+	public ArtsListRecyclerViewAdapter getArtsListAdapter()
 	{
 		return artsListAdapter;
 	}
 
 	/**
-	 * @param artsListAdapter the artsListAdapter to set
+	 * @param artsListAdapter
+	 *            the artsListAdapter to set
 	 */
-	public void setArtsListAdapter(ArtsListAdapter artsListAdapter)
+	public void ArtsListRecyclerViewAdapter(ArtsListRecyclerViewAdapter artsListAdapter)
 	{
 		this.artsListAdapter = artsListAdapter;
 	}
-	
-	public ListView getArtsListView()
+
+	public RecyclerView getArtsListView()
 	{
 		return this.artsList;
 	}
