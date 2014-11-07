@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.support.v7.widget.RecyclerView;
@@ -142,18 +143,37 @@ public class ArticlesListFragment extends Fragment
 		//test
 		this.artsList.setOnScrollListener(new OnScrollListener()
 		{
+			//			LinearLayoutManager manager;
+			//			Toolbar toolbar=(Toolbar) act.findViewById(R.id.toolbar);
+			//			ImageView topImg=(ImageView) act.findViewById(R.id.top_img);
+			int initialDistance = -1;
+			int curentDistance = -1;
+
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState)
 			{
+
+				LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				ImageView topImg = (ImageView) act.findViewById(R.id.top_img);
 				switch (newState)
 				{
 					case (RecyclerView.SCROLL_STATE_DRAGGING):
-						System.out.println("dragging");
+						//						System.out.println("dragging");
+						//mesuring initialDistance between actionBar and 1-st item
+						if (initialDistance == -1)
+						{
+							initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+						}
 					break;
 					case (RecyclerView.SCROLL_STATE_IDLE):
-						System.out.println("SCROLL_STATE_IDLE");
+						//						System.out.println("SCROLL_STATE_IDLE");
+						if (topImg.getY() > 0)
+						{
+							topImg.setY(0);
+						}
 					break;
 					case (RecyclerView.SCROLL_STATE_SETTLING):
-						System.out.println("SCROLL_STATE_SETTLING");
+					//						System.out.println("SCROLL_STATE_SETTLING");
 					break;
 				}
 			}
@@ -161,24 +181,121 @@ public class ArticlesListFragment extends Fragment
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int x, int y)
 			{
-//				System.out.println("onScrolled: x/y: "+x+"/"+y);
-				Toolbar toolbar=(Toolbar) act.findViewById(R.id.toolbar);
-//				android.support.v7.widget.Toolbar.LayoutParams lp=(android.support.v7.widget.Toolbar.LayoutParams) toolbar.getLayoutParams();
-//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
-//				lp.height-=y;
-//				toolbar.setLayoutParams(lp);
-				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
-				if(lp.height<100)
+				LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				ImageView topImg = (ImageView) act.findViewById(R.id.top_img);
+
+				boolean scrollToUp = y > 0;
+
+				//				android.support.v7.widget.Toolbar.LayoutParams lp=(android.support.v7.widget.Toolbar.LayoutParams) toolbar.getLayoutParams();
+				//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
+				//				lp.height-=y;
+				//				toolbar.setLayoutParams(lp);
+				//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
+				//				if(lp.height<100)
+				//				View firstArticleChild=recyclerView.getLayoutManager().getChildAt(0);
+				//				System.out.println("firstArticleChild y: "+firstArticleChild.getY());
+				//				System.out.println("toolbar y: "+toolbar.getY());
+				//				if(firstArticleChild.getY()<=toolbar.getY()-toolbar.getHeight())
+				//				{
+				//					toolbar.setY(firstArticleChild.getY()+toolbar.getHeight());
+				//				}
+				//				else if(y<0 && toolbar.getY()<0)
+				//				{
+				//					toolbar.setY(toolbar.getY()-y );
+				//				}
+				////				else if(toolbar.getTop()<0 && y>0)
+				////				{
+				////					toolbar.setY(toolbar.getY()+y);
+				////				}
+				//				ImageView topImg=(ImageView) act.findViewById(R.id.top_img);
+				//				if(topImg.getY()<0 && y>0)
+				//				{
+				//					topImg.setY(topImg.getY()+y/2);
+				//				}
+				//				else if(topImg.getY()<0 && y<0)
+				//				{
+				//					topImg.setY(topImg.getY()-y/2);
+				//				}		
+				//move picture
+				if (scrollToUp)
 				{
-					toolbar.setY(toolbar.getY()-y/2);
+					if (topImg.getY() + topImg.getHeight() > 0)
+					{
+						topImg.setY(topImg.getY() - y / 2);
+					}
+					else
+					{
+						topImg.setY(-topImg.getHeight());
+					}
 				}
 				else
 				{
-					lp.height-=y;
-					toolbar.setLayoutParams(lp);
+					//test find main view of recyclerView that holds all articles cards
+
+					if (manager.findFirstVisibleItemPosition() <= 1)
+					{
+						if (topImg.getY() + topImg.getHeight() >= 0 && topImg.getY() < 0)
+						{
+							topImg.setY(topImg.getY() - y / 2);
+						}
+						else if (topImg.getY() > 0)
+						{
+							topImg.setY(0);
+						}
+
+					}
 				}
-				
-				
+				////End of move picture
+
+				//move light actionBar
+				if (scrollToUp)
+				{
+					//move actionBar UP
+					if (manager.findFirstVisibleItemPosition() == 0)
+					{
+						if (manager.findViewByPosition(1).getY() < toolbar.getHeight())
+						{
+							if (toolbar.getY() > -toolbar.getHeight())
+							{
+								toolbar.setY(toolbar.getY() - y);
+							}
+							else
+							{
+								toolbar.setY(-toolbar.getHeight());
+							}
+						}
+					}
+					//UNlight actionBar UP
+					//do it only while it's not moved
+					if (toolbar.getY() == 0)
+					{
+						curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+						float percent = (float)this.curentDistance / (float)this.initialDistance;
+						float gradient=1f - percent;
+						int newAlpha = (int) (255 * gradient);
+//						System.out.println("this.curentDistance / this.initialDistance: " + this.curentDistance +"/" +this.initialDistance);
+//						System.out.println("percent: " + percent);
+//						System.out.println("gradient: " + gradient);
+//						System.out.println("newAlpha: " + newAlpha);
+						toolbar.getBackground().setAlpha(newAlpha);
+					}
+				}
+				else
+				{
+					//move actionBar
+					if (toolbar.getY() <0)
+					{
+						toolbar.setY(toolbar.getY() - y);
+					}
+					else
+					{
+						toolbar.setY(0);
+					}
+					
+					//light actionBar
+					
+				}
 			}
 		});
 		////test

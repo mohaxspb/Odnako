@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -170,9 +171,14 @@ public class ActivityBase extends ActionBarActivity
 		// As we're using a Toolbar, we should retrieve it and set it
 	    // to be our ActionBar
 	    toolbar = (Toolbar) findViewById(R.id.toolbar);
-//	    toolbar.seton
-//	    toolbar.setLogo(R.drawable.ic_launcher);
 	    setSupportActionBar(toolbar);
+	    toolbar.getBackground().setAlpha(0);
+	    
+//	    ImageView topImg=(ImageView) this.findViewById(R.id.top_img);
+//	    topImg.setY(0);
+//	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.material_blue_grey_800));
+//	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+	    
 
 	    // Now retrieve the DrawerLayout so that we can set the status bar color.
 	    // This only takes effect on Lollipop, or when using translucentStatusBar

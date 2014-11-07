@@ -9,24 +9,25 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true" >
 
-   <!--  <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" > -->
-         <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:baselineAligned="true" >
+
+        <ImageView
+            android:id="@+id/top_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/img"
+            android:src="@drawable/odnako"
+            android:scaleType="fitXY" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="168dp"
-            android:gravity="top"
-            android:background="@drawable/odnako"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?colorPrimary"
             android:minHeight="?attr/actionBarSize" />
-        <!-- android:minHeight="@dimen/triple_height_toolbar?attr/actionBarSize" 
-        
-            android:background="?attr/colorPrimary"-->
 
         <LinearLayout
             android:id="@+id/main_lin"
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
-    <!-- </LinearLayout> -->
+        <!-- </LinearLayout> -->
     </RelativeLayout>
 
     <ExpandableListView
