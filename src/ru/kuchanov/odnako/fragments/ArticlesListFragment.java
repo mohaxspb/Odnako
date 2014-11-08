@@ -10,29 +10,26 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
+import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListRecyclerViewAdapter;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView.ItemAnimator;
-import android.support.v7.widget.RecyclerView.LayoutManager;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.Toolbar.LayoutParams;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.support.v7.widget.RecyclerView;
 
 public class ArticlesListFragment extends Fragment
 {
@@ -41,7 +38,9 @@ public class ArticlesListFragment extends Fragment
 	private RecyclerView artsList;
 
 	ActionBarActivity act;
-	Context ctx;
+//	Context ctx;
+	
+	SharedPreferences pref;
 
 	//////
 
@@ -68,7 +67,7 @@ public class ArticlesListFragment extends Fragment
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
-		this.ctx = this.act;
+		this.pref=PreferenceManager.getDefaultSharedPreferences(act);
 	}
 
 	@Override
@@ -136,185 +135,26 @@ public class ArticlesListFragment extends Fragment
 		this.artsList.setAdapter(artsListAdapter);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
-		LayoutManager mManager = this.artsList.getLayoutManager();
-		ItemAnimator anim = this.artsList.getItemAnimator();
-		//		artsListAdapter
 		///////
 
-		//test
-		this.artsList.setOnScrollListener(new OnScrollListener()
+		//set onScrollListener
+		if (android.os.Build.VERSION.SDK_INT >= 11)
 		{
-			//			LinearLayoutManager manager;
-			//			Toolbar toolbar=(Toolbar) act.findViewById(R.id.toolbar);
-			//			ImageView topImg=(ImageView) act.findViewById(R.id.top_img);
-			int initialDistance = -100000;
-			int curentDistance = -1;
-
-			public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-			{
-
-				LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-				ImageView topImg = (ImageView) act.findViewById(R.id.top_img);
-				switch (newState)
-				{
-					case (RecyclerView.SCROLL_STATE_DRAGGING):
-						//						System.out.println("dragging");
-						//mesuring initialDistance between actionBar and 1-st item
-						if (initialDistance == -100000)
-						{
-							initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
-						}
-					break;
-					case (RecyclerView.SCROLL_STATE_IDLE):
-						//						System.out.println("SCROLL_STATE_IDLE");
-						if (topImg.getY() > 0)
-						{
-							topImg.setY(0);
-						}
-					if(manager.findFirstVisibleItemPosition()==0)
-					{
-						if(manager.findViewByPosition(0).getY()==0)
-						{
-							topImg.setY(0);
-						}
-					}
-					break;
-					case (RecyclerView.SCROLL_STATE_SETTLING):
-					//						System.out.println("SCROLL_STATE_SETTLING");
-					break;
-				}
-			}
-
-			@Override
-			public void onScrolled(RecyclerView recyclerView, int x, int y)
-			{
-				LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-				ImageView topImg = (ImageView) act.findViewById(R.id.top_img);
-
-				boolean scrollToUp = y > 0;
-				//move picture
-				if (scrollToUp)
-				{
-					if (topImg.getY() + topImg.getHeight() > 0)
-					{
-						topImg.setY(topImg.getY() - y / 2);
-					}
-					else
-					{
-						topImg.setY(-topImg.getHeight());
-					}
-				}
-				else
-				{
-					if (manager.findFirstVisibleItemPosition() <= 1)
-					{
-						if (/*topImg.getY() + topImg.getHeight() >= 0 && */topImg.getY() < 0)
-						{
-							topImg.setY(topImg.getY() - y / 2);
-						}
-						else if (topImg.getY() > 0)
-						{
-							topImg.setY(0);
-						}
-
-					}
-				}
-				////End of move picture
-
-				//move light actionBar
-				if (scrollToUp)
-				{
-					//move actionBar UP
-					//on the very top of list
-					if (manager.findFirstVisibleItemPosition() == 0)
-					{
-						if (manager.findViewByPosition(1).getY() < toolbar.getHeight())
-						{
-							if (toolbar.getY() > -toolbar.getHeight())
-							{
-								toolbar.setY(toolbar.getY() - y);
-							}
-							else
-							{
-								toolbar.setY(-toolbar.getHeight());
-							}
-						}
-					}
-					//from any other position
-					else
-					{
-						if (toolbar.getY() > -toolbar.getHeight())
-						{
-							toolbar.setY(toolbar.getY() - y);
-						}
-						else
-						{
-							toolbar.setY(-toolbar.getHeight());
-						}
-					}
-					//UNlight actionBar UP
-					//do it only while it's not moved
-					//and we are on the top of our list
-//					System.out.println("firstVisPos ==0: "+String.valueOf(manager.findFirstVisibleItemPosition()==0));
-					if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
-					{
-						if(manager.findFirstVisibleItemPosition()==0)
-						{
-							curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
-							float percent = (float) this.curentDistance / (float) this.initialDistance;
-							float gradient = 1f - percent;
-							int newAlpha = (int) (255 * gradient);
-							toolbar.getBackground().setAlpha(newAlpha);
-						}
-						else// if(toolbar.getBackground().getAlpha()<1)
-						{
-							toolbar.getBackground().setAlpha(255);
-						}
-					}
-				}
-				else
-				{
-					//move actionBar
-					if (toolbar.getY() < 0)
-					{
-						toolbar.setY(toolbar.getY() - y);
-					}
-					else
-					{
-						toolbar.setY(0);
-					}
-
-					//light actionBar
-					if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
-					{
-						if(manager.findFirstVisibleItemPosition()==0)
-						{
-							curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
-							float percent = (float) this.curentDistance / (float) this.initialDistance;
-							if(percent>0)
-							{
-								float gradient = 1f-percent;
-								int newAlpha = (int) (255 * gradient);
-//								System.out.println("curentDistance/initialDistance: "+curentDistance+"/"+initialDistance);
-//								System.out.println("gradient: "+gradient);
-//								System.out.println("newAlpha: "+newAlpha);
-								toolbar.getBackground().setAlpha(newAlpha);
-							}
-							
-						}
-						else// if(toolbar.getBackground().getAlpha()<1)
-						{
-							toolbar.getBackground().setAlpha(255);
-						}
-					}
-
-				}
-			}
-		});
-		////test
-
+			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act));
+		}
+		else if(this.pref.getBoolean("animate_lists", false)==true)
+		{
+			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerPreHONEYCOMB(act));
+		}
+		else
+		{
+			SwipeRefreshLayout STR=(SwipeRefreshLayout) this.artsList.getParent();
+			STR.setPadding(0, 0, 0, 0);
+			LayoutParams lp=(LayoutParams) STR.getLayoutParams();
+			lp.setMargins(0, 50, 0, 0);
+			STR.setLayoutParams(lp);
+		}
+		
 		return v;
 	}
 

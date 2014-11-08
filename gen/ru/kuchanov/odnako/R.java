@@ -3171,8 +3171,7 @@ containing a value of this type.
         public static final int Theme_AppCompat_NoActionBar=0x7f0c00bd;
         public static final int Theme_IAPTheme=0x7f0c00ee;
         /**  Odnako custom dark theme with material_grey_colors 
- 
-    <style name="ThemeDark" parent="Theme.AppCompat"> 
+ <style name="ThemeDark" parent="Theme.AppCompat"> 
          */
         public static final int ThemeDark=0x7f0c00f4;
         public static final int ThemeDarkPreference=0x7f0c00fb;

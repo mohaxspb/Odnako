@@ -25,7 +25,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -201,8 +200,6 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				ArticlesListFragment artsListFrag=(ArticlesListFragment) this.getSupportFragmentManager().findFragmentById(R.id.main_lin);
-//				((RecyclerView) artsListFrag.getArtsListView()).setFilterText("title");
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

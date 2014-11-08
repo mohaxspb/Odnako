@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Gravity;
@@ -223,6 +224,11 @@ implements Filterable
 			//TODO
 			break;
 			case (ARTICLE):
+				
+				//test
+				LayoutManager mManager = this.artsListView.getLayoutManager();
+			mManager.requestSimpleAnimationsInNextLayout();
+				/////
 
 				final ArtInfo p;
 				if (position < 15)

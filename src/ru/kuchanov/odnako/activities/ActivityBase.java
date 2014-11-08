@@ -22,7 +22,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -171,10 +170,17 @@ public class ActivityBase extends ActionBarActivity
 	    // to be our ActionBar
 	    toolbar = (Toolbar) findViewById(R.id.toolbar);
 	    setSupportActionBar(toolbar);
-	    toolbar.getBackground().setAlpha(0);
+	    if (android.os.Build.VERSION.SDK_INT >= 11)
+		{
+	    	toolbar.getBackground().setAlpha(0);
+		}
+		else if(this.pref.getBoolean("animate_lists", false)==true)
+		{
+			toolbar.getBackground().setAlpha(120);
+			
+		}
 	    
-	    ColorDrawable CD=new ColorDrawable(R.color.material_grey_400);
-//	    CD.setAlpha(255);
+	    
 	    ImageView topImgCover=(ImageView) this.findViewById(R.id.top_img_cover);
 	    if(this.pref.getString("theme", "dark").equals("dark"))
 	    {
@@ -184,9 +190,6 @@ public class ActivityBase extends ActionBarActivity
 	    {
 	    	topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
 	    }
-//	    topImgCover.setAlpha(0.8f);
-//	    topImgCover.setBackground(CD);
-//	    topImgCover.setImageDrawable(CD);
 	    
 	   
 //	    ImageView topImg=(ImageView) this.findViewById(R.id.top_img);
