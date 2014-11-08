@@ -18,10 +18,18 @@
         <ImageView
             android:id="@+id/top_img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:contentDescription="@string/img"
             android:scaleType="fitXY"
-            android:src="@drawable/odnako" />
+            android:src="@drawable/odnako" /><!-- 
+            android:src="@drawable/oboronnaya_politika" /> -->
+        <ImageView
+            android:id="@+id/top_img_cover"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:background="?colorPrimary"
+            android:contentDescription="@string/img"/>
 
         <LinearLayout
             android:id="@+id/main_lin"

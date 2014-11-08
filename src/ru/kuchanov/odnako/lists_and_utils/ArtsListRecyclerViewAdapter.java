@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
@@ -213,7 +214,7 @@ implements Filterable
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
 		System.out.println(position);
-		switch (position)
+		switch (getItemViewType(position))
 		{
 			case (HEADER):
 
@@ -578,7 +579,7 @@ implements Filterable
 		{
 			case (HEADER):
 				itemLayoutView = new LinearLayout(act);
-				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 255));
+				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165, act)));
 
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
@@ -596,9 +597,6 @@ implements Filterable
 				false);
 
 				// create ViewHolder
-				//				ArtsListRecyclerViewAdapter.ArticleHolder viewHolder = new ArtsListRecyclerViewAdapter.ArticleHolder(
-				//				itemLayoutView);
-				//				return viewHolder;
 				holder = new ArtsListRecyclerViewAdapter.ArticleHolder(itemLayoutView);
 
 				return holder;

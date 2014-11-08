@@ -72,6 +72,10 @@
 
     <!-- <style name="ThemeLight" parent="Theme.AppCompat.Light"> -->
     <style name="ThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+         <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item> 
+        <!--  -->
         <item name="android:windowBackground">@color/material_grey_300</item>
         <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_800</item>

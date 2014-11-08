@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdView;
 
@@ -171,6 +172,26 @@ public class ActivityBase extends ActionBarActivity
 	    toolbar = (Toolbar) findViewById(R.id.toolbar);
 	    setSupportActionBar(toolbar);
 	    toolbar.getBackground().setAlpha(0);
+	    
+	    ColorDrawable CD=new ColorDrawable(R.color.material_grey_400);
+//	    CD.setAlpha(255);
+	    ImageView topImgCover=(ImageView) this.findViewById(R.id.top_img_cover);
+	    if(this.pref.getString("theme", "dark").equals("dark"))
+	    {
+	    	topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+	    }
+	    else
+	    {
+	    	topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+	    }
+//	    topImgCover.setAlpha(0.8f);
+//	    topImgCover.setBackground(CD);
+//	    topImgCover.setImageDrawable(CD);
+	    
+	   
+//	    ImageView topImg=(ImageView) this.findViewById(R.id.top_img);
+//	    topImg.setAlpha(127);//.setBackground(CD);
+	    
 //	    ColorDrawable CD=new ColorDrawable(R.color.material_grey_800);
 //	    CD.setAlpha(0);
 //	    this.getSupportActionBar().setBackgroundDrawable(CD);
