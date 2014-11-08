@@ -12,7 +12,6 @@ import java.util.Set;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.DemoDrawerListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -36,7 +35,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdView;
 
@@ -173,9 +171,10 @@ public class ActivityBase extends ActionBarActivity
 	    toolbar = (Toolbar) findViewById(R.id.toolbar);
 	    setSupportActionBar(toolbar);
 	    toolbar.getBackground().setAlpha(0);
+//	    ColorDrawable CD=new ColorDrawable(R.color.material_grey_800);
+//	    CD.setAlpha(0);
+//	    this.getSupportActionBar().setBackgroundDrawable(CD);
 	    
-//	    ImageView topImg=(ImageView) this.findViewById(R.id.top_img);
-//	    topImg.setY(0);
 //	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.material_blue_grey_800));
 //	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 	    

@@ -5,10 +5,10 @@
     <!-- Odnako custom dark theme with material_grey_colors --><!-- 
     <style name="ThemeDark" parent="Theme.AppCompat"> -->
     <style name="ThemeDark" parent="Theme.AppCompat.NoActionBar">
-        <!-- <item name="windowActionModeOverlay">true</item> -->
+   <!--     <item name="windowActionModeOverlay">true</item> -->
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+         <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item> 
         <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>

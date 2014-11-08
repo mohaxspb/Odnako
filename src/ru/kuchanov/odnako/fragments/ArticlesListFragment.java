@@ -14,6 +14,7 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListRecyclerViewAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -146,7 +147,7 @@ public class ArticlesListFragment extends Fragment
 			//			LinearLayoutManager manager;
 			//			Toolbar toolbar=(Toolbar) act.findViewById(R.id.toolbar);
 			//			ImageView topImg=(ImageView) act.findViewById(R.id.top_img);
-			int initialDistance = -1;
+			int initialDistance = -100000;
 			int curentDistance = -1;
 
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -160,7 +161,7 @@ public class ArticlesListFragment extends Fragment
 					case (RecyclerView.SCROLL_STATE_DRAGGING):
 						//						System.out.println("dragging");
 						//mesuring initialDistance between actionBar and 1-st item
-						if (initialDistance == -1)
+						if (initialDistance == -100000)
 						{
 							initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
 						}
@@ -171,6 +172,13 @@ public class ArticlesListFragment extends Fragment
 						{
 							topImg.setY(0);
 						}
+					if(manager.findFirstVisibleItemPosition()==0)
+					{
+						if(manager.findViewByPosition(0).getY()==0)
+						{
+							topImg.setY(0);
+						}
+					}
 					break;
 					case (RecyclerView.SCROLL_STATE_SETTLING):
 					//						System.out.println("SCROLL_STATE_SETTLING");
@@ -186,37 +194,6 @@ public class ArticlesListFragment extends Fragment
 				ImageView topImg = (ImageView) act.findViewById(R.id.top_img);
 
 				boolean scrollToUp = y > 0;
-
-				//				android.support.v7.widget.Toolbar.LayoutParams lp=(android.support.v7.widget.Toolbar.LayoutParams) toolbar.getLayoutParams();
-				//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
-				//				lp.height-=y;
-				//				toolbar.setLayoutParams(lp);
-				//				android.view.ViewGroup.LayoutParams lp=(android.view.ViewGroup.LayoutParams) toolbar.getLayoutParams();
-				//				if(lp.height<100)
-				//				View firstArticleChild=recyclerView.getLayoutManager().getChildAt(0);
-				//				System.out.println("firstArticleChild y: "+firstArticleChild.getY());
-				//				System.out.println("toolbar y: "+toolbar.getY());
-				//				if(firstArticleChild.getY()<=toolbar.getY()-toolbar.getHeight())
-				//				{
-				//					toolbar.setY(firstArticleChild.getY()+toolbar.getHeight());
-				//				}
-				//				else if(y<0 && toolbar.getY()<0)
-				//				{
-				//					toolbar.setY(toolbar.getY()-y );
-				//				}
-				////				else if(toolbar.getTop()<0 && y>0)
-				////				{
-				////					toolbar.setY(toolbar.getY()+y);
-				////				}
-				//				ImageView topImg=(ImageView) act.findViewById(R.id.top_img);
-				//				if(topImg.getY()<0 && y>0)
-				//				{
-				//					topImg.setY(topImg.getY()+y/2);
-				//				}
-				//				else if(topImg.getY()<0 && y<0)
-				//				{
-				//					topImg.setY(topImg.getY()-y/2);
-				//				}		
 				//move picture
 				if (scrollToUp)
 				{
@@ -231,11 +208,9 @@ public class ArticlesListFragment extends Fragment
 				}
 				else
 				{
-					//test find main view of recyclerView that holds all articles cards
-
 					if (manager.findFirstVisibleItemPosition() <= 1)
 					{
-						if (topImg.getY() + topImg.getHeight() >= 0 && topImg.getY() < 0)
+						if (/*topImg.getY() + topImg.getHeight() >= 0 && */topImg.getY() < 0)
 						{
 							topImg.setY(topImg.getY() - y / 2);
 						}
@@ -252,6 +227,7 @@ public class ArticlesListFragment extends Fragment
 				if (scrollToUp)
 				{
 					//move actionBar UP
+					//on the very top of list
 					if (manager.findFirstVisibleItemPosition() == 0)
 					{
 						if (manager.findViewByPosition(1).getY() < toolbar.getHeight())
@@ -266,25 +242,42 @@ public class ArticlesListFragment extends Fragment
 							}
 						}
 					}
+					//from any other position
+					else
+					{
+						if (toolbar.getY() > -toolbar.getHeight())
+						{
+							toolbar.setY(toolbar.getY() - y);
+						}
+						else
+						{
+							toolbar.setY(-toolbar.getHeight());
+						}
+					}
 					//UNlight actionBar UP
 					//do it only while it's not moved
-					if (toolbar.getY() == 0)
+					//and we are on the top of our list
+//					System.out.println("firstVisPos ==0: "+String.valueOf(manager.findFirstVisibleItemPosition()==0));
+					if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
 					{
-						curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
-						float percent = (float)this.curentDistance / (float)this.initialDistance;
-						float gradient=1f - percent;
-						int newAlpha = (int) (255 * gradient);
-//						System.out.println("this.curentDistance / this.initialDistance: " + this.curentDistance +"/" +this.initialDistance);
-//						System.out.println("percent: " + percent);
-//						System.out.println("gradient: " + gradient);
-//						System.out.println("newAlpha: " + newAlpha);
-						toolbar.getBackground().setAlpha(newAlpha);
+						if(manager.findFirstVisibleItemPosition()==0)
+						{
+							curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+							float percent = (float) this.curentDistance / (float) this.initialDistance;
+							float gradient = 1f - percent;
+							int newAlpha = (int) (255 * gradient);
+							toolbar.getBackground().setAlpha(newAlpha);
+						}
+						else// if(toolbar.getBackground().getAlpha()<1)
+						{
+							toolbar.getBackground().setAlpha(255);
+						}
 					}
 				}
 				else
 				{
 					//move actionBar
-					if (toolbar.getY() <0)
+					if (toolbar.getY() < 0)
 					{
 						toolbar.setY(toolbar.getY() - y);
 					}
@@ -292,9 +285,31 @@ public class ArticlesListFragment extends Fragment
 					{
 						toolbar.setY(0);
 					}
-					
+
 					//light actionBar
-					
+					if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
+					{
+						if(manager.findFirstVisibleItemPosition()==0)
+						{
+							curentDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+							float percent = (float) this.curentDistance / (float) this.initialDistance;
+							if(percent>0)
+							{
+								float gradient = 1f-percent;
+								int newAlpha = (int) (255 * gradient);
+//								System.out.println("curentDistance/initialDistance: "+curentDistance+"/"+initialDistance);
+//								System.out.println("gradient: "+gradient);
+//								System.out.println("newAlpha: "+newAlpha);
+								toolbar.getBackground().setAlpha(newAlpha);
+							}
+							
+						}
+						else// if(toolbar.getBackground().getAlpha()<1)
+						{
+							toolbar.getBackground().setAlpha(255);
+						}
+					}
+
 				}
 			}
 		});

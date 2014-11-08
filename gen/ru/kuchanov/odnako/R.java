@@ -2471,7 +2471,7 @@ containing a value of this type.
         public static final int art_title=0x7f0a0085;
         public static final int article_comments_container=0x7f0a005c;
         public static final int article_container=0x7f0a0054;
-        public static final int articles_list=0x7f0a005b;
+        public static final int articles_list=0x7f0a005a;
         public static final int arts_list_refresh=0x7f0a0091;
         public static final int arts_list_view=0x7f0a0092;
         public static final int author_name=0x7f0a0071;
@@ -2577,7 +2577,7 @@ containing a value of this type.
         public static final int theme_ligth=0x7f0a00a9;
         public static final int time_city=0x7f0a0079;
         public static final int title=0x7f0a003a;
-        public static final int toolbar=0x7f0a005a;
+        public static final int toolbar=0x7f0a005b;
         public static final int top=0x7f0a001f;
         public static final int top_img=0x7f0a0059;
         public static final int up=0x7f0a0001;
