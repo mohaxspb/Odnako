@@ -8,15 +8,17 @@ package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseForAllAuthors;
 import ru.kuchanov.odnako.download.ParseForAllCategories;
-import ru.kuchanov.odnako.download.ParseForAllCategoriesImages;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,8 +41,10 @@ public class ActivityMain extends ActivityBase
 	ViewPager artsListPager;
 	PagerAdapter artsListPagerAdapter;
 
+	int curentCategoryPosition = 11;
+
 	private int backPressedQ;
-	
+
 	ImageView topImgCover;
 	ImageView topImg;
 
@@ -97,7 +101,7 @@ public class ActivityMain extends ActivityBase
 		//setNavDraw
 		this.setNavDrawer();
 		//End of setNavDraw
-		
+
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
@@ -121,10 +125,8 @@ public class ActivityMain extends ActivityBase
 		{
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
 		}
-		this.topImg=(ImageView)this.findViewById(R.id.top_img);
+		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.topImg.setImageResource(R.drawable.odnako);
-
-		
 
 		//Set unreaded num of arts to zero
 		//it's for new arts motification
@@ -185,22 +187,36 @@ public class ActivityMain extends ActivityBase
 		this.artsListPagerAdapter = new ArtsListViewPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
 		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
-		this.artsListPager.setCurrentItem(11, true);
+		this.artsListPager.setCurrentItem(curentCategoryPosition, true);
 		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 		{
 			@Override
 			public void onPageSelected(int position)
 			{
+				int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
+
 				String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[position];
 				setTitle(title);
 
+				//change topImg
+				if (position >= firstCategoryChildrenQuontity)
+				{
+					String defPackage = act.getPackageName();
+					String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+					String resName = catImgsFilesNames[position - firstCategoryChildrenQuontity].substring(0,
+					catImgsFilesNames[position - firstCategoryChildrenQuontity].length() - 4);
+					int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
+					ImageLoader imgLoader = UniversalImageLoader.get(act);
+					imgLoader.displayImage("drawable://" + resId, topImg);
+				}
 				int group;
 				int child;
-				//3 is not a magic number! It's a quontity of categories in authors menu items in drawer
-				if (position > 3)
+				//4 is not a magic number! It's a quontity of categories in authors menu items in drawer
+
+				if (position >= firstCategoryChildrenQuontity)
 				{
 					group = 1;
-					child = position - 4;
+					child = position - firstCategoryChildrenQuontity;
 				}
 				else
 				{
@@ -208,6 +224,21 @@ public class ActivityMain extends ActivityBase
 					child = position;
 				}
 				setGroupChildPosition(group, child);
+				
+				//save curent category position
+				curentCategoryPosition=position;
+
+				//show toolbar when switch category to show it's title
+				if (android.os.Build.VERSION.SDK_INT >= 11)
+				{
+					toolbar.setY(0);
+					toolbar.getBackground().setAlpha(255);
+
+					//restore and set topImg position
+					ArticlesListFragment frag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) artsListPagerAdapter)
+					.getRegisteredFragment(position);
+					topImg.setY(frag.getTopImgYCoord());
+				}
 			}
 		});
 
@@ -235,6 +266,8 @@ public class ActivityMain extends ActivityBase
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
 
 		this.saveGroupChildPosition(outState);
+		
+		outState.putInt("curentCategoryPosition", curentCategoryPosition);
 	}
 
 	@Override
@@ -245,6 +278,8 @@ public class ActivityMain extends ActivityBase
 
 		this.restoreState(savedInstanceState);
 		this.restoreGroupChildPosition(savedInstanceState);
+		
+		curentCategoryPosition=savedInstanceState.getInt("curentCategoryPosition");
 	}
 
 	@Override
@@ -268,13 +303,7 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				//download all categories images
-//				String[] allCatUrls=this.getResources().getStringArray(R.array.all_categories_urls);
-//				for(int i=0; i<allCatUrls.length; i++)
-//				{
-//					ParseForAllCategoriesImages parse=new ParseForAllCategoriesImages(act);
-//					parse.execute(allCatUrls[i]);
-//				}
+
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

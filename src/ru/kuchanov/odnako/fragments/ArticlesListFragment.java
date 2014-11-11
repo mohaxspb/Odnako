@@ -30,15 +30,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
 public class ArticlesListFragment extends Fragment
 {
+	private int topImgYCoord = 0;
+	private int toolbarYCoord = 0;
+	private int toolbarAlpha = 0;
+
+	Toolbar toolbar;
+	ImageView topImg;
 
 	private RecyclerView artsList;
 	ActionBarActivity act;
@@ -61,25 +69,37 @@ public class ArticlesListFragment extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		System.out.println("ArticlesListFragment onCreate");
+		//		System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
+		
+
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(fromArgs, act);
+//			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(fromArgs, act);
 			this.categoryToLoad = fromArgs.getString("categoryToLoad");
 		}
-		else if (savedInstanceState != null)
-		{
-			//			this.allArtsInfo=ArtInfo.restoreAllArtsInfoFromBundle(fromArgs, act);
-		}
+//		else if (savedInstanceState != null)
+//		{
+//			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(savedInstanceState, act);
+//		}
 		else
 		{
 			System.out.println("empty allArtsInfo, so we need to load it from INTERNET!");
+		}
+
+		//restore topImg and toolbar prop's
+		if (savedInstanceState != null)
+		{
+			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(savedInstanceState, act);
+			
+			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
+			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
+			this.toolbarAlpha = savedInstanceState.getInt("toolbarAlpha");
 		}
 
 		// Register to receive messages.
@@ -99,13 +119,13 @@ public class ArticlesListFragment extends Fragment
 			// Get extra data included in the Intent
 			String message = intent.getStringExtra("message");
 			Log.d("receiver", "Got message: " + message);
-			
-			ArrayList<ArtInfo> newAllArtsInfo=ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
-			
+
+			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
+
 			if (newAllArtsInfo != null)
 			{
 				allArtsInfo = newAllArtsInfo;
-				
+
 				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
 				artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
@@ -119,7 +139,7 @@ public class ArticlesListFragment extends Fragment
 			{
 				System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
 			}
-			
+
 		}
 	};
 
@@ -130,10 +150,20 @@ public class ArticlesListFragment extends Fragment
 		//inflate root view
 		View v;
 
-		//		v = inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
+
+		//restore topImg and toolbar prop's
+//		if (android.os.Build.VERSION.SDK_INT >= 11)
+//		{
+//			//find toolbar and topImg
+//			this.toolbar = (Toolbar) ((ActivityBase) this.act).findViewById(R.id.toolbar);
+//			this.topImg = (ImageView) ((ActivityBase) this.act).findViewById(R.id.top_img);
+//			
+//			this.toolbar.setY(this.toolbarYCoord);
+//			this.topImg.setY(this.topImgYCoord);
+//		}
 
 		if (this.allArtsInfo == null)
 		{
@@ -141,7 +171,7 @@ public class ArticlesListFragment extends Fragment
 			this.getAllArtsInfo(this.categoryToLoad);
 
 			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
-			System.out.println(def.get(1).toString());
+			//			System.out.println(def.get(1).toString());
 
 			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, def, artsList);
 			this.artsList.setAdapter(artsListAdapter);
@@ -164,7 +194,7 @@ public class ArticlesListFragment extends Fragment
 		//set onScrollListener
 		if (android.os.Build.VERSION.SDK_INT >= 11)
 		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act));
+			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this));
 		}
 		else if (this.pref.getBoolean("animate_lists", false) == true)
 		{
@@ -182,7 +212,6 @@ public class ArticlesListFragment extends Fragment
 		return v;
 	}
 
-
 	private void getAllArtsInfo(String categoryToLoad2)
 	{
 		// TODO Auto-generated method stub
@@ -192,9 +221,6 @@ public class ArticlesListFragment extends Fragment
 		b.putInt("pageToLaod", 1);
 		intent.putExtras(b);
 		this.act.startService(intent);
-
-//		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(this.categoryToLoad, 1, this.act, this);
-//		parse.execute();
 	}
 
 	@Override
@@ -213,27 +239,32 @@ public class ArticlesListFragment extends Fragment
 	@Override
 	public void onAttach(Activity activity)
 	{
-		System.out.println("ArticlesListFragment onAttach");
+//		System.out.println("ArticlesListFragment onAttach");
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-		System.out.println("ArticlesListFragment onDetach");
+//		System.out.println("ArticlesListFragment onDetach");
 		super.onDetach();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		System.out.println("ArticlesListFragment onSaveInstanceState");
+//		System.out.println("ArticlesListFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		if (mActivatedPosition != ListView.INVALID_POSITION)
 		{
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
+
+		//save topImg and toolbar prop's
+		outState.putInt("topImgYCoord", this.topImgYCoord);
+		outState.putInt("toolbarYCoord", this.toolbarYCoord);
+		outState.putInt("toolbarAlpha", this.toolbarAlpha);
 	}
 
 	/**
@@ -293,5 +324,37 @@ public class ArticlesListFragment extends Fragment
 	public RecyclerView getArtsListView()
 	{
 		return this.artsList;
+	}
+
+	////////setters and getters for TopImg and Toolbar position and Alpha
+
+	public int getToolbarAlpha()
+	{
+		return toolbarAlpha;
+	}
+
+	public void setToolbarAlpha(int toolbarAlpha)
+	{
+		this.toolbarAlpha = toolbarAlpha;
+	}
+
+	public int getToolbarYCoord()
+	{
+		return toolbarYCoord;
+	}
+
+	public void setToolbarYCoord(int toolbarYCoord)
+	{
+		this.toolbarYCoord = toolbarYCoord;
+	}
+
+	public int getTopImgYCoord()
+	{
+		return topImgYCoord;
+	}
+
+	public void setTopImgYCoord(int topImgYCoord)
+	{
+		this.topImgYCoord = topImgYCoord;
 	}
 }

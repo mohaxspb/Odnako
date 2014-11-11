@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 public class RecyclerViewOnScrollListener extends OnScrollListener
 {
 	ActionBarActivity act;
+	
+	ArticlesListFragment frag;
 
 	int initialDistance = -100000;
 	int curentDistance = -1;
@@ -28,11 +31,13 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, ArticlesListFragment frag)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
+		
+		this.frag=frag;
 	}
 
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -41,7 +46,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
-		
+
 		switch (newState)
 		{
 			case (RecyclerView.SCROLL_STATE_DRAGGING):
@@ -52,6 +57,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 					initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
 				}
 			break;
+			//scroll finished
 			case (RecyclerView.SCROLL_STATE_IDLE):
 				//						System.out.println("SCROLL_STATE_IDLE");
 				if (topImg.getY() > 0)
@@ -65,6 +71,10 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 						topImg.setY(0);
 					}
 				}
+				//save position to frag
+				this.frag.setTopImgYCoord((int) this.topImg.getY());
+				this.frag.setToolbarYCoord((int) this.toolbar.getY());
+//				this.frag.setToolbarAlpha(this.toolbar.getBackground().getAlpha());
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
 			//						System.out.println("SCROLL_STATE_SETTLING");
@@ -181,12 +191,8 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 					{
 						float gradient = 1f - percent;
 						int newAlpha = (int) (255 * gradient);
-						//								System.out.println("curentDistance/initialDistance: "+curentDistance+"/"+initialDistance);
-						//								System.out.println("gradient: "+gradient);
-						//								System.out.println("newAlpha: "+newAlpha);
 						toolbar.getBackground().setAlpha(newAlpha);
 					}
-
 				}
 				else
 				// if(toolbar.getBackground().getAlpha()<1)

@@ -10,67 +10,50 @@
     android:fitsSystemWindows="true" >
 
     <RelativeLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="true" >
 
-       
         <ImageView
             android:id="@+id/top_img"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="@string/img"
             android:scaleType="fitXY"
-            android:src="@drawable/odnako" /><!-- 
-            android:src="@drawable/oboronnaya_politika" /> -->
+            android:src="@drawable/odnako" />
+
         <ImageView
             android:id="@+id/top_img_cover"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="fitXY"
             android:background="?colorPrimary"
-            android:contentDescription="@string/img"/>
+            android:contentDescription="@string/img"
+            android:scaleType="fitXY" />
 
-        <!-- <LinearLayout
-            android:id="@+id/main_lin"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/arts_list_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_above="@id/adView" >
-
-            <fragment
-                android:id="@+id/articles_list"
-                android:name="ru.kuchanov.odnako.fragments.ArticlesListFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                tools:context="ru.kuchanov.odnako.activities.ActivityMain"
-                tools:layout="@android:layout/list_content" />
-        </LinearLayout> -->
-        <android.support.v4.view.ViewPager
-                android:id="@+id/arts_list_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_above="@id/adView"/>
+            android:layout_above="@id/adView"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
             android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
         <!-- </LinearLayout> -->
-         <android.support.v7.widget.Toolbar
+
+        <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorPrimary"
             android:minHeight="?attr/actionBarSize" />
-        
     </RelativeLayout>
 
     <ExpandableListView

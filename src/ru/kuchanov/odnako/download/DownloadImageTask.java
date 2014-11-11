@@ -63,6 +63,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 		String dirToWrite = act.getFilesDir().getAbsolutePath();
 		String formatedImgAdress;
 		formatedImgAdress = this.imgAdress.substring(imgAdress.lastIndexOf("/") + 1);
+		formatedImgAdress=formatedImgAdress.replace("-", "_");
 		File dirToWriteFile = new File(dirToWrite + "/images/");
 		if(!dirToWriteFile.exists())
 		{

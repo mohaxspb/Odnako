@@ -1,6 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- menu categories -->
+    <string-array name="menu_items">
+        <item>Авторы</item>
+        <item>Категории</item>
+        <item>Загрузки</item>
+        <item>Настройки</item>
+    </string-array>
+    <string-array name="authors">
+        <item>Михаил Леонтьев</item>
+        <item>Виктор Мараховский</item>
+        <item>Анатолий Вассерман</item>
+        <item>Все авторы</item>
+    </string-array>
+    <string-array name="authors_links">
+        <item>leontev.odnako.org</item>
+        <item>viktormarahovskiy.odnako.org</item>
+        <item>awas.odnako.org</item>
+        <item>odnako.org/authors</item>
+    </string-array>
+    <string-array name="categories">
+        <item>Идеология</item>
+        <item>Экономическая политика</item>
+        <item>Государственное строительство</item>
+        <item>Оборонная политика</item>
+        <item>Евразия</item>
+        <item>Человекостроение</item>
+        <item>Миропорядок</item>
+        <item>Лента обновлений</item>
+        <item>Новости</item>
+        <item>Все категории</item>
+    </string-array>
+    <string-array name="categories_links">
+        <item>ideologiya.odnako.org</item>
+        <item>ekonomicheskayapolitika.odnako.org</item>
+        <item>gosudarstvennoestroitelstvo.odnako.org</item>
+        <item>oboronnayapolitika.odnako.org</item>
+        <item>eurasia.odnako.org</item>
+        <item>chelovekostroenie.odnako.org</item>
+        <item>miroporyadok.odnako.org</item>
+        <item>odnako.org/blogs</item>
+        <item>novosti.odnako.org</item>
+        <item>all_categiries</item>
+    </string-array>
+    <string-array name="categories_imgs_urls">
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/16/ekonomicheskaya-politika-1770-1-16.png]]></item>
+        <item><![CDATA[/i/940_255/tags_img/15/gosudarstvennoe-stroitelstvo-1770-1-15.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/18/oboronnaya-politika-1770-1-18.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/17/evraziya-1770-1-17.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/19/chelovekostroenie-1770-1-19.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/20/miroporyadok-1770-1-20.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+        <item><![CDATA[/i/940_255/tags_img/4/novosti-1770-1-4.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+    </string-array>
+    <string-array name="categories_imgs_files_names">
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[ekonomicheskaya_politika_1770_1_16.png]]></item>
+        <item><![CDATA[gosudarstvennoe_stroitelstvo_1770_1_15.jpg]]></item>
+        <item><![CDATA[oboronnaya_politika_1770_1_18.jpg]]></item>
+        <item><![CDATA[evraziya_1770_1_17.jpg]]></item>
+        <item><![CDATA[chelovekostroenie_1770_1_19.jpg]]></item>
+        <item><![CDATA[miroporyadok_1770_1_20.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[novosti_1770_1_4.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+    </string-array>
+    <!-- End of menu categories -->
+    <!-- all categories -->
     <string-array name="all_categories">
         <item>Азия</item>
         <item>Армия</item>
@@ -222,6 +291,80 @@
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+    </string-array>
+    <string-array name="all_categories_imgs_files_names">
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[grazhdanskaya_aktivnost_1770_1_32.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[kultura_1770_1_13.jpg]]></item>
+        <item><![CDATA[kulturnaya_politika_1770_1_67.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[mirovoy_krizis_1770_1_41.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[nauka_i_tehnologii_1770_1_49.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[oboronnaya_promishlennost_1770_1_59.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
     </string-array>
     <string-array name="all_authors_names">
         <item>Станислав Бескаравайный</item>

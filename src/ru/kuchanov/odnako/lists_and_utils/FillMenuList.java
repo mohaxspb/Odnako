@@ -83,9 +83,8 @@ public class FillMenuList
 	}
 
 	public ArrayList<ArrayList<String>> getGroupsLinks()
-	{
-		//������� ����� ������ ��� ��������        
-		String[] menuCatLinks = act.getResources().getStringArray(R.array.menu_items_links);
+	{       
+		String[] menuCatLinks = act.getResources().getStringArray(R.array.menu_items);
 		for (int i = 0; i < menuCatLinks.length; i++)
 		{
 			if (i == 0)
