@@ -31,11 +31,12 @@
             android:background="?colorPrimary"
             android:contentDescription="@string/img"/>
 
-        <LinearLayout
+        <!-- <LinearLayout
             android:id="@+id/main_lin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_above="@id/adView" >
 
             <fragment
                 android:id="@+id/articles_list"
@@ -46,13 +47,21 @@
                 android:layout_marginRight="16dp"
                 tools:context="ru.kuchanov.odnako.activities.ActivityMain"
                 tools:layout="@android:layout/list_content" />
-        </LinearLayout>
+        </LinearLayout> -->
+        <android.support.v4.view.ViewPager
+                android:id="@+id/arts_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_above="@id/adView"/>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             ads:adSize="SMART_BANNER"
+            android:layout_alignParentBottom="true"
             ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
         <!-- </LinearLayout> -->
          <android.support.v7.widget.Toolbar

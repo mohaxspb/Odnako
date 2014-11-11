@@ -7,12 +7,10 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -50,7 +48,6 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 
 		this.setContentView(R.layout.activity_article);
 
-		System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
 		if (stateFromIntent != null)
@@ -63,13 +60,13 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 			
 			this.restoreGroupChildPosition(stateFromIntent);
 //			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
-			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
+//			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
-			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
+//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
 		//all is null, so start request for info
 		else
@@ -125,10 +122,10 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		switch (item.getItemId())
 		{
 			case R.id.comments:
-				ArtsListAdapter.showComments(allArtsInfo, position, act);
+				Actions.showComments(allArtsInfo, position, act);//.showComments(allArtsInfo, position, act);
 				return true;
 			case R.id.share:
-				ArtsListAdapter.shareUrl(this.curArtInfo.url, this.act);
+				Actions.shareUrl(this.curArtInfo.url, this.act);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -161,34 +158,6 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@SuppressLint("NewApi")
-	protected void myRecreate()
-	{
-		if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-			super.recreate();
-		}
-		else
-		{
-			finish();
-			startActivity(getIntent());
-		}
-	}
-
-	@Override
-	public void onPause()
-	{
-		adView.pause();
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		adView.destroy();
-		super.onDestroy();
 	}
 
 	@Override

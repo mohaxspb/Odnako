@@ -36,7 +36,7 @@
         <item>leontev.odnako.org</item>
         <item>viktormarahovskiy.odnako.org</item>
         <item>awas.odnako.org</item>
-        <item>www.odnako.org/authors</item>
+        <item>odnako.org/authors</item>
     </string-array>
     <string-array name="categories_links">
         <item>ideologiya.odnako.org</item>
@@ -46,9 +46,9 @@
         <item>eurasia.odnako.org</item>
         <item>chelovekostroenie.odnako.org</item>
         <item>miroporyadok.odnako.org</item>
-        <item>www.odnako.org/blogs</item>
+        <item>odnako.org/blogs</item>
         <item>novosti.odnako.org</item>
-        <item>Все категории</item>
+        <item>all_categiries</item>
     </string-array>
     <string-array name="categories_to_load">
         <item>Лента обновлений</item>

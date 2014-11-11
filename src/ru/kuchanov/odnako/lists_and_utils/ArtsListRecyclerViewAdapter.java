@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Gravity;
@@ -156,51 +155,6 @@ implements Filterable
 		}
 	}
 
-	static class HeaderHolder extends RecyclerView.ViewHolder
-	{
-
-		HeaderHolder(View itemLayoutView)
-		{
-			super(itemLayoutView);
-		}
-	}
-
-	static class ArticleHolder extends RecyclerView.ViewHolder
-	{
-		TextView title;
-		TextView author_name;
-		ImageView art_img;
-		ImageView save;
-		ImageView read;
-		ImageView comms;
-		ImageView share;
-		TextView num_of_comms;
-		TextView num_of_shares;
-		TextView date;
-		TextView preview;
-		ImageView settings;
-		ViewGroup top_lin_lay;
-
-		ArticleHolder(View itemLayoutView)
-		{
-			super(itemLayoutView);
-			this.title = (TextView) itemLayoutView.findViewById(R.id.art_card_title_tv);
-
-			this.author_name = (TextView) itemLayoutView.findViewById(R.id.author_name);
-			this.art_img = (ImageView) itemLayoutView.findViewById(R.id.art_card_img);
-			this.save = (ImageView) itemLayoutView.findViewById(R.id.save_img);
-			this.read = (ImageView) itemLayoutView.findViewById(R.id.read_img);
-			this.comms = (ImageView) itemLayoutView.findViewById(R.id.comments_img);
-			this.share = (ImageView) itemLayoutView.findViewById(R.id.share_img);
-			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
-			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
-			this.date = (TextView) itemLayoutView.findViewById(R.id.art_card_date_tv);
-			this.preview = (TextView) itemLayoutView.findViewById(R.id.art_card_preview_tv);
-			this.settings = (ImageView) itemLayoutView.findViewById(R.id.art_card_settings);
-			this.top_lin_lay = (ViewGroup) itemLayoutView.findViewById(R.id.art_card_top_lin_lay);
-		}
-	}
-
 	@Override
 	public int getItemCount()
 	{
@@ -209,6 +163,32 @@ implements Filterable
 		//		int footer=1;
 		int numOfAds = 1;
 		return this.artsInfo.size() + header + /* footer */+numOfAds;
+	}
+
+	public ArtInfo getArtInfoByPosition(int position)
+	{
+		ArtInfo p;
+		if (position < 15)
+		{
+			p = this.artsInfo.get(position - 1);
+		}
+		else
+		{
+			p = this.artsInfo.get(position - 2);
+		}
+		return p;
+	}
+
+	public int getPositionInAllArtsInfo(int recyclerViewPosition)
+	{
+		if (recyclerViewPosition < 15)
+		{
+			return recyclerViewPosition - 1;
+		}
+		else
+		{
+			return recyclerViewPosition - 2;
+		}
 	}
 
 	@Override
@@ -224,21 +204,22 @@ implements Filterable
 			//TODO
 			break;
 			case (ARTICLE):
-				
+
 				//test
-				LayoutManager mManager = this.artsListView.getLayoutManager();
-			mManager.requestSimpleAnimationsInNextLayout();
+				//				LayoutManager mManager = this.artsListView.getLayoutManager();
+				//				mManager.requestSimpleAnimationsInNextLayout();
 				/////
 
-				final ArtInfo p;
-				if (position < 15)
-				{
-					p = this.artsInfo.get(position - 1);
-				}
-				else
-				{
-					p = this.artsInfo.get(position - 2);
-				}
+				final ArtInfo p = this.getArtInfoByPosition(position);
+				final int positionInAllArtsInfo = this.getPositionInAllArtsInfo(position);
+				//				if (position < 15)
+				//				{
+				//					p = this.artsInfo.get(position - 1);
+				//				}
+				//				else
+				//				{
+				//					p = this.artsInfo.get(position - 2);
+				//				}
 				//				final ArtInfo p = this.artsInfo.get(position - 1);
 
 				ArticleHolder holderMain = (ArticleHolder) holder;
@@ -260,13 +241,13 @@ implements Filterable
 								switch (item.getItemId())
 								{
 									case R.id.mark_as_read:
-										ArtsListAdapter.markAsRead(p.url, act);
+										Actions.markAsRead(p.url, act);
 										return true;
 									case R.id.share_link:
-										ArtsListAdapter.shareUrl(p.url, act);
+										Actions.shareUrl(p.url, act);
 										return true;
 									case R.id.show_comments:
-										ArtsListAdapter.showComments(artsInfo, position, act);
+										Actions.showComments(artsInfo, positionInAllArtsInfo, act);
 										return true;
 									default:
 										return false;
@@ -309,7 +290,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showArticle(artsInfo, position, act);
+						Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
 					}
 				});
 
@@ -324,7 +305,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showArticle(artsInfo, position, act);
+						Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
 					}
 				});
 
@@ -351,7 +332,7 @@ implements Filterable
 					@Override
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showAllAuthorsArticles(p, act);
+						Actions.showAllAuthorsArticles(p, act);
 					}
 				});
 				//end of name of author
@@ -472,7 +453,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.shareUrl(p.url, act);
+						Actions.shareUrl(p.url, act);
 					}
 				});
 				holderMain.num_of_shares.setLayoutParams(paramsForIconsBottomGravity);
@@ -483,7 +464,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.shareUrl(p.url, act);
+						Actions.shareUrl(p.url, act);
 					}
 				});
 				////end of share btn
@@ -494,7 +475,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showComments(artsInfo, position, act);
+						Actions.showComments(artsInfo, positionInAllArtsInfo, act);
 					}
 				});
 				holderMain.num_of_comms.setLayoutParams(paramsForIconsBottomGravity);
@@ -505,7 +486,7 @@ implements Filterable
 				{
 					public void onClick(View v)
 					{
-						ArtsListAdapter.showComments(artsInfo, position, act);
+						Actions.showComments(artsInfo, positionInAllArtsInfo, act);
 					}
 				});
 				//				set comm.y coord to share.y coord
@@ -585,7 +566,8 @@ implements Filterable
 		{
 			case (HEADER):
 				itemLayoutView = new LinearLayout(act);
-				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165, act)));
+				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165,
+				act)));
 
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
@@ -609,6 +591,50 @@ implements Filterable
 			default:
 				return holder;
 		}
+	}
 
+	static class HeaderHolder extends RecyclerView.ViewHolder
+	{
+
+		HeaderHolder(View itemLayoutView)
+		{
+			super(itemLayoutView);
+		}
+	}
+
+	static class ArticleHolder extends RecyclerView.ViewHolder
+	{
+		TextView title;
+		TextView author_name;
+		ImageView art_img;
+		ImageView save;
+		ImageView read;
+		ImageView comms;
+		ImageView share;
+		TextView num_of_comms;
+		TextView num_of_shares;
+		TextView date;
+		TextView preview;
+		ImageView settings;
+		ViewGroup top_lin_lay;
+
+		ArticleHolder(View itemLayoutView)
+		{
+			super(itemLayoutView);
+			this.title = (TextView) itemLayoutView.findViewById(R.id.art_card_title_tv);
+
+			this.author_name = (TextView) itemLayoutView.findViewById(R.id.author_name);
+			this.art_img = (ImageView) itemLayoutView.findViewById(R.id.art_card_img);
+			this.save = (ImageView) itemLayoutView.findViewById(R.id.save_img);
+			this.read = (ImageView) itemLayoutView.findViewById(R.id.read_img);
+			this.comms = (ImageView) itemLayoutView.findViewById(R.id.comments_img);
+			this.share = (ImageView) itemLayoutView.findViewById(R.id.share_img);
+			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
+			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
+			this.date = (TextView) itemLayoutView.findViewById(R.id.art_card_date_tv);
+			this.preview = (TextView) itemLayoutView.findViewById(R.id.art_card_preview_tv);
+			this.settings = (ImageView) itemLayoutView.findViewById(R.id.art_card_settings);
+			this.top_lin_lay = (ViewGroup) itemLayoutView.findViewById(R.id.art_card_top_lin_lay);
+		}
 	}
 }

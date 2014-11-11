@@ -14,6 +14,8 @@ import ru.kuchanov.odnako.download.ParseForAllCategories;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListViewPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +27,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +35,9 @@ public class ActivityMain extends ActivityBase
 {
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
+	
+	ViewPager artsListPager;
+	PagerAdapter artsListPagerAdapter;
 
 	private int backPressedQ;
 
@@ -87,6 +93,30 @@ public class ActivityMain extends ActivityBase
 
 		//setNavDraw
 		this.setNavDrawer();
+
+		//onMain if we don't use twoPane mode we'll set alpha for action bar
+		//we'll do it after setNavDrawer, cause we find toolbar in it
+		//onMain if we don't use twoPane mode we'll set alpha for action bar
+		//we'll do it after setNavDrawer, cause we find toolbar in it
+		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
+		{
+			toolbar.getBackground().setAlpha(0);
+		}
+		else if (this.pref.getBoolean("animate_lists", false))
+		{
+			toolbar.getBackground().setAlpha(255);
+
+		}
+		//setTopImageCover
+		ImageView topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+		}
+		else
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+		}
 
 		//End of setNavDraw
 
@@ -144,6 +174,14 @@ public class ActivityMain extends ActivityBase
 				}
 			});
 		}
+		//////////////////
+		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
+		this.artsListPagerAdapter = new ArtsListViewPagerAdapter(this.getSupportFragmentManager(), act);
+		this.artsListPager.setAdapter(artsListPagerAdapter);
+		this.artsListPager.setCurrentItem(5, true);
+		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
+		//////////
+		
 		//adMob
 		this.AddAds();
 		//end of adMob
@@ -164,7 +202,6 @@ public class ActivityMain extends ActivityBase
 
 		//save allArtsInfo
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
-		//		System.out.println("curArtInfo: "+curArtInfo.toString());
 
 		this.saveGroupChildPosition(outState);
 	}

@@ -23,18 +23,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
+            android:layout_marginRight="5dp"
+            android:layout_above="@id/adView" />
+        
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary"
+            android:minHeight="?attr/actionBarSize" />
     </RelativeLayout>
 
     <ExpandableListView
-        android:id="@+id/exListView"
-        android:layout_width="240dp"
+        android:id="@+id/start_drawer"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="?colorPrimary"
         android:layout_gravity="start"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:groupIndicator="@null"
-        android:indicatorLeft="250dp"
-        android:indicatorRight="300dp" />
+        android:groupIndicator="@null"/>
 
 </android.support.v4.widget.DrawerLayout>

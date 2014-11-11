@@ -7,48 +7,31 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-
-import com.google.android.gms.ads.AdView;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
-import ru.kuchanov.odnako.utils.AddAds;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ActivityComments extends ActionBarActivity
+public class ActivityComments extends ActivityBase//ActionBarActivity
 {
-	ActionBarActivity act;
-	SharedPreferences pref;
-
-	AdView adView;
-
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
-
-	ArtInfo curArtInfo;
-	int position;
-	ArrayList<ArtInfo> allArtsInfo;
 
 	ArrayList<CommentInfo> curArtCommentsInfoList;
 	ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		System.out.println("ActivityArticle onCreate");
+		System.out.println("ActivityComments onCreate");
 
 		this.act = this;
 		//get default settings to get all settings later
@@ -74,18 +57,28 @@ public class ActivityComments extends ActionBarActivity
 		Bundle stateFromIntent = this.getIntent().getExtras();
 		if (stateFromIntent != null)
 		{
+			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 			this.restoreState(stateFromIntent);
+			this.restoreGroupChildPosition(stateFromIntent);
+
+			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
+			//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
+			this.restoreGroupChildPosition(savedInstanceState);
+			//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
 		//all is null, so start request for info
 		else
 		{
 			// TODO
-			System.out.println("ActivityArticle: all bundles are null, so make request for info");
+			System.out.println("ActivityComments: all bundles are null, so make request for info");
 		}
+
+		//set NavigationDrawer
+		this.setNavDrawer();
 
 		//def all comms info setting
 		this.allArtsCommentsInfo = CommentInfo.getDefaultAllArtsCommentsInfo(this.allArtsInfo.size(), 15);
@@ -99,9 +92,7 @@ public class ActivityComments extends ActionBarActivity
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//adMob
-		adView = (AdView) this.findViewById(R.id.adView);
-		AddAds addAds = new AddAds(this, this.adView);
-		addAds.addAd();
+		this.AddAds();
 		//end of adMob
 	}
 
@@ -116,6 +107,12 @@ public class ActivityComments extends ActionBarActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		/* The action bar home/up action should open or close the drawer.
+		 * mDrawerToggle will take care of this. */
+		if (mDrawerToggle.onOptionsItemSelected(item))
+		{
+			return true;
+		}
 		switch (item.getItemId())
 		{
 			case R.id.action_settings:
@@ -151,38 +148,20 @@ public class ActivityComments extends ActionBarActivity
 		}
 	}
 
-	@SuppressLint("NewApi")
-	protected void myRecreate()
-	{
-		if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-			super.recreate();
-		}
-		else
-		{
-			finish();
-			startActivity(getIntent());
-		}
-	}
-
+	/* Called whenever we call supportInvalidateOptionsMenu() */
 	@Override
-	public void onPause()
+	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		adView.pause();
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		adView.destroy();
-		super.onDestroy();
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	protected void onResume()
 	{
-		System.out.println("ActivityArticle onResume");
+		System.out.println("ActivityComments onResume");
 		super.onResume();
 	}
 
@@ -191,6 +170,10 @@ public class ActivityComments extends ActionBarActivity
 	{
 		super.onSaveInstanceState(outState);
 		System.out.println("ActivityArticle: onSaveInstanceState");
+
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+
+		this.saveGroupChildPosition(outState);
 	}
 
 	@Override
@@ -198,37 +181,9 @@ public class ActivityComments extends ActionBarActivity
 	{
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("ActivityArticle onRestoreInstanceState");
+
+		this.restoreState(savedInstanceState);
+		this.restoreGroupChildPosition(savedInstanceState);
 	}
 
-	private void restoreState(Bundle state)
-	{
-		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
-		this.position = state.getInt("position");
-		//restore AllArtsInfo
-		this.allArtsInfo = new ArrayList<ArtInfo>();
-		Set<String> keySet = state.keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		for (int i = 0; i < keySetSortedArrList.size(); i++)
-		{
-			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-			{
-				if (i < 10)
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
-					+ String.valueOf(i))));
-				}
-				else
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
-					+ String.valueOf(i))));
-				}
-
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
 }

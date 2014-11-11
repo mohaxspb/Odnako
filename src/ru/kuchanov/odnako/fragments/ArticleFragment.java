@@ -13,8 +13,8 @@ import java.util.Set;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.app.Activity;
 import android.content.Context;
@@ -243,7 +243,7 @@ public class ArticleFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				ArtsListAdapter.showComments(allArtsInfo, position, act);
+				Actions.showComments(allArtsInfo, position, act);
 			}
 		});
 		this.bottomPanel.addView(this.commentsBottomBtn);
@@ -499,7 +499,7 @@ public class ArticleFragment extends Fragment
 				@Override
 				public void onClick(View v)
 				{
-					ArtsListAdapter.showAllAuthorsArticles(curArtInfo, act);
+					Actions.showAllAuthorsArticles(curArtInfo, act);
 				}
 			});
 		}

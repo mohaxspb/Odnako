@@ -2,9 +2,14 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Set;
+
+import ru.kuchanov.odnako.R;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 public class ArtInfo implements Comparable<ArtInfo>
 {
@@ -292,7 +297,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-//			System.out.println("alsoToRead (to_read_main) var is empty!");
+			//			System.out.println("alsoToRead (to_read_main) var is empty!");
 			alsoToRead = null;
 		}
 
@@ -320,7 +325,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-//			System.out.println("alsoToRead (to_read_more) var is empty!");
+			//			System.out.println("alsoToRead (to_read_more) var is empty!");
 			alsoToRead = null;
 		}
 
@@ -403,11 +408,51 @@ public class ArtInfo implements Comparable<ArtInfo>
 			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
 		}
 	}
-	
+
+	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, ActionBarActivity act)
+	{
+		ArrayList<ArtInfo> allArtsInfo = null;
+		if (b.containsKey("allArtsInfo_00"))
+		{
+			//restore AllArtsInfo
+			allArtsInfo = new ArrayList<ArtInfo>();
+			Set<String> keySet = b.keySet();
+			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+			Collections.sort(keySetSortedArrList);
+			for (int i = 0; i < keySetSortedArrList.size(); i++)
+			{
+				if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
+				{
+					if (i < 10)
+					{
+						allArtsInfo.add(new ArtInfo(b.getStringArray("allArtsInfo_0"
+						+ String.valueOf(i))));
+					}
+					else
+					{
+						allArtsInfo.add(new ArtInfo(b.getStringArray("allArtsInfo_"
+						+ String.valueOf(i))));
+					}
+
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
+		}
+
+		return allArtsInfo;
+	}
+
 	public static ArtInfo getDefaultArtInfo()
 	{
-		String[] AllInfo=new String[17];
-		
+		String[] AllInfo = new String[17];
+
 		AllInfo[0] = "url";
 		AllInfo[1] = "title";
 		AllInfo[2] = "img_art";
@@ -427,10 +472,58 @@ public class ArtInfo implements Comparable<ArtInfo>
 		AllInfo[14] = "to_read_main";
 		AllInfo[15] = "to_read_more";
 		AllInfo[16] = "img_author";
-		
-		ArtInfo defArtInfo=new ArtInfo(AllInfo);
-		
+
+		ArtInfo defArtInfo = new ArtInfo(AllInfo);
+
 		return defArtInfo;
+	}
+
+	public static ArrayList<ArtInfo> getDefaultAllArtsInfo(ActionBarActivity act)
+	{
+		//fill Arraylist with artsInfo
+		//sample data now
+		ArrayList<ArtInfo> allArtsInfo = new ArrayList<ArtInfo>();
+		int sampleNum = 30;
+		for (int i = 0; i < sampleNum; i++)
+		{
+			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i), "",
+			"author_blog_link_" + String.valueOf(i), "author_name_" + String.valueOf(i));
+			artInfo.updateArtInfoFromRSS("preview_" + String.valueOf(i), "date_" + String.valueOf(i));
+			artInfo.updateArtInfoFromARTICLE(
+			i,
+			i,
+			"art_text_" + String.valueOf(i),
+			"author_description_" + String.valueOf(i),
+			"tegs_main_" + String.valueOf(i),
+			"tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_"
+			+ String.valueOf(i) + " !!!! " + "tegs_all_" + String.valueOf(i) + " !!!! " + "tegs_all_"
+			+ String.valueOf(i) + " !!!! ",
+			String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! "
+			+ String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! " + String.valueOf(i) + " !!!! ",
+			"to_read_main_" + String.valueOf(i), "to_read_more_" + String.valueOf(i), "empty");
+			allArtsInfo.add(artInfo);
+		}
+
+		ArtInfo artInfoTEST = new ArtInfo(
+		"http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/",
+		"Разработчик testetsetstetstestetstestetstetstetsetstetstetste setstestet");
+		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
+		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history),
+		"Описание автора", "Интернет", "Интернет !!!! Андроид", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10",
+		"url !!!! title !!!! date !!!! url !!!! title !!!! date !!!! url !!!! title !!!! date",
+		"url !!!! title !!!! date !!!! url !!!! title !!!! date",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
+		allArtsInfo.set(1, artInfoTEST);
+		//one more
+		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "", "empty", "Разработчик");
+		artInfoTEST2.updateArtInfoFromRSS("test_preview", "2 сентября 1945");
+		artInfoTEST2.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "empty",
+		"empty", "empty", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "empty", "empty",
+		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
+		allArtsInfo.set(2, artInfoTEST2);
+
+		return allArtsInfo;
 	}
 
 }

@@ -21,7 +21,6 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,7 +33,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdView;
 
@@ -56,7 +54,7 @@ public class ActivityBase extends ActionBarActivity
 //	protected ActionBarHelper mActionBar;
 	protected boolean drawerOpened;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	protected Bundle additionalBundle;
+//	protected Bundle additionalBundle;
 	protected int[] groupChildPosition = new int[] { -1, -1 };
 	///drawer
 
@@ -162,52 +160,16 @@ public class ActivityBase extends ActionBarActivity
 		lp.width = drawerWidth;
 		mDrawer.setLayoutParams(lp);
 		////end of set Drawer width
-//		mActionBar = createActionBarHelper();
-//		mActionBar.init();
 		
-		///////////////////////////////////////////////
 		// As we're using a Toolbar, we should retrieve it and set it
 	    // to be our ActionBar
 	    toolbar = (Toolbar) findViewById(R.id.toolbar);
 	    setSupportActionBar(toolbar);
-	    if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-	    	toolbar.getBackground().setAlpha(0);
-		}
-		else if(this.pref.getBoolean("animate_lists", false)==true)
-		{
-			toolbar.getBackground().setAlpha(120);
-			
-		}
 	    
-	    
-	    ImageView topImgCover=(ImageView) this.findViewById(R.id.top_img_cover);
-	    if(this.pref.getString("theme", "dark").equals("dark"))
-	    {
-	    	topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
-	    }
-	    else
-	    {
-	    	topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
-	    }
-	    
-	   
-//	    ImageView topImg=(ImageView) this.findViewById(R.id.top_img);
-//	    topImg.setAlpha(127);//.setBackground(CD);
-	    
-//	    ColorDrawable CD=new ColorDrawable(R.color.material_grey_800);
-//	    CD.setAlpha(0);
-//	    this.getSupportActionBar().setBackgroundDrawable(CD);
-	    
-//	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.color.material_blue_grey_800));
-//	    this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-	    
-
 	    // Now retrieve the DrawerLayout so that we can set the status bar color.
 	    // This only takes effect on Lollipop, or when using translucentStatusBar
 	    // on KitKat.
-//	    DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+//	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
 	    
 	    ////////////////////////////////
 	    
@@ -219,23 +181,17 @@ public class ActivityBase extends ActionBarActivity
 
 			public void onDrawerClosed(View view)
 			{
-				//				getSupportActionBar().setTitle(mTitle);
-//				drawerOpened=false;
 				supportInvalidateOptionsMenu();
 				drawerOpened=false;
 			}
 
 			public void onDrawerOpened(View drawerView)
 			{
-				//				getSupportActionBar().setTitle(mDrawerTitle);
-				
 				supportInvalidateOptionsMenu();
 				drawerOpened=true;
 			}
 		};
-//		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mDrawerToggle));
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-//		mDrawerLayout.setDrawerListener(new DemoDrawerListener(this.mActionBar, this.mDrawerToggle));
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
@@ -255,10 +211,10 @@ public class ActivityBase extends ActionBarActivity
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
 	 */
-	protected ActionBarHelper createActionBarHelper()
-	{
-		return new ActionBarHelper(act, this.mDrawer);
-	}
+//	protected ActionBarHelper createActionBarHelper()
+//	{
+//		return new ActionBarHelper(act, this.mDrawer);
+//	}
 
 	public int[] getGroupChildPosition()
 	{
@@ -279,18 +235,36 @@ public class ActivityBase extends ActionBarActivity
 	{
 		//		groupChildPosition[0] = state.getInt("groupPosition");
 		//		groupChildPosition[1] = state.getInt("childPosition");
-		this.groupChildPosition = state.getIntArray("groupChildPosition");
+		if(state.containsKey("groupChildPosition"))
+		{
+			this.groupChildPosition = state.getIntArray("groupChildPosition");
+		}
+		else
+		{
+			System.out.println("restoring groupChildPosition FAILED from "+this.getClass().getSimpleName()+" groupChildPosition=null");
+//			System.out.println("restoring groupChildPosition from "+this.getClass().getSimpleName());
+		}
 	}
 
 	protected void restoreState(Bundle state)
 	{
+		System.out.println("restoring state from "+this.getClass().getSimpleName());
+		
 		if (state.containsKey("curArtInfo"))
 		{
 			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
 		}
+		else
+		{
+			System.out.println("this.curArtInfo in Bundle in "+this.getClass().getSimpleName()+" =null");
+		}
 		if (state.containsKey("position"))
 		{
 			this.position = state.getInt("position");
+		}
+		else
+		{
+			System.out.println("this.position in Bundle in "+this.getClass().getSimpleName()+" =null");
 		}
 		if (state.containsKey("allArtsInfo_00"))
 		{
@@ -320,6 +294,10 @@ public class ActivityBase extends ActionBarActivity
 					break;
 				}
 			}
+		}
+		else
+		{
+			System.out.println("this.allArtsInfo in Bundle in "+this.getClass().getSimpleName()+" =null");
 		}
 
 	}

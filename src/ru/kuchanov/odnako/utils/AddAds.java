@@ -163,22 +163,22 @@ public class AddAds
 		boolean isTestDevice = adRequest.isTestDevice(act);
 		System.out.println("is Admob Test Device ? " + deviceId + " " + isTestDevice);
 		// Загрузка adView с объявлением.
-//		if (pref.getBoolean("adsOn", false))
-//		{
-//			if (adView.getLayoutParams().height == 0)
-//			{
-//				adView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-//			}
-//			adView.loadAd(adRequest);
-//		}
-//		else
-//		{
-//			adView.getLayoutParams().height = 0;
-//		}
+		if (pref.getBoolean("adsOn", false))
+		{
+			if (adView.getLayoutParams().height == 0)
+			{
+				adView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+			}
+			adView.loadAd(adRequest);
+		}
+		else
+		{
+			adView.getLayoutParams().height = 0;
+		}
 		
 		//removing now; delete before publish
-		adView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-		adView.getLayoutParams().height = 0;
+//		adView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+//		adView.getLayoutParams().height = 0;
 		//end of adMob
 	}
 }

@@ -14,7 +14,7 @@ import java.util.Set;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -123,7 +123,7 @@ public class CommentsFragment extends Fragment
 		{
 			public void onClick(View v)
 			{
-				ArtsListAdapter.showArticle(allArtsInfo, position, act);
+				Actions.showArticle(allArtsInfo, position, act);
 			}
 		});
 
@@ -138,7 +138,7 @@ public class CommentsFragment extends Fragment
 		{
 			public void onClick(View v)
 			{
-				ArtsListAdapter.showArticle(allArtsInfo, position, act);
+				Actions.showArticle(allArtsInfo, position, act);
 			}
 		});
 
@@ -283,7 +283,7 @@ public class CommentsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				ArtsListAdapter.showAllAuthorsArticles(curArtInfo, act);
+				Actions.showAllAuthorsArticles(curArtInfo, act);
 			}
 		});
 		//end of name of author
