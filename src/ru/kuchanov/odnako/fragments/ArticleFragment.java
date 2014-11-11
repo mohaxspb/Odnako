@@ -35,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ArticleFragment extends Fragment
 {
@@ -100,35 +99,6 @@ public class ArticleFragment extends Fragment
 		}
 
 		this.imageLoader = UniversalImageLoader.get(act);
-
-		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
-		this.position = this.getArguments().getInt("position");
-		//restore AllArtsInfo
-		this.allArtsInfo = new ArrayList<ArtInfo>();
-		Set<String> keySet = this.getArguments().keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		for (int i = 0; i < keySetSortedArrList.size(); i++)
-		{
-			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-			{
-				if (i < 10)
-				{
-					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray(
-					"allArtsInfo_0" + String.valueOf(i))));
-				}
-				else
-				{
-					this.allArtsInfo.add(new ArtInfo(this.getArguments().getStringArray(
-					"allArtsInfo_" + String.valueOf(i))));
-				}
-
-			}
-			else
-			{
-				break;
-			}
-		}
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
@@ -217,21 +187,17 @@ public class ArticleFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-				Toast.makeText(act, "share!", Toast.LENGTH_SHORT).show();
+				Actions.shareUrl(curArtInfo.url, act);
 			}
 		});
 		//setShareIcon
 		ImageView shareIcon = (ImageView) this.shareCard.findViewById(R.id.art_share_all);
-		System.out.println("shareIcon==null: "+String.valueOf(shareIcon==null));
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-//			this.imageLoader.displayImage("drawable://" + R.drawable.ic_share_white_48dp, shareIcon);
-			shareIcon.setImageResource(R.drawable.ic_share_white_48dp);//.setImageDrawable(this.act.getDrawable(R.drawable.ic_share_white_48dp));
+			shareIcon.setImageResource(R.drawable.ic_share_white_48dp);
 		}
 		else
 		{
-//			this.imageLoader.displayImage("drawable://" + R.drawable.ic_share_grey600_48dp, shareIcon);
 			shareIcon.setImageResource(R.drawable.ic_share_grey600_48dp);
 		}
 

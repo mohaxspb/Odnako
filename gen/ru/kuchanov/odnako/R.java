@@ -19,13 +19,14 @@ public final class R {
     public static final class array {
         /**  descriptions 
          */
-        public static final int all_authors_descriptions=0x7f0d0011;
+        public static final int all_authors_descriptions=0x7f0d0012;
         /**  imgs 
          */
-        public static final int all_authors_imgs=0x7f0d0010;
-        public static final int all_authors_names=0x7f0d000e;
-        public static final int all_authors_urls=0x7f0d000f;
+        public static final int all_authors_imgs=0x7f0d0011;
+        public static final int all_authors_names=0x7f0d000f;
+        public static final int all_authors_urls=0x7f0d0010;
         public static final int all_categories=0x7f0d000c;
+        public static final int all_categories_imgs=0x7f0d000e;
         public static final int all_categories_urls=0x7f0d000d;
         public static final int authors=0x7f0d0001;
         public static final int authors_links=0x7f0d0004;
@@ -33,8 +34,8 @@ public final class R {
         public static final int categories_links=0x7f0d0005;
         public static final int categories_to_load=0x7f0d0006;
         public static final int categories_to_load_links=0x7f0d0007;
-        public static final int entries=0x7f0d0012;
-        public static final int entry_values=0x7f0d0013;
+        public static final int entries=0x7f0d0013;
+        public static final int entry_values=0x7f0d0014;
         public static final int files_dir=0x7f0d0008;
         public static final int files_dir_values=0x7f0d0009;
         public static final int menu_items=0x7f0d0000;
@@ -43,15 +44,15 @@ public final class R {
         public static final int notif_period_values=0x7f0d000b;
         /**  Масштаб картинок и текста для главной 
          */
-        public static final int scale=0x7f0d0017;
+        public static final int scale=0x7f0d0018;
         /**  Масштаб для статей 
          */
-        public static final int scale_art=0x7f0d0019;
-        public static final int scale_values=0x7f0d0018;
-        public static final int scale_values_art=0x7f0d001a;
-        public static final int theme=0x7f0d0014;
-        public static final int theme_str_arr=0x7f0d0016;
-        public static final int theme_values=0x7f0d0015;
+        public static final int scale_art=0x7f0d001a;
+        public static final int scale_values=0x7f0d0019;
+        public static final int scale_values_art=0x7f0d001b;
+        public static final int theme=0x7f0d0015;
+        public static final int theme_str_arr=0x7f0d0017;
+        public static final int theme_values=0x7f0d0016;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"

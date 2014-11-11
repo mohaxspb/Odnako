@@ -68,7 +68,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//check internet
 		if (output != null)
 		{
-			callback.doSomething(output);
+			callback.doSomething(output, this.category);
 		}
 		//NO internet
 		else
@@ -77,8 +77,4 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		}
 	}// Событие по окончанию парсинга
 
-//	public interface MyCustomCallBack
-//	{
-//		public void doSomething(Void someResult);
-//	}
 }

@@ -25,8 +25,7 @@ public class HtmlHelper
 		HtmlCleaner cleaner = new HtmlCleaner();
 		try
 		{
-			System.out.println("HtmlHelper constructor URL: " + htmlPage.toString());
-
+//			System.out.println("HtmlHelper constructor URL: " + htmlPage.toString());
 			rootNode = cleaner.clean(htmlPage);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
@@ -172,6 +171,17 @@ public class HtmlHelper
 		}
 
 		return allArtsInfo;
+	}
+	
+	public String getCategoryImage()
+	{
+		String ImageUrl;
+		
+		TagNode imageTag=this.rootNode.findElementByAttValue("class", "l-left header-news-banner-item-pic", true, false);
+		
+		ImageUrl=imageTag.getAttributeByName("src");
+		
+		return ImageUrl;		
 	}
 
 }

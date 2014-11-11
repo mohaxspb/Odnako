@@ -1,9 +1,11 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
+import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -14,12 +16,15 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	private DrawerLayout mDrawerLayout;
 	private ExpandableListView mDrawerList;
 	ActionBarActivity act;
+	
+	ViewPager viewPager;
 
 	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, ActionBarActivity act)
 	{
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;
 		this.act = act;
+		this.viewPager=(ViewPager) ((ActivityMain)act).findViewById(R.id.arts_list_container) ;
 	}
 
 	@Override
@@ -37,8 +42,16 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 
 			((ActivityMain) this.act).setGroupChildPosition(groupPosition, childPosition);
-
 			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
+			
+			if(groupPosition==0)
+			{
+				this.viewPager.setCurrentItem(childPosition, true);
+			}
+			else
+			{
+				this.viewPager.setCurrentItem(4+childPosition, true);
+			}
 
 			mDrawerLayout.closeDrawer(mDrawerList);
 			// TODO

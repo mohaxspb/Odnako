@@ -12,5 +12,5 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 public interface AllArtsInfoCallback
 {
-	public void doSomething(ArrayList<ArtInfo> someResult);
+	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad);
 }

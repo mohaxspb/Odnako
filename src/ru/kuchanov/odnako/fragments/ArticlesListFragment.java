@@ -13,30 +13,31 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.download.GetInfoService;
-import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
-import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListRecyclerViewAdapter;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
-public class ArticlesListFragment extends Fragment implements AllArtsInfoCallback
+public class ArticlesListFragment extends Fragment
 {
 
 	private RecyclerView artsList;
@@ -81,7 +82,46 @@ public class ArticlesListFragment extends Fragment implements AllArtsInfoCallbac
 			System.out.println("empty allArtsInfo, so we need to load it from INTERNET!");
 		}
 
+		// Register to receive messages.
+		// We are registering an observer (mMessageReceiver) to receive Intents
+		// with actions named "custom-event-name".
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(mMessageReceiver,
+		new IntentFilter(this.categoryToLoad));
 	}
+
+	// Our handler for received Intents. This will be called whenever an Intent
+	// with an action named "custom-event-name" is broadcasted.
+	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			// Get extra data included in the Intent
+			String message = intent.getStringExtra("message");
+			Log.d("receiver", "Got message: " + message);
+			
+			ArrayList<ArtInfo> newAllArtsInfo=ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
+			
+			if (newAllArtsInfo != null)
+			{
+				allArtsInfo = newAllArtsInfo;
+				
+				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+
+				artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
+				artsList.setAdapter(artsListAdapter);
+				artsList.setItemAnimator(new DefaultItemAnimator());
+				artsList.setLayoutManager(new LinearLayoutManager(act));
+
+				artsListAdapter.notifyDataSetChanged();
+			}
+			else
+			{
+				System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
+			}
+			
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -90,7 +130,7 @@ public class ArticlesListFragment extends Fragment implements AllArtsInfoCallbac
 		//inflate root view
 		View v;
 
-//		v = inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
+		//		v = inflater.inflate(R.layout.fragment_arts_list, new LinearLayout(this.getActivity()));
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
@@ -142,37 +182,6 @@ public class ArticlesListFragment extends Fragment implements AllArtsInfoCallbac
 		return v;
 	}
 
-	@Override
-	public void doSomething(ArrayList<ArtInfo> someResult)
-	{
-		System.out.println("ArticlesListFragment doSomething called");
-		if (someResult != null)
-		{
-			//			ArticlesListFragment artsListFrag = new ArticlesListFragment();
-			//			Bundle b = new Bundle();
-			//			b.putString("category", this.categoryToLoad);
-			//			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
-			//			artsListFrag.setArguments(b);
-			//
-			//			FragmentTransaction tr = this.getActivity().getSupportFragmentManager().beginTransaction();
-			//			tr.replace(R.id.arts_list_container, artsListFrag);
-			//			tr.commit();
-			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
-
-			this.allArtsInfo = someResult;
-
-			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
-			this.artsList.setAdapter(artsListAdapter);
-			this.artsList.setItemAnimator(new DefaultItemAnimator());
-			this.artsList.setLayoutManager(new LinearLayoutManager(act));
-
-			this.artsListAdapter.notifyDataSetChanged();
-		}
-		else
-		{
-			System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
-		}
-	}
 
 	private void getAllArtsInfo(String categoryToLoad2)
 	{
@@ -184,8 +193,8 @@ public class ArticlesListFragment extends Fragment implements AllArtsInfoCallbac
 		intent.putExtras(b);
 		this.act.startService(intent);
 
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(this.categoryToLoad, 1, this.act, this);
-		parse.execute();
+//		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(this.categoryToLoad, 1, this.act, this);
+//		parse.execute();
 	}
 
 	@Override

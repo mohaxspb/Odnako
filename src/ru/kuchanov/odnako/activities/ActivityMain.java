@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseForAllAuthors;
 import ru.kuchanov.odnako.download.ParseForAllCategories;
+import ru.kuchanov.odnako.download.ParseForAllCategoriesImages;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,11 +35,14 @@ public class ActivityMain extends ActivityBase
 {
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
-	
+
 	ViewPager artsListPager;
 	PagerAdapter artsListPagerAdapter;
 
 	private int backPressedQ;
+	
+	ImageView topImgCover;
+	ImageView topImg;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -93,7 +96,8 @@ public class ActivityMain extends ActivityBase
 
 		//setNavDraw
 		this.setNavDrawer();
-
+		//End of setNavDraw
+		
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
@@ -108,7 +112,7 @@ public class ActivityMain extends ActivityBase
 
 		}
 		//setTopImageCover
-		ImageView topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
+		topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
@@ -117,8 +121,10 @@ public class ActivityMain extends ActivityBase
 		{
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
 		}
+		this.topImg=(ImageView)this.findViewById(R.id.top_img);
+		this.topImg.setImageResource(R.drawable.odnako);
 
-		//End of setNavDraw
+		
 
 		//Set unreaded num of arts to zero
 		//it's for new arts motification
@@ -178,10 +184,35 @@ public class ActivityMain extends ActivityBase
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		this.artsListPagerAdapter = new ArtsListViewPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
-		this.artsListPager.setCurrentItem(5, true);
 		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
+		this.artsListPager.setCurrentItem(11, true);
+		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+		{
+			@Override
+			public void onPageSelected(int position)
+			{
+				String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[position];
+				setTitle(title);
+
+				int group;
+				int child;
+				//3 is not a magic number! It's a quontity of categories in authors menu items in drawer
+				if (position > 3)
+				{
+					group = 1;
+					child = position - 4;
+				}
+				else
+				{
+					group = 0;
+					child = position;
+				}
+				setGroupChildPosition(group, child);
+			}
+		});
+
 		//////////
-		
+
 		//adMob
 		this.AddAds();
 		//end of adMob
@@ -237,6 +268,13 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
+				//download all categories images
+//				String[] allCatUrls=this.getResources().getStringArray(R.array.all_categories_urls);
+//				for(int i=0; i<allCatUrls.length; i++)
+//				{
+//					ParseForAllCategoriesImages parse=new ParseForAllCategoriesImages(act);
+//					parse.execute(allCatUrls[i]);
+//				}
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -274,35 +312,21 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	/**
-	 * @return the curArtInfo
-	 */
 	public ArrayList<ArtInfo> getAllArtsInfo()
 	{
 		return this.allArtsInfo;
 	}
 
-	/**
-	 * @param curArtInfo
-	 *            the curArtInfo to set
-	 */
 	public void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
 	{
 		this.allArtsInfo = allArtsInfo;
 	}
 
-	/**
-	 * @return the cUR_ARTS_INFO
-	 */
 	public ArtInfo getCUR_ART_INFO()
 	{
 		return curArtInfo;
 	}
 
-	/**
-	 * @param cUR_ARTS_INFO
-	 *            the cUR_ARTS_INFO to set
-	 */
 	public void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
 	{
 		this.curArtInfo = cUR_ARTS_INFO;
@@ -322,7 +346,6 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public void onBackPressed()
 	{
-		//super.onBackPressed();
 		if (this.backPressedQ == 1)
 		{
 			this.backPressedQ = 0;
@@ -341,15 +364,6 @@ public class ActivityMain extends ActivityBase
 				this.backPressedQ++;
 				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
 			}
-			//			if (this.mActionBar.drawerOpened)
-			//			{
-			//				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
-			//			}
-			//			else
-			//			{
-			//				this.backPressedQ++;
-			//				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
-			//			}
 		}
 		//Обнуление счётчика через 5 секунд
 		final Handler handler = new Handler();

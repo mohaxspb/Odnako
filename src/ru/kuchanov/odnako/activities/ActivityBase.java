@@ -46,15 +46,13 @@ public class ActivityBase extends ActionBarActivity
 	
 	//Toolbar
 	Toolbar toolbar;
-	////End of Toolbar
 
 	///drawer
 	protected DrawerLayout mDrawerLayout;
 	protected ExpandableListView mDrawer;
-//	protected ActionBarHelper mActionBar;
+	protected ExpListAdapter expAdapter;
 	protected boolean drawerOpened;
 	protected ActionBarDrawerToggle mDrawerToggle;
-//	protected Bundle additionalBundle;
 	protected int[] groupChildPosition = new int[] { -1, -1 };
 	///drawer
 
@@ -196,7 +194,7 @@ public class ActivityBase extends ActionBarActivity
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
 		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
-		ExpListAdapter expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
+		this.expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
 		mDrawer.setAdapter(expAdapter);
 		mDrawer.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
 		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
@@ -224,6 +222,7 @@ public class ActivityBase extends ActionBarActivity
 	public void setGroupChildPosition(int group, int child)
 	{
 		groupChildPosition = new int[] { group, child };
+		this.expAdapter.notifyDataSetChanged();
 	}
 
 	protected void saveGroupChildPosition(Bundle state)
