@@ -26,9 +26,11 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -75,25 +77,13 @@ public class ActivityMain extends ActivityBase
 		if (stateFromIntent != null)
 		{
 			this.restoreState(stateFromIntent);
-
-			//			int[] intArr;
-			//			intArr = stateFromIntent.getIntArray("groupChildPosition");
-			//			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
-
 			this.restoreGroupChildPosition(stateFromIntent);
-			//			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
 
-		}
-		//all is null, so start request for info
-		else
-		{
-			// TODO
-			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
 
 		this.setContentView(R.layout.activity_main);
@@ -182,17 +172,21 @@ public class ActivityMain extends ActivityBase
 				}
 			});
 		}
-		//////////////////
+		//set arts lists viewPager
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		this.artsListPagerAdapter = new ArtsListViewPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
 		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
+		//
+		if(savedInstanceState!=null)curentCategoryPosition=savedInstanceState.getInt("curentCategoryPosition");
+		///
 		this.artsListPager.setCurrentItem(curentCategoryPosition, true);
 		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 		{
 			@Override
 			public void onPageSelected(int position)
 			{
+				System.out.println("select page; position= "+position);
 				int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
 
 				String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[position];
@@ -231,19 +225,51 @@ public class ActivityMain extends ActivityBase
 				//show toolbar when switch category to show it's title
 				if (android.os.Build.VERSION.SDK_INT >= 11)
 				{
-					toolbar.setY(0);
-					toolbar.getBackground().setAlpha(255);
-
 					//restore and set topImg position
 					ArticlesListFragment frag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) artsListPagerAdapter)
 					.getRegisteredFragment(position);
 					topImg.setY(frag.getTopImgYCoord());
+					
+					toolbar.setY(0);
+					
+					if(frag.getToolbarYCoord()<0)
+					{
+						toolbar.getBackground().setAlpha(255);
+					}
+					else
+					{
+						LinearLayoutManager listManager=(LinearLayoutManager) frag.getArtsListView().getLayoutManager();
+						try
+						{
+							if(listManager.findFirstVisibleItemPosition()==0)
+							{
+								View firstArtViewInRecyclerView=listManager.findViewByPosition(1);
+								int initialDistance=frag.getInitialDistance();
+								int curDistance = (int) (firstArtViewInRecyclerView.getY() - toolbar.getHeight());
+								float percent = (float) curDistance / (float) initialDistance;
+								float gradient = 1f - percent;
+								int newAlpha = (int) (255 * gradient);
+								toolbar.getBackground().setAlpha(newAlpha);
+							}
+							else
+							{
+								System.out.println("catchEdPositonChenged NPE in LAyoutManager");
+								toolbar.getBackground().setAlpha(255);
+							}
+						}
+						catch(Exception e)
+						{
+							toolbar.getBackground().setAlpha(255);
+						}
+					}
 				}
 			}
 		});
 
 		//////////
-
+//		setTitle by pagerPOsition
+		String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[this.curentCategoryPosition];
+		setTitle(title);
 		//adMob
 		this.AddAds();
 		//end of adMob

@@ -54,7 +54,10 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 				//mesuring initialDistance between actionBar and 1-st item
 				if (initialDistance == -100000)
 				{
-					initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+					if(manager.findFirstVisibleItemPosition()==0)
+					{
+						initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+					}
 				}
 			break;
 			//scroll finished
@@ -74,7 +77,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 				//save position to frag
 				this.frag.setTopImgYCoord((int) this.topImg.getY());
 				this.frag.setToolbarYCoord((int) this.toolbar.getY());
-//				this.frag.setToolbarAlpha(this.toolbar.getBackground().getAlpha());
+				this.frag.setInitialDistance(this.initialDistance);
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
 			//						System.out.println("SCROLL_STATE_SETTLING");

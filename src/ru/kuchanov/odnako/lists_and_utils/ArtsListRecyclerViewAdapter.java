@@ -194,7 +194,6 @@ implements Filterable
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
-		System.out.println(position);
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
@@ -204,23 +203,8 @@ implements Filterable
 			//TODO
 			break;
 			case (ARTICLE):
-
-				//test
-				//				LayoutManager mManager = this.artsListView.getLayoutManager();
-				//				mManager.requestSimpleAnimationsInNextLayout();
-				/////
-
 				final ArtInfo p = this.getArtInfoByPosition(position);
 				final int positionInAllArtsInfo = this.getPositionInAllArtsInfo(position);
-				//				if (position < 15)
-				//				{
-				//					p = this.artsInfo.get(position - 1);
-				//				}
-				//				else
-				//				{
-				//					p = this.artsInfo.get(position - 2);
-				//				}
-				//				final ArtInfo p = this.artsInfo.get(position - 1);
 
 				ArticleHolder holderMain = (ArticleHolder) holder;
 

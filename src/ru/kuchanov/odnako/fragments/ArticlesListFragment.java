@@ -30,12 +30,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
@@ -43,28 +40,25 @@ public class ArticlesListFragment extends Fragment
 {
 	private int topImgYCoord = 0;
 	private int toolbarYCoord = 0;
-	private int toolbarAlpha = 0;
-
-	Toolbar toolbar;
-	ImageView topImg;
+	private int initialDistance;
 
 	private RecyclerView artsList;
+	private ArtsListRecyclerViewAdapter artsListAdapter;
+
 	ActionBarActivity act;
 	SharedPreferences pref;
 
 	String categoryToLoad;
 	ArrayList<ArtInfo> allArtsInfo;
+	ArtInfo curArtInfo;
+	private int position = ListView.INVALID_POSITION;
 
-	private ArtsListRecyclerViewAdapter artsListAdapter;
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
 	 */
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-	/**
-	 * The current activated item position. Only used on tablets.
-	 */
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -75,32 +69,28 @@ public class ArticlesListFragment extends Fragment
 		this.act = (ActionBarActivity) this.getActivity();
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
-		
-
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-//			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(fromArgs, act);
 			this.categoryToLoad = fromArgs.getString("categoryToLoad");
 		}
-//		else if (savedInstanceState != null)
-//		{
-//			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(savedInstanceState, act);
-//		}
 		else
 		{
-			System.out.println("empty allArtsInfo, so we need to load it from INTERNET!");
+			System.out.println("empty fromArgs!");
 		}
 
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-			this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(savedInstanceState, act);
-			
 			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
-			this.toolbarAlpha = savedInstanceState.getInt("toolbarAlpha");
+			this.initialDistance = savedInstanceState.getInt("initialDistance");
+
+			this.restoreState(savedInstanceState);
 		}
+		
+		
+		
 
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents
@@ -117,23 +107,15 @@ public class ArticlesListFragment extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			// Get extra data included in the Intent
-			String message = intent.getStringExtra("message");
-			Log.d("receiver", "Got message: " + message);
-
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
 
 			if (newAllArtsInfo != null)
 			{
-				allArtsInfo = newAllArtsInfo;
+				allArtsInfo.clear();
+				allArtsInfo.addAll(newAllArtsInfo);
+				artsListAdapter.notifyDataSetChanged();
 
 				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
-
-				artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
-				artsList.setAdapter(artsListAdapter);
-				artsList.setItemAnimator(new DefaultItemAnimator());
-				artsList.setLayoutManager(new LinearLayoutManager(act));
-
-				artsListAdapter.notifyDataSetChanged();
 			}
 			else
 			{
@@ -146,7 +128,7 @@ public class ArticlesListFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		System.out.println("ArticlesListFragment onCreateView");
+		//		System.out.println("ArticlesListFragment onCreateView");
 		//inflate root view
 		View v;
 
@@ -154,26 +136,16 @@ public class ArticlesListFragment extends Fragment
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 
-		//restore topImg and toolbar prop's
-//		if (android.os.Build.VERSION.SDK_INT >= 11)
-//		{
-//			//find toolbar and topImg
-//			this.toolbar = (Toolbar) ((ActivityBase) this.act).findViewById(R.id.toolbar);
-//			this.topImg = (ImageView) ((ActivityBase) this.act).findViewById(R.id.top_img);
-//			
-//			this.toolbar.setY(this.toolbarYCoord);
-//			this.topImg.setY(this.topImgYCoord);
-//		}
-
 		if (this.allArtsInfo == null)
 		{
-			//TODO
 			this.getAllArtsInfo(this.categoryToLoad);
 
 			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
-			//			System.out.println(def.get(1).toString());
+			this.allArtsInfo = def;
+			
+			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
-			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, def, artsList);
+			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, this.allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
 
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -187,6 +159,7 @@ public class ArticlesListFragment extends Fragment
 			this.artsList.setAdapter(artsListAdapter);
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
 			this.artsList.setLayoutManager(new LinearLayoutManager(act));
+			this.artsListAdapter.notifyDataSetChanged();
 		}
 
 		///////
@@ -220,51 +193,52 @@ public class ArticlesListFragment extends Fragment
 		b.putString("categoryToLoad", this.categoryToLoad);
 		b.putInt("pageToLaod", 1);
 		intent.putExtras(b);
+		//		if(CheckIfServiceIsRunning.check(act, GetInfoService.class.getSimpleName()))
+		//		{
+		//			this.act
+		//		}
 		this.act.startService(intent);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		System.out.println("ArticlesListFragment onViewCreated");
+		//		System.out.println("ArticlesListFragment onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
 		{
-			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+			setActivatedPosition(savedInstanceState.getInt("position"));
 		}
 	}
 
 	@Override
 	public void onAttach(Activity activity)
 	{
-//		System.out.println("ArticlesListFragment onAttach");
+		//		System.out.println("ArticlesListFragment onAttach");
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onDetach()
 	{
-//		System.out.println("ArticlesListFragment onDetach");
+		//		System.out.println("ArticlesListFragment onDetach");
 		super.onDetach();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-//		System.out.println("ArticlesListFragment onSaveInstanceState");
+		//		System.out.println("ArticlesListFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
-		if (mActivatedPosition != ListView.INVALID_POSITION)
-		{
-			// Serialize and persist the activated item position.
-			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
-		}
 
 		//save topImg and toolbar prop's
 		outState.putInt("topImgYCoord", this.topImgYCoord);
 		outState.putInt("toolbarYCoord", this.toolbarYCoord);
-		outState.putInt("toolbarAlpha", this.toolbarAlpha);
+		outState.putInt("initialDistance", this.initialDistance);
+
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
 	}
 
 	/**
@@ -282,26 +256,26 @@ public class ArticlesListFragment extends Fragment
 	public void setActivatedPosition(int position)
 	{
 		System.out.println("setActivatedPosition(int position: " + position);
-		if (position == ListView.INVALID_POSITION)
+		this.position = position;
+
+		if (position != ListView.INVALID_POSITION)
 		{
-			//			artsList.setItemChecked(mActivatedPosition, false);
+			scrollToActivatedPosition();
 		}
 		else
 		{
-			//			artsList.setItemChecked(position, true);
+			System.out.println("setActivatedPosition ERROR: position=ListView.INVALID_POSITION");
 		}
-
-		mActivatedPosition = position;
 	}
 
 	public void scrollToActivatedPosition()
 	{
-		this.artsList.smoothScrollToPosition(mActivatedPosition);
+		this.artsList.smoothScrollToPosition(position);
 	}
 
 	public int getMyActivatedPosition()
 	{
-		return this.mActivatedPosition;
+		return this.position;
 	}
 
 	/**
@@ -312,10 +286,6 @@ public class ArticlesListFragment extends Fragment
 		return artsListAdapter;
 	}
 
-	/**
-	 * @param artsListAdapter
-	 *            the artsListAdapter to set
-	 */
 	public void ArtsListRecyclerViewAdapter(ArtsListRecyclerViewAdapter artsListAdapter)
 	{
 		this.artsListAdapter = artsListAdapter;
@@ -327,17 +297,6 @@ public class ArticlesListFragment extends Fragment
 	}
 
 	////////setters and getters for TopImg and Toolbar position and Alpha
-
-	public int getToolbarAlpha()
-	{
-		return toolbarAlpha;
-	}
-
-	public void setToolbarAlpha(int toolbarAlpha)
-	{
-		this.toolbarAlpha = toolbarAlpha;
-	}
-
 	public int getToolbarYCoord()
 	{
 		return toolbarYCoord;
@@ -346,6 +305,16 @@ public class ArticlesListFragment extends Fragment
 	public void setToolbarYCoord(int toolbarYCoord)
 	{
 		this.toolbarYCoord = toolbarYCoord;
+	}
+	
+	public void setInitialDistance(int initialDistance)
+	{
+		this.initialDistance=initialDistance;
+	}
+	
+	public int getInitialDistance()
+	{
+		return initialDistance;
 	}
 
 	public int getTopImgYCoord()
@@ -357,4 +326,30 @@ public class ArticlesListFragment extends Fragment
 	{
 		this.topImgYCoord = topImgYCoord;
 	}
+
+	protected void restoreState(Bundle state)
+	{
+		System.out.println("restoring state from " + this.getClass().getSimpleName());
+
+		if (state.containsKey("curArtInfo"))
+		{
+			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		}
+		else
+		{
+			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+		}
+		if (state.containsKey("position"))
+		{
+			this.position = state.getInt("position");
+		}
+		else
+		{
+			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
+		}
+		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+
+	}
+
+	
 }

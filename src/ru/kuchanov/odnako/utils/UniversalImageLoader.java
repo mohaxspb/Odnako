@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.utils.L;
 
 public class UniversalImageLoader
 {
@@ -39,6 +40,9 @@ public class UniversalImageLoader
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
+		
+
+		L.writeLogs(false);
 		
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
 		.diskCache(new UnlimitedDiscCache(cacheDir))

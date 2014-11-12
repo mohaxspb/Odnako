@@ -16,7 +16,7 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	private DrawerLayout mDrawerLayout;
 	private ExpandableListView mDrawerList;
 	ActionBarActivity act;
-	
+
 	ViewPager viewPager;
 
 	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, ActionBarActivity act)
@@ -24,17 +24,20 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;
 		this.act = act;
-		this.viewPager=(ViewPager) ((ActivityMain)act).findViewById(R.id.arts_list_container) ;
+		if (act instanceof ActivityMain)
+		{
+			this.viewPager = (ViewPager) ((ActivityMain) act).findViewById(R.id.arts_list_container);
+		}
 	}
 
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
 	{
 		//test
-		final long groupChildFlatPosition=ExpandableListView.getPackedPositionForChild(groupPosition, childPosition);
-		final int groupPos1 = ExpandableListView.getPackedPositionGroup(groupChildFlatPosition);//(groupChildFlatPosition);
-		final int childPos1 = ExpandableListView.getPackedPositionChild(groupChildFlatPosition);
-		System.out.println("onChildClick_groupPos1: " + groupPos1 + "/ childPos1: "+childPos1);
+//		final long groupChildFlatPosition = ExpandableListView.getPackedPositionForChild(groupPosition, childPosition);
+//		final int groupPos1 = ExpandableListView.getPackedPositionGroup(groupChildFlatPosition);//(groupChildFlatPosition);
+//		final int childPos1 = ExpandableListView.getPackedPositionChild(groupChildFlatPosition);
+//		System.out.println("onChildClick_groupPos1: " + groupPos1 + "/ childPos1: " + childPos1);
 
 		if (act instanceof ActivityMain)
 		{
@@ -43,14 +46,14 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 
 			((ActivityMain) this.act).setGroupChildPosition(groupPosition, childPosition);
 			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
-			
-			if(groupPosition==0)
+
+			if (groupPosition == 0)
 			{
 				this.viewPager.setCurrentItem(childPosition, true);
 			}
 			else
 			{
-				this.viewPager.setCurrentItem(4+childPosition, true);
+				this.viewPager.setCurrentItem(4 + childPosition, true);
 			}
 
 			mDrawerLayout.closeDrawer(mDrawerList);
@@ -63,7 +66,7 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 			// TODO
 			Intent intent = new Intent(act, ActivityMain.class);
 			Bundle b = new Bundle();
-			int[] groupChildPosition=new int[]{groupPosition, childPosition};
+			int[] groupChildPosition = new int[] { groupPosition, childPosition };
 			b.putIntArray("groupChildPosition", groupChildPosition);
 			intent.putExtras(b);
 			act.startActivity(intent);

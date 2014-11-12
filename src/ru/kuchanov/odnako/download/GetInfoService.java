@@ -51,7 +51,7 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 
 	void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		System.out.println("startDownLoad");
+		System.out.println("startDownLoad "+catToLoad +"page-"+pageToLoad);
 		Context context = getApplicationContext();
 		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
 		parse.execute();
@@ -61,12 +61,10 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 	// be received by the ReceiverActivity.
 	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad)
 	{
-		Log.d("sender", "Broadcasting message");
+//		Log.d("sender", "Broadcasting message");
 		Intent intent = new Intent(categoryToLoad);
-		// You can also include some extra data.
 		Bundle b=new Bundle();
 		ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
-		b.putString("message", "This is my message!");
 		intent.putExtras(b);
 		
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -75,7 +73,6 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 	@Override
 	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad)
 	{
-		// TODO Auto-generated method stub
 		this.sendMessage(someResult, categoryToLoad);
 	}
 }

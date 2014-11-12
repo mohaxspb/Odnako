@@ -7,8 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -265,39 +263,6 @@ public class ActivityBase extends ActionBarActivity
 		{
 			System.out.println("this.position in Bundle in "+this.getClass().getSimpleName()+" =null");
 		}
-		if (state.containsKey("allArtsInfo_00"))
-		{
-			//restore AllArtsInfo
-			this.allArtsInfo = new ArrayList<ArtInfo>();
-			Set<String> keySet = state.keySet();
-			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-			Collections.sort(keySetSortedArrList);
-			for (int i = 0; i < keySetSortedArrList.size(); i++)
-			{
-				if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-				{
-					if (i < 10)
-					{
-						this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
-						+ String.valueOf(i))));
-					}
-					else
-					{
-						this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
-						+ String.valueOf(i))));
-					}
-
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-		else
-		{
-			System.out.println("this.allArtsInfo in Bundle in "+this.getClass().getSimpleName()+" =null");
-		}
-
+		ArtInfo.restoreAllArtsInfoFromBundle(state, act);
 	}
 }
