@@ -34,7 +34,7 @@ public class Actions
 	{
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
 	{
 		if (!p.authorBlogUrl.equals("empty") && !p.authorBlogUrl.equals(""))
@@ -46,7 +46,7 @@ public class Actions
 			System.out.println("p.authorBlogUrl.equals('empty') (|| ''): WTF?!");
 		}
 	}
-	
+
 	public static void markAsRead(String url, Context ctx)
 	{
 		Toast.makeText(ctx, "readed!", Toast.LENGTH_SHORT).show();
@@ -65,7 +65,7 @@ public class Actions
 		if (act.getClass().getSimpleName().equals("ActivityMain"))
 		{
 			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
-			.findFragmentById(R.id.articles_list);
+			.findFragmentById(R.id.arts_list_container);
 			artsListFrag.setActivatedPosition(position);
 		}
 
@@ -94,10 +94,10 @@ public class Actions
 		else
 		{
 			Intent intent = new Intent(act, ActivityComments.class);
-			Bundle b=new Bundle();
+			Bundle b = new Bundle();
 			b.putInt("position", position);
 			ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, allArtsInfo.get(position));
-			b.putIntArray("groupChildPosition", ((ActivityBase)act).getGroupChildPosition());			
+			b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 			intent.putExtras(b);
 			act.startActivity(intent);
 		}
@@ -115,9 +115,16 @@ public class Actions
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		if (twoPane)
 		{
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
-			.findFragmentById(R.id.articles_list);
-			artsListFrag.setActivatedPosition(position);
+			//			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
+			//			.findFragmentById(R.id.arts_list_container);
+			//			artsListFrag.setActivatedPosition(position);
+			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+			ArtsListViewPagerAdapter artsListPagerAdapter = (ArtsListViewPagerAdapter) artsListPager.getAdapter();
+			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
+			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
+			.getRegisteredFragment(curentCategoryPosition);
+			curArtsListFrag.setActivatedPosition(position);
+///////////
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
 			if (pager.getAdapter().getClass().getSimpleName().equals(ArticleViewPagerAdapter.class.getSimpleName()))
 			{
@@ -139,7 +146,7 @@ public class Actions
 			Bundle b = new Bundle();
 			b.putInt("position", position);
 			ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, allArtsInfo.get(position));
-			b.putIntArray("groupChildPosition", ((ActivityBase)act).getGroupChildPosition());
+			b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 			intent.putExtras(b);
 
 			act.startActivity(intent);

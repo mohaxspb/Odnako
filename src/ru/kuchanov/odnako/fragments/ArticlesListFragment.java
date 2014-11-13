@@ -63,7 +63,7 @@ public class ArticlesListFragment extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//		System.out.println("ArticlesListFragment onCreate");
+//				System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
@@ -88,10 +88,6 @@ public class ArticlesListFragment extends Fragment
 
 			this.restoreState(savedInstanceState);
 		}
-		
-		
-		
-
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents
 		// with actions named "custom-event-name".

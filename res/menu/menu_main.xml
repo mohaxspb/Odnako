@@ -46,6 +46,6 @@
         android:icon="?refreshIcon"
         android:orderInCategory="100"
         android:title="@string/refresh"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
 </menu>

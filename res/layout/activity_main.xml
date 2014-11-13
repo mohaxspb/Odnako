@@ -46,7 +46,6 @@
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
-        <!-- </LinearLayout> -->
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

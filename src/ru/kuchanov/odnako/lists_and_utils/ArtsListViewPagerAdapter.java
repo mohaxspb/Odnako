@@ -133,6 +133,10 @@ public class ArtsListViewPagerAdapter extends FragmentStatePagerAdapter
 
 	public Fragment getRegisteredFragment(int position)
 	{
+//		System.out.println("position: "+position);
+//		System.out.println("registeredFragments==null: "+String.valueOf(registeredFragments==null));
+//		System.out.println("registeredFragments.get(1)==null: "+String.valueOf(registeredFragments.get(1)==null));
+		
 		return registeredFragments.get(position);
 	}
 

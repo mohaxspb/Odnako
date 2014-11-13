@@ -5,12 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:baselineAligned="true" >
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
@@ -18,7 +20,52 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/TWO_PANE_AD_UNIT_ID" />
+            ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/top_img"
+                android:layout_width="0dip"
+                android:layout_height="200dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/img"
+                android:scaleType="fitXY"
+                android:src="@drawable/odnako" />
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/top_img_cover"
+                android:layout_width="0dip"
+                android:layout_height="200dp"
+                android:layout_weight="1"
+                android:background="?colorPrimary"
+                android:contentDescription="@string/img"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/main_lin"
@@ -28,16 +75,13 @@
             android:baselineAligned="false"
             android:orientation="horizontal" >
 
-            <fragment
-                android:id="@+id/articles_list"
-                android:name="ru.kuchanov.odnako.fragments.ArticlesListFragment"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/arts_list_container"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                tools:context="ru.kuchanov.odnako.activities.ActivityMain"
-                tools:layout="@android:layout/list_content" />
+                android:layout_weight="1" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/article_comments_container"
@@ -45,16 +89,30 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="2" >
-            </android.support.v4.view.ViewPager>
-
+                android:layout_weight="2" />
         </LinearLayout>
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?colorPrimary"
-            android:minHeight="?attr/actionBarSize" />
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?colorPrimary"
+                android:minHeight="?attr/actionBarSize" />
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ExpandableListView
