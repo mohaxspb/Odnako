@@ -61,6 +61,10 @@
     <string name="divider">|</string>
     <string name="img">картинка</string>
     <string name="sending_app">Отправлено из приложения \"Однако. Новости и Аналитика\" для Android.</string>
+    <string name="name">Имя</string>
+    <string name="fio">Фамилия Имя Отчество</string>
+    <string name="email">example@kuchanov.ru</string>
+    <string name="feature_login">Когда-нибудь разработчик разберётся как залогиниться на сайте через приложение и тут будет ваша автатарка, ваши ФИО и ваш логин. И вы сможете комментировать статьи через приложение! =)</string>
 
     <string-array name="entries">
         <item>30</item>

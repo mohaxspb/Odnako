@@ -30,7 +30,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
@@ -41,7 +44,7 @@ public class ActivityBase extends ActionBarActivity
 	protected SharedPreferences pref;
 
 	AdView adView;
-	
+
 	//Toolbar
 	Toolbar toolbar;
 
@@ -156,35 +159,34 @@ public class ActivityBase extends ActionBarActivity
 		lp.width = drawerWidth;
 		mDrawer.setLayoutParams(lp);
 		////end of set Drawer width
-		
+
 		// As we're using a Toolbar, we should retrieve it and set it
-	    // to be our ActionBar
-	    toolbar = (Toolbar) findViewById(R.id.toolbar);
-	    setSupportActionBar(toolbar);
-	    
-	    // Now retrieve the DrawerLayout so that we can set the status bar color.
-	    // This only takes effect on Lollipop, or when using translucentStatusBar
-	    // on KitKat.
-//	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
-	    
-	    ////////////////////////////////
-	    
+		// to be our ActionBar
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		// Now retrieve the DrawerLayout so that we can set the status bar color.
+		// This only takes effect on Lollipop, or when using translucentStatusBar
+		// on KitKat.
+		//	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+
+		////////////////////////////////
+
 		// ActionBarDrawerToggle provides convenient helpers for tying together the
 		// prescribed interactions between a top-level sliding drawer and the action bar.
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
 		{
-			
 
 			public void onDrawerClosed(View view)
 			{
 				supportInvalidateOptionsMenu();
-				drawerOpened=false;
+				drawerOpened = false;
 			}
 
 			public void onDrawerOpened(View drawerView)
 			{
 				supportInvalidateOptionsMenu();
-				drawerOpened=true;
+				drawerOpened = true;
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -192,25 +194,37 @@ public class ActivityBase extends ActionBarActivity
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
 		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+		//setHeader BEFORE setting adapter
+		this.addHeaderForDrawer();
+		////
 		this.expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
 		mDrawer.setAdapter(expAdapter);
 		mDrawer.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
 		mDrawer.setOnChildClickListener(new DrawerItemClickListener(mDrawerLayout, mDrawer, act));
 		mDrawer.setOnGroupClickListener(new DrawerGroupClickListener(mDrawerLayout, mDrawer, act));
+
 		mDrawer.expandGroup(1);
 		((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 
 		////End of drawer settings
 	}
 
-	/**
-	 * Create a compatible helper that will manipulate the action bar if
-	 * available.
-	 */
-//	protected ActionBarHelper createActionBarHelper()
-//	{
-//		return new ActionBarHelper(act, this.mDrawer);
-//	}
+	private void addHeaderForDrawer()
+	{
+		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
+		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
+		ava.setImageResource(R.drawable.dev_ava);
+		ava.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				Toast.makeText(act, R.string.feature_login, Toast.LENGTH_LONG).show();
+			}
+		});
+		this.mDrawer.addHeaderView(header);
+	}
 
 	public int[] getGroupChildPosition()
 	{
@@ -230,30 +244,28 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void restoreGroupChildPosition(Bundle state)
 	{
-		//		groupChildPosition[0] = state.getInt("groupPosition");
-		//		groupChildPosition[1] = state.getInt("childPosition");
-		if(state.containsKey("groupChildPosition"))
+		if (state.containsKey("groupChildPosition"))
 		{
 			this.groupChildPosition = state.getIntArray("groupChildPosition");
 		}
 		else
 		{
-			System.out.println("restoring groupChildPosition FAILED from "+this.getClass().getSimpleName()+" groupChildPosition=null");
-//			System.out.println("restoring groupChildPosition from "+this.getClass().getSimpleName());
+			System.out.println("restoring groupChildPosition FAILED from " + this.getClass().getSimpleName()
+			+ " groupChildPosition=null");
 		}
 	}
 
 	protected void restoreState(Bundle state)
 	{
-		System.out.println("restoring state from "+this.getClass().getSimpleName());
-		
+		System.out.println("restoring state from " + this.getClass().getSimpleName());
+
 		if (state.containsKey("curArtInfo"))
 		{
 			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
 		}
 		else
 		{
-			System.out.println("this.curArtInfo in Bundle in "+this.getClass().getSimpleName()+" =null");
+			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		if (state.containsKey("position"))
 		{
@@ -261,8 +273,8 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
-			System.out.println("this.position in Bundle in "+this.getClass().getSimpleName()+" =null");
+			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
 	}
 }
