@@ -36,7 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class ArtsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class ArtsListAdapterOLD extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 implements Filterable
 {
 
@@ -54,7 +54,7 @@ implements Filterable
 
 	boolean twoPane;
 
-	public ArtsListRecyclerViewAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView)
+	public ArtsListAdapterOLD(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
@@ -564,12 +564,15 @@ implements Filterable
 				return holder;
 			case (ARTICLE):
 				// create a new view
-				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.arts_list_card_view,
+//				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.arts_list_card_view,
+//				parent,
+//				false);
+				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,
 				parent,
 				false);
 
 				// create ViewHolder
-				holder = new ArtsListRecyclerViewAdapter.ArticleHolder(itemLayoutView);
+				holder = new ArticleHolder(itemLayoutView);
 
 				return holder;
 			default:

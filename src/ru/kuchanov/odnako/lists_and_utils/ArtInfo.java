@@ -486,7 +486,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
-			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i), "",
+			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i), "/i/75_75/users/7160/7160-1481-7160.jpg",
 			"author_blog_link_" + String.valueOf(i), "author_name_" + String.valueOf(i));
 			artInfo.updateArtInfoFromRSS("preview_" + String.valueOf(i), "date_" + String.valueOf(i));
 			artInfo.updateArtInfoFromARTICLE(
@@ -506,7 +506,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 		ArtInfo artInfoTEST = new ArtInfo(
 		"http://www.odnako.org/blogs/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet/", "Заголовок статьи",
-		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "http://yuriykuchanov.odnako.org/",
+		"/i/75_75/users/7160/7160-1481-7160.jpg", "http://yuriykuchanov.odnako.org/",
 		"Разработчик testetsetstetstestetstestetstetstetsetstetstetste setstestet");
 		artInfoTEST.updateArtInfoFromRSS(act.getResources().getString(R.string.preview), "1 сентября 1939");
 		artInfoTEST.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history),
@@ -516,7 +516,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
 		allArtsInfo.set(1, artInfoTEST);
 		//one more
-		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "", "empty", "Разработчик");
+		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "/i/75_75/users/7160/7160-1481-7160.jpg", "empty", "Разработчик");
 		artInfoTEST2.updateArtInfoFromRSS("test_preview", "2 сентября 1945");
 		artInfoTEST2.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "empty",
 		"empty", "empty", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "empty", "empty",

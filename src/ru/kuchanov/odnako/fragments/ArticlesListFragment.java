@@ -14,7 +14,7 @@ import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.download.GetInfoService;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListRecyclerViewAdapter;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -43,7 +43,7 @@ public class ArticlesListFragment extends Fragment
 	private int initialDistance;
 
 	private RecyclerView artsList;
-	private ArtsListRecyclerViewAdapter artsListAdapter;
+	private ArtsListAdapter artsListAdapter;
 
 	ActionBarActivity act;
 	SharedPreferences pref;
@@ -141,7 +141,7 @@ public class ArticlesListFragment extends Fragment
 			
 			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
-			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, this.allArtsInfo, artsList);
+			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
 
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -151,7 +151,7 @@ public class ArticlesListFragment extends Fragment
 		{
 			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
-			this.artsListAdapter = new ArtsListRecyclerViewAdapter(act, allArtsInfo, artsList);
+			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
 			this.artsList.setLayoutManager(new LinearLayoutManager(act));
@@ -277,12 +277,12 @@ public class ArticlesListFragment extends Fragment
 	/**
 	 * @return the artsListAdapter
 	 */
-	public ArtsListRecyclerViewAdapter getArtsListAdapter()
+	public ArtsListAdapter getArtsListAdapter()
 	{
 		return artsListAdapter;
 	}
 
-	public void ArtsListRecyclerViewAdapter(ArtsListRecyclerViewAdapter artsListAdapter)
+	public void ArtsListAdapter(ArtsListAdapter artsListAdapter)
 	{
 		this.artsListAdapter = artsListAdapter;
 	}
