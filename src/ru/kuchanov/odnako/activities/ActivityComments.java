@@ -81,14 +81,14 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		this.setNavDrawer();
 
 		//def all comms info setting
-		this.allArtsCommentsInfo = CommentInfo.getDefaultAllArtsCommentsInfo(this.allArtsInfo.size(), 15);
+		this.allArtsCommentsInfo = CommentInfo.getDefaultAllArtsCommentsInfo(this.curAllArtsInfo.size(), 15);
 		////
 
 		this.pager = (ViewPager) this.findViewById(R.id.comments_container);
-		this.pagerAdapter = new CommentsViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo,
+		this.pagerAdapter = new CommentsViewPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo,
 		this.allArtsCommentsInfo, act);
 		this.pager.setAdapter(pagerAdapter);
-		this.pager.setCurrentItem(position, true);
+		this.pager.setCurrentItem(curArtPosition, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//adMob
@@ -171,7 +171,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		super.onSaveInstanceState(outState);
 		System.out.println("ActivityArticle: onSaveInstanceState");
 
-		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
 
 		this.saveGroupChildPosition(outState);
 	}

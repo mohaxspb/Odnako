@@ -1605,6 +1605,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int systemSettingsIcon=0x7f0100e8;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int tabletIcon=0x7f0100f0;
         /**  Present the text in ALL CAPS. This may use a small-caps form when available. 
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -2402,35 +2406,37 @@ containing a value of this type.
         public static final int ic_storage_white_48dp=0x7f020094;
         public static final int ic_subject_grey600_48dp=0x7f020095;
         public static final int ic_subject_white_48dp=0x7f020096;
-        public static final int ic_vibration_grey600_48dp=0x7f020097;
-        public static final int ic_vibration_white_48dp=0x7f020098;
-        public static final int info_box_blue=0x7f020099;
-        public static final int kultura_1770_1_13=0x7f02009a;
-        public static final int kulturnaya_politika_1770_1_67=0x7f02009b;
-        public static final int list_focused=0x7f02009c;
-        public static final int list_pressed=0x7f02009d;
-        public static final int menu_dropdown_panel=0x7f02009e;
-        public static final int miroporyadok_1770_1_20=0x7f02009f;
-        public static final int mirovoy_krizis_1770_1_41=0x7f0200a0;
-        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200a1;
-        public static final int novosti_1770_1_4=0x7f0200a2;
-        public static final int oboronnaya_politika=0x7f0200a3;
-        public static final int oboronnaya_politika_1770_1_18=0x7f0200a4;
-        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200a5;
-        public static final int odnako=0x7f0200a6;
-        public static final int powered_by_google_dark=0x7f0200a7;
-        public static final int powered_by_google_light=0x7f0200a8;
-        public static final int selectable_background=0x7f0200a9;
-        public static final int social_facebook=0x7f0200aa;
-        public static final int social_google=0x7f0200ab;
-        public static final int social_livejournal=0x7f0200ac;
-        public static final int social_odnoklassniki=0x7f0200ad;
-        public static final int social_twitter=0x7f0200ae;
-        public static final int social_vkontakte=0x7f0200af;
-        public static final int spinner_default_holo_dark_am=0x7f0200b0;
-        public static final int spinner_default_holo_light_am=0x7f0200b1;
-        public static final int top_img_cover_grey_dark=0x7f0200b2;
-        public static final int top_img_cover_grey_light=0x7f0200b3;
+        public static final int ic_tablet_android_grey600_48dp=0x7f020097;
+        public static final int ic_tablet_android_white_48dp=0x7f020098;
+        public static final int ic_vibration_grey600_48dp=0x7f020099;
+        public static final int ic_vibration_white_48dp=0x7f02009a;
+        public static final int info_box_blue=0x7f02009b;
+        public static final int kultura_1770_1_13=0x7f02009c;
+        public static final int kulturnaya_politika_1770_1_67=0x7f02009d;
+        public static final int list_focused=0x7f02009e;
+        public static final int list_pressed=0x7f02009f;
+        public static final int menu_dropdown_panel=0x7f0200a0;
+        public static final int miroporyadok_1770_1_20=0x7f0200a1;
+        public static final int mirovoy_krizis_1770_1_41=0x7f0200a2;
+        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200a3;
+        public static final int novosti_1770_1_4=0x7f0200a4;
+        public static final int oboronnaya_politika=0x7f0200a5;
+        public static final int oboronnaya_politika_1770_1_18=0x7f0200a6;
+        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200a7;
+        public static final int odnako=0x7f0200a8;
+        public static final int powered_by_google_dark=0x7f0200a9;
+        public static final int powered_by_google_light=0x7f0200aa;
+        public static final int selectable_background=0x7f0200ab;
+        public static final int social_facebook=0x7f0200ac;
+        public static final int social_google=0x7f0200ad;
+        public static final int social_livejournal=0x7f0200ae;
+        public static final int social_odnoklassniki=0x7f0200af;
+        public static final int social_twitter=0x7f0200b0;
+        public static final int social_vkontakte=0x7f0200b1;
+        public static final int spinner_default_holo_dark_am=0x7f0200b2;
+        public static final int spinner_default_holo_light_am=0x7f0200b3;
+        public static final int top_img_cover_grey_dark=0x7f0200b4;
+        public static final int top_img_cover_grey_light=0x7f0200b5;
     }
     public static final class id {
         public static final int action_bar=0x7f0a0044;
@@ -2671,21 +2677,6 @@ containing a value of this type.
         public static final int activity_article=0x7f030017;
         public static final int activity_comments=0x7f030018;
         public static final int activity_downloads=0x7f030019;
-        /** 
-    Layout alias to replace the single-pane version of the layout with a
-    two-pane version on Large screens.
-
-    For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
-    
-
-    Layout alias to replace the single-pane version of the layout with a
-    two-pane version on Large screens.
-
-    For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
-    
-         */
         public static final int activity_main=0x7f03001a;
         public static final int activity_main_large=0x7f03001b;
         public static final int all_tegs_layout=0x7f03001c;

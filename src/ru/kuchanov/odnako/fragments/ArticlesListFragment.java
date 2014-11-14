@@ -111,7 +111,7 @@ public class ArticlesListFragment extends Fragment
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
-				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+//				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 			}
 			else
 			{
@@ -139,7 +139,7 @@ public class ArticlesListFragment extends Fragment
 			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
 			this.allArtsInfo = def;
 			
-			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
@@ -149,7 +149,7 @@ public class ArticlesListFragment extends Fragment
 		}
 		else
 		{
-			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);

@@ -124,7 +124,7 @@ public class Actions
 			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
 			.getRegisteredFragment(curentCategoryPosition);
 			curArtsListFrag.setActivatedPosition(position);
-///////////
+			///////////
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
 			if (pager.getAdapter().getClass().getSimpleName().equals(ArticleViewPagerAdapter.class.getSimpleName()))
 			{
@@ -133,8 +133,10 @@ public class Actions
 			//so it's comments adapter and need to switch to artAdapter
 			else
 			{
-				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
-				((ActivityMain) act).getAllArtsInfo(), act);
+				//				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
+				//				((ActivityMain) act).getAllArtsInfo(), act);
+				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
+				act);
 				pager.setAdapter(pagerAdapter);
 				pager.setCurrentItem(position, true);
 			}

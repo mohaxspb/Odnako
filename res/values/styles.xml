@@ -58,6 +58,7 @@
         <item name="textSizeIcon">@drawable/ic_format_size_white_48dp</item>
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_white_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
+        <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
@@ -124,6 +125,7 @@
         <item name="textSizeIcon">@drawable/ic_format_size_grey600_48dp</item>
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_grey600_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>
+        <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

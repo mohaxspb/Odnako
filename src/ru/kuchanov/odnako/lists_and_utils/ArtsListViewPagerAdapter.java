@@ -46,23 +46,17 @@ public class ArtsListViewPagerAdapter extends FragmentStatePagerAdapter
 
 	//////
 
-	public String[] concatArrays(String[] first, String[] second)
-	{
-		List<String> both = new ArrayList<String>(first.length + second.length);
-		Collections.addAll(both, first);
-		Collections.addAll(both, second);
-		return both.toArray(new String[both.size()]);
-	}
+	
 
-	public String[] getAllCategoriesMenuNames()
-	{
-		return this.allCategoriesMenuNames;
-	}
-
-	public String[] getAllCategoriesMenuLinks()
-	{
-		return this.allCategoriesMenuLinks;
-	}
+//	public String[] getAllCategoriesMenuNames()
+//	{
+//		return this.allCategoriesMenuNames;
+//	}
+//
+//	public String[] getAllCategoriesMenuLinks()
+//	{
+//		return this.allCategoriesMenuLinks;
+//	}
 
 	public void fillAllMenuCategories(ActionBarActivity act)
 	{
@@ -83,8 +77,8 @@ public class ArtsListViewPagerAdapter extends FragmentStatePagerAdapter
 			categories.put(categoriesMenuNames[i], categoriesMenuLinks[i]);
 		}
 
-		this.allCategoriesMenuNames = this.concatArrays(authorsMenuNames, categoriesMenuNames);
-		this.allCategoriesMenuLinks = this.concatArrays(authorsMenuLinks, categoriesMenuLinks);
+		this.allCategoriesMenuNames = CatData.concatArrays(authorsMenuNames, categoriesMenuNames);
+		this.allCategoriesMenuLinks = CatData.concatArrays(authorsMenuLinks, categoriesMenuLinks);
 	}
 
 	public ArtsListViewPagerAdapter(FragmentManager fm, ActionBarActivity act)

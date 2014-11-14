@@ -80,9 +80,9 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		////End of drawer settings
 
 		this.pager = (ViewPager) this.findViewById(R.id.article_container);
-		this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.allArtsInfo, this);
+		this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
-		this.pager.setCurrentItem(position, true);
+		this.pager.setCurrentItem(curArtPosition, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//adMob
@@ -122,7 +122,7 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		switch (item.getItemId())
 		{
 			case R.id.comments:
-				Actions.showComments(allArtsInfo, position, act);//.showComments(allArtsInfo, position, act);
+				Actions.showComments(curAllArtsInfo, curArtPosition, act);//.showComments(allArtsInfo, position, act);
 				return true;
 			case R.id.share:
 				Actions.shareUrl(this.curArtInfo.url, this.act);
@@ -174,7 +174,7 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		System.out.println("ActivityArticle: onSaveInstanceState");
 
 		//save allArtsInfo
-		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
 
 	}
 

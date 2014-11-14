@@ -1,0 +1,91 @@
+/*
+ 14.11.2014
+CatData.java
+Created by Kuchanov Yuri,
+mohax.spb@gmail.com
+ */
+package ru.kuchanov.odnako.lists_and_utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import ru.kuchanov.odnako.R;
+import android.support.v7.app.ActionBarActivity;
+
+public class CatData
+{
+	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+
+	static String[] authorsMenuNames;
+	static String[] authorsMenuLinks;
+
+	static String[] categoriesMenuNames;
+	static String[] categoriesMenuLinks;
+
+	/**
+	 * 
+	 */
+	public CatData()
+	{
+		// TODO Auto-generated constructor stub
+	}
+
+	public static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
+	{
+		//init arrays from /res
+		authorsMenuNames = act.getResources().getStringArray(R.array.authors);
+		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
+
+		categoriesMenuNames = act.getResources().getStringArray(R.array.categories);
+		categoriesMenuLinks = act.getResources().getStringArray(R.array.categories_links);
+
+		//here we'll do request for database and get data from it.
+		//Then, if data in requestTime-DB_sinchTime bigger then some constant
+		//we'll start url-request;
+		//NOW DUMMY DATA FOR TEST
+		HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB = new HashMap<String, ArrayList<ArtInfo>>();
+		//-1, because last is all authors
+		for (int i = 0; i < authorsMenuLinks.length - 1; i++)
+		{
+			getAllCatArtsInfoFromDB.put(authorsMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+		}
+		for (int i = 0; i < categoriesMenuLinks.length - 1; i++)
+		{
+			getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+		}
+
+		return getAllCatArtsInfoFromDB;
+	}
+
+	public static String[] getAllCategoriesMenuNames(ActionBarActivity act)
+	{
+		authorsMenuNames = act.getResources().getStringArray(R.array.authors);
+		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
+
+		categoriesMenuNames = act.getResources().getStringArray(R.array.categories);
+		categoriesMenuLinks = act.getResources().getStringArray(R.array.categories_links);
+
+		String[] allCategoriesMenuNames = CatData.concatArrays(authorsMenuNames, categoriesMenuNames);
+		return allCategoriesMenuNames;
+	}
+
+	public static String[] getAllCategoriesMenuLinks(ActionBarActivity act)
+	{
+		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
+
+		categoriesMenuLinks = act.getResources().getStringArray(R.array.categories_links);
+
+		String[] allCategoriesMenuLinks = CatData.concatArrays(authorsMenuLinks, categoriesMenuLinks);
+		return allCategoriesMenuLinks;
+	}
+
+	public static String[] concatArrays(String[] first, String[] second)
+	{
+		List<String> both = new ArrayList<String>(first.length + second.length);
+		Collections.addAll(both, first);
+		Collections.addAll(both, second);
+		return both.toArray(new String[both.size()]);
+	}
+}

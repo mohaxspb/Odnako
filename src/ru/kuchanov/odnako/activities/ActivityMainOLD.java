@@ -3,11 +3,10 @@
 ActivityMain.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com
- */
+ 
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -18,51 +17,40 @@ import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Toast;
 
-public class ActivityMain extends ActivityBase
+public class ActivityMainOLD extends ActivityBase
 {
-	//ViewPager and it's adapter for articles/comments
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
 
-	//ViewPager and it's adapter for artsLists
 	ViewPager artsListPager;
 	PagerAdapter artsListPagerAdapter;
 
-	//art's list top image and it's gradient cover
+	private int curentCategoryPosition = 11;
+
+	private int backPressedQ;
+
 	ImageView topImgCover;
 	ImageView topImg;
-
-	//curent displayed info
-	//AllArtsList Arrays for aithor's and categories links
-	//HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
-
-	//curent cat position
-	//we also have int[2] with group/child position for expListIn navDrawer
-	//known as "groupChildPosition"
-	//	int curentCategoryPosition = 11;
-
-	//curent article position for curent artsListPosition
-	//int curArtPosition
-	//ArrayList<ArtInfo> curAllArtsInfo=allCatArtsInfo.get(
-	//cur ArtInfo =curAllArtsInfo.get(curArtPosition)
-
-	//int array in hashMap to store top img and toolbar Ycoord for each category
-	//we'll change it at runtime from fragment and restore it and get it from activity
-	HashMap<String, int[]> allCatToolbarTopImgYCoord;
+	
+	private ArticlesListFragment curArtsListFrag;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -73,8 +61,6 @@ public class ActivityMain extends ActivityBase
 		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//end of get default settings to get all settings later
-
-		this.twoPane = this.pref.getBoolean("twoPane", false);
 
 		//set theme before super and set content to apply it
 		if (pref.getString("theme", "dark").equals("dark"))
@@ -99,21 +85,9 @@ public class ActivityMain extends ActivityBase
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
-			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
+
 		}
-		//get artsInfo data from DB
-		this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
-		//set or restore coords of topImg and toolbar
-		if (allCatToolbarTopImgYCoord == null)
-		{
-			allCatToolbarTopImgYCoord = new HashMap<String, int[]>();
-			String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-			for (int i = 0; i < allCategoriesMenuLinks.length; i++)
-			{
-				allCatToolbarTopImgYCoord.put(allCategoriesMenuLinks[i], new int[] { 0, 0 });
-			}
-		}
-		//setLayout
+
 		this.setContentView(R.layout.activity_main);
 
 		//setNavDraw
@@ -145,23 +119,38 @@ public class ActivityMain extends ActivityBase
 		}
 		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.topImg.setImageResource(R.drawable.odnako);
-		////////////////
+
+		//Set unreaded num of arts to zero
+		//it's for new arts motification
+		SharedPreferences prefsNumOfArts = this.getSharedPreferences("saveNumOfUnReadedArts", 0);
+		SharedPreferences.Editor editor = prefsNumOfArts.edit();
+		editor.putInt("quontityOfUnreadedArts", 0);
+		editor.commit();
+		//end of Set unreaded num of arts to zero
+
 		//set arts lists viewPager
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		this.artsListPagerAdapter = new ArtsListViewPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
 		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
-		this.artsListPager.setCurrentItem(this.curentCategoryPosition, true);
+		//
+		if (savedInstanceState != null)
+			setCurentCategoryPosition(savedInstanceState.getInt("curentCategoryPosition"));
+		///
+		this.artsListPager.setCurrentItem(getCurentCategoryPosition(), true);
 		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 		{
 			@Override
 			public void onPageSelected(int position)
 			{
-				System.out.println("select artsListPager; position= " + position);
-
+				System.out.println("select page; position= " + position);
+				//setCurArtsListFrag
+				curArtsListFrag=(ArticlesListFragment) ((ArtsListViewPagerAdapter) artsListPagerAdapter)
+				.getRegisteredFragment(position);
+				
 				int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
 
-				String title = CatData.getAllCategoriesMenuNames(act)[position];
+				String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[position];
 				setTitle(title);
 
 				//change topImg
@@ -195,18 +184,10 @@ public class ActivityMain extends ActivityBase
 
 				//save curent category position
 				setCurentCategoryPosition(position);
-
+				
 				///////set new adapter to ArticleViewPAger
-				ArrayList<ArtInfo> list = allCatArtsInfo.get(CatData.getAllCategoriesMenuLinks(act)[curentCategoryPosition]);
-				if (list != null)
-				{
-					pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(), list, act);
-					pager.setAdapter(pagerAdapter);
-				}
-				else
-				{
-					System.out.println("there is allAuthor's or AllCategories, so we do not set any adapter now");
-				}
+				pagerAdapter=new ArticleViewPagerAdapter(act.getSupportFragmentManager(), curAllArtsInfo, act);
+				pager.setAdapter(pagerAdapter);
 				///////////
 
 				//show toolbar when switch category to show it's title
@@ -256,13 +237,22 @@ public class ActivityMain extends ActivityBase
 
 		///////////////
 		//check if there is two fragments. If so, set flag (twoPane) to true
-		if (this.pref.getBoolean("twoPane", false))
+		if (findViewById(R.id.article_comments_container) != null)
 		{
+			// The detail container view will be present only in the
+			// large-screen layouts (res/values-large and
+			// res/values-sw600dp). If this view is present, then the
+			// activity should be in two-pane mode.
+			twoPane = true;
+
+			//save it to pref, to be able to read it without calling Activity
+			this.pref.edit().putBoolean("twoPane", twoPane).commit();
+
 			this.pager = (ViewPager) this.findViewById(R.id.article_comments_container);
 
+//			this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), allArtsInfo, this);
 			//defAllArtsInfo set to artFrag
-			this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(),
-			this.allCatArtsInfo.get(CatData.getAllCategoriesMenuLinks(act)[this.curentCategoryPosition]), this);
+			this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), ArtInfo.getDefaultAllArtsInfo(act), this);
 			this.pager.setAdapter(pagerAdapter);
 			this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 			this.pager.setCurrentItem(curArtPosition, true);
@@ -271,20 +261,25 @@ public class ActivityMain extends ActivityBase
 				@Override
 				public void onPageSelected(int position)
 				{
-//					curArtsListFrag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) artsListPagerAdapter)
-//					.getRegisteredFragment(getCurentCategoryPosition());
-//					if (curArtsListFrag != null)
-//					{
-//						//						curArtsListFrag.setActivateOnItemClick(true);
-//						//						position = curArtsListFrag.getMyActivatedPosition();
-//
-//						if (position == ListView.INVALID_POSITION)
-//						{
-//							position = 0;
-//						}
-//						curArtsListFrag.setActivatedPosition(position);
-//						curArtsListFrag.scrollToActivatedPosition();
-//					}
+//					ArticlesListFragment artsListFrag = (ArticlesListFragment) getSupportFragmentManager()
+//					.findFragmentById(R.id.arts_list_container);
+//					//setActivPosition to curItem of pager
+//					artsListFrag.setActivatedPosition(position);
+//					artsListFrag.scrollToActivatedPosition();
+					curArtsListFrag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) artsListPagerAdapter)
+					.getRegisteredFragment(getCurentCategoryPosition());
+					if(curArtsListFrag!=null)
+					{
+//						curArtsListFrag.setActivateOnItemClick(true);
+//						position = curArtsListFrag.getMyActivatedPosition();
+						
+						if (position == ListView.INVALID_POSITION)
+						{
+							position = 0;
+						}
+						curArtsListFrag.setActivatedPosition(position);
+						curArtsListFrag.scrollToActivatedPosition();
+					}
 				}
 			});
 
@@ -292,69 +287,38 @@ public class ActivityMain extends ActivityBase
 			//get position from listFrag
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-//			curArtsListFrag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) this.artsListPagerAdapter)
-//			.getRegisteredFragment(getCurentCategoryPosition());
-//			if (curArtsListFrag != null)
-//			{
-//				curArtsListFrag.setActivateOnItemClick(true);
-//				this.curArtPosition = curArtsListFrag.getMyActivatedPosition();
-//				if (this.curArtPosition == ListView.INVALID_POSITION)
-//				{
-//					this.curArtPosition = 0;
-//				}
-//				curArtsListFrag.setActivatedPosition(curArtPosition);
-//			}
-
-			//			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.arts_list_container))
-			//			.setActivatedPosition(position);
+//			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) this.artsListPagerAdapter)
+//			.getRegisteredFragment(curentCategoryPosition);
+//			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.arts_list_container))
+//			.setActivateOnItemClick(true);
+			
+			////////
+//			this.position = ((ArticlesListFragment) getSupportFragmentManager().findFragmentById(
+//			R.id.arts_list_container)).getMyActivatedPosition();
+			curArtsListFrag = (ArticlesListFragment) ((ArtsListViewPagerAdapter) this.artsListPagerAdapter)
+			.getRegisteredFragment(getCurentCategoryPosition());
+			if(curArtsListFrag!=null)
+			{
+				curArtsListFrag.setActivateOnItemClick(true);
+				this.curArtPosition = curArtsListFrag.getMyActivatedPosition();
+				if (this.curArtPosition == ListView.INVALID_POSITION)
+				{
+					this.curArtPosition = 0;
+				}
+				curArtsListFrag.setActivatedPosition(curArtPosition);
+			}
+			
+//			((ArticlesListFragment) getSupportFragmentManager().findFragmentById(R.id.arts_list_container))
+//			.setActivatedPosition(position);
 			////////////
 		}
 		//////////
 		//		setTitle by pagerPOsition
-		String title = CatData.getAllCategoriesMenuNames(act)[this.getCurentCategoryPosition()];
+		String title = ((ArtsListViewPagerAdapter) artsListPagerAdapter).getAllCategoriesMenuNames()[this.getCurentCategoryPosition()];
 		setTitle(title);
 		//adMob
 		this.AddAds();
 		//end of adMob
-	}
-
-	private void restoreAllCatToolbartopImgYCoord(Bundle savedInstanceState)
-	{
-		this.allCatToolbarTopImgYCoord = null;
-		if (savedInstanceState.containsKey("allCatToolbarTopImgYCoord_0"))
-		{
-			allCatToolbarTopImgYCoord = new HashMap<String, int[]>();
-			String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-			for (int i = 0; i < allCategoriesMenuLinks.length; i++)
-			{
-				allCatToolbarTopImgYCoord.put(allCategoriesMenuLinks[i],
-				savedInstanceState.getIntArray("allCatToolbarTopImgYCoord_" + String.valueOf(i)));
-			}
-		}
-		else
-		{
-			System.out.println("allCatToolbarTopImgYCoord=null from saved state. WTF?!");
-		}
-	}
-
-	private void saveAllCatToolbartopImgYCoord(Bundle savedInstanceState)
-	{
-		String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < allCategoriesMenuLinks.length; i++)
-		{
-			savedInstanceState.putIntArray("allCatToolbarTopImgYCoord_" + String.valueOf(i),
-			allCatToolbarTopImgYCoord.get(allCategoriesMenuLinks[i]));
-		}
-	}
-
-	public int getCurentCategoryPosition()
-	{
-		return curentCategoryPosition;
-	}
-
-	public void setCurentCategoryPosition(int curentCategoryPosition)
-	{
-		this.curentCategoryPosition = curentCategoryPosition;
 	}
 
 	@Override
@@ -376,9 +340,6 @@ public class ActivityMain extends ActivityBase
 		this.saveGroupChildPosition(outState);
 
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
-
-		//save toolbar and topImg Y coord
-		saveAllCatToolbartopImgYCoord(outState);
 	}
 
 	@Override
@@ -403,8 +364,8 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		/* The action bar home/up action should open or close the drawer.
-		 * mDrawerToggle will take care of this. */
+		 The action bar home/up action should open or close the drawer.
+		 * mDrawerToggle will take care of this. 
 		if (mDrawerToggle.onOptionsItemSelected(item))
 		{
 			return true;
@@ -452,7 +413,27 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	/* Called whenever we call supportInvalidateOptionsMenu() */
+	public ArrayList<ArtInfo> getAllArtsInfo()
+	{
+		return this.curAllArtsInfo;
+	}
+
+	public void setAllArtsInfo(ArrayList<ArtInfo> allArtsInfo)
+	{
+		this.curAllArtsInfo = allArtsInfo;
+	}
+
+	public ArtInfo getCUR_ART_INFO()
+	{
+		return curArtInfo;
+	}
+
+	public void setCUR_ART_INFO(ArtInfo cUR_ARTS_INFO)
+	{
+		this.curArtInfo = cUR_ARTS_INFO;
+	}
+
+	 Called whenever we call supportInvalidateOptionsMenu() 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
@@ -462,4 +443,63 @@ public class ActivityMain extends ActivityBase
 		menu.findItem(R.id.refresh).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if (this.backPressedQ == 1)
+		{
+			this.backPressedQ = 0;
+			super.onBackPressed();
+			this.finish();
+		}
+		else
+		{
+			//			if (drawerOpened)
+			if (mDrawerLayout.isDrawerOpen(Gravity.START))
+			{
+				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			}
+			else
+			{
+				this.backPressedQ++;
+				Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+			}
+		}
+		//Обнуление счётчика через 5 секунд
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Do something after 5s = 5000ms
+				backPressedQ = 0;
+				//checkNew();
+			}
+		}, 5000);
+		//Обнуление счётчика через 5 секунд
+	}
+
+	public ArticlesListFragment getCurArtsListFrag()
+	{
+		return curArtsListFrag;
+	}
+
+	public void setCurArtsListFrag(ArticlesListFragment curArtsListFrag)
+	{
+		this.curArtsListFrag = curArtsListFrag;
+	}
+
+	public int getCurentCategoryPosition()
+	{
+		return curentCategoryPosition;
+	}
+
+	public void setCurentCategoryPosition(int curentCategoryPosition)
+	{
+		this.curentCategoryPosition = curentCategoryPosition;
+	}
+
 }
+*/

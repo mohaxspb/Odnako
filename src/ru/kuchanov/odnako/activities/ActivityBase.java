@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -20,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -56,10 +58,16 @@ public class ActivityBase extends ActionBarActivity
 	protected ActionBarDrawerToggle mDrawerToggle;
 	protected int[] groupChildPosition = new int[] { -1, -1 };
 	///drawer
+	
+	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+	
+	int curentCategoryPosition = 11;
 
 	protected ArtInfo curArtInfo = null;
-	protected int position = -1;
-	protected ArrayList<ArtInfo> allArtsInfo = null;
+	protected int curArtPosition = -1;
+	protected ArrayList<ArtInfo> curAllArtsInfo = null;
+
+	private int backPressedQ;
 
 	protected void AddAds()
 	{
@@ -241,6 +249,11 @@ public class ActivityBase extends ActionBarActivity
 	{
 		state.putIntArray("groupChildPosition", groupChildPosition);
 	}
+	protected void saveCurentCategoryPosition(Bundle state)
+	{
+		state.putInt("curentCategoryPosition", curentCategoryPosition);
+	}
+	
 
 	protected void restoreGroupChildPosition(Bundle state)
 	{
@@ -269,12 +282,71 @@ public class ActivityBase extends ActionBarActivity
 		}
 		if (state.containsKey("position"))
 		{
-			this.position = state.getInt("position");
+			this.curArtPosition = state.getInt("position");
 		}
 		else
 		{
 			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+		
+		if (state.containsKey("curentCategoryPosition"))
+		{
+			this.curentCategoryPosition = state.getInt("curentCategoryPosition");
+		}
+	}
+	
+	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
+	{
+		return this.allCatArtsInfo;
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if (this.act.getClass().getSimpleName().equals("ActivityMain"))
+		{
+			if (this.backPressedQ == 1)
+			{
+				this.backPressedQ = 0;
+				super.onBackPressed();
+				this.finish();
+			}
+			else
+			{
+				if (mDrawerLayout.isDrawerOpen(Gravity.START))
+				{
+					this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+				}
+				else
+				{
+					this.backPressedQ++;
+					Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+				}
+			}
+			//Обнуление счётчика через 5 секунд
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					// Do something after 5s = 5000ms
+					backPressedQ = 0;
+					//checkNew();
+				}
+			}, 5000);
+		}
+		else
+		{
+			if (mDrawerLayout.isDrawerOpen(Gravity.START))
+			{
+				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			}
+			else
+			{
+				super.onBackPressed();
+			}
+		}
 	}
 }

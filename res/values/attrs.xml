@@ -38,5 +38,6 @@
     <attr name="textSizeIcon" format="reference" />
     <attr name="openInBrowserIcon" format="reference" />
     <attr name="mailToMeIcon" format="reference" />
+    <attr name="tabletIcon" format="reference" />
 
 </resources>

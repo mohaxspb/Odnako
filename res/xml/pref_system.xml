@@ -27,5 +27,15 @@
         android:summaryOn="ОБНОВЛЯЮСЬ при запуске"
         android:title="Обновлять при запуске" >
     </CheckBoxPreference>
+    
+    <CheckBoxPreference
+        android:icon="?tabletIcon"
+        android:defaultValue="@bool/isTablet"
+        android:enabled="@bool/isTablet"
+        android:key="twoPane"
+        android:summaryOff="Планшетный режим отключён"
+        android:summaryOn="Планшетный режим включён"
+        android:title="Планшетный режим" >
+    </CheckBoxPreference>
 
 </PreferenceScreen>
