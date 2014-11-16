@@ -56,11 +56,12 @@ public class ActivityBase extends ActionBarActivity
 	protected ExpListAdapter expAdapter;
 	protected boolean drawerOpened;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	protected int[] groupChildPosition = new int[] { -1, -1 };
+//	protected int[] groupChildPosition = new int[] { -1, -1 };
+	protected int[] groupChildPosition = new int[] { 1, 7 };
 	///drawer
-	
+
 	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
-	
+
 	int curentCategoryPosition = 11;
 
 	protected ArtInfo curArtInfo = null;
@@ -242,18 +243,21 @@ public class ActivityBase extends ActionBarActivity
 	public void setGroupChildPosition(int group, int child)
 	{
 		groupChildPosition = new int[] { group, child };
-		this.expAdapter.notifyDataSetChanged();
+		if (this.expAdapter != null)
+		{
+			this.expAdapter.notifyDataSetChanged();
+		}
 	}
 
 	protected void saveGroupChildPosition(Bundle state)
 	{
 		state.putIntArray("groupChildPosition", groupChildPosition);
 	}
+
 	protected void saveCurentCategoryPosition(Bundle state)
 	{
 		state.putInt("curentCategoryPosition", curentCategoryPosition);
 	}
-	
 
 	protected void restoreGroupChildPosition(Bundle state)
 	{
@@ -270,7 +274,7 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void restoreState(Bundle state)
 	{
-		System.out.println("restoring state from " + this.getClass().getSimpleName());
+//		System.out.println("restoring state from " + this.getClass().getSimpleName());
 
 		if (state.containsKey("curArtInfo"))
 		{
@@ -278,7 +282,7 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
-			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		if (state.containsKey("position"))
 		{
@@ -286,19 +290,24 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
-			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
+//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
-		
+
 		if (state.containsKey("curentCategoryPosition"))
 		{
 			this.curentCategoryPosition = state.getInt("curentCategoryPosition");
 		}
 	}
-	
+
 	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
 	{
 		return this.allCatArtsInfo;
+	}
+
+	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
+	{
+		this.allCatArtsInfo.put(category, newData);
 	}
 
 	@Override

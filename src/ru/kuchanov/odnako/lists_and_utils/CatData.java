@@ -32,6 +32,33 @@ public class CatData
 		// TODO Auto-generated constructor stub
 	}
 
+//	public static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
+//	{
+//		//init arrays from /res
+//		authorsMenuNames = act.getResources().getStringArray(R.array.authors);
+//		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
+//
+//		categoriesMenuNames = act.getResources().getStringArray(R.array.categories);
+//		categoriesMenuLinks = act.getResources().getStringArray(R.array.categories_links);
+//
+//		//here we'll do request for database and get data from it.
+//		//Then, if data in requestTime-DB_sinchTime bigger then some constant
+//		//we'll start url-request;
+//		//NOW DUMMY DATA FOR TEST
+//		HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB = new HashMap<String, ArrayList<ArtInfo>>();
+//		//-1, because last is all authors
+//		for (int i = 0; i < authorsMenuLinks.length - 1; i++)
+//		{
+//			getAllCatArtsInfoFromDB.put(authorsMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+//		}
+//		for (int i = 0; i < categoriesMenuLinks.length - 1; i++)
+//		{
+//			getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+//		}
+//
+//		return getAllCatArtsInfoFromDB;
+//	}
+	
 	public static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
 	{
 		//init arrays from /res
@@ -46,14 +73,30 @@ public class CatData
 		//we'll start url-request;
 		//NOW DUMMY DATA FOR TEST
 		HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB = new HashMap<String, ArrayList<ArtInfo>>();
-		//-1, because last is all authors
-		for (int i = 0; i < authorsMenuLinks.length - 1; i++)
+		for (int i = 0; i < authorsMenuLinks.length; i++)
 		{
-			getAllCatArtsInfoFromDB.put(authorsMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+			//allAutors, so pass null to check it later and show all Authors
+			if(i==authorsMenuLinks.length-1)
+			{
+				getAllCatArtsInfoFromDB.put(authorsMenuLinks[i], null);
+			}
+			else
+			{
+				getAllCatArtsInfoFromDB.put(authorsMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+			}
 		}
 		for (int i = 0; i < categoriesMenuLinks.length - 1; i++)
 		{
-			getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+//			getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+			//allCategories, so pass null to check it later and show allCategories
+			if(i==categoriesMenuLinks.length-1)
+			{
+				getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], null);
+			}
+			else
+			{
+				getAllCatArtsInfoFromDB.put(categoriesMenuLinks[i], ArtInfo.getDefaultAllArtsInfo(act));
+			}
 		}
 
 		return getAllCatArtsInfoFromDB;

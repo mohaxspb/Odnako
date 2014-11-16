@@ -46,6 +46,12 @@ public class ResourceUpdater
 		//					WriteFile write = new WriteFile(dataToWrite, "categoriesImgsFilesNames", "categories_imgs_files_names.txt", act);
 		//					write.execute();
 		//				}
+		
+		
+//		ParseForAllCategories parse = new ParseForAllCategories(act);
+//		parse.execute("http://odnako.org/");
+//		ParseForAllAuthors parse1 = new ParseForAllAuthors(act);
+//		parse1.execute("http://odnako.org/authors/");
 	}
 
 }

@@ -28,8 +28,6 @@ public class UniversalImageLoader
 		//UniversalImageLoader
 		File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
 
-		
-
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.displayer(new RoundedBitmapDisplayer(10))
 		.showImageOnLoading(R.drawable.ic_autorenew_grey600_48dp)
@@ -40,38 +38,52 @@ public class UniversalImageLoader
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
-		
 
 		L.writeLogs(false);
-		
+
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
 		.diskCache(new UnlimitedDiscCache(cacheDir))
 		.defaultDisplayImageOptions(options)
 		.build();
 
 		ImageLoader imageLoader = ImageLoader.getInstance();
-		
+
 		if (!imageLoader.isInited())
 		{
 			imageLoader.init(config);
 		}
-		
+
 		return imageLoader;
-		
+
 	}
-	
+
 	public static DisplayImageOptions getDarkOptions()
 	{
 		return new DisplayImageOptions.Builder()
-	
-	.displayer(new RoundedBitmapDisplayer(10))
-	.showImageOnLoading(R.drawable.ic_autorenew_white_48dp)
-	.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
-	.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
-	.cacheInMemory(true)
-	.cacheOnDisk(true)
-	.considerExifParams(true)
-	.bitmapConfig(Bitmap.Config.RGB_565)
-	.build();
+
+		.displayer(new RoundedBitmapDisplayer(10))
+		.showImageOnLoading(R.drawable.ic_autorenew_white_48dp)
+		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
+		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+	}
+
+	public static DisplayImageOptions getTransparentBackgroundOptions()
+	{
+		return new DisplayImageOptions.Builder()
+
+		.displayer(new RoundedBitmapDisplayer(10))
+		.showImageOnLoading(R.drawable.top_img_cover_grey_dark)
+		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
+		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
 	}
 }

@@ -12,7 +12,6 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -118,15 +117,15 @@ public class Actions
 			//			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
 			//			.findFragmentById(R.id.arts_list_container);
 			//			artsListFrag.setActivatedPosition(position);
-			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
-			ArtsListViewPagerAdapter artsListPagerAdapter = (ArtsListViewPagerAdapter) artsListPager.getAdapter();
-			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
-			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
-			.getRegisteredFragment(curentCategoryPosition);
-			curArtsListFrag.setActivatedPosition(position);
+//			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+//			ArtsListsPagerAdapter artsListPagerAdapter = (ArtsListsPagerAdapter) artsListPager.getAdapter();
+//			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
+//			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
+//			.getRegisteredFragment(curentCategoryPosition);
+//			curArtsListFrag.setActivatedPosition(position);
 			///////////
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
-			if (pager.getAdapter().getClass().getSimpleName().equals(ArticleViewPagerAdapter.class.getSimpleName()))
+			if (pager.getAdapter().getClass().getSimpleName().equals(ArticlesPagerAdapter.class.getSimpleName()))
 			{
 				pager.setCurrentItem(position, true);
 			}
@@ -135,9 +134,9 @@ public class Actions
 			{
 				//				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
 				//				((ActivityMain) act).getAllArtsInfo(), act);
-				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
-				act);
-				pager.setAdapter(pagerAdapter);
+//				PagerAdapter pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
+//				act);
+//				pager.setAdapter(pagerAdapter);
 				pager.setCurrentItem(position, true);
 			}
 

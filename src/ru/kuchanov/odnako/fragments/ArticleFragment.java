@@ -77,7 +77,7 @@ public class ArticleFragment extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		//		System.out.println("ArticleFragment onCreate");
+		System.out.println("ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -87,15 +87,19 @@ public class ArticleFragment extends Fragment
 		{
 			this.restoreState(stateFromArgs);
 		}
-		else if (savedState != null)
+//		else if (savedState != null)
+//		{
+//			this.restoreState(savedState);
+//		}
+//		//all is null, so start request for info
+//		else
+//		{
+//			// TODO
+//			System.out.println("ActivityArticle: all bundles are null, so make request for info");
+//		}
+		if (savedState != null)
 		{
 			this.restoreState(savedState);
-		}
-		//all is null, so start request for info
-		else
-		{
-			// TODO
-			System.out.println("ActivityArticle: all bundles are null, so make request for info");
 		}
 
 		this.imageLoader = UniversalImageLoader.get(act);
@@ -422,19 +426,19 @@ public class ArticleFragment extends Fragment
 		{
 			this.artAuthorDescriptionTV.setText(this.curArtInfo.authorDescr);
 			//restore size
-//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
-//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
+			//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
+			//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
 			this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
 			if (this.pref.getString("theme", "dark").equals("dark"))
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
 			}
 			else
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
 			}
 
@@ -498,14 +502,14 @@ public class ArticleFragment extends Fragment
 			//set btn image
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_white_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_white_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
 			}
 			else
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_grey600_48dp);
 			}
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
@@ -517,16 +521,16 @@ public class ArticleFragment extends Fragment
 			//set btn image
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
 			}
 			else
 			{
-//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-//				artAuthorDescriptionIV);
+				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
-				
+
 			}
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
 		}
@@ -558,19 +562,19 @@ public class ArticleFragment extends Fragment
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
 			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, UniversalImageLoader.getDarkOptions());
-//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
+			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
-//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-//			this.artAuthorDescriptionIV);
+			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
+			//			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
 		}
 		else
 		{
 			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
-//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_grey600_48dp);
-//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-//			this.artAuthorDescriptionIV);
+			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
+			//			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
 		}
 
@@ -604,7 +608,7 @@ public class ArticleFragment extends Fragment
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		outState.putInt("position", this.position);
-		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, getCurArtInfo());
+		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, this.curArtInfo);
 	}
 
 	private void restoreState(Bundle state)
@@ -639,10 +643,10 @@ public class ArticleFragment extends Fragment
 		}
 	}
 
-	public ArtInfo getCurArtInfo()
-	{
-		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
-		return this.curArtInfo;
-	}
+//	public ArtInfo getCurArtInfo()
+//	{
+//		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
+//		return this.curArtInfo;
+//	}
 
 }

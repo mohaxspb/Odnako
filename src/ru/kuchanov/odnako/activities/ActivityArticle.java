@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.activities;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArticleViewPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ActivityArticle extends ActivityBase//ActionBarActivity
+public class ActivityArticle extends ActivityBase
 {
 	ViewPager pager;
 	PagerAdapter pagerAdapter;
@@ -80,7 +79,7 @@ public class ActivityArticle extends ActivityBase//ActionBarActivity
 		////End of drawer settings
 
 		this.pager = (ViewPager) this.findViewById(R.id.article_container);
-		this.pagerAdapter = new ArticleViewPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo, this);
+//		this.pagerAdapter = new ArticlesPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(curArtPosition, true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());

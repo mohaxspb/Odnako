@@ -48,7 +48,7 @@ public class ArticlesListFragment extends Fragment
 	ActionBarActivity act;
 	SharedPreferences pref;
 
-	String categoryToLoad;
+	private String categoryToLoad;
 	ArrayList<ArtInfo> allArtsInfo;
 	ArtInfo curArtInfo;
 	private int position = ListView.INVALID_POSITION;
@@ -59,11 +59,10 @@ public class ArticlesListFragment extends Fragment
 	 */
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-//				System.out.println("ArticlesListFragment onCreate");
+		//				System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
@@ -72,7 +71,7 @@ public class ArticlesListFragment extends Fragment
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-			this.categoryToLoad = fromArgs.getString("categoryToLoad");
+			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
 		}
 		else
 		{
@@ -92,7 +91,7 @@ public class ArticlesListFragment extends Fragment
 		// We are registering an observer (mMessageReceiver) to receive Intents
 		// with actions named "custom-event-name".
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(mMessageReceiver,
-		new IntentFilter(this.categoryToLoad));
+		new IntentFilter(this.getCategoryToLoad()));
 	}
 
 	// Our handler for received Intents. This will be called whenever an Intent
@@ -111,7 +110,8 @@ public class ArticlesListFragment extends Fragment
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
-//				((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+				//				((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, newAllArtsInfo);
+				((ActivityMain) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
 			}
 			else
 			{
@@ -134,12 +134,12 @@ public class ArticlesListFragment extends Fragment
 
 		if (this.allArtsInfo == null)
 		{
-			this.getAllArtsInfo(this.categoryToLoad);
+			this.getAllArtsInfo(this.getCategoryToLoad());
 
 			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
 			this.allArtsInfo = def;
-			
-//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+
+			//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
@@ -149,7 +149,7 @@ public class ArticlesListFragment extends Fragment
 		}
 		else
 		{
-//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
+			//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList);
 			this.artsList.setAdapter(artsListAdapter);
@@ -186,7 +186,7 @@ public class ArticlesListFragment extends Fragment
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(this.act, GetInfoService.class);
 		Bundle b = new Bundle();
-		b.putString("categoryToLoad", this.categoryToLoad);
+		b.putString("categoryToLoad", this.getCategoryToLoad());
 		b.putInt("pageToLaod", 1);
 		intent.putExtras(b);
 		//		if(CheckIfServiceIsRunning.check(act, GetInfoService.class.getSimpleName()))
@@ -302,12 +302,12 @@ public class ArticlesListFragment extends Fragment
 	{
 		this.toolbarYCoord = toolbarYCoord;
 	}
-	
+
 	public void setInitialDistance(int initialDistance)
 	{
-		this.initialDistance=initialDistance;
+		this.initialDistance = initialDistance;
 	}
-	
+
 	public int getInitialDistance()
 	{
 		return initialDistance;
@@ -325,7 +325,7 @@ public class ArticlesListFragment extends Fragment
 
 	protected void restoreState(Bundle state)
 	{
-		System.out.println("restoring state from " + this.getClass().getSimpleName());
+		//		System.out.println("restoring state from " + this.getClass().getSimpleName());
 
 		if (state.containsKey("curArtInfo"))
 		{
@@ -333,7 +333,7 @@ public class ArticlesListFragment extends Fragment
 		}
 		else
 		{
-			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		if (state.containsKey("position"))
 		{
@@ -341,11 +341,19 @@ public class ArticlesListFragment extends Fragment
 		}
 		else
 		{
-			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
+			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
 
 	}
 
-	
+	public String getCategoryToLoad()
+	{
+		return categoryToLoad;
+	}
+
+	public void setCategoryToLoad(String categoryToLoad)
+	{
+		this.categoryToLoad = categoryToLoad;
+	}
 }

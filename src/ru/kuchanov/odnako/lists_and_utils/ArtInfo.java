@@ -396,7 +396,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
+			//			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
 		}
 		//save curArtInfo
 		if (curArtInfo != null)
@@ -405,7 +405,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
+			//			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
 		}
 	}
 
@@ -443,7 +443,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
+			//			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
 		}
 
 		return allArtsInfo;
@@ -486,7 +486,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 		int sampleNum = 30;
 		for (int i = 0; i < sampleNum; i++)
 		{
-			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i), "/i/75_75/users/7160/7160-1481-7160.jpg",
+			ArtInfo artInfo = new ArtInfo("url_" + String.valueOf(i), "title_" + String.valueOf(i),
+			"/i/75_75/users/7160/7160-1481-7160.jpg",
 			"author_blog_link_" + String.valueOf(i), "author_name_" + String.valueOf(i));
 			artInfo.updateArtInfoFromRSS("preview_" + String.valueOf(i), "date_" + String.valueOf(i));
 			artInfo.updateArtInfoFromARTICLE(
@@ -516,12 +517,85 @@ public class ArtInfo implements Comparable<ArtInfo>
 		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
 		allArtsInfo.set(1, artInfoTEST);
 		//one more
-		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "/i/75_75/users/7160/7160-1481-7160.jpg", "empty", "Разработчик");
+		ArtInfo artInfoTEST2 = new ArtInfo("", "Заголовок статьи", "/i/75_75/users/7160/7160-1481-7160.jpg", "empty",
+		"Разработчик");
 		artInfoTEST2.updateArtInfoFromRSS("test_preview", "2 сентября 1945");
 		artInfoTEST2.updateArtInfoFromARTICLE(0, 0, act.getResources().getString(R.string.version_history), "empty",
 		"empty", "empty", "10 !!!! 10 !!!! 10 !!!! 10 !!!! 10 !!!! 10", "empty", "empty",
 		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg");
 		allArtsInfo.set(2, artInfoTEST2);
+
+		return allArtsInfo;
+	}
+
+	public static void writeAllArtsInfoToBundle(Bundle b, ArrayList<ArtInfo> allArtsInfo, String category)
+	{
+		if (allArtsInfo != null)
+		{
+			for (int i = 0; i < allArtsInfo.size(); i++)
+			{
+				if (i < 10)
+				{
+					b.putStringArray(category + "_allArtsInfo_0" + String.valueOf(i), allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+				else
+				{
+					b.putStringArray(category + "_allArtsInfo_" + String.valueOf(i), allArtsInfo.get(i)
+					.getArtInfoAsStringArray());
+				}
+			}
+		}
+		else
+		{
+			//			System.out.println("ArticleFragment: onSaveInstanceState. allArtsInfo=null");
+		}
+	}
+
+	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String category)
+	{
+//		System.out.println("category: "+category);
+//		System.out.println("b.containsKey(category+'_allArtsInfo_00'): "+String.valueOf(b.containsKey(category+"_allArtsInfo_00")));
+		ArrayList<ArtInfo> allArtsInfo = null;
+		if (b.containsKey(category + "_allArtsInfo_00"))
+		{
+			//restore AllArtsInfo
+			allArtsInfo = new ArrayList<ArtInfo>();
+			Set<String> keySet = b.keySet();
+			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
+			Collections.sort(keySetSortedArrList);
+			ArrayList<String> onlyNeededKeysArrList=new ArrayList<String>();
+			for (int i = 0; i < keySetSortedArrList.size(); i++)
+			{
+				if (keySetSortedArrList.get(i).startsWith(category + "_allArtsInfo_"))
+				{
+					onlyNeededKeysArrList.add(keySetSortedArrList.get(i));
+				}
+			}
+			///////
+			for (int i = 0; i < onlyNeededKeysArrList.size(); i++)
+			{
+				if (onlyNeededKeysArrList.get(i).startsWith(category + "_allArtsInfo_"))
+				{
+					if (i < 10)
+					{
+						allArtsInfo.add(new ArtInfo(b.getStringArray(category + "_allArtsInfo_0"
+						+ String.valueOf(i))));
+					}
+					else
+					{
+						allArtsInfo.add(new ArtInfo(b.getStringArray(category + "_allArtsInfo_"
+						+ String.valueOf(i))));
+					}
+//					System.out.println("allArtsInfo.get(allArtsInfo.size()-1).url: "
+//					+ allArtsInfo.get(allArtsInfo.size() - 1).url);
+				}
+			}
+		}
+		else
+		{
+			//			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
+		}
 
 		return allArtsInfo;
 	}
