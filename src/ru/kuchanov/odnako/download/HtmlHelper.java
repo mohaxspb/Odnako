@@ -183,5 +183,20 @@ public class HtmlHelper
 		
 		return ImageUrl;		
 	}
+	
+	public String getAuthorsWho()
+	{
+		String className="Description";
+		TagNode descrTag=rootNode.findElementByAttValue("name", className, true, false);
+		String who=descrTag.getAttributeByName("content");
+		return who;
+	}
+	
+	public String getAuthorsBigImg()
+	{
+		TagNode bigImgTag=rootNode.findElementByAttValue("itemprop", "image", true, false);
+		String bigImg=bigImgTag.getAttributeByName("content");
+		return bigImg;
+	}
 
 }

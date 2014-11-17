@@ -12,6 +12,7 @@ import java.util.HashMap;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.download.ParseAuthor;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
@@ -501,6 +502,8 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
+				ParseAuthor parse=new ParseAuthor(act);
+				parse.execute();
 
 				return true;
 			case R.id.action_settings:

@@ -161,7 +161,6 @@ public class ArticlesListFragment extends Fragment
 	@Override
 	public void onDestroy()
 	{
-
 		// If the DownloadStateReceiver still exists, unregister it and set it to null
 		if (artSelectedReceiver != null)
 		{
@@ -173,7 +172,6 @@ public class ArticlesListFragment extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(mMessageReceiver);
 			mMessageReceiver = null;
 		}
-		
 		if (fragSelectedReceiver != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);

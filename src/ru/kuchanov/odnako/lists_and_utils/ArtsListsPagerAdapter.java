@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
+import ru.kuchanov.odnako.fragments.AllAuthorsListFragment;
 import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,14 +27,24 @@ public class ArtsListsPagerAdapter extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		ArticlesListFragment artsListFrag = new ArticlesListFragment();
-		Bundle b = new Bundle();
-		//		b.putString("categoryToLoad", this.allCategoriesMenuLinks[position]);
-		b.putString("categoryToLoad", CatData.getAllCategoriesMenuLinks(act)[position]);
-		b.putInt("pageToLoad", 1);
-		artsListFrag.setArguments(b);
-
-		return artsListFrag;
+		if (position != 3 && position != 13)
+		{
+			ArticlesListFragment artsListFrag = new ArticlesListFragment();
+			Bundle b = new Bundle();
+			b.putString("categoryToLoad", CatData.getAllCategoriesMenuLinks(act)[position]);
+			b.putInt("pageToLoad", 1);
+			artsListFrag.setArguments(b);
+			return artsListFrag;
+		}
+		else if(position==3)
+		{
+			AllAuthorsListFragment frag=new AllAuthorsListFragment();
+			return frag;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
