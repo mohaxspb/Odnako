@@ -6,14 +6,18 @@ import java.util.ArrayList;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -52,13 +56,18 @@ implements Filterable
 
 	boolean twoPane;
 
-	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView)
+	ArticlesListFragment artsListFrag;
+
+	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
+	ArticlesListFragment artsListFrag)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
 		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.artsListView = artsListView;
+
+		this.artsListFrag = artsListFrag;
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
@@ -136,14 +145,21 @@ implements Filterable
 	public int getItemCount()
 	{
 		// TODO Auto-generated method stub
+		//this for all cats and authors
+		if(this.artsInfo==null)
+		{
+			return 1;
+		}
 		int header = 1;
 		//		int footer=1;
 		int numOfAds = 1;
+		
 		return this.artsInfo.size() + header + /* footer */+numOfAds;
 	}
 
 	public ArtInfo getArtInfoByPosition(int position)
 	{
+		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
 		ArtInfo p;
 		if (position < 15)
 		{
@@ -156,7 +172,7 @@ implements Filterable
 		return p;
 	}
 
-	public int getPositionInAllArtsInfo(int recyclerViewPosition)
+	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
 	{
 		if (recyclerViewPosition < 15)
 		{
@@ -165,6 +181,18 @@ implements Filterable
 		else
 		{
 			return recyclerViewPosition - 2;
+		}
+	}
+
+	public static int getPositionInRecyclerView(int artsListPosition)
+	{
+		if (artsListPosition < 15)
+		{
+			return artsListPosition + 1;
+		}
+		else
+		{
+			return artsListPosition + 2;
 		}
 	}
 
@@ -180,324 +208,337 @@ implements Filterable
 			//TODO
 			break;
 			case (ARTICLE):
-				final ArtInfo p = this.getArtInfoByPosition(position);
-				final int positionInAllArtsInfo = this.getPositionInAllArtsInfo(position);
-
-				ArticleHolder holderMain = (ArticleHolder) holder;
-
-				//variables for scaling text and icons and images from settings
-				String scaleFactorString = pref.getString("scale", "1");
-				float scaleFactor = Float.valueOf(scaleFactorString);
-
-				final float scale = act.getResources().getDisplayMetrics().density;
-				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-				////End of variables for scaling text and icons and images from settings
-
-				//light checked item in listView
-				//		ArticlesListFragment artsListFrag = (ArticlesListFragment) act
-				//		.getSupportFragmentManager().findFragmentById(R.id.articles_list);
-				//		if (this.artsListView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE)
-				//		{
-				//			if (artsListFrag.getMyActivatedPosition() == position)
-				//			{
-				//				view.setBackgroundColor(act.getResources().getColor(R.color.blue));
-				//			}
-				//			else
-				//			{
-				//				view.setBackgroundColor(Color.TRANSPARENT);
-				//			}
-				//		}
-				//		else
-				//		{
-				//			view.setBackgroundColor(Color.TRANSPARENT);
-				//		}
-
-				////////
-
-				// ART_IMG
-				if (!p.img_art.equals("empty") && !p.img_art.contains("/75_75/"))
+				//				System.out.println("position: "+position);
+				//			System.out.println("this.artsInfo==null: "+String.valueOf(this.artsInfo==null));
+				//catch all cat author frags and return;
+				final ArtInfo p;
+				try
 				{
-					LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
-					params.height=(int) DipToPx.convert(120, act);
-					holderMain.art_img.setLayoutParams(params);
-					String HDimgURL=p.img_art.replace("/120_72/", "/450_240/");
-					if (this.pref.getString("theme", "dark").equals("dark"))
+					p = this.getArtInfoByPosition(position);
+
+					//				final ArtInfo p = this.getArtInfoByPosition(position);
+					final int positionInAllArtsInfo = ArtsListAdapter.getPositionInAllArtsInfo(position);
+
+					ArticleHolder holderMain = (ArticleHolder) holder;
+
+					//variables for scaling text and icons and images from settings
+					String scaleFactorString = pref.getString("scale", "1");
+					float scaleFactor = Float.valueOf(scaleFactorString);
+
+					final float scale = act.getResources().getDisplayMetrics().density;
+					int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+					////End of variables for scaling text and icons and images from settings
+
+					//light checked item in listView
+					ViewGroup vg = (ViewGroup) holderMain.card.getParent();
+					if (this.twoPane)
 					{
-						imageLoader.displayImage(HDimgURL, holderMain.art_img, UniversalImageLoader.getDarkOptions());
-					}
-					else
-					{
-						imageLoader.displayImage(HDimgURL, holderMain.art_img);
-					}
-				}
-				else
-				{
-					LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
-					params.height=0;
-					holderMain.art_img.setLayoutParams(params);
-				}
-				//end of ART_IMG
 
-				//Title of article
-				Spanned spannedContentTitle = Html.fromHtml(p.title);
-				holderMain.title.setText(spannedContentTitle);
-				
-				holderMain.top_lin_lay.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
-					}
-				});
-
-				holderMain.title.setTextSize(21 * scaleFactor);
-
-				//Date
-				if (!p.pubDate.equals("empty"))
-				{
-					holderMain.date.setText(p.pubDate);
-					holderMain.date.setTextSize(19 * scaleFactor);
-				}
-				else
-				{
-					holderMain.date.setText("date is empty; Must hide on relize");
-					holderMain.date.setTextSize(19 * scaleFactor);
-				}
-				////End of Date
-
-				//popUp menu in cardView
-				holderMain.settings.setOnClickListener(new OnClickListener()
-				{
-
-					@Override
-					public void onClick(View v)
-					{
-						PopupMenu popup = new PopupMenu(act, v);
-						popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+						if (artsListFrag.getMyActivatedPosition() == positionInAllArtsInfo)
 						{
+							vg.setBackgroundColor(act.getResources().getColor(R.color.blue));
+						}
+						else
+						{
+							vg.setBackgroundColor(Color.TRANSPARENT);
+						}
+					}
+					else
+					{
+						vg.setBackgroundColor(Color.TRANSPARENT);
+					}
 
-							public boolean onMenuItemClick(MenuItem item)
+					////////
+
+					// ART_IMG
+					if (!p.img_art.equals("empty") && !p.img_art.contains("/75_75/"))
+					{
+						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
+						params.height = (int) DipToPx.convert(120, act);
+						holderMain.art_img.setLayoutParams(params);
+						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
+						if (this.pref.getString("theme", "dark").equals("dark"))
+						{
+							imageLoader.displayImage(HDimgURL, holderMain.art_img,
+							UniversalImageLoader.getDarkOptions());
+						}
+						else
+						{
+							imageLoader.displayImage(HDimgURL, holderMain.art_img);
+						}
+					}
+					else
+					{
+						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
+						params.height = 0;
+						holderMain.art_img.setLayoutParams(params);
+					}
+					//end of ART_IMG
+
+					//Title of article
+					Spanned spannedContentTitle = Html.fromHtml(p.title);
+					holderMain.title.setText(spannedContentTitle);
+
+					holderMain.top_lin_lay.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+							Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
+						}
+					});
+
+					holderMain.title.setTextSize(21 * scaleFactor);
+
+					//Date
+					if (!p.pubDate.equals("empty"))
+					{
+						holderMain.date.setText(p.pubDate);
+						holderMain.date.setTextSize(19 * scaleFactor);
+					}
+					else
+					{
+						holderMain.date.setText("date is empty; Must hide on relize");
+						holderMain.date.setTextSize(19 * scaleFactor);
+					}
+					////End of Date
+
+					//popUp menu in cardView
+					holderMain.settings.setOnClickListener(new OnClickListener()
+					{
+
+						@Override
+						public void onClick(View v)
+						{
+							PopupMenu popup = new PopupMenu(act, v);
+							popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
 							{
-								switch (item.getItemId())
+
+								public boolean onMenuItemClick(MenuItem item)
 								{
-									case R.id.mark_as_read:
-										Actions.markAsRead(p.url, act);
-										return true;
-									case R.id.share_link:
-										Actions.shareUrl(p.url, act);
-										return true;
-									case R.id.show_comments:
-										Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-										return true;
-									default:
-										return false;
+									switch (item.getItemId())
+									{
+										case R.id.mark_as_read:
+											Actions.markAsRead(p.url, act);
+											return true;
+										case R.id.share_link:
+											Actions.shareUrl(p.url, act);
+											return true;
+										case R.id.show_comments:
+											Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+											return true;
+										default:
+											return false;
+									}
 								}
-							}
-						});
-						MenuInflater inflater = popup.getMenuInflater();
-						inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
-						popup.show();
-					}
+							});
+							MenuInflater inflater = popup.getMenuInflater();
+							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
+							popup.show();
+						}
 
-				});
-				////End of popUp menu in cardView
+					});
+					////End of popUp menu in cardView
 
-				//preview
-				if (!p.preview.equals("empty"))
-				{
-					Spanned spannedContentPreview = Html.fromHtml(p.preview);
-					holderMain.preview.setText(spannedContentPreview);
-					holderMain.preview.setTextSize(21 * scaleFactor);
-				}
-				else
-				{
-					holderMain.preview.setText("preview is empty; Must hide on relize");
-					holderMain.preview.setTextSize(21 * scaleFactor);
-				}
-				
-//				Spanned spannedContentPreview = Html.fromHtml(p.preview);
-//				holderMain.preview.setText(spannedContentPreview);
-//
-//				holderMain.preview.setTextSize(21 * scaleFactor);
-				////end of preview
-
-				//name  and img of author
-				if (!p.img_art.equals("empty") && p.img_art.contains("/75_75/"))
-				{
-					LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
-					params.height = pixels;
-					params.width = pixels;
-					holderMain.author_img.setLayoutParams(params);
-					if (this.pref.getString("theme", "dark").equals("dark"))
+					//preview
+					if (!p.preview.equals("empty"))
 					{
-						imageLoader.displayImage(p.img_art, holderMain.author_img,
-						UniversalImageLoader.getDarkOptions());
+						Spanned spannedContentPreview = Html.fromHtml(p.preview);
+						holderMain.preview.setText(spannedContentPreview);
+						holderMain.preview.setTextSize(21 * scaleFactor);
 					}
 					else
 					{
-						imageLoader.displayImage(p.img_art, holderMain.author_img);
+						holderMain.preview.setText("preview is empty; Must hide on relize");
+						holderMain.preview.setTextSize(21 * scaleFactor);
 					}
-				}
-				else
-				{
-					LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
-					params.height = 0;
-					params.width = 0;
-					holderMain.author_img.setLayoutParams(params);
-				}
-				if (!p.authorName.equals("empty"))
-				{
-					LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
-					params.height = LayoutParams.WRAP_CONTENT;
-					params.width = 0;
-					Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
-					holderMain.author_name.setText(spannedContent);
-					holderMain.author_name.setTextSize(21 * scaleFactor);
-				}
-				else
-				{
-					holderMain.author_name.setText(null);
-					LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
-					params.height = 0;
-					params.width = 0;
-					holderMain.author_name.setLayoutParams(params);
-				}
 
-				holderMain.author_lin.setOnClickListener(new OnClickListener()
-				{
+					//				Spanned spannedContentPreview = Html.fromHtml(p.preview);
+					//				holderMain.preview.setText(spannedContentPreview);
+					//
+					//				holderMain.preview.setTextSize(21 * scaleFactor);
+					////end of preview
 
-					@Override
-					public void onClick(View v)
+					//name  and img of author
+					if (!p.img_art.equals("empty") && p.img_art.contains("/75_75/"))
 					{
-						Actions.showAllAuthorsArticles(p, act);
-					}
-				});
-				//end of name of author
-
-				//SaveImg
-				String appDir;
-				appDir = pref.getString("filesDir", "");
-
-				String formatedCategory;
-				//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
-				String TO_DELETE = "odnako.org/blogs";
-				formatedCategory = TO_DELETE.replace("-", "_");
-				formatedCategory = formatedCategory.replace("/", "_");
-				formatedCategory = formatedCategory.replace(":", "_");
-				formatedCategory = formatedCategory.replace(".", "_");
-
-				String formatedLink;
-				formatedLink = p.url.replace("-", "_");
-				formatedLink = formatedLink.replace("/", "_");
-				formatedLink = formatedLink.replace(":", "_");
-				formatedLink = formatedLink.replace(".", "_");
-
-				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
-				+ formatedLink);
-				//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
-				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
-				paramsForIcons.setMargins(5, 5, 5, 5);
-
-				holderMain.save.setScaleType(ScaleType.FIT_XY);
-				holderMain.save.setLayoutParams(paramsForIcons);
-
-				if (currentArticleFile.exists())
-				{
-
-				}
-				if (p.url != null)
-				{
-					if (pref.getString("theme", "dark").equals("dark"))
-					{
-						holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
+						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
+						params.height = pixels;
+						params.width = pixels;
+						holderMain.author_img.setLayoutParams(params);
+						if (this.pref.getString("theme", "dark").equals("dark"))
+						{
+							imageLoader.displayImage(p.img_art, holderMain.author_img,
+							UniversalImageLoader.getDarkOptions());
+						}
+						else
+						{
+							imageLoader.displayImage(p.img_art, holderMain.author_img);
+						}
 					}
 					else
 					{
-						holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
+						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
+						params.height = 0;
+						params.width = 0;
+						holderMain.author_img.setLayoutParams(params);
 					}
-
-				}
-				else
-				{
-					if (pref.getString("theme", "dark").equals("dark"))
+					if (!p.authorName.equals("empty"))
 					{
-						holderMain.save.setImageResource(android.R.color.transparent);
+						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
+						params.height = LayoutParams.WRAP_CONTENT;
+						params.width = 0;
+						Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
+						holderMain.author_name.setText(spannedContent);
+						holderMain.author_name.setTextSize(21 * scaleFactor);
 					}
 					else
 					{
-						holderMain.save.setImageResource(android.R.color.transparent);
+						holderMain.author_name.setText(null);
+						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
+						params.height = 0;
+						params.width = 0;
+						holderMain.author_name.setLayoutParams(params);
 					}
-				}
-				////end SaveImg
 
-				//read Img
-				ReadUnreadRegister read = new ReadUnreadRegister(act);
-				holderMain.read.setLayoutParams(paramsForIcons);
-
-				if (read.check(p.url))
-				{
-					if (pref.getString("theme", "dark").equals("dark"))
+					holderMain.author_lin.setOnClickListener(new OnClickListener()
 					{
-						holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
+
+						@Override
+						public void onClick(View v)
+						{
+							Actions.showAllAuthorsArticles(p, act);
+						}
+					});
+					//end of name of author
+
+					//SaveImg
+					String appDir;
+					appDir = pref.getString("filesDir", "");
+
+					String formatedCategory;
+					//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
+					String TO_DELETE = "odnako.org/blogs";
+					formatedCategory = TO_DELETE.replace("-", "_");
+					formatedCategory = formatedCategory.replace("/", "_");
+					formatedCategory = formatedCategory.replace(":", "_");
+					formatedCategory = formatedCategory.replace(".", "_");
+
+					String formatedLink;
+					formatedLink = p.url.replace("-", "_");
+					formatedLink = formatedLink.replace("/", "_");
+					formatedLink = formatedLink.replace(":", "_");
+					formatedLink = formatedLink.replace(".", "_");
+
+					File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
+					+ formatedLink);
+					//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
+					int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
+					LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
+					paramsForIcons.setMargins(5, 5, 5, 5);
+
+					holderMain.save.setScaleType(ScaleType.FIT_XY);
+					holderMain.save.setLayoutParams(paramsForIcons);
+
+					if (currentArticleFile.exists())
+					{
+
+					}
+					if (p.url != null)
+					{
+						if (pref.getString("theme", "dark").equals("dark"))
+						{
+							holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
+						}
+						else
+						{
+							holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
+						}
+
 					}
 					else
 					{
-						holderMain.read.setImageResource(R.drawable.ic_drafts_grey600_48dp);
+						if (pref.getString("theme", "dark").equals("dark"))
+						{
+							holderMain.save.setImageResource(android.R.color.transparent);
+						}
+						else
+						{
+							holderMain.save.setImageResource(android.R.color.transparent);
+						}
 					}
-				}
-				else
-				{
-					if (pref.getString("theme", "dark").equals("dark"))
+					////end SaveImg
+
+					//read Img
+					ReadUnreadRegister read = new ReadUnreadRegister(act);
+					holderMain.read.setLayoutParams(paramsForIcons);
+
+					if (read.check(p.url))
 					{
-						holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
+						if (pref.getString("theme", "dark").equals("dark"))
+						{
+							holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
+						}
+						else
+						{
+							holderMain.read.setImageResource(R.drawable.ic_drafts_grey600_48dp);
+						}
 					}
 					else
 					{
-						holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
+						if (pref.getString("theme", "dark").equals("dark"))
+						{
+							holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
+						}
+						else
+						{
+							holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
+						}
 					}
+					////end read Img
+
+					//share btn
+					holderMain.share.setLayoutParams(paramsForIcons);
+					holderMain.share.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+							Actions.shareUrl(p.url, act);
+						}
+					});
+					holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
+					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
+					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+							Actions.shareUrl(p.url, act);
+						}
+					});
+					////end of share btn
+
+					//comments btn
+					holderMain.comms.setLayoutParams(paramsForIcons);
+					holderMain.comms.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+						}
+					});
+					holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
+					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
+					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+						}
+					});
+					////end of comments btn
+				} catch (Exception e)
+				{
+					return;
 				}
-				////end read Img
-
-				//share btn
-				holderMain.share.setLayoutParams(paramsForIcons);
-				holderMain.share.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Actions.shareUrl(p.url, act);
-					}
-				});
-				holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
-				holderMain.num_of_shares.setTextSize(21 * scaleFactor);
-				holderMain.num_of_shares.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Actions.shareUrl(p.url, act);
-					}
-				});
-				////end of share btn
-
-				//comments btn
-				holderMain.comms.setLayoutParams(paramsForIcons);
-				holderMain.comms.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-					}
-				});
-				holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
-				holderMain.num_of_comms.setTextSize(21 * scaleFactor);
-				holderMain.num_of_comms.setOnClickListener(new OnClickListener()
-				{
-					public void onClick(View v)
-					{
-						Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-					}
-				});
-			////end of comments btn
 
 			break;
 
@@ -567,6 +608,7 @@ implements Filterable
 		TextView preview;
 		ImageView settings;
 		ViewGroup top_lin_lay;
+		CardView card;
 
 		ArticleHolder(View itemLayoutView)
 		{
@@ -590,6 +632,7 @@ implements Filterable
 			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
 			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
 
+			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
 		}
 	}
 }

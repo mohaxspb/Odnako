@@ -22,6 +22,7 @@ import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +64,11 @@ public class ActivityMain extends ActivityBase
 	//we'll change it at runtime from fragment and restore it and get it from activity
 	private HashMap<String, int[]> allCatToolbarTopImgYCoord;
 
+	//int in hashMap to store SelectedArtPosition
+	//we'll change it at runtime selecting artsCards and restore it and get it from activity
+	//def value is zero for all
+	private HashMap<String, Integer> allCatListsSelectedArtPosition;
+
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityMain onCreate");
@@ -102,6 +108,7 @@ public class ActivityMain extends ActivityBase
 			//			this.curentCategoryPosition=this.getCurentPositionByGroupChildPosition(this.groupChildPosition[0], this.groupChildPosition[1]);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
 			this.restoreAllCatArtsInfo(savedInstanceState);
+			this.restoreAllCatListsSelectedArtPosition(savedInstanceState);
 		}
 		//get artsInfo data from DB
 		if (this.allCatArtsInfo == null)
@@ -109,7 +116,18 @@ public class ActivityMain extends ActivityBase
 			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
 		}
 
-		//set or restore coords of topImg and toolbar
+		//set selected pos for all cats if they are null (first launch without any state)
+		if (this.allCatListsSelectedArtPosition == null)
+		{
+			String[] catMenuLinks = CatData.getAllCategoriesMenuLinks(act);
+			this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
+			for (int i = 0; i < catMenuLinks.length; i++)
+			{
+				this.allCatListsSelectedArtPosition.put(catMenuLinks[i], 0);
+			}
+		}
+
+		//set coords of topImg and toolbar if they are null (first launch without any state)
 		if (allCatToolbarTopImgYCoord == null)
 		{
 			setAllCatToolbarTopImgYCoord(new HashMap<String, int[]>());
@@ -162,22 +180,48 @@ public class ActivityMain extends ActivityBase
 				setCurentCategoryPosition(position);
 
 				setTitleDrawerItemToolbarTopImgETC(position);
+				
+				//test sending intent to listfrag to notify it's adapter to fix issue
+				//when there is only 1-st art is shown and other can be shown only from articlesPager
+				//when switching articles
+				String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
+				Intent intentToListFrag=new Intent(allCatsLinks[curentCategoryPosition]+"_notify_that_selected");				
+				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 
 				if (twoPane)
 				{
-					pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
-					.getAllCategoriesMenuLinks(act)[curentCategoryPosition], act);
-					pager.setAdapter(pagerAdapter);
-					pager.setPageTransformer(true, new ZoomOutPageTransformer());
-					pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+					if (curentCategoryPosition != 3 && curentCategoryPosition != 13)
 					{
-						@Override
-						public void onPageSelected(int position)
+						pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
+						.getAllCategoriesMenuLinks(act)[curentCategoryPosition], act);
+						pager.setAdapter(pagerAdapter);
+						pager.setPageTransformer(true, new ZoomOutPageTransformer());
+						pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 						{
-
-						}
-					});
-					pager.setCurrentItem(curArtPosition, true);
+							@Override
+							public void onPageSelected(int position)
+							{
+								System.out.println("onPageSelected in articlePager; position: "+position);
+								String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
+								allCatListsSelectedArtPosition.put(allCatsLinks[curentCategoryPosition], position);
+								
+								Intent intentToListFrag=new Intent(allCatsLinks[curentCategoryPosition]+"art_position");
+								Bundle b=new Bundle();
+								b.putInt("position", position);
+								intentToListFrag.putExtras(b);
+								
+								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							}
+						});
+//						String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
+						int curPos=allCatListsSelectedArtPosition.get(allCatsLinks[curentCategoryPosition]);
+						pager.setCurrentItem(curPos, true);
+//						pager.setCurrentItem(curArtPosition, true);
+					}
+					else
+					{
+						//TODO show all authors and categories adapters
+					}
 				}
 			}
 		});
@@ -213,6 +257,16 @@ public class ActivityMain extends ActivityBase
 		//adMob
 		this.AddAds();
 		//end of adMob
+	}
+
+	private void restoreAllCatListsSelectedArtPosition(Bundle b)
+	{
+		this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
+		String[] catLinks = CatData.getAllCategoriesMenuLinks(act);
+		for (int i = 0; i < catLinks.length; i++)
+		{
+			this.allCatListsSelectedArtPosition.put(catLinks[i], b.getInt("allCatListsSelectedArtPosition_0"));
+		}
 	}
 
 	private void restoreAllCatArtsInfo(Bundle b)
@@ -323,6 +377,16 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
+	private void saveAllCatListsSelectedArtPosition(Bundle b)
+	{
+		String[] allLinks = CatData.getAllCategoriesMenuLinks(act);
+		for (int i = 0; i < allLinks.length; i++)
+		{
+			b.putInt("allCatListsSelectedArtPosition_" + String.valueOf(i),
+			allCatListsSelectedArtPosition.get(allLinks[i]));
+		}
+	}
+
 	public int getCurentCategoryPosition()
 	{
 		return curentCategoryPosition;
@@ -398,6 +462,9 @@ public class ActivityMain extends ActivityBase
 
 		//save all cat arts info
 		saveAllCatArtsInfo(outState);
+
+		//save selected pos
+		this.saveAllCatListsSelectedArtPosition(outState);
 	}
 
 	//	@Override

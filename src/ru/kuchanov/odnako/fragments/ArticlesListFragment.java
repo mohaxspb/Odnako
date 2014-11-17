@@ -15,7 +15,6 @@ import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.download.GetInfoService;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +33,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 
 public class ArticlesListFragment extends Fragment
 {
@@ -51,7 +49,10 @@ public class ArticlesListFragment extends Fragment
 	private String categoryToLoad;
 	ArrayList<ArtInfo> allArtsInfo;
 	ArtInfo curArtInfo;
-	private int position = ListView.INVALID_POSITION;
+	//	private int position = ListView.INVALID_POSITION;
+	private int position = 0;
+
+	//	boolean 
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -85,6 +86,9 @@ public class ArticlesListFragment extends Fragment
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
 			this.initialDistance = savedInstanceState.getInt("initialDistance");
 
+			//			this.position=savedInstanceState.getInt(STATE_ACTIVATED_POSITION);
+			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
+
 			this.restoreState(savedInstanceState);
 		}
 		// Register to receive messages.
@@ -92,7 +96,40 @@ public class ArticlesListFragment extends Fragment
 		// with actions named "custom-event-name".
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(mMessageReceiver,
 		new IntentFilter(this.getCategoryToLoad()));
+
+		//reciver for scrolling and highligting selected position
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
+		new IntentFilter(this.getCategoryToLoad() + "art_position"));
+
+		//reciver for notify when frag sselected
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
+		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 	}
+
+	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			artsListAdapter.notifyDataSetChanged();
+		}
+	};
+
+	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			//			artsListAdapter.notifyItemChanged(position);
+			position = intent.getIntExtra("position", 0);
+			//			artsListAdapter.notifyDataSetChanged();
+
+			setActivatedPosition(position);
+			artsListAdapter.notifyDataSetChanged();
+			//			System.out.println("artsListAdapter.notifyDataSetChanged() end");
+			//			artsListAdapter.notifyItemChanged(position);
+		}
+	};
 
 	// Our handler for received Intents. This will be called whenever an Intent
 	// with an action named "custom-event-name" is broadcasted.
@@ -122,6 +159,31 @@ public class ArticlesListFragment extends Fragment
 	};
 
 	@Override
+	public void onDestroy()
+	{
+
+		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		if (artSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
+			artSelectedReceiver = null;
+		}
+		if (mMessageReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(mMessageReceiver);
+			mMessageReceiver = null;
+		}
+		
+		if (fragSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+			fragSelectedReceiver = null;
+		}
+		// Must always call the super method at the end.
+		super.onDestroy();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		//		System.out.println("ArticlesListFragment onCreateView");
@@ -141,7 +203,7 @@ public class ArticlesListFragment extends Fragment
 
 			//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
-			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList);
+			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -151,7 +213,7 @@ public class ArticlesListFragment extends Fragment
 		{
 			//			((ActivityMain) act).setAllArtsInfo(allArtsInfo);
 
-			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList);
+			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 			this.artsList.setItemAnimator(new DefaultItemAnimator());
 			this.artsList.setLayoutManager(new LinearLayoutManager(act));
@@ -203,24 +265,10 @@ public class ArticlesListFragment extends Fragment
 		super.onViewCreated(view, savedInstanceState);
 
 		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
-		{
-			setActivatedPosition(savedInstanceState.getInt("position"));
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity)
-	{
-		//		System.out.println("ArticlesListFragment onAttach");
-		super.onAttach(activity);
-	}
-
-	@Override
-	public void onDetach()
-	{
-		//		System.out.println("ArticlesListFragment onDetach");
-		super.onDetach();
+		//		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
+		//		{
+		//			setActivatedPosition(savedInstanceState.getInt("position"));
+		//		}
 	}
 
 	@Override
@@ -229,44 +277,52 @@ public class ArticlesListFragment extends Fragment
 		//		System.out.println("ArticlesListFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
+		//category saving
+		outState.putString("categoryToLoad", categoryToLoad);
+
 		//save topImg and toolbar prop's
 		outState.putInt("topImgYCoord", this.topImgYCoord);
 		outState.putInt("toolbarYCoord", this.toolbarYCoord);
 		outState.putInt("initialDistance", this.initialDistance);
 
+		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
 	}
 
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick(boolean activateOnItemClick)
-	{
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		//		artsList.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
-		//		this.artsList.seti
-	}
+	//	/**
+	//	 * Turns on activate-on-click mode. When this mode is on, list items will be
+	//	 * given the 'activated' state when touched.
+	//	 */
+	//	public void setActivateOnItemClick(boolean activateOnItemClick)
+	//	{
+	//		// When setting CHOICE_MODE_SINGLE, ListView will automatically
+	//		// give items the 'activated' state when touched.
+	//		//		artsList.setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
+	//		//		this.artsList.seti
+	//	}
 
 	public void setActivatedPosition(int position)
 	{
 		System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
-		if (position != ListView.INVALID_POSITION)
-		{
-			scrollToActivatedPosition();
-		}
-		else
-		{
-			System.out.println("setActivatedPosition ERROR: position=ListView.INVALID_POSITION");
-		}
+		scrollToActivatedPosition();
+
+		//		if (position != ListView.INVALID_POSITION)
+		//		{
+		//			scrollToActivatedPosition();
+		//		}
+		//		else
+		//		{
+		//			System.out.println("setActivatedPosition ERROR: position=ListView.INVALID_POSITION");
+		//		}
 	}
 
 	public void scrollToActivatedPosition()
 	{
-		this.artsList.smoothScrollToPosition(position);
+		//		this.artsList.smoothScrollToPosition(position);
+		//		this.artsList.smoothScrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
 	}
 
 	public int getMyActivatedPosition()
@@ -277,20 +333,20 @@ public class ArticlesListFragment extends Fragment
 	/**
 	 * @return the artsListAdapter
 	 */
-	public ArtsListAdapter getArtsListAdapter()
-	{
-		return artsListAdapter;
-	}
+	//	public ArtsListAdapter getArtsListAdapter()
+	//	{
+	//		return artsListAdapter;
+	//	}
+	//
+	//	public void ArtsListAdapter(ArtsListAdapter artsListAdapter)
+	//	{
+	//		this.artsListAdapter = artsListAdapter;
+	//	}
 
-	public void ArtsListAdapter(ArtsListAdapter artsListAdapter)
-	{
-		this.artsListAdapter = artsListAdapter;
-	}
-
-	public RecyclerView getArtsListView()
-	{
-		return this.artsList;
-	}
+	//	public RecyclerView getArtsListView()
+	//	{
+	//		return this.artsList;
+	//	}
 
 	////////setters and getters for TopImg and Toolbar position and Alpha
 	public int getToolbarYCoord()

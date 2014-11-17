@@ -38,7 +38,7 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 
 		this.allArtsInfo = ((ActivityMain) act).getAllCatArtsInfo().get(category);
 		
-		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
+//		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
 
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents

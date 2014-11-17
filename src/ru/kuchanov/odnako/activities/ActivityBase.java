@@ -56,7 +56,7 @@ public class ActivityBase extends ActionBarActivity
 	protected ExpListAdapter expAdapter;
 	protected boolean drawerOpened;
 	protected ActionBarDrawerToggle mDrawerToggle;
-//	protected int[] groupChildPosition = new int[] { -1, -1 };
+	
 	protected int[] groupChildPosition = new int[] { 1, 7 };
 	///drawer
 
@@ -65,7 +65,8 @@ public class ActivityBase extends ActionBarActivity
 	int curentCategoryPosition = 11;
 
 	protected ArtInfo curArtInfo = null;
-	protected int curArtPosition = -1;
+//	protected int curArtPosition = -1;
+	protected int curArtPosition = 0;
 	protected ArrayList<ArtInfo> curAllArtsInfo = null;
 
 	private int backPressedQ;
