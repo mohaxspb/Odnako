@@ -1,67 +1,59 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.AllAuthorsListFragment;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+	final Drawable drawableArrowDown;
+	final Drawable drawableArrowUp;
 
 	private static final int HEADER = 0;
 	private static final int ADS = 1;
-	private static final int ARTICLE = 2;
+	private static final int AUTHOR = 2;
 	ActionBarActivity act;
-	LayoutInflater lInflater;
 
 	RecyclerView artsListView;
 
 	ImageLoader imageLoader;
-
-	ArrayList<ArtInfo> artsInfo;
-	ArrayList<ArtInfo> orig;
 	SharedPreferences pref;
 
 	boolean twoPane;
 
 	AllAuthorsListFragment artsListFrag;
 
+	AllAuthorsInfo allAuthorsInfo;
+	ArrayList<AuthorInfo> allAuthrsInfoList;
+	ArrayList<AuthorInfo> orig;
+
 	public AllAuthorsListAdapter(ActionBarActivity act, RecyclerView artsListView, AllAuthorsListFragment artsListFrag)
 	{
 		this.act = act;
-		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		this.artsListView = artsListView;
 
@@ -71,7 +63,22 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		twoPane = pref.getBoolean("twoPane", false);
 
 		imageLoader = UniversalImageLoader.get(act);
+
+		allAuthorsInfo = new AllAuthorsInfo(act);
+		allAuthrsInfoList = allAuthorsInfo.getAllAuthorsInfoAsList();
+
+		//set arrowDownIcon by theme
+		int[] attrs = new int[] { R.attr.arrowDownIcon };
+		TypedArray ta = this.act.obtainStyledAttributes(attrs);
+		drawableArrowDown = ta.getDrawable(0);
+		ta.recycle();
+		//set arrowDownIcon by theme
+		attrs = new int[] { R.attr.arrowUpIcon };
+		ta = this.act.obtainStyledAttributes(attrs);
+		drawableArrowUp = ta.getDrawable(0);
+		ta.recycle();
 	}
+
 	@Override
 	public long getItemId(int position)
 	{
@@ -91,7 +98,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 		else
 		{
-			return ARTICLE;
+			return AUTHOR;
 		}
 	}
 
@@ -99,29 +106,23 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	public int getItemCount()
 	{
 		// TODO Auto-generated method stub
-		//this for all cats and authors
-		if (this.artsInfo == null)
-		{
-			return 1;
-		}
 		int header = 1;
 		//		int footer=1;
 		int numOfAds = 1;
 
-		return this.artsInfo.size() + header + /* footer */+numOfAds;
+		return this.allAuthrsInfoList.size() + header + /* footer */+numOfAds;
 	}
 
-	public ArtInfo getArtInfoByPosition(int position)
+	public AuthorInfo getArtInfoByPosition(int position)
 	{
-		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
-		ArtInfo p;
+		AuthorInfo p;
 		if (position < 15)
 		{
-			p = this.artsInfo.get(position - 1);
+			p = this.allAuthrsInfoList.get(position - 1);
 		}
 		else
 		{
-			p = this.artsInfo.get(position - 2);
+			p = this.allAuthrsInfoList.get(position - 2);
 		}
 		return p;
 	}
@@ -161,337 +162,151 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			case (ADS):
 			//TODO
 			break;
-			case (ARTICLE):
-				//				System.out.println("position: "+position);
-				//			System.out.println("this.artsInfo==null: "+String.valueOf(this.artsInfo==null));
-				//catch all cat author frags and return;
-				final ArtInfo p;
-				try
+			case (AUTHOR):
+				final AuthorInfo p;
+				p = this.getArtInfoByPosition(position);
+
+				//				final ArtInfo p = this.getArtInfoByPosition(position);
+				final int positionInAllArtsInfo = AllAuthorsListAdapter.getPositionInAllArtsInfo(position);
+
+				final AuthorHolder holderMain = (AuthorHolder) holder;
+
+				//variables for scaling text and icons and images from settings
+				String scaleFactorString = pref.getString("scale", "1");
+				float scaleFactor = Float.valueOf(scaleFactorString);
+
+				final float scale = act.getResources().getDisplayMetrics().density;
+				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+				////End of variables for scaling text and icons and images from settings
+
+				//light checked item in listView
+				if (this.twoPane)
 				{
-					p = this.getArtInfoByPosition(position);
 
-					//				final ArtInfo p = this.getArtInfoByPosition(position);
-					final int positionInAllArtsInfo = AllAuthorsListAdapter.getPositionInAllArtsInfo(position);
-
-					ArticleHolder holderMain = (ArticleHolder) holder;
-
-					//variables for scaling text and icons and images from settings
-					String scaleFactorString = pref.getString("scale", "1");
-					float scaleFactor = Float.valueOf(scaleFactorString);
-
-					final float scale = act.getResources().getDisplayMetrics().density;
-					int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-					////End of variables for scaling text and icons and images from settings
-
-					//light checked item in listView
-					ViewGroup vg = (ViewGroup) holderMain.card.getParent();
-					if (this.twoPane)
+					if (artsListFrag.getMyActivatedPosition() == positionInAllArtsInfo)
 					{
-
-						if (artsListFrag.getMyActivatedPosition() == positionInAllArtsInfo)
-						{
-							vg.setBackgroundColor(act.getResources().getColor(R.color.blue));
-						}
-						else
-						{
-							vg.setBackgroundColor(Color.TRANSPARENT);
-						}
+						holderMain.container.setBackgroundColor(act.getResources().getColor(R.color.blue));
 					}
 					else
 					{
-						vg.setBackgroundColor(Color.TRANSPARENT);
+						holderMain.container.setBackgroundColor(Color.TRANSPARENT);
 					}
+				}
+				else
+				{
+					holderMain.container.setBackgroundColor(Color.TRANSPARENT);
+				}
 
-					////////
-
-					// ART_IMG
-					if (!p.img_art.equals("empty") && !p.img_art.contains("/75_75/"))
+				////////
+				//setOnclick
+				holderMain.container.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
 					{
-						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
-						params.height = (int) DipToPx.convert(120, act);
-						holderMain.art_img.setLayoutParams(params);
-						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
-						if (this.pref.getString("theme", "dark").equals("dark"))
-						{
-							imageLoader.displayImage(HDimgURL, holderMain.art_img,
-							UniversalImageLoader.getDarkOptions());
-						}
-						else
-						{
-							imageLoader.displayImage(HDimgURL, holderMain.art_img);
-						}
+						Actions.showAllAuthorsArticles(new ArtInfo(new String[] { "", "", "", p.blogLink, p.name }),
+						act);
 					}
-					else
-					{
-						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
-						params.height = 0;
-						holderMain.art_img.setLayoutParams(params);
-					}
-					//end of ART_IMG
+				});
 
-					//Title of article
-					Spanned spannedContentTitle = Html.fromHtml(p.title);
-					holderMain.title.setText(spannedContentTitle);
+				// Author ava
+				LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
+				params.height = pixels;
+				params.width = pixels;
+				holderMain.author_img.setLayoutParams(params);
+				String link = "";
+				if (p.avaImg.startsWith("/"))
+				{
+					link = "http://odnako.org" + p.avaImg;
+				}
 
-					holderMain.top_lin_lay.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
-						}
-					});
+				if (this.pref.getString("theme", "dark").equals("dark"))
+				{
+					imageLoader.displayImage(link, holderMain.author_img, UniversalImageLoader.getDarkOptions());
+				}
+				else
+				{
+					imageLoader.displayImage(link, holderMain.author_img);
+				}
+				//end of ART_IMG
 
-					holderMain.title.setTextSize(21 * scaleFactor);
+				//name 
+				Spanned spannedContentTitle = Html.fromHtml(p.name);
+				holderMain.name.setText(spannedContentTitle);
+				holderMain.name.setTextSize(21 * scaleFactor);
 
-					//Date
-					if (!p.pubDate.equals("empty"))
-					{
-						holderMain.date.setText(p.pubDate);
-						holderMain.date.setTextSize(19 * scaleFactor);
-					}
-					else
-					{
-						holderMain.date.setText("date is empty; Must hide on relize");
-						holderMain.date.setTextSize(19 * scaleFactor);
-					}
-					////End of Date
+				//who
+				if (!p.who.equals("empty") && !p.who.equals(""))
+				{
+					Spanned spannedContentPreview = Html.fromHtml(p.who);
+					holderMain.who.setText(spannedContentPreview);
+					holderMain.who.setTextSize(21 * scaleFactor);
+				}
+				else
+				{
+					holderMain.who.setText(null);
+				}
+				//description
+				if (!p.description.equals("empty") && !p.description.equals(""))
+				{
+					Spanned spannedContentPreview = Html.fromHtml(p.description);
+					holderMain.description.setText(spannedContentPreview);
+					holderMain.description.setTextSize(21 * scaleFactor);
+				}
+				else
+				{
+					holderMain.description.setText(null);
+				}
+				holderMain.description.setLinksClickable(true);
+				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
+				//descriptionIcon
 
-					//popUp menu in cardView
-					holderMain.settings.setOnClickListener(new OnClickListener()
+				if (!p.description.equals("empty") && !p.description.equals(""))
+				{
+					holderMain.more_icon.setImageDrawable(drawableArrowDown);
+				}
+
+				//descr onClick
+				if (!p.description.equals("empty") && !p.description.equals(""))
+				{
+					//set conateiner height to wrapContent
+					LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();
+					paramsBottomLin.height = LayoutParams.WRAP_CONTENT;
+					holderMain.bottom_lin.setLayoutParams(paramsBottomLin);
+					//set on click
+					holderMain.bottom_lin.setOnClickListener(new OnClickListener()
 					{
 
 						@Override
 						public void onClick(View v)
 						{
-							PopupMenu popup = new PopupMenu(act, v);
-							popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+							LayoutParams params = (LayoutParams) holderMain.description.getLayoutParams();
+							if (params.height == LayoutParams.WRAP_CONTENT)
 							{
-
-								public boolean onMenuItemClick(MenuItem item)
-								{
-									switch (item.getItemId())
-									{
-										case R.id.mark_as_read:
-											Actions.markAsRead(p.url, act);
-											return true;
-										case R.id.share_link:
-											Actions.shareUrl(p.url, act);
-											return true;
-										case R.id.show_comments:
-											Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-											return true;
-										default:
-											return false;
-									}
-								}
-							});
-							MenuInflater inflater = popup.getMenuInflater();
-							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
-							popup.show();
-						}
-
-					});
-					////End of popUp menu in cardView
-
-					//preview
-					if (!p.preview.equals("empty"))
-					{
-						Spanned spannedContentPreview = Html.fromHtml(p.preview);
-						holderMain.preview.setText(spannedContentPreview);
-						holderMain.preview.setTextSize(21 * scaleFactor);
-					}
-					else
-					{
-						holderMain.preview.setText("preview is empty; Must hide on relize");
-						holderMain.preview.setTextSize(21 * scaleFactor);
-					}
-
-					//				Spanned spannedContentPreview = Html.fromHtml(p.preview);
-					//				holderMain.preview.setText(spannedContentPreview);
-					//
-					//				holderMain.preview.setTextSize(21 * scaleFactor);
-					////end of preview
-
-					//name  and img of author
-					if (!p.img_art.equals("empty") && p.img_art.contains("/75_75/"))
-					{
-						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
-						params.height = pixels;
-						params.width = pixels;
-						holderMain.author_img.setLayoutParams(params);
-						if (this.pref.getString("theme", "dark").equals("dark"))
-						{
-							imageLoader.displayImage(p.img_art, holderMain.author_img,
-							UniversalImageLoader.getDarkOptions());
-						}
-						else
-						{
-							imageLoader.displayImage(p.img_art, holderMain.author_img);
-						}
-					}
-					else
-					{
-						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
-						params.height = 0;
-						params.width = 0;
-						holderMain.author_img.setLayoutParams(params);
-					}
-					if (!p.authorName.equals("empty"))
-					{
-						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
-						params.height = LayoutParams.WRAP_CONTENT;
-						params.width = 0;
-						Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
-						holderMain.author_name.setText(spannedContent);
-						holderMain.author_name.setTextSize(21 * scaleFactor);
-					}
-					else
-					{
-						holderMain.author_name.setText(null);
-						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
-						params.height = 0;
-						params.width = 0;
-						holderMain.author_name.setLayoutParams(params);
-					}
-
-					holderMain.author_lin.setOnClickListener(new OnClickListener()
-					{
-
-						@Override
-						public void onClick(View v)
-						{
-							Actions.showAllAuthorsArticles(p, act);
+								//so opened need to close
+								//changeIcon
+								holderMain.more_icon.setImageDrawable(drawableArrowDown);
+								params.height=(int) DipToPx.convert(40, act);
+								holderMain.description.setLayoutParams(params);
+							}
+							else
+							{
+								//closed, need to open
+								//changeIcon
+								holderMain.more_icon.setImageDrawable(drawableArrowUp);
+								params.height=LayoutParams.WRAP_CONTENT;
+								holderMain.description.setLayoutParams(params);
+							}
 						}
 					});
-					//end of name of author
-
-					//SaveImg
-					String appDir;
-					appDir = pref.getString("filesDir", "");
-
-					String formatedCategory;
-					//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
-					String TO_DELETE = "odnako.org/blogs";
-					formatedCategory = TO_DELETE.replace("-", "_");
-					formatedCategory = formatedCategory.replace("/", "_");
-					formatedCategory = formatedCategory.replace(":", "_");
-					formatedCategory = formatedCategory.replace(".", "_");
-
-					String formatedLink;
-					formatedLink = p.url.replace("-", "_");
-					formatedLink = formatedLink.replace("/", "_");
-					formatedLink = formatedLink.replace(":", "_");
-					formatedLink = formatedLink.replace(".", "_");
-
-					File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
-					+ formatedLink);
-					//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-					int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
-					LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
-					paramsForIcons.setMargins(5, 5, 5, 5);
-
-					holderMain.save.setScaleType(ScaleType.FIT_XY);
-					holderMain.save.setLayoutParams(paramsForIcons);
-
-					if (currentArticleFile.exists())
-					{
-
-					}
-					if (p.url != null)
-					{
-						if (pref.getString("theme", "dark").equals("dark"))
-						{
-							holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
-						}
-						else
-						{
-							holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
-						}
-
-					}
-					else
-					{
-						if (pref.getString("theme", "dark").equals("dark"))
-						{
-							holderMain.save.setImageResource(android.R.color.transparent);
-						}
-						else
-						{
-							holderMain.save.setImageResource(android.R.color.transparent);
-						}
-					}
-					////end SaveImg
-
-					//read Img
-					ReadUnreadRegister read = new ReadUnreadRegister(act);
-					holderMain.read.setLayoutParams(paramsForIcons);
-
-					if (read.check(p.url))
-					{
-						if (pref.getString("theme", "dark").equals("dark"))
-						{
-							holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
-						}
-						else
-						{
-							holderMain.read.setImageResource(R.drawable.ic_drafts_grey600_48dp);
-						}
-					}
-					else
-					{
-						if (pref.getString("theme", "dark").equals("dark"))
-						{
-							holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
-						}
-						else
-						{
-							holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
-						}
-					}
-					////end read Img
-
-					//share btn
-					holderMain.share.setLayoutParams(paramsForIcons);
-					holderMain.share.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.shareUrl(p.url, act);
-						}
-					});
-					holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
-					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
-					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.shareUrl(p.url, act);
-						}
-					});
-					////end of share btn
-
-					//comments btn
-					holderMain.comms.setLayoutParams(paramsForIcons);
-					holderMain.comms.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-						}
-					});
-					holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
-					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
-					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-						}
-					});
-					////end of comments btn
-				} catch (Exception e)
+				}
+				else
 				{
-					return;
+					//set conateiner height to ZERO
+					LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();
+					paramsBottomLin.height = 0;
+					holderMain.bottom_lin.setLayoutParams(paramsBottomLin);
+					//set on click
+					holderMain.bottom_lin.setOnClickListener(null);
 				}
 
 			break;
@@ -521,14 +336,14 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
-			case (ARTICLE):
+			case (AUTHOR):
 				// create a new view
-				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,
+				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.author_card,
 				parent,
 				false);
 
 				// create ViewHolder
-				holder = new ArticleHolder(itemLayoutView);
+				holder = new AuthorHolder(itemLayoutView);
 
 				return holder;
 			default:
@@ -545,48 +360,30 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	}
 
-	static class ArticleHolder extends RecyclerView.ViewHolder
+	static class AuthorHolder extends RecyclerView.ViewHolder
 	{
-		TextView title;
-		TextView author_name;
+		TextView name;
+		TextView who;
+		TextView description;
 		ImageView author_img;
-		ViewGroup author_lin;
-		ImageView art_img;
-		ImageView save;
-		ImageView read;
-		ImageView comms;
-		ImageView share;
-		TextView num_of_comms;
-		TextView num_of_shares;
-		TextView date;
-		TextView preview;
-		ImageView settings;
-		ViewGroup top_lin_lay;
-		CardView card;
+		ImageView more_icon;
+		ViewGroup bottom_lin;
+		View container;
 
-		ArticleHolder(View itemLayoutView)
+		AuthorHolder(View itemLayoutView)
 		{
 			super(itemLayoutView);
-			//			top panel
-			this.top_lin_lay = (ViewGroup) itemLayoutView.findViewById(R.id.art_card_top_lin);
-			this.art_img = (ImageView) itemLayoutView.findViewById(R.id.art_card_img);
-			this.title = (TextView) itemLayoutView.findViewById(R.id.art_card_title_tv);
-			this.date = (TextView) itemLayoutView.findViewById(R.id.art_card_date_tv);
-			this.settings = (ImageView) itemLayoutView.findViewById(R.id.art_card_settings);
-			this.preview = (TextView) itemLayoutView.findViewById(R.id.art_card_preview_tv);
 			//author
-			this.author_name = (TextView) itemLayoutView.findViewById(R.id.author_name);
-			this.author_img = (ImageView) itemLayoutView.findViewById(R.id.art_card_author_img);
-			this.author_lin = (ViewGroup) itemLayoutView.findViewById(R.id.art_card_author_lin);
-			//bottom panel
-			this.save = (ImageView) itemLayoutView.findViewById(R.id.save_img);
-			this.read = (ImageView) itemLayoutView.findViewById(R.id.read_img);
-			this.comms = (ImageView) itemLayoutView.findViewById(R.id.comments_img);
-			this.share = (ImageView) itemLayoutView.findViewById(R.id.share_img);
-			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
-			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
+			this.name = (TextView) itemLayoutView.findViewById(R.id.name);
 
-			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
+			this.who = (TextView) itemLayoutView.findViewById(R.id.who);
+			this.description = (TextView) itemLayoutView.findViewById(R.id.description);
+			this.container = itemLayoutView;
+
+			this.author_img = (ImageView) itemLayoutView.findViewById(R.id.ava_img);
+			this.more_icon = (ImageView) itemLayoutView.findViewById(R.id.more_icon);
+
+			this.bottom_lin = (ViewGroup) itemLayoutView.findViewById(R.id.author_card_bottom_lin);
 		}
 	}
 }

@@ -86,4 +86,19 @@ public class UniversalImageLoader
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
+	
+	public static DisplayImageOptions getTransparentBackgroundROUNDOptions(ActionBarActivity act)
+	{
+		return new DisplayImageOptions.Builder()
+
+		.displayer(new RoundedBitmapDisplayer((int) DipToPx.convert(35, act)))
+		.showImageOnLoading(R.drawable.top_img_cover_grey_dark)
+		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
+		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+	}
 }

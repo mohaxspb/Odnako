@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ru.kuchanov.odnako.R;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 
 public class CatData
@@ -102,7 +103,8 @@ public class CatData
 		return getAllCatArtsInfoFromDB;
 	}
 
-	public static String[] getAllCategoriesMenuNames(ActionBarActivity act)
+//	public static String[] getAllCategoriesMenuNames(ActionBarActivity act)
+	public static String[] getAllCategoriesMenuNames(Context act)
 	{
 		authorsMenuNames = act.getResources().getStringArray(R.array.authors);
 		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
@@ -114,7 +116,8 @@ public class CatData
 		return allCategoriesMenuNames;
 	}
 
-	public static String[] getAllCategoriesMenuLinks(ActionBarActivity act)
+//	public static String[] getAllCategoriesMenuLinks(ActionBarActivity act)
+	public static String[] getAllCategoriesMenuLinks(Context act)
 	{
 		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);
 

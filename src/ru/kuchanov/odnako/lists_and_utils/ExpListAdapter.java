@@ -35,8 +35,9 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	String[] cat;
 	SharedPreferences pref;
 	private Drawable drawableArrrowDown;
+	private Drawable drawableArrowUp;
 	Drawable drawableArrrowLeft;
-	private Drawable drawableArrrowRight;
+	Drawable drawableArrrowRight;
 	private Drawable drawableDownload;
 	private Drawable drawableSettings;
 	private Drawable drawableAsList;
@@ -44,7 +45,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	private Drawable drawableCategoriesMore;
 	private Drawable drawableAuthor;
 	private Drawable drawableAuthorsMore;
-	private Drawable drawableArrowUp;
+	
 
 	public ExpListAdapter(ActionBarActivity act, ArrayList<ArrayList<String>> groups)
 	{
@@ -338,7 +339,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		holderMain.text.setTextSize(21 * scaleFactor);
 
 		//left and right imgs
-		holderMain.right.setImageDrawable(drawableArrrowRight);
+//		holderMain.right.setImageDrawable(drawableArrrowRight);
+		holderMain.right.setImageDrawable(null);
 		switch (groupPosition)
 		{
 			case (0):

@@ -6,15 +6,10 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.util.ArrayList;
-
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
+import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
-import ru.kuchanov.odnako.download.GetInfoService;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,17 +32,14 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class AllAuthorsListFragment extends Fragment
 {
-	private int topImgYCoord = 0;
-	private int toolbarYCoord = 0;
-	private int initialDistance;
-
 	private RecyclerView artsList;
 	AllAuthorsListAdapter adapter;
+
+	String categoryToLoad = "odnako.org/authors";
 
 	ActionBarActivity act;
 	SharedPreferences pref;
 
-	private String categoryToLoad;
 	private int position = 0;
 
 	@Override
@@ -59,26 +51,9 @@ public class AllAuthorsListFragment extends Fragment
 		this.act = (ActionBarActivity) this.getActivity();
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
-		Bundle fromArgs = this.getArguments();
-		if (fromArgs != null)
-		{
-			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
-		}
-		else
-		{
-			System.out.println("empty fromArgs!");
-		}
-
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
-			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
-			this.initialDistance = savedInstanceState.getInt("initialDistance");
-
-			//			this.position=savedInstanceState.getInt(STATE_ACTIVATED_POSITION);
-			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
-
 			this.restoreState(savedInstanceState);
 		}
 		// Register to receive messages.
@@ -153,7 +128,7 @@ public class AllAuthorsListFragment extends Fragment
 		//set onScrollListener
 		if (android.os.Build.VERSION.SDK_INT >= 11)
 		{
-//			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this));
+			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad));
 		}
 		else if (this.pref.getBoolean("animate_lists", false) == true)
 		{
@@ -186,11 +161,6 @@ public class AllAuthorsListFragment extends Fragment
 
 		//category saving
 		outState.putString("categoryToLoad", categoryToLoad);
-
-		//save topImg and toolbar prop's
-		outState.putInt("topImgYCoord", this.topImgYCoord);
-		outState.putInt("toolbarYCoord", this.toolbarYCoord);
-		outState.putInt("initialDistance", this.initialDistance);
 
 		outState.putInt("position", this.position);
 	}

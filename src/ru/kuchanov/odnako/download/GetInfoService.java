@@ -51,7 +51,7 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 
 	void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		System.out.println("startDownLoad "+catToLoad +"page-"+pageToLoad);
+		System.out.println("startDownLoad "+catToLoad +"/page-"+pageToLoad);
 		Context context = getApplicationContext();
 		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
 		parse.execute();

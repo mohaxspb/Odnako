@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 
-public class ParseForAllAuthors extends AsyncTask<String, Integer, ArrayList<ArrayList<String>>>
+public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<ArrayList<String>>>
 {
 
 	ActionBarActivity act;
@@ -16,12 +16,12 @@ public class ParseForAllAuthors extends AsyncTask<String, Integer, ArrayList<Arr
 	}
 
 	@Override
-	protected ArrayList<ArrayList<String>> doInBackground(String... url)
+	protected ArrayList<ArrayList<String>> doInBackground(Void... args)
 	{
 		ArrayList<ArrayList<String>> output = null;
 		try
 		{
-			HtmlHelper hh = new HtmlHelper(new URL(url[0]));
+			HtmlHelper hh = new HtmlHelper(new URL("http://odnako.org/authors/"));
 			output = hh.getAllAuthorsAsList();
 		} catch (Exception e)
 		{
@@ -67,7 +67,6 @@ public class ParseForAllAuthors extends AsyncTask<String, Integer, ArrayList<Arr
 					dataToWrite2 = dataToWrite2.concat("<item><![CDATA[" + output.get(i).get(2) + "]]></item>\n");
 				}
 				dataToWrite2 = dataToWrite2.concat("</html>");
-//				dataToWrite2=dataToWrite2.replaceAll("-", "–");
 				WriteFile write2 = new WriteFile(dataToWrite2, "allAuthors", "all_authors_imgs.txt", act);
 				write2.execute();
 				////
@@ -81,6 +80,15 @@ public class ParseForAllAuthors extends AsyncTask<String, Integer, ArrayList<Arr
 				WriteFile write3 = new WriteFile(dataToWrite3, "allAuthors", "all_authors_descriptions.txt", act);
 				write3.execute();
 				////
+
+				//start downLoad all Big img and WHO of all Authors
+				String[] allAuthorsUrls = new String[output.size()];
+				for(int i=0; i<allAuthorsUrls.length; i++)
+				{
+					allAuthorsUrls[i]=output.get(i).get(1);
+				}
+				ParseAuthorForBigImgAndWho parse = new ParseAuthorForBigImgAndWho(act, allAuthorsUrls);
+				parse.execute();
 			}
 			else
 			{
@@ -92,5 +100,4 @@ public class ParseForAllAuthors extends AsyncTask<String, Integer, ArrayList<Arr
 			System.out.println("output=null  So  no internet!");
 		}
 	}
-
 }

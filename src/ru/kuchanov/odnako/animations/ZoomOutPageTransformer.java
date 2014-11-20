@@ -4,7 +4,7 @@ ZoomOutPageTransformer.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com
  */
-package ru.kuchanov.odnako.lists_and_utils;
+package ru.kuchanov.odnako.animations;
 
 import android.view.View;
 import android.annotation.SuppressLint;
@@ -15,6 +15,12 @@ public class ZoomOutPageTransformer implements ViewPager.PageTransformer
 {
 	private static final float MIN_SCALE = 0.85f;
 	private static final float MIN_ALPHA = 0.5f;
+	
+	//test
+//	@Override
+//	public void transformPage(View page, float position) {
+//	    page.setRotationY(position * -30);
+//	}
 
 	public void transformPage(View view, float position)
 	{

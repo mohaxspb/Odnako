@@ -9,10 +9,10 @@ package ru.kuchanov.odnako.activities;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.animations.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;

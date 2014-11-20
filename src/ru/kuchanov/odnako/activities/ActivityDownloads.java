@@ -6,10 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.download.ParseForAllAuthors;
-import ru.kuchanov.odnako.download.ParseForAllCategories;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +15,7 @@ import android.view.MenuItem;
 
 public class ActivityDownloads extends ActivityBase
 {
-	
+
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityDownloads onCreate");
@@ -106,7 +103,6 @@ public class ActivityDownloads extends ActivityBase
 				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
 				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
 				String curTheme = pref.getString("theme", "dark");
-				System.out.println(curTheme);
 				if (!curTheme.equals("dark"))
 				{
 					ligthThemeMenuItem.setChecked(true);
@@ -115,10 +111,6 @@ public class ActivityDownloads extends ActivityBase
 				{
 					darkThemeMenuItem.setChecked(true);
 				}
-				ParseForAllCategories parse = new ParseForAllCategories(act);
-				parse.execute("http://odnako.org/");
-				ParseForAllAuthors parse1 = new ParseForAllAuthors(act);
-				parse1.execute("http://odnako.org/authors/");
 				return true;
 			case R.id.theme_ligth:
 				this.pref.edit().putString("theme", "ligth").commit();

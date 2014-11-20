@@ -52,7 +52,15 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(new URL(link));
-			output = hh.getAllArtsInfoFromPage();
+			if(hh.isAuthor())
+			{
+				output = hh.getAllArtsInfoFromAUTHORPage();
+			}
+			else
+			{
+				output = hh.getAllArtsInfoFromPage();
+			}
+			
 
 		} catch (Exception e)
 		{

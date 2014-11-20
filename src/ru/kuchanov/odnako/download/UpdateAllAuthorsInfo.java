@@ -7,12 +7,12 @@ import ru.kuchanov.odnako.R;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 
-public class ParseAuthor extends AsyncTask<Void, Integer, String[][]>
+public class UpdateAllAuthorsInfo extends AsyncTask<Void, Integer, String[][]>
 {
 
 	ActionBarActivity act;
 
-	public ParseAuthor(ActionBarActivity act)
+	public UpdateAllAuthorsInfo(ActionBarActivity act)
 	{
 		this.act = act;
 	}
@@ -27,10 +27,18 @@ public class ParseAuthor extends AsyncTask<Void, Integer, String[][]>
 			output = new String[2][allAuthorsUrls.length];
 			for (int i = 0; i < allAuthorsUrls.length; i++)
 			{
-				HtmlHelper hh = new HtmlHelper(new URL(allAuthorsUrls[i]));
+				try
+				{
+					HtmlHelper hh = new HtmlHelper(new URL(allAuthorsUrls[i]));
 
-				output[0][i] = hh.getAuthorsWho();
-				output[1][i] = hh.getAuthorsBigImg();
+					output[0][i] = hh.getAuthorsWho();
+					output[1][i] = hh.getAuthorsBigImg();
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+					output[0][i] = "empty";
+					output[1][i] = "empty";
+				}
 			}
 
 		} catch (Exception e)

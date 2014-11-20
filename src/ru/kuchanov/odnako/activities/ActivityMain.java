@@ -12,12 +12,12 @@ import java.util.HashMap;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.download.ParseAuthor;
+import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.AuthorsListsPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.lists_and_utils.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
@@ -169,7 +169,7 @@ public class ActivityMain extends ActivityBase
 		//set arts lists viewPager
 		this.artsListPagerAdapter = new ArtsListsPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
-		this.artsListPager.setPageTransformer(true, new ZoomOutPageTransformer());
+		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 		{
 			@Override
@@ -181,14 +181,13 @@ public class ActivityMain extends ActivityBase
 				setCurentCategoryPosition(position);
 
 				setTitleDrawerItemToolbarTopImgETC(position);
-				
+
 				//test sending intent to listfrag to notify it's adapter to fix issue
 				//when there is only 1-st art is shown and other can be shown only from articlesPager
 				//when switching articles
-				String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
-				Intent intentToListFrag=new Intent(allCatsLinks[curentCategoryPosition]+"_notify_that_selected");				
+				String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+				Intent intentToListFrag = new Intent(allCatsLinks[curentCategoryPosition] + "_notify_that_selected");
 				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-
 				if (twoPane)
 				{
 					if (curentCategoryPosition != 3 && curentCategoryPosition != 13)
@@ -196,32 +195,39 @@ public class ActivityMain extends ActivityBase
 						pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
 						.getAllCategoriesMenuLinks(act)[curentCategoryPosition], act);
 						pager.setAdapter(pagerAdapter);
-						pager.setPageTransformer(true, new ZoomOutPageTransformer());
+						pager.setPageTransformer(true, new RotationPageTransformer());
 						pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 						{
 							@Override
 							public void onPageSelected(int position)
 							{
-								System.out.println("onPageSelected in articlePager; position: "+position);
-								String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
+								if (android.os.Build.VERSION.SDK_INT >= 11)
+								{
+									toolbar.setY(0 - toolbar.getHeight());
+									topImg.setY(0 - topImg.getHeight());
+								}
+								System.out.println("onPageSelected in articlePager; position: " + position);
+								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 								allCatListsSelectedArtPosition.put(allCatsLinks[curentCategoryPosition], position);
-								
-								Intent intentToListFrag=new Intent(allCatsLinks[curentCategoryPosition]+"art_position");
-								Bundle b=new Bundle();
+
+								Intent intentToListFrag = new Intent(allCatsLinks[curentCategoryPosition]
+								+ "art_position");
+								Bundle b = new Bundle();
 								b.putInt("position", position);
 								intentToListFrag.putExtras(b);
-								
+
 								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 							}
 						});
-//						String[] allCatsLinks=CatData.getAllCategoriesMenuLinks(act);
-						int curPos=allCatListsSelectedArtPosition.get(allCatsLinks[curentCategoryPosition]);
+						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[curentCategoryPosition]);
 						pager.setCurrentItem(curPos, true);
-//						pager.setCurrentItem(curArtPosition, true);
 					}
 					else
 					{
 						//TODO show all authors and categories adapters
+						pagerAdapter = new AuthorsListsPagerAdapter(act.getSupportFragmentManager(), act);
+						pager.setAdapter(pagerAdapter);
+						pager.setPageTransformer(true, new RotationPageTransformer());
 					}
 				}
 			}
@@ -468,19 +474,6 @@ public class ActivityMain extends ActivityBase
 		this.saveAllCatListsSelectedArtPosition(outState);
 	}
 
-	//	@Override
-	//	protected void onRestoreInstanceState(Bundle savedInstanceState)
-	//	{
-	//		super.onRestoreInstanceState(savedInstanceState);
-	//		System.out.println("ActivityMain onRestoreInstanceState");
-	//
-	//		this.restoreState(savedInstanceState);
-	//		this.restoreGroupChildPosition(savedInstanceState);
-	//
-	//		//		setCurentCategoryPosition(savedInstanceState.getInt("curentCategoryPosition"));
-	//		this.curentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
-	//	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -502,9 +495,6 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				ParseAuthor parse=new ParseAuthor(act);
-				parse.execute();
-
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

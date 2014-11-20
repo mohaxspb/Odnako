@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.widget.ImageView;
 
-public class RecyclerViewOnScrollListener extends OnScrollListener
+public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
 {
 	ActionBarActivity act;
 
-	ArticlesListFragment frag;
+	String categoryToLoad;
 
 	int initialDistance = -100000;
 	int curentDistance = -1;
@@ -32,13 +31,13 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, ArticlesListFragment frag)
+	public RecyclerViewOnScrollListenerALLAUTHORS(ActionBarActivity act, String categoryToLoad)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
 
-		this.frag = frag;
+		this.categoryToLoad = categoryToLoad;
 	}
 
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -50,7 +49,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 		switch (newState)
 		{
 			case (RecyclerView.SCROLL_STATE_DRAGGING):
-				System.out.println("dragging");
+				//						System.out.println("dragging");
 				//mesuring initialDistance between actionBar and 1-st item
 				if (initialDistance == -100000)
 				{
@@ -62,7 +61,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 			break;
 			//scroll finished
 			case (RecyclerView.SCROLL_STATE_IDLE):
-				System.out.println("SCROLL_STATE_IDLE");
+				//						System.out.println("SCROLL_STATE_IDLE");
 				if (topImg.getY() > 0)
 				{
 					topImg.setY(0);
@@ -74,17 +73,13 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 						topImg.setY(0);
 					}
 				}
-				//save position to frag
-				this.frag.setTopImgYCoord((int) this.topImg.getY());
-				this.frag.setToolbarYCoord((int) this.toolbar.getY());
-				this.frag.setInitialDistance(this.initialDistance);
 				//save coord to ActivityMain
 				ActivityMain actM = (ActivityMain) act;
-				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
+				actM.updateAllCatToolbarTopImgYCoord(this.categoryToLoad,
 				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
-				System.out.println("SCROLL_STATE_SETTLING");
+			//						System.out.println("SCROLL_STATE_SETTLING");
 			break;
 		}
 	}

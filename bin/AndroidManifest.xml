@@ -16,6 +16,9 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
+    
+    <!-- for overscreen icon -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -24,6 +27,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    
+    
 
     <application
         android:allowBackup="true"
@@ -98,6 +103,11 @@
         <service
              android:enabled="true"
              android:name="ru.kuchanov.odnako.download.GetInfoService"
+             android:icon="@drawable/ic_launcher"
+             android:label="@string/downloads" />
+        <service
+             android:enabled="true"
+             android:name="ru.kuchanov.odnako.utils.OverScreenService"
              android:icon="@drawable/ic_launcher"
              android:label="@string/downloads" />
         <!--
