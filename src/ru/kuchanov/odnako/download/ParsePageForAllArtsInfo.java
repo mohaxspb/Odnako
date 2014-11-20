@@ -47,7 +47,15 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	{
 		System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		ArrayList<ArtInfo> output = null;
-		String link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
+		String link;
+		if(this.category.startsWith("http://"))
+		{
+			link = category + "/page-" + String.valueOf(this.page) + "/";
+		}
+		else
+		{
+		link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
+		}
 		System.out.println(link);
 		try
 		{

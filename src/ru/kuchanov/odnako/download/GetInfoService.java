@@ -64,7 +64,14 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 //		Log.d("sender", "Broadcasting message");
 		Intent intent = new Intent(categoryToLoad);
 		Bundle b=new Bundle();
-		ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+		if(someResult.size()!=0)
+		{
+			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+		}
+		else
+		{
+			
+		}
 		intent.putExtras(b);
 		
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
