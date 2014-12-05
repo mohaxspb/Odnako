@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -92,10 +91,6 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		{
 			return HEADER;
 		}
-		else if (position == 15)
-		{
-			return ADS;
-		}
 		else
 		{
 			return AUTHOR;
@@ -107,48 +102,24 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	{
 		// TODO Auto-generated method stub
 		int header = 1;
-		//		int footer=1;
-		int numOfAds = 1;
 
-		return this.allAuthrsInfoList.size() + header + /* footer */+numOfAds;
+		return this.allAuthrsInfoList.size() + header;
 	}
 
 	public AuthorInfo getArtInfoByPosition(int position)
 	{
-		AuthorInfo p;
-		if (position < 15)
-		{
-			p = this.allAuthrsInfoList.get(position - 1);
-		}
-		else
-		{
-			p = this.allAuthrsInfoList.get(position - 2);
-		}
+		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
 		return p;
 	}
 
 	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
 	{
-		if (recyclerViewPosition < 15)
-		{
-			return recyclerViewPosition - 1;
-		}
-		else
-		{
-			return recyclerViewPosition - 2;
-		}
+		return recyclerViewPosition - 1;
 	}
 
 	public static int getPositionInRecyclerView(int artsListPosition)
 	{
-		if (artsListPosition < 15)
-		{
-			return artsListPosition + 1;
-		}
-		else
-		{
-			return artsListPosition + 2;
-		}
+		return artsListPosition + 1;
 	}
 
 	@Override
@@ -256,8 +227,9 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				{
 					holderMain.description.setText(null);
 				}
-				holderMain.description.setLinksClickable(true);
-				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
+				//fuck it. It ruins layout(((
+//				holderMain.description.setLinksClickable(true);
+//				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
 				//descriptionIcon
 
 				if (!p.description.equals("empty") && !p.description.equals(""))
@@ -285,7 +257,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 								//so opened need to close
 								//changeIcon
 								holderMain.more_icon.setImageDrawable(drawableArrowDown);
-								params.height=(int) DipToPx.convert(40, act);
+								params.height = (int) DipToPx.convert(40, act);
 								holderMain.description.setLayoutParams(params);
 							}
 							else
@@ -293,7 +265,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 								//closed, need to open
 								//changeIcon
 								holderMain.more_icon.setImageDrawable(drawableArrowUp);
-								params.height=LayoutParams.WRAP_CONTENT;
+								params.height = LayoutParams.WRAP_CONTENT;
 								holderMain.description.setLayoutParams(params);
 							}
 						}

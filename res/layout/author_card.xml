@@ -17,13 +17,13 @@
         <LinearLayout
             android:id="@+id/art_card_main_lin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/art_card_top_lin"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:orientation="horizontal" >
 
@@ -62,16 +62,15 @@
                 android:id="@+id/author_card_bottom_lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:orientation="horizontal" >
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="0dip"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:text="@string/preview"
                     android:textColor="?android:textColorPrimary" />
                 <ImageView
                     android:id="@+id/more_icon"

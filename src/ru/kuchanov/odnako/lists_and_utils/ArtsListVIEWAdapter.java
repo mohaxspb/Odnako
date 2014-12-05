@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
@@ -12,7 +15,9 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -41,8 +46,7 @@ public class ArtsListVIEWAdapter extends ArrayAdapter<ArtInfo>
 implements Filterable
 {
 	private static final int HEADER = 0;
-	private static final int ADS = 1;
-	private static final int ARTICLE = 2;
+	private static final int ARTICLE = 1;
 	ActionBarActivity act;
 
 	ListView artsListView;
@@ -60,6 +64,7 @@ implements Filterable
 	public ArtsListVIEWAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> objects)
 	{
 		super(act, resource, objects);
+		Log.i("ArtsListVIEWAdapter", "ArtsListVIEWAdapter called");
 		this.act = act;
 		this.artsInfo = objects;
 
@@ -75,8 +80,6 @@ implements Filterable
 
 		this.artsListFrag = artsListFrag;
 	}
-	
-	
 
 	@SuppressLint("DefaultLocale")
 	public Filter getFilter()
@@ -134,10 +137,6 @@ implements Filterable
 		{
 			return HEADER;
 		}
-		else if (position == 15)
-		{
-			return ADS;
-		}
 		else
 		{
 			return ARTICLE;
@@ -145,110 +144,83 @@ implements Filterable
 	}
 
 	@Override
+	public int getViewTypeCount()
+	{
+		return 2;
+	}
+
+	@Override
 	public int getCount()
 	{
 		// TODO Auto-generated method stub
 		int header = 1;
-		//		int footer=1;
-		int numOfAds = 0;// 1;
 
-		return this.artsInfo.size() + header + /* footer */+numOfAds;
+		return this.artsInfo.size() + header;
 	}
-//	
-//	public void updateData(ArrayList<ArtInfo> data)
-//	{
-//		this.artsInfo.clear();
-//		this.artsInfo.addAll(data);
-//		this.notifyDataSetChanged();
-//	}
 
 	public ArtInfo getArtInfoByPosition(int position)
 	{
-//		this.artsInfo = ((ActivityMain)act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
-//		this.artsInfo=this.artsListFrag.getArtsInfo();
-		Log.i("adapter", "categoryToLoad: "+this.artsListFrag.getCategoryToLoad());
-		Log.i("adapter", "this.artsInfo.size(): "+this.artsInfo.size());
-		Log.i("adapter", "position: "+position);
-		ArtInfo p;
-		if (position < 15)
-		{
-			p = this.artsInfo.get(position - 1);
-		}
-		else
-		{
-			p = this.artsInfo.get(position - 2);
-		}
+		//		this.artsInfo = ((ActivityMain)act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
+		//		this.artsInfo=this.artsListFrag.getArtsInfo();
+		//		Log.i("adapter", "categoryToLoad: " + this.artsListFrag.getCategoryToLoad());
+		//		Log.i("adapter", "this.artsInfo.size(): " + this.artsInfo.size());
+		//		Log.i("adapter", "position: " + position);
+		ArtInfo p = this.artsInfo.get(position - 1);
 		return p;
 	}
 
 	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
 	{
-		if (recyclerViewPosition < 15)
-		{
-			return recyclerViewPosition - 1;
-		}
-		else
-		{
-			return recyclerViewPosition - 2;
-		}
+		int header = 1;
+		return recyclerViewPosition - header;
 	}
 
-	public static int getPositionInRecyclerView(int artsListPosition)
-	{
-		if (artsListPosition < 15)
-		{
-			return artsListPosition + 1;
-		}
-		else
-		{
-			return artsListPosition + 2;
-		}
-	}
+	//	public static int getPositionInRecyclerView(int artsListPosition)
+	//	{
+	//		int header = 1;
+	//		return artsListPosition + header;
+	//	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View view = null;
+		//		Log.i("adapter", "position: " + position);
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
-				View vg = new View(act);
-				android.widget.AbsListView.LayoutParams paramsABS = new AbsListView.LayoutParams(
-				LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165, act));
-				vg.setLayoutParams(paramsABS);
-
-				HeaderHolder holder = new HeaderHolder(vg);
-				vg.setTag(holder);
-				view = vg;
-
-			break;
-			case (ADS):
-				//TODO
-				View vg1 = new View(act);
-				paramsABS = new AbsListView.LayoutParams(
-				LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165, act));
-				vg1.setLayoutParams(paramsABS);
-
-				HeaderHolder holder1 = new HeaderHolder(vg1);
-				vg1.setTag(holder1);
-				view = vg1;
+				HeaderHolder holderHeader = null;
+				if (convertView == null)
+				{
+					convertView = new View(act);
+					android.widget.AbsListView.LayoutParams paramsABS = new AbsListView.LayoutParams(
+					LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165, act));
+					convertView.setLayoutParams(paramsABS);
+					holderHeader = new HeaderHolder(convertView);
+					convertView.setTag(holderHeader);
+				}
+				else
+				{
+					holderHeader = (HeaderHolder) convertView.getTag();
+				}
 			break;
 			case (ARTICLE):
-				//catch all cat author frags and return;
+
+				final ArticleHolder holderMain;// = null;
 				final ArtInfo p;
 				p = this.getArtInfoByPosition(position);
-
 				final int positionInAllArtsInfo = ArtsListVIEWAdapter.getPositionInAllArtsInfo(position);
 
-				ArticleHolder holderMain;
-				//////////
-				ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(act)
-				.inflate(R.layout.article_card, parent, false);
-				holderMain = new ArticleHolder(viewGroup);
-				viewGroup.setTag(holderMain);
-				view = viewGroup;
-				///////////
-
+				if (convertView == null)// || convertView.getTag() instanceof HeaderHolder)
+				{
+					LayoutInflater vi = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					convertView = vi.inflate(R.layout.article_card, parent, false);
+					holderMain = new ArticleHolder(convertView);
+					convertView.setTag(holderMain);
+				}
+				else
+				{
+					holderMain = (ArticleHolder) convertView.getTag();
+				}
 				//variables for scaling text and icons and images from settings
 				String scaleFactorString = pref.getString("scale", "1");
 				float scaleFactor = Float.valueOf(scaleFactorString);
@@ -259,7 +231,8 @@ implements Filterable
 
 				//light checked item in listView
 				ViewGroup container = (ViewGroup) holderMain.card.getParent();
-				if (this.twoPane)
+				//				if (this.twoPane)
+				if (((ActivityMain) act).getCurentCategoryPosition() == 4 && this.pref.getBoolean("twoPane", false))
 				{
 
 					if (artsListFrag.getMyActivatedPosition() == positionInAllArtsInfo)
@@ -285,14 +258,86 @@ implements Filterable
 					params.height = (int) DipToPx.convert(120, act);
 					holderMain.art_img.setLayoutParams(params);
 					String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
+					//try to load big img.
+					//if fails - load default
 					if (this.pref.getString("theme", "dark").equals("dark"))
 					{
 						imageLoader.displayImage(HDimgURL, holderMain.art_img,
-						UniversalImageLoader.getDarkOptions());
+						UniversalImageLoader.getDarkOptions(),
+						new ImageLoadingListener()
+						{
+							@Override
+							public void onLoadingStarted(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingCancelled(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingFailed(String imageUri, View arg1, FailReason arg2)
+							{
+								String newURL = imageUri.replace("/450_240/", "/120_72/");
+								imageLoader.displayImage(newURL, holderMain.art_img,
+								UniversalImageLoader.getDarkOptions());
+							}
+						}, new ImageLoadingProgressListener()
+						{
+							@Override
+							public void onProgressUpdate(String imageUri, View view, int current, int total)
+							{
+								//							        ...
+							}
+						});
 					}
 					else
 					{
-						imageLoader.displayImage(HDimgURL, holderMain.art_img);
+						imageLoader.displayImage(HDimgURL, holderMain.art_img, UniversalImageLoader.getLightOptions(),
+						new ImageLoadingListener()
+						{
+							@Override
+							public void onLoadingStarted(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingCancelled(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingFailed(String imageUri, View arg1, FailReason arg2)
+							{
+								String newURL = imageUri.replace("/450_240/", "/120_72/");
+								imageLoader.displayImage(newURL, holderMain.art_img,
+								UniversalImageLoader.getLightOptions());
+							}
+						}, new ImageLoadingProgressListener()
+						{
+							@Override
+							public void onProgressUpdate(String imageUri, View view, int current, int total)
+							{
+								//							        ...
+							}
+						});
 					}
 				}
 				else
@@ -455,7 +500,8 @@ implements Filterable
 				File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
 				+ formatedLink);
 				//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-				int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
+				int pixelsForIcons = (int) (35 /** scaleFactor */
+				* scale + 0.5f);
 				LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
 				paramsForIcons.setMargins(5, 5, 5, 5);
 
@@ -562,7 +608,7 @@ implements Filterable
 
 		}
 
-		return view;
+		return convertView;
 
 	}
 

@@ -39,6 +39,7 @@ public class UniversalImageLoader
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 
+		//switch to true if you want logging
 		L.writeLogs(false);
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(act)
@@ -60,11 +61,24 @@ public class UniversalImageLoader
 	public static DisplayImageOptions getDarkOptions()
 	{
 		return new DisplayImageOptions.Builder()
-
 		.displayer(new RoundedBitmapDisplayer(10))
 		.showImageOnLoading(R.drawable.ic_autorenew_white_48dp)
 		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
 		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+	}
+
+	public static DisplayImageOptions getLightOptions()
+	{
+		return new DisplayImageOptions.Builder()
+		.displayer(new RoundedBitmapDisplayer(10))
+		.showImageOnLoading(R.drawable.ic_autorenew_grey600_48dp)
+		.showImageForEmptyUri(R.drawable.ic_crop_original_grey600_48dp)
+		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
@@ -86,7 +100,7 @@ public class UniversalImageLoader
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
-	
+
 	public static DisplayImageOptions getTransparentBackgroundROUNDOptions(ActionBarActivity act)
 	{
 		return new DisplayImageOptions.Builder()

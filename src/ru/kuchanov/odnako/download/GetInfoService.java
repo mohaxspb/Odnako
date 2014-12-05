@@ -70,7 +70,10 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 		}
 		else
 		{
-			
+			ArrayList<ArtInfo> empty=new ArrayList<ArtInfo>();
+			String[] artInfoArr=new String[]{"empty", "Ни одной статьи не обнаружено.", "empty","empty","empty"};
+			empty.add(new ArtInfo(artInfoArr));
+			ArtInfo.writeAllArtsInfoToBundle(b, empty, empty.get(0));
 		}
 		intent.putExtras(b);
 		

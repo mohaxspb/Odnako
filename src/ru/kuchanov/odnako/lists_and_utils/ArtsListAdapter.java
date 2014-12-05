@@ -146,14 +146,14 @@ implements Filterable
 	{
 		// TODO Auto-generated method stub
 		//this for all cats and authors
-		if(this.artsInfo==null)
+		if (this.artsInfo == null)
 		{
 			return 1;
 		}
 		int header = 1;
 		//		int footer=1;
 		int numOfAds = 1;
-		
+
 		return this.artsInfo.size() + header + /* footer */+numOfAds;
 	}
 
@@ -432,12 +432,12 @@ implements Filterable
 					File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
 					+ formatedLink);
 					//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-					int pixelsForIcons = (int) (35 * scaleFactor * scale + 0.5f);
-					LayoutParams paramsForIcons = new LayoutParams(pixelsForIcons, pixelsForIcons);
-					paramsForIcons.setMargins(5, 5, 5, 5);
+//					LayoutParams paramsForIcons = new LayoutParams((int) DipToPx.convert(25, act),
+//					(int) DipToPx.convert(25, act));
+//					paramsForIcons.setMargins(5, 5, 5, 5);
 
 					holderMain.save.setScaleType(ScaleType.FIT_XY);
-					holderMain.save.setLayoutParams(paramsForIcons);
+//					holderMain.save.setLayoutParams(paramsForIcons);
 
 					if (currentArticleFile.exists())
 					{
@@ -470,7 +470,7 @@ implements Filterable
 
 					//read Img
 					ReadUnreadRegister read = new ReadUnreadRegister(act);
-					holderMain.read.setLayoutParams(paramsForIcons);
+//					holderMain.read.setLayoutParams(paramsForIcons);
 
 					if (read.check(p.url))
 					{
@@ -497,7 +497,7 @@ implements Filterable
 					////end read Img
 
 					//share btn
-					holderMain.share.setLayoutParams(paramsForIcons);
+//					holderMain.share.setLayoutParams(paramsForIcons);
 					holderMain.share.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)
@@ -517,7 +517,7 @@ implements Filterable
 					////end of share btn
 
 					//comments btn
-					holderMain.comms.setLayoutParams(paramsForIcons);
+//					holderMain.comms.setLayoutParams(paramsForIcons);
 					holderMain.comms.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)

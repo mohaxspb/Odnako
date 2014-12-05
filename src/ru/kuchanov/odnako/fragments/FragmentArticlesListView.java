@@ -75,10 +75,15 @@ public class FragmentArticlesListView extends Fragment
 		new IntentFilter(this.getCategoryToLoad()));
 
 		//reciver for scrolling and highligting selected position
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
-		new IntentFilter(this.getCategoryToLoad() + "art_position"));
+		//only if there is twoPane MODE and there is allAuthors list currently selected
+		if(((ActivityMain)act).getCurentCategoryPosition()==4 && this.pref.getBoolean("twoPane", false))
+		{
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
+			new IntentFilter(this.getCategoryToLoad() + "art_position"));
+		}
+		
 
-		//reciver for notify when frag sselected
+		//reciver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 	}
