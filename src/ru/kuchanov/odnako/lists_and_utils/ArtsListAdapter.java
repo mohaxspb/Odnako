@@ -7,7 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
@@ -56,10 +56,10 @@ implements Filterable
 
 	boolean twoPane;
 
-	ArticlesListFragment artsListFrag;
+	FragmentArtsRecyclerList artsListFrag;
 
 	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
-	ArticlesListFragment artsListFrag)
+	FragmentArtsRecyclerList artsListFrag)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;

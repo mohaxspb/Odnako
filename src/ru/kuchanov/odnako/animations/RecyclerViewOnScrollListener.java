@@ -8,7 +8,7 @@ package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +20,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 {
 	ActionBarActivity act;
 
-	ArticlesListFragment frag;
+	FragmentArtsRecyclerList frag;
 
 	int initialDistance = -100000;
 	int curentDistance = -1;
@@ -32,7 +32,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, ArticlesListFragment frag)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, FragmentArtsRecyclerList frag)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);

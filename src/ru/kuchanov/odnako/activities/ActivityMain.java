@@ -27,6 +27,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -72,7 +73,7 @@ public class ActivityMain extends ActivityBase
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		System.out.println("ActivityMain onCreate");
+//		System.out.println("ActivityMain onCreate");
 		this.act = this;
 
 		//get default settings to get all settings later
@@ -220,6 +221,8 @@ public class ActivityMain extends ActivityBase
 							}
 						});
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[curentCategoryPosition]);
+						Log.i("curARTSelected", "curPos: "+curPos);
+						
 						pager.setCurrentItem(curPos, true);
 					}
 					else
@@ -272,7 +275,7 @@ public class ActivityMain extends ActivityBase
 		String[] catLinks = CatData.getAllCategoriesMenuLinks(act);
 		for (int i = 0; i < catLinks.length; i++)
 		{
-			this.allCatListsSelectedArtPosition.put(catLinks[i], b.getInt("allCatListsSelectedArtPosition_0"));
+			this.allCatListsSelectedArtPosition.put(catLinks[i], b.getInt("allCatListsSelectedArtPosition_"+String.valueOf(i)));
 		}
 	}
 
@@ -447,7 +450,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		System.out.println("ActivityMain onResume");
+//		System.out.println("ActivityMain onResume");
 		super.onResume();
 	}
 
@@ -455,7 +458,7 @@ public class ActivityMain extends ActivityBase
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		System.out.println("ActivityMain: onSaveInstanceState");
+//		System.out.println("ActivityMain: onSaveInstanceState");
 
 		//save allArtsInfo
 		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);

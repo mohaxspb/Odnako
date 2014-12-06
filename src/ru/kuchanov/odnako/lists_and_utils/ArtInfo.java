@@ -443,7 +443,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			//			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
+			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
 		}
 
 		return allArtsInfo;
@@ -554,8 +554,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String category)
 	{
-//		System.out.println("category: "+category);
-//		System.out.println("b.containsKey(category+'_allArtsInfo_00'): "+String.valueOf(b.containsKey(category+"_allArtsInfo_00")));
+		//		System.out.println("category: "+category);
+		//		System.out.println("b.containsKey(category+'_allArtsInfo_00'): "+String.valueOf(b.containsKey(category+"_allArtsInfo_00")));
 		ArrayList<ArtInfo> allArtsInfo = null;
 		if (b.containsKey(category + "_allArtsInfo_00"))
 		{
@@ -564,7 +564,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 			Set<String> keySet = b.keySet();
 			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
 			Collections.sort(keySetSortedArrList);
-			ArrayList<String> onlyNeededKeysArrList=new ArrayList<String>();
+			ArrayList<String> onlyNeededKeysArrList = new ArrayList<String>();
 			for (int i = 0; i < keySetSortedArrList.size(); i++)
 			{
 				if (keySetSortedArrList.get(i).startsWith(category + "_allArtsInfo_"))
@@ -587,8 +587,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 						allArtsInfo.add(new ArtInfo(b.getStringArray(category + "_allArtsInfo_"
 						+ String.valueOf(i))));
 					}
-//					System.out.println("allArtsInfo.get(allArtsInfo.size()-1).url: "
-//					+ allArtsInfo.get(allArtsInfo.size() - 1).url);
+					//					System.out.println("allArtsInfo.get(allArtsInfo.size()-1).url: "
+					//					+ allArtsInfo.get(allArtsInfo.size() - 1).url);
 				}
 			}
 		}

@@ -12,7 +12,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
-import ru.kuchanov.odnako.fragments.ArticlesListFragment;
+import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,7 +63,7 @@ public class Actions
 		//light clicked card if we can find frag from @param act 
 		if (act.getClass().getSimpleName().equals("ActivityMain"))
 		{
-			ArticlesListFragment artsListFrag = (ArticlesListFragment) act.getSupportFragmentManager()
+			FragmentArtsRecyclerList artsListFrag = (FragmentArtsRecyclerList) act.getSupportFragmentManager()
 			.findFragmentById(R.id.arts_list_container);
 			artsListFrag.setActivatedPosition(position);
 		}

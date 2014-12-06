@@ -35,7 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 
-public class ArticlesListFragment extends Fragment
+public class FragmentArtsRecyclerList extends Fragment
 {
 	private int topImgYCoord = 0;
 	private int toolbarYCoord = 0;
@@ -51,8 +51,6 @@ public class ArticlesListFragment extends Fragment
 	ArrayList<ArtInfo> allArtsInfo;
 	ArtInfo curArtInfo;
 	private int position = 0;
-
-	//	boolean 
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -72,6 +70,7 @@ public class ArticlesListFragment extends Fragment
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
+//			Log.i(categoryToLoad, "fromArgs != null");
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
 		}
 		else
@@ -82,6 +81,7 @@ public class ArticlesListFragment extends Fragment
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
+//			Log.i(categoryToLoad, "savedInstanceState != null");
 			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
 			this.initialDistance = savedInstanceState.getInt("initialDistance");
@@ -136,7 +136,7 @@ public class ArticlesListFragment extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
+//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
 
@@ -194,7 +194,8 @@ public class ArticlesListFragment extends Fragment
 
 		if (this.allArtsInfo == null)
 		{
-			this.getAllArtsInfo(this.getCategoryToLoad());
+			Log.i(categoryToLoad, "this.allArtsInfo=NULL");
+			this.getAllArtsInfo(/*this.getCategoryToLoad()*/);
 
 			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
 			this.allArtsInfo = def;
@@ -206,6 +207,7 @@ public class ArticlesListFragment extends Fragment
 		}
 		else
 		{
+			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 			
@@ -235,7 +237,7 @@ public class ArticlesListFragment extends Fragment
 		return v;
 	}
 
-	private void getAllArtsInfo(String categoryToLoad2)
+	private void getAllArtsInfo(/*String categoryToLoad2*/)
 	{
 //		Log.i(categoryToLoad, "getAllArtsInfo called");
 		// TODO Auto-generated method stub
