@@ -39,7 +39,6 @@ import android.widget.TextView;
 public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 implements Filterable
 {
-
 	private static final int HEADER = 0;
 	private static final int ADS = 1;
 	private static final int ARTICLE = 2;
@@ -432,12 +431,12 @@ implements Filterable
 					File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
 					+ formatedLink);
 					//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-//					LayoutParams paramsForIcons = new LayoutParams((int) DipToPx.convert(25, act),
-//					(int) DipToPx.convert(25, act));
-//					paramsForIcons.setMargins(5, 5, 5, 5);
+					//					LayoutParams paramsForIcons = new LayoutParams((int) DipToPx.convert(25, act),
+					//					(int) DipToPx.convert(25, act));
+					//					paramsForIcons.setMargins(5, 5, 5, 5);
 
 					holderMain.save.setScaleType(ScaleType.FIT_XY);
-//					holderMain.save.setLayoutParams(paramsForIcons);
+					//					holderMain.save.setLayoutParams(paramsForIcons);
 
 					if (currentArticleFile.exists())
 					{
@@ -470,7 +469,7 @@ implements Filterable
 
 					//read Img
 					ReadUnreadRegister read = new ReadUnreadRegister(act);
-//					holderMain.read.setLayoutParams(paramsForIcons);
+					//					holderMain.read.setLayoutParams(paramsForIcons);
 
 					if (read.check(p.url))
 					{
@@ -497,7 +496,7 @@ implements Filterable
 					////end read Img
 
 					//share btn
-//					holderMain.share.setLayoutParams(paramsForIcons);
+					//					holderMain.share.setLayoutParams(paramsForIcons);
 					holderMain.share.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)
@@ -517,7 +516,7 @@ implements Filterable
 					////end of share btn
 
 					//comments btn
-//					holderMain.comms.setLayoutParams(paramsForIcons);
+					//					holderMain.comms.setLayoutParams(paramsForIcons);
 					holderMain.comms.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)

@@ -18,6 +18,7 @@ import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.AuthorsListsPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
+import ru.kuchanov.odnako.services.ServiceDB;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
@@ -498,6 +499,13 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
+				Intent intent=new Intent(this.act, ServiceDB.class);
+				Bundle b=new Bundle();
+				b.putString("categoryToLoad", "odnako.org/blogs");
+				b.putLong("timeStamp", System.currentTimeMillis());
+				b.putBoolean("startDownload", true);
+				intent.putExtras(b);
+				this.startService(intent);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

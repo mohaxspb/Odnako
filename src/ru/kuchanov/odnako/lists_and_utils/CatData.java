@@ -126,6 +126,43 @@ public class CatData
 		String[] allCategoriesMenuLinks = CatData.concatArrays(authorsMenuLinks, categoriesMenuLinks);
 		return allCategoriesMenuLinks;
 	}
+	
+	public static String[] getAllTagsLinks(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_urls);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllTagsNames(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllTagsImgsURLs(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_imgs);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllTagsImgsFILEnames(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_imgs_files_names);
+		return categoriesLinks;
+	}
+	
+	//////authors
+	public static String[] getAllAuthorsNames(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_names);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllAuthorsBlogsURLs(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_urls);
+		return categoriesLinks;
+	}
 
 	public static String[] concatArrays(String[] first, String[] second)
 	{

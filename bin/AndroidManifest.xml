@@ -16,10 +16,10 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-    
-    <!-- for overscreen icon -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <!-- for overscreen icon -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- other -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -27,8 +27,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    
-    
 
     <application
         android:allowBackup="true"
@@ -101,15 +99,20 @@
         </activity>
 
         <service
-             android:enabled="true"
-             android:name="ru.kuchanov.odnako.download.GetInfoService"
-             android:icon="@drawable/ic_launcher"
-             android:label="@string/downloads" />
+            android:name="ru.kuchanov.odnako.download.GetInfoService"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/downloads" />
         <service
-             android:enabled="true"
-             android:name="ru.kuchanov.odnako.utils.OverScreenService"
-             android:icon="@drawable/ic_launcher"
-             android:label="@string/downloads" />
+            android:name="ru.kuchanov.odnako.services.ServiceDB"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_db" />
+        <service
+            android:name="ru.kuchanov.odnako.utils.OverScreenService"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/downloads" />
         <!--
         <service
             android:name="ru.kuchanov.odnako.download.MyService"
@@ -130,7 +133,7 @@
             android:name="ru.kuchanov.odnako.onboot.CheckNewService"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/check_new" />
+            android:label="@string/check_new" />
         -->
 
         <receiver
@@ -149,7 +152,7 @@
             <intent-filter>
                 <action android:name="action_2" />
             </intent-filter>
-        </receiver>
+        </receiver>
         -->
     </application>
 

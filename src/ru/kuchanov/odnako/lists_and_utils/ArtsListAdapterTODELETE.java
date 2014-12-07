@@ -35,7 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class ArtsListAdapterNEW extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class ArtsListAdapterTODELETE extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 implements Filterable
 {
 	private static final int HEADER = 0;
@@ -55,7 +55,7 @@ implements Filterable
 
 	FragmentArticlesListView artsListFrag;
 
-	public ArtsListAdapterNEW(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
+	public ArtsListAdapterTODELETE(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
 	FragmentArticlesListView artsListFrag)
 	{
 		this.act = act;
@@ -211,7 +211,7 @@ implements Filterable
 					p = this.getArtInfoByPosition(position);
 
 					//				final ArtInfo p = this.getArtInfoByPosition(position);
-					final int positionInAllArtsInfo = ArtsListAdapterNEW.getPositionInAllArtsInfo(position);
+					final int positionInAllArtsInfo = ArtsListAdapterTODELETE.getPositionInAllArtsInfo(position);
 
 					ArticleHolder holderMain = (ArticleHolder) holder;
 
