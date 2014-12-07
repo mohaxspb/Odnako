@@ -79,7 +79,18 @@ public class ServiceDB extends Service
 	    SQLiteDatabase db = dbCategoriesHelper.getWritableDatabase();
 	    
 	    
-		
+//		String[] from = { "title" };
+//		String where = "id" + "=?";
+//		String[] whereArgs = new String[] { rowID + "" };
+//		Cursor c = db.query("categoriestable", from, where, whereArgs, null, null, null, null);
+//		if (c != null)
+//		{
+//			while (c.moveToNext())
+//			{
+//				String title = c.getString(c.getColumnIndex("title"));
+//				Log.d(DB_TAG, "row inserted, ID = " + rowID + "title: " + title);
+//			}
+//		}
 	}
 
 	public void onDestroy()

@@ -88,45 +88,45 @@ public class DBCategoriesHelper extends SQLiteOpenHelper
 			initialValues.put("timestamp", 0);
 
 			long rowID = db.insert("categoriestable", null, initialValues);
-
-			String from[] = { "title" };
-			String where = "id" + "=?";
-			String[] whereArgs = new String[] { rowID + "" };
-			Cursor c = db.query("categoriestable", from, where, whereArgs, null, null, null, null);
-			if (c != null)
-			{
-				while (c.moveToNext())
-				{
-					String title = c.getString(c.getColumnIndex("title"));
-					Log.d(DB_TAG, "row inserted, ID = " + rowID + "title: " + title);
-				}
-			}
+			Log.d(DB_TAG, "row inserted, iD = " + rowID);
+//			String[] from = { "title" };
+//			String where = "id" + "=?";
+//			String[] whereArgs = new String[] { rowID + "" };
+//			Cursor c = db.query("categoriestable", from, where, whereArgs, null, null, null, null);
+//			if (c != null)
+//			{
+//				while (c.moveToNext())
+//				{
+//					String title = c.getString(c.getColumnIndex("title"));
+//					Log.d(DB_TAG, "row inserted, ID = " + rowID + "title: " + title);
+//				}
+//			}
 		}
 
 		//menu categories
-		for (int ii = 0; ii < CatData.getAllCategoriesMenuLinks(ctx).length; ii++)
+		for (int i = 0; i < CatData.getAllCategoriesMenuLinks(ctx).length; i++)
 		{
-			ContentValues iiniitiialValues = new ContentValues();
-			iiniitiialValues.put("url", CatData.getAllCategoriesMenuLinks(ctx)[ii]);
-			iiniitiialValues.put("tiitle", CatData.getAllCategoriesMenuNames(ctx)[ii]);
+			ContentValues initialValues = new ContentValues();
+			initialValues.put("url", CatData.getAllCategoriesMenuLinks(ctx)[i]);
+			initialValues.put("title", CatData.getAllCategoriesMenuNames(ctx)[i]);
 
-			iiniitiialValues.put("tiimestamp", 0);
+			initialValues.put("timestamp", 0);
 
-			long rowiiD = db.insert("categoriiestable", null, iiniitiialValues);
-			Log.d(DB_TAG, "row iinserted, iiD = " + rowiiD);
+			long rowiD = db.insert("categoriestable", null, initialValues);
+			Log.d(DB_TAG, "row inserted, iD = " + rowiD);
 		}
 
 		//all authors
 		for (int a = 0; a < CatData.getAllAuthorsBlogsURLs(ctx).length; a++)
 		{
-			ContentValues anitialValues = new ContentValues();
-			anitialValues.put("url", CatData.getAllAuthorsBlogsURLs(ctx)[a]);
-			anitialValues.put("title", CatData.getAllAuthorsNames(ctx)[a]);
+			ContentValues initialValues = new ContentValues();
+			initialValues.put("url", CatData.getAllAuthorsBlogsURLs(ctx)[a]);
+			initialValues.put("title", CatData.getAllAuthorsNames(ctx)[a]);
 
-			anitialValues.put("timestamp", 0);
+			initialValues.put("timestamp", 0);
 
-			long rowIDa = db.insert("categoriestable", null, anitialValues);
-			Log.d(DB_TAG, "row inserted, ID = " + rowIDa);
+			long rowID = db.insert("categoriestable", null, initialValues);
+			Log.d(DB_TAG, "row inserted, ID = " + rowID);
 		}
 	}
 
