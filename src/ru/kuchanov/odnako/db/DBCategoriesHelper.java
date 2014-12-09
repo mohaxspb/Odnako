@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.db;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;

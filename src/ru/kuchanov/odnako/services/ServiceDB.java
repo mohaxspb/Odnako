@@ -6,15 +6,19 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.services;
 
+import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import ru.kuchanov.odnako.db.DBCategoriesHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 
 import android.app.Service;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -23,10 +27,38 @@ public class ServiceDB extends Service
 
 	final String LOG_TAG = "ServiceDB";
 
+	///////////
+	private DataBaseHelper dataBaseHelper = null;
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		Log.d(LOG_TAG, "onDestroy");
+		if (dataBaseHelper != null)
+		{
+			OpenHelperManager.releaseHelper();
+			dataBaseHelper = null;
+		}
+	}
+
+	private DataBaseHelper getHelper()
+	{
+		if (dataBaseHelper == null)
+		{
+			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
+		}
+		return dataBaseHelper;
+	}
+
+	///////////
+
 	public void onCreate()
 	{
 		super.onCreate();
 		Log.d(LOG_TAG, "onCreate");
+		//get access to my_awersomeDB
+		this.getHelper();
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -67,37 +99,55 @@ public class ServiceDB extends Service
 
 	private void getInfoFromDB(String catToLoad, Long timeStamp, boolean startDownload)
 	{
-		//delete
-//		DBCategoriesHelper dbCategoriesHelper1=new DBCategoriesHelper(this);
-//	    SQLiteDatabase db1 = dbCategoriesHelper1.getWritableDatabase();
-//	    db1.delete("categoriestable", null, null);
-		this.deleteDatabase("myDB");
+		List<Category> allCatsListFromDB=null;
 		
-		//TODO request to DB, now return default data with zero timeStamp
-		// подключаемся к БД
-		DBCategoriesHelper dbCategoriesHelper=new DBCategoriesHelper(this);
-	    SQLiteDatabase db = dbCategoriesHelper.getWritableDatabase();
-	    
-	    
-//		String[] from = { "title" };
-//		String where = "id" + "=?";
-//		String[] whereArgs = new String[] { rowID + "" };
-//		Cursor c = db.query("categoriestable", from, where, whereArgs, null, null, null, null);
-//		if (c != null)
-//		{
-//			while (c.moveToNext())
-//			{
-//				String title = c.getString(c.getColumnIndex("title"));
-//				Log.d(DB_TAG, "row inserted, ID = " + rowID + "title: " + title);
-//			}
-//		}
+		try
+		{
+			allCatsListFromDB=this.getHelper().getDaoCategory().queryForAll();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(allCatsListFromDB!=null)
+		{
+			for(Category c: allCatsListFromDB)
+			{
+				Log.d(LOG_TAG, c.getTitle()+" url: "+c.getUrl());
+			}
+		}
+		else
+		{
+			Log.d(LOG_TAG, "allCatsListFromDB=null");
+		}
+		
+
 	}
 
-	public void onDestroy()
-	{
-		super.onDestroy();
-		Log.d(LOG_TAG, "onDestroy");
-	}
+	//delete
+	//		DBCategoriesHelper dbCategoriesHelper1=new DBCategoriesHelper(this);
+	//	    SQLiteDatabase db1 = dbCategoriesHelper1.getWritableDatabase();
+	//	    db1.delete("categoriestable", null, null);
+	//		this.deleteDatabase("myDB");
+
+	//TODO request to DB, now return default data with zero timeStamp
+	// подключаемся к БД
+	//		DBCategoriesHelper dbCategoriesHelper=new DBCategoriesHelper(this);
+	//	    SQLiteDatabase db = dbCategoriesHelper.getWritableDatabase();
+
+	//		String[] from = { "title" };
+	//		String where = "id" + "=?";
+	//		String[] whereArgs = new String[] { rowID + "" };
+	//		Cursor c = db.query("categoriestable", from, where, whereArgs, null, null, null, null);
+	//		if (c != null)
+	//		{
+	//			while (c.moveToNext())
+	//			{
+	//				String title = c.getString(c.getColumnIndex("title"));
+	//				Log.d(DB_TAG, "row inserted, ID = " + rowID + "title: " + title);
+	//			}
+	//		}
 
 	public IBinder onBind(Intent intent)
 	{

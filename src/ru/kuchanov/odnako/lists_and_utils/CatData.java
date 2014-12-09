@@ -139,6 +139,17 @@ public class CatData
 		return categoriesLinks;
 	}
 	
+	public static String[] getAllTagsDescriptions(Context act)
+	{
+		// TODO need to load it
+		String[] categoriesLinks = new String[CatData.getAllTagsLinks(act).length];
+		for(int i=0; i<categoriesLinks.length; i++)
+		{
+			categoriesLinks[i]="empty";
+		}
+		return categoriesLinks;
+	}
+	
 	public static String[] getAllTagsImgsURLs(Context act)
 	{
 		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_imgs);
