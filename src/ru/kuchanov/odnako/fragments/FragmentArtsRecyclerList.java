@@ -15,6 +15,9 @@ import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.download.GetInfoService;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.services.ServiceDB;
+import ru.kuchanov.odnako.utils.DipToPx;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +33,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +44,8 @@ public class FragmentArtsRecyclerList extends Fragment
 	private int topImgYCoord = 0;
 	private int toolbarYCoord = 0;
 	private int initialDistance;
+
+	SwipeRefreshLayout swipeRef;
 
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
@@ -70,7 +76,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-//			Log.i(categoryToLoad, "fromArgs != null");
+			//			Log.i(categoryToLoad, "fromArgs != null");
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
 		}
 		else
@@ -81,7 +87,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-//			Log.i(categoryToLoad, "savedInstanceState != null");
+			//			Log.i(categoryToLoad, "savedInstanceState != null");
 			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
 			this.initialDistance = savedInstanceState.getInt("initialDistance");
@@ -136,7 +142,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
+			//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
 
@@ -182,11 +188,13 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-//				System.out.println("ArticlesListFragment onCreateView");
+		//				System.out.println("ArticlesListFragment onCreateView");
 		//inflate root view
 		View v;
 
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
+
+		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -195,22 +203,31 @@ public class FragmentArtsRecyclerList extends Fragment
 		if (this.allArtsInfo == null)
 		{
 			Log.i(categoryToLoad, "this.allArtsInfo=NULL");
-			this.getAllArtsInfo(/*this.getCategoryToLoad()*/);
 
-			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
+			this.getAllArtsInfo();
+
+			//			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
+			//			this.allArtsInfo = def;
+			//
+			//			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
+			//			
+			//			this.artsList.setAdapter(artsListAdapter);
+
+			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
+			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
 			this.allArtsInfo = def;
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
-			
+
 			this.artsList.setAdapter(artsListAdapter);
-			
+
 		}
 		else
 		{
 			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
-			
+
 			this.artsListAdapter.notifyDataSetChanged();
 		}
 
@@ -237,14 +254,37 @@ public class FragmentArtsRecyclerList extends Fragment
 		return v;
 	}
 
-	private void getAllArtsInfo(/*String categoryToLoad2*/)
+	@SuppressLint("ResourceAsColor")
+	private void getAllArtsInfo()
 	{
-//		Log.i(categoryToLoad, "getAllArtsInfo called");
+		Log.i(categoryToLoad, "getAllArtsInfo called");
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.act, GetInfoService.class);
+		//		Intent intent = new Intent(this.act, GetInfoService.class);
+		//		Bundle b = new Bundle();
+		//		b.putString("categoryToLoad", this.getCategoryToLoad());
+		//		b.putInt("pageToLaod", 1);
+		//		intent.putExtras(b);
+		//		this.act.startService(intent);
+
+		//		this.swipeRef.setProgressViewEndTarget(false, (int) DipToPx.convert(56, act));
+		//		this.swipeRef.setProgressBackgroundColor(R.color.odnako);
+//		this.swipeRef.setColorSchemeColors(R.color.material_grey_300,
+//		R.color.material_grey_500,
+//		R.color.material_grey_700,
+//		R.color.material_grey_900);
+		//////////////
+		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
+		//as I understand before onResume of Activity
+		TypedValue typed_value = new TypedValue();
+		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+		this.swipeRef.setRefreshing(true);
+
+		Intent intent = new Intent(this.act, ServiceDB.class);
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", this.getCategoryToLoad());
-		b.putInt("pageToLaod", 1);
+		b.putLong("timeStamp", System.currentTimeMillis());
+		b.putBoolean("startDownload", false);
 		intent.putExtras(b);
 		this.act.startService(intent);
 	}
@@ -252,7 +292,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-				System.out.println("ArticlesListFragment onViewCreated");
+		System.out.println("ArticlesListFragment onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 	}
 

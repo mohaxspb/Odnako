@@ -157,9 +157,9 @@ public class CatData
 		return allCategoriesMenuLinks;
 	}
 	
-	public static String[] getAllTagsLinks(Context act)
+	public static String[] getAllTagsLinks(Context ctx)
 	{
-		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_urls);
+		String[] categoriesLinks = ctx.getResources().getStringArray(R.array.all_categories_urls);
 		return categoriesLinks;
 	}
 	

@@ -14,6 +14,7 @@ import java.util.TimeZone;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 
@@ -30,23 +31,12 @@ public class ServiceDB extends Service
 	///////////
 	private DataBaseHelper dataBaseHelper = null;
 
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		Log.d(LOG_TAG, "onDestroy");
-		if (dataBaseHelper != null)
-		{
-			OpenHelperManager.releaseHelper();
-			dataBaseHelper = null;
-		}
-	}
-
 	private DataBaseHelper getHelper()
 	{
 		if (dataBaseHelper == null)
 		{
-			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
+//			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
+			dataBaseHelper=new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 3);
 		}
 		return dataBaseHelper;
 	}
@@ -99,30 +89,7 @@ public class ServiceDB extends Service
 
 	private void getInfoFromDB(String catToLoad, Long timeStamp, boolean startDownload)
 	{
-		List<Category> allCatsListFromDB=null;
 		
-		try
-		{
-			allCatsListFromDB=this.getHelper().getDaoCategory().queryForAll();
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(allCatsListFromDB!=null)
-		{
-			for(Category c: allCatsListFromDB)
-			{
-				Log.d(LOG_TAG, c.getTitle()+" url: "+c.getUrl());
-			}
-		}
-		else
-		{
-			Log.d(LOG_TAG, "allCatsListFromDB=null");
-		}
-		
-
 	}
 
 	//delete
@@ -154,5 +121,63 @@ public class ServiceDB extends Service
 		Log.d(LOG_TAG, "onBind");
 		return null;
 	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		Log.d(LOG_TAG, "onDestroy");
+		if (dataBaseHelper != null)
+		{
+			OpenHelperManager.releaseHelper();
+			dataBaseHelper = null;
+		}
+	}
+	
+	//dummy testing code
+//	List<Category> allCatsListFromDB = null;
+//	try
+//	{
+//		allCatsListFromDB = this.getHelper().getDaoCategory().queryForAll();
+//		if (allCatsListFromDB != null)
+//		{
+//			Log.d(LOG_TAG, "allCatsListFromDB.size(): " + allCatsListFromDB.size());
+//			for (Category c : allCatsListFromDB)
+//			{
+//				Log.d(LOG_TAG, c.getTitle() + " url: " + c.getUrl());
+//			}
+//		}
+//		else
+//		{
+//			Log.d(LOG_TAG, "allCatsListFromDB=null");
+//		}
+//	} catch (SQLException e)
+//	{
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//
+//	List<Author> allAuthorsListFromDB = null;
+//	try
+//	{
+//		allAuthorsListFromDB = this.getHelper().getDaoAuthor().queryForAll();
+//		if (allAuthorsListFromDB != null)
+//		{
+//			Log.d(LOG_TAG, "allAuthorsListFromDB.size(): " + allAuthorsListFromDB.size());
+//			for (Author c : allAuthorsListFromDB)
+//			{
+//				Log.d(LOG_TAG, c.getName() + " url: " + c.getBlog_url());
+//			}
+//		}
+//		else
+//		{
+//			Log.d(LOG_TAG, "allCatsListFromDB=null");
+//		}
+//	} catch (SQLException e)
+//	{
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+
 
 }
