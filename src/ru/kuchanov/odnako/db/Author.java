@@ -34,6 +34,9 @@ public class Author
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String avatar;
 
+	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	private String avatarBig;
+
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
 	private Date refreshed;
 
@@ -43,6 +46,31 @@ public class Author
 	public Author()
 	{
 
+	}
+
+	public Author(String blog_url, String name, String descr, String who, String ava_url, String ava_big, Date ref,
+	Date lastArt)
+	{
+		this.blog_url = blog_url;
+		this.name = name;
+		this.avatar = ava_url;
+		this.avatarBig = ava_big;
+		this.who = who;
+		this.description = descr;
+		this.refreshed = ref;
+		this.lastArticleDate = lastArt;
+	}
+
+	public Author(String[] stringData, Date[] dateData)
+	{
+		this.blog_url = stringData[0];
+		this.name = stringData[1];
+		this.avatar = stringData[2];
+		this.avatarBig = stringData[3];
+		this.who = stringData[4];
+		this.description = stringData[5];
+		this.refreshed = dateData[0];
+		this.lastArticleDate = dateData[1];
 	}
 
 	public int getId()

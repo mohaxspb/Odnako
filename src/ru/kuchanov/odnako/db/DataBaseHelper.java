@@ -71,7 +71,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			//create artCatTable table
 			TableUtils.createTable(connectionSource, ArtCatTable.class);
 			Log.i(DataBaseHelper.class.getSimpleName(), "all tables have been created");
-			
+
 			//fill with initial data
 			fillTables();
 		} catch (SQLException e)
@@ -161,6 +161,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	private void fillTables()
 	{
 		//fill initial category info
+		//AllTags
 		String[] urls = CatData.getAllTagsLinks(ctx);
 		String[] titles = CatData.getAllTagsNames(ctx);
 		String[] descriptions = CatData.getAllTagsDescriptions(ctx);
@@ -178,6 +179,52 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 				Date[] dateData = { new Date(0), new Date(0) };
 				Category category = new Category(stringData, dateData);
 				this.daoCategory.create(category);
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		//menuCategories
+		String[] urlsM = CatData.getAllCategoriesMenuLinks(ctx);
+		String[] titlesM = CatData.getAllCategoriesMenuNames(ctx);
+		String[] descriptionsM = CatData.getAllCategoriesMenuDescriptions(ctx);
+		String[] img_urlsM = CatData.getAllCategoriesMenuImgsUrls(ctx);
+		String[] img_files_namesM = CatData.getAllCategoriesMenuImgsFilesNames(ctx);
+
+		int lengthM = urlsM.length;
+		for (int i = 0; i < lengthM; i++)
+		{
+			try
+			{
+				this.daoCategory = this.getDaoCategory();
+				String[] stringData = { urlsM[i], titlesM[i], descriptionsM[i], img_urlsM[i], img_files_namesM[i] };
+				Date[] dateData = { new Date(0), new Date(0) };
+				Category category = new Category(stringData, dateData);
+				this.daoCategory.create(category);
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		////
+		//Authors table
+		String[] urlsA = CatData.getAllAuthorsBlogsURLs(ctx);
+		String[] namesA = CatData.getAllAuthorsNames(ctx);
+		String[] descriptionsA = CatData.getAllAuthorsDescriptions(ctx);
+		String[] whoA = CatData.getAllAuthorsWhos(ctx);
+		String[] img_urlsA = CatData.getAllAuthorsAvatars(ctx);
+		String[] img_urlsABIG = CatData.getAllAuthorsAvatarsBig(ctx);
+
+		int lengthA = urlsA.length;
+		for (int i = 0; i < lengthA; i++)
+		{
+			try
+			{
+				this.daoAuthor = this.getDaoAuthor();
+				String[] stringData = { urlsA[i], namesA[i], descriptionsA[i], whoA[i], img_urlsA[i], img_urlsABIG[i] };
+				Date[] dateData = { new Date(0), new Date(0) };
+				Author author = new Author(stringData, dateData);
+				this.daoAuthor.create(author);
 			} catch (SQLException e)
 			{
 				e.printStackTrace();

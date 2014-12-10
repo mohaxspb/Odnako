@@ -14,6 +14,18 @@
         <item>Анатолий Вассерман</item>
         <item>Все авторы</item>
     </string-array>
+    <string-array name="authors_imgs_links">
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
+    </string-array>
+    <string-array name="authors_imgs_files_names">
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+        <item><![CDATA[agr_dummy.jpg]]></item>
+    </string-array>
     <string-array name="authors_links">
         <item>leontev.odnako.org</item>
         <item>viktormarahovskiy.odnako.org</item>

@@ -127,6 +127,36 @@ public class CatData
 		return allCategoriesMenuLinks;
 	}
 	
+	public static String[] getAllCategoriesMenuDescriptions(Context act)
+	{
+		// TODO need to load it
+		String[] categoriesLinks = new String[CatData.getAllTagsLinks(act).length];
+		for(int i=0; i<categoriesLinks.length; i++)
+		{
+			categoriesLinks[i]="empty";
+		}
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllCategoriesMenuImgsUrls(Context act)
+	{
+		String[] arr = act.getResources().getStringArray(R.array.authors_imgs_links);
+
+		String[] arr2 = act.getResources().getStringArray(R.array.categories_imgs_urls);
+
+		String[] allCategoriesMenuLinks = CatData.concatArrays(arr, arr2);
+		return allCategoriesMenuLinks;
+	}
+	public static String[] getAllCategoriesMenuImgsFilesNames(Context act)
+	{
+		String[] arr = act.getResources().getStringArray(R.array.authors_imgs_files_names);
+
+		String[] arr2 = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+
+		String[] allCategoriesMenuLinks = CatData.concatArrays(arr, arr2);
+		return allCategoriesMenuLinks;
+	}
+	
 	public static String[] getAllTagsLinks(Context act)
 	{
 		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_urls);
@@ -172,6 +202,30 @@ public class CatData
 	public static String[] getAllAuthorsBlogsURLs(Context act)
 	{
 		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_urls);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllAuthorsDescriptions(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_descriptions);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllAuthorsWhos(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_who);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllAuthorsAvatars(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_imgs);
+		return categoriesLinks;
+	}
+	
+	public static String[] getAllAuthorsAvatarsBig(Context act)
+	{
+		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_big_imgs);
 		return categoriesLinks;
 	}
 
