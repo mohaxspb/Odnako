@@ -287,6 +287,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		Intent intent = new Intent(this.act, ServiceDB.class);
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", this.getCategoryToLoad());
+		b.putInt("pageToLoad", 1);
 		b.putLong("timeStamp", System.currentTimeMillis());
 		b.putBoolean("startDownload", false);
 		intent.putExtras(b);

@@ -15,6 +15,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "article")
 public class Article
 {
+	public final static String AUTHOR_FIELD_NAME="author"; 
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -74,7 +75,7 @@ public class Article
 	private String img_author;
 
 	//foreignKeys
-	@DatabaseField(foreign = true)
+	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, foreignAutoRefresh=true, canBeNull=true)
 	private Author author;
 
 	public Article()

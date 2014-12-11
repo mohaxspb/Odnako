@@ -14,14 +14,16 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "art_cat_table")
 public class ArtCatTable
 {
+	public final static String ARTICLE_ID_FIELD_NAME="article_id";
+	public final static String CATEGORY_ID_FIELD_NAME="category_id"; 
 
 	@DatabaseField(generatedId = true)
 	private int id;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true)
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
 	private int article_id;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true)
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = CATEGORY_ID_FIELD_NAME)
 	private int category_id;
 	
 	public ArtCatTable()
