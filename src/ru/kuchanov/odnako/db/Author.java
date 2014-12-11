@@ -15,11 +15,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "author")
 public class Author
 {
+	public final static String URL_FIELD_NAME="blog_url"; 
 
 	@DatabaseField(generatedId = true)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String blog_url;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)

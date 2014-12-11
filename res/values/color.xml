@@ -10,6 +10,7 @@
     <color name="blue">#7ecce8</color>
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
+    <!-- material_grey_colors -->
     <color name="material_grey_900">#212121</color>
     <color name="material_grey_900_transparent">#00212121</color>
     <color name="material_grey_800">#424242</color>
@@ -22,5 +23,31 @@
     <color name="material_grey_200">#eeeeee</color>
     <color name="material_grey_100">#f5f5f5</color>
     <color name="material_grey_50">#fafafa</color>
+    <!-- material_indigo_colors -->
+    <color name="material_indigo_50">#E8EAF6</color>
+    <color name="material_indigo_100">#C5CAE9</color>
+    <color name="material_indigo_200">#9FA8DA</color>
+    <color name="material_indigo_300">#7986CB</color>
+    <color name="material_indigo_300_transparent">#007986CB</color>
+    <color name="material_indigo_400">#5C6BC0</color>
+    <color name="material_indigo_500">#3F51B5</color>
+    <color name="material_indigo_600">#3949AB</color>
+    <color name="material_indigo_700">#303F9F</color>
+    <color name="material_indigo_800">#283593</color>
+    <color name="material_indigo_900">#1A237E</color>
+    <color name="material_indigo_900_transparent">#001A237E</color>
+    <!-- material_red_colors -->
+    <color name="material_red_50">#FFEBEE</color>
+    <color name="material_red_100">#FFCDD2</color>
+    <color name="material_red_200">#EF9A9A</color>
+    <color name="material_red_300">#E57373</color>
+    <color name="material_red_300_transparent">#00E57373</color>
+    <color name="material_red_400">#EF5350</color>
+    <color name="material_red_500">#F44336</color>
+    <color name="material_red_600">#E53935</color>
+    <color name="material_red_700">#D32F2F</color>
+    <color name="material_red_800">#C62828</color>
+    <color name="material_red_900">#B71C1C</color>
+    <color name="material_red_900_transparent">#00B71C1C</color>
 
 </resources>

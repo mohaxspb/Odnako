@@ -15,11 +15,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "category")
 public class Category
 {
+	public final static String URL_FIELD_NAME="url"; 
 
-	@DatabaseField(generatedId = true/*allowGeneratedIdInsert=true*/)
+	@DatabaseField(generatedId = true)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String url;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)

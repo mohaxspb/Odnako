@@ -12,12 +12,9 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
-import ru.kuchanov.odnako.download.GetInfoService;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.services.ServiceDB;
-import ru.kuchanov.odnako.utils.DipToPx;
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -142,7 +139,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
+			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
 
@@ -195,6 +192,18 @@ public class FragmentArtsRecyclerList extends Fragment
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
+		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
+		//as I understand before onResume of Activity
+		this.swipeRef.setColorSchemeColors(R.color.material_red_300,
+		R.color.material_red_500,
+		R.color.material_red_500,
+		R.color.material_red_500);
+
+		TypedValue typed_value = new TypedValue();
+		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+
+		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -254,7 +263,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		return v;
 	}
 
-	@SuppressLint("ResourceAsColor")
 	private void getAllArtsInfo()
 	{
 		Log.i(categoryToLoad, "getAllArtsInfo called");
@@ -268,16 +276,12 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		//		this.swipeRef.setProgressViewEndTarget(false, (int) DipToPx.convert(56, act));
 		//		this.swipeRef.setProgressBackgroundColor(R.color.odnako);
-//		this.swipeRef.setColorSchemeColors(R.color.material_grey_300,
-//		R.color.material_grey_500,
-//		R.color.material_grey_700,
-//		R.color.material_grey_900);
+		//		this.swipeRef.setColorSchemeColors(R.color.material_grey_300,
+		//		R.color.material_grey_500,
+		//		R.color.material_grey_700,
+		//		R.color.material_grey_900);
 		//////////////
-		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
-		//as I understand before onResume of Activity
-		TypedValue typed_value = new TypedValue();
-		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
-		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+
 		this.swipeRef.setRefreshing(true);
 
 		Intent intent = new Intent(this.act, ServiceDB.class);

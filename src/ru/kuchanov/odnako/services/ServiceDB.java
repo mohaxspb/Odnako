@@ -89,7 +89,31 @@ public class ServiceDB extends Service
 
 	private void getInfoFromDB(String catToLoad, Long timeStamp, boolean startDownload)
 	{
-		
+		//try to find db entry for given catToLoad
+		//first in Category
+		Category cat=null;
+		try
+		{
+			cat = this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, catToLoad).queryForFirst();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//if there is no entry in Category
+		//try to find in Author
+		Author aut=null;
+		if(cat==null)
+		{
+			try
+			{
+				aut = this.getHelper().getDaoAuthor().queryBuilder().where().eq(Author.URL_FIELD_NAME, catToLoad).queryForFirst();
+			} catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	//delete
