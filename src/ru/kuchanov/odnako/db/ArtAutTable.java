@@ -11,11 +11,11 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "art_cat_table")
-public class ArtCatTable
+@DatabaseTable(tableName = "art_aut_table")
+public class ArtAutTable
 {
 	public final static String ARTICLE_ID_FIELD_NAME="article_id";
-	public final static String CATEGORY_ID_FIELD_NAME="category_id"; 
+	public final static String AUTHOR_ID_FIELD_NAME="author_id"; 
 
 	@DatabaseField(generatedId = true, allowGeneratedIdInsert=true)
 	private int id;
@@ -23,10 +23,10 @@ public class ArtCatTable
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
 	private int article_id;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = CATEGORY_ID_FIELD_NAME)
-	private int category_id;
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = AUTHOR_ID_FIELD_NAME)
+	private int author_id;
 	
-	public ArtCatTable()
+	public ArtAutTable()
 	{
 		// TODO need empty constructor for ORMlite
 	}
@@ -53,12 +53,12 @@ public class ArtCatTable
 
 	public int getCategory_id()
 	{
-		return category_id;
+		return author_id;
 	}
 
 	public void setCategory_id(int category_id)
 	{
-		this.category_id = category_id;
+		this.author_id = category_id;
 	}
 
 }

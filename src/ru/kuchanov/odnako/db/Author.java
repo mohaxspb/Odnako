@@ -15,7 +15,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "author")
 public class Author
 {
-	public final static String URL_FIELD_NAME="blog_url"; 
+	public final static String URL_FIELD_NAME = "blog_url";
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -43,6 +43,21 @@ public class Author
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
 	private Date lastArticleDate;
+
+	//true if there are full list of arts without intervals
+	//false if we have arts, with interval, that we catch while loading arts from web;
+	//i.e. on first launch we have no arts at all, so it's false
+	//after first load we have it's true
+	//then if we'll load MORE arts we search for then in DB
+	//if there are no arts (or less then 30). we load from web
+	//else from bd
+	////
+	//if it's no first load (there are arts in DB) and we have no match of loaded arts (i.e. by url) we set it to false
+	//and so load MORE arts by web;
+	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
+	//so next MORE arts we'll get from DB
+	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false)
+	private boolean sinhronised = false;
 
 	public Author()
 	{
@@ -152,6 +167,16 @@ public class Author
 	public void setLastArticleDate(Date lastArticleDate)
 	{
 		this.lastArticleDate = lastArticleDate;
+	}
+
+	public boolean isSinhronised()
+	{
+		return sinhronised;
+	}
+
+	public void setSinhronised(boolean sinhronised)
+	{
+		this.sinhronised = sinhronised;
 	}
 
 }

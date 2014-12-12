@@ -17,7 +17,7 @@ public class Article
 {
 	public final static String AUTHOR_FIELD_NAME="author"; 
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true)//, allowGeneratedIdInsert=true)
 	private int id;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
@@ -88,10 +88,10 @@ public class Article
 		return id;
 	}
 
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+//	public void setId(int id)
+//	{
+//		this.id = id;
+//	}
 
 	public String getUrl()
 	{

@@ -37,6 +37,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	private Dao<Author, Integer> daoAuthor = null;
 	private Dao<Article, Integer> daoArticle = null;
 	private Dao<ArtCatTable, Integer> daoArtCatTable = null;
+	private Dao<ArtAutTable, Integer> daoArtAutTable = null;
 
 	public DataBaseHelper(Context context)
 	{
@@ -59,7 +60,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase arg0, ConnectionSource arg1)
+	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource)
 	{
 		try
 		{
@@ -72,6 +73,8 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable(connectionSource, Article.class);
 			//create artCatTable table
 			TableUtils.createTable(connectionSource, ArtCatTable.class);
+			//create artAutTable table
+			TableUtils.createTable(connectionSource, ArtAutTable.class);
 			Log.i(DataBaseHelper.class.getSimpleName(), "all tables have been created");
 
 			//fill with initial data
@@ -169,6 +172,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.dropTable(connectionSource, Author.class, true);
 			TableUtils.dropTable(connectionSource, Article.class, true);
 			TableUtils.dropTable(connectionSource, ArtCatTable.class, true);
+			TableUtils.dropTable(connectionSource, ArtAutTable.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e)
@@ -221,6 +225,15 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		return this.daoArtCatTable;
 	}
 
+	public Dao<ArtAutTable, Integer> getDaoArtAutTable() throws SQLException
+	{
+		if (this.daoArtAutTable == null)
+		{
+			this.daoArtAutTable = DaoManager.createDao(this.getConnectionSource(), ArtAutTable.class);
+		}
+		return this.daoArtAutTable;
+	}
+
 	/**
 	 * Close the database connections and clear any cached DAOs.
 	 */
@@ -232,6 +245,21 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		this.daoArticle = null;
 		this.daoAuthor = null;
 		this.daoCategory = null;
+	}
+
+	public void clearArticleTable()
+	{
+		try
+		{
+			this.getDaoArticle().deleteBuilder().delete();
+			Log.d(DATABASE_NAME, "Article table's objects are already DELETED");
+			Log.d(DATABASE_NAME, "this.getDaoArticle().queryForAll().size(): "
+			+ this.getDaoArticle().queryForAll().size());
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
