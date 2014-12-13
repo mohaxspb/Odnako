@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 import java.util.Date;
+import ru.kuchanov.odnako.utils.DateParse;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -15,12 +16,13 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "article")
 public class Article
 {
-	public final static String AUTHOR_FIELD_NAME="author"; 
+	public final static String AUTHOR_FIELD_NAME = "author";
+	public final static String URL_FIELD_NAME = "url";
 
-	@DatabaseField(generatedId = true)//, allowGeneratedIdInsert=true)
+	@DatabaseField(generatedId = true)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String url;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
@@ -42,15 +44,15 @@ public class Article
 	private Date pubDate;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
-	private Date refreshed;
+	private Date refreshed=new Date(0);
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false)
-	private int numOfComments=0;
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = true)
+	private int numOfComments = 0;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false)
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = true)
 	private int numOfSharings = 0;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String artText;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
@@ -75,7 +77,7 @@ public class Article
 	private String img_author;
 
 	//foreignKeys
-	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, foreignAutoRefresh=true, canBeNull=true)
+	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME/*, foreignAutoRefresh = true*/, canBeNull = true)
 	private Author author;
 
 	public Article()
@@ -83,15 +85,73 @@ public class Article
 
 	}
 
+	public Article(String[] artInfoArr, Date refreshed, Author author)
+	{
+		this.url = artInfoArr[0];
+		this.title = artInfoArr[1];
+		this.img_art = artInfoArr[2];
+		this.authorBlogUrl = artInfoArr[3];
+		this.authorName = artInfoArr[4];
+
+		this.preview = artInfoArr[5];
+
+		//date; here can be 2 different ways of storing date, that we recive from site, so get them from util
+		this.pubDate = DateParse.parse(artInfoArr[6]);
+		//end of date
+
+		this.numOfComments = Integer.parseInt(artInfoArr[7]);
+		this.numOfSharings = Integer.parseInt(artInfoArr[8]);
+		this.artText = artInfoArr[9];
+		this.authorDescr = artInfoArr[10];
+		this.tegs_main = artInfoArr[11];
+		this.tegs_all = artInfoArr[12];
+		this.share_quont = artInfoArr[13];
+		this.to_read_main = artInfoArr[14];
+		this.to_read_more = artInfoArr[15];
+		this.img_author = artInfoArr[16];
+		
+		//refreshed date
+		//set it only if we have not null or "empty" artText value
+		//and, ofcours not null given Date refreshed
+		if(this.artText!=null)
+		{
+			if(!this.artText.equals("empty"))
+			{
+				if(refreshed!=null)
+				{
+					this.refreshed=refreshed;
+				}
+//				else
+//				{
+//					this.refreshed=new Date(0);
+//				}
+			}
+//			else
+//			{
+//				this.refreshed=new Date(0);
+//			}
+		}
+//		else
+//		{
+//			this.refreshed=new Date(0);
+//		}
+		
+		//author object
+		if(author!=null)
+		{
+			this.author=author;
+		}
+	}
+
 	public int getId()
 	{
 		return id;
 	}
 
-//	public void setId(int id)
-//	{
-//		this.id = id;
-//	}
+	//	public void setId(int id)
+	//	{
+	//		this.id = id;
+	//	}
 
 	public String getUrl()
 	{

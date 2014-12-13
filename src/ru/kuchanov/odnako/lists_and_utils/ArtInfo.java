@@ -462,8 +462,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 		AllInfo[5] = "preview";
 		AllInfo[6] = "pubDate";
 
-		AllInfo[7] = String.valueOf("10");
-		AllInfo[8] = String.valueOf("10");
+		AllInfo[7] = String.valueOf(10);
+		AllInfo[8] = String.valueOf(10);
 		AllInfo[9] = "artText";
 		AllInfo[10] = "authorDescr";
 		AllInfo[11] = "tegs_main";

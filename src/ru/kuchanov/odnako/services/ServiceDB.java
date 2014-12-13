@@ -8,7 +8,9 @@ package ru.kuchanov.odnako.services;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -33,6 +35,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -60,7 +66,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (dataBaseHelper == null)
 		{
 			//			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 5);
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 8);
 			//			this.dataBaseHelper.clearArticleTable();
 		}
 		return dataBaseHelper;
@@ -154,7 +160,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					break;
 
 					case DB_ANSWER_NO_ENTRY_OF_ARTS:
-						//TODO no arts in DB (why?) 
+						//TODO no arts in DB (why?)
+						//we get it if there is no need to refresh by period, so we have one successful load in past...
+						//but no art's in db... that's realy strange! =)
 						//so start download from web
 						this.startDownLoad(catToLoad, 1);
 					break;
@@ -243,7 +251,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					}
 				} catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return DB_ANSWER_SQLEXCEPTION_ARTCAT;
 				}
@@ -270,13 +277,12 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				lastRefreshedMills = aut.getRefreshed().getTime();
 				if (lastRefreshedMills == 0)
 				{
-					//TODO was never refreshed, so start to refresh
+					//was never refreshed, so start to refresh
 					return DB_ANSWER_NEVER_REFRESHED;
 				}
 				else
 				{
-					//TODO check period from last sink
-					//					boolean needToRefreshByPeriod = false;
+					//check period from last sink
 					int secondsInMills = 1000;
 					int minutes = secondsInMills * 60;
 					int testCheckPeriod = 1;
@@ -318,7 +324,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					}
 				} catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
+					//Auto-generated catch block
 					e.printStackTrace();
 					return DB_ANSWER_SQLEXCEPTION_ARTS;
 				}
@@ -331,7 +337,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			}
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
+			//Auto-generated catch block
 			e.printStackTrace();
 			return DB_ANSWER_SQLEXCEPTION_AUTHOR;
 		}
@@ -374,9 +380,91 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	private void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad)
 	{
 		// TODO Auto-generated method stub
-		//here we'll write gained arts to Article table,
+		//here we'll write gained arts to Article table
+
+		///////////////
+		for (ArtInfo a : someResult)
+		{
+			//check if there is no already exsisted arts in DB by queryForURL
+			Article existingArt = null;
+			try
+			{
+				existingArt = this.getHelper().getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, a.url)
+				.queryForFirst();
+			} catch (SQLException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (existingArt == null)
+			{
+				//get author obj if it is in ArtInfo and Author table
+				Author aut = null;
+				try
+				{
+					aut = this.getHelper().getDaoAuthor().queryBuilder().where()
+					.eq(Author.URL_FIELD_NAME, a.authorBlogUrl).queryForFirst();
+				} catch (SQLException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//crate Article obj to pass it to DB
+								Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
+//				Article art = new Article(test.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), null);
+				//				Article art = new Article(ArtInfo.getDefaultArtInfo().getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), null);
+				try
+				{
+					this.getHelper().getDaoArticle().create(art);
+				} catch (SQLException e)
+				{
+					Log.e(LOG_TAG, art.getTitle() + " error while INSERT");
+				}
+			}
+			else
+			{
+				//entry already exists... So what we must do in that case? Need to think about it... =)
+			}
+
+		}
+		//test logging writened to DB arts
+		List<Article> listFromDB = null;
+		try
+		{
+			listFromDB = this.getHelper().getDaoArticle().queryForAll();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (listFromDB.size() != 0)
+		{
+			Log.d(LOG_TAG, "listFromDB.size(): " + listFromDB.size());
+			for (Article a : listFromDB)
+			{
+				Author aut = a.getAuthor();
+				try
+				{
+					this.getHelper().getDaoAuthor().refresh(aut);
+				} catch (SQLException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (aut != null)
+				{
+					Log.d(LOG_TAG, a.getTitle() + ", author: " + aut.getName());
+				}
+				else
+				{
+					Log.d(LOG_TAG, a.getTitle() + ", author=null");
+				}
+			}
+
+		}
 		//write refreshed date to entry of given category
 		//and fill ArtCatTable with entries of arts 
+
 	}
 
 	@Override

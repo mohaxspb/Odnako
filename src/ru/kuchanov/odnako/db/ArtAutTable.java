@@ -30,6 +30,13 @@ public class ArtAutTable
 	{
 		// TODO need empty constructor for ORMlite
 	}
+	
+	public ArtAutTable(int id, int articleId, int authorId)
+	{
+		this.id=id;
+		this.article_id=articleId;
+		this.author_id=authorId;
+	}
 
 	public int getId()
 	{
