@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.services;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.db.ArtAutTable;
 import ru.kuchanov.odnako.db.ArtCatTable;
@@ -35,9 +35,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -66,7 +63,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (dataBaseHelper == null)
 		{
 			//			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 8);
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 11);
 			//			this.dataBaseHelper.clearArticleTable();
 		}
 		return dataBaseHelper;
@@ -361,6 +358,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (someResult.size() != 0)
 		{
 			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+			//before sending message to listener (frag) we must write gained info to DB
+			this.writeArtsToDB(someResult, categoryToLoad);
 		}
 		else
 		{
@@ -372,14 +371,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		intent.putExtras(b);
 
-		//before sending message to listener (frag) we must write gained info to DB
-		this.writeArtsToDB(someResult, categoryToLoad);
+		//now update REFRESHED field of Category or Author entry in table
+		this.updateRefreshedDate(categoryToLoad);
+		
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 
 	private void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad)
 	{
-		// TODO Auto-generated method stub
 		//here we'll write gained arts to Article table
 
 		///////////////
@@ -393,7 +392,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				.queryForFirst();
 			} catch (SQLException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if (existingArt == null)
@@ -403,16 +401,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				try
 				{
 					aut = this.getHelper().getDaoAuthor().queryBuilder().where()
-					.eq(Author.URL_FIELD_NAME, a.authorBlogUrl).queryForFirst();
+					.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(a.authorBlogUrl)).queryForFirst();
+
 				} catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//crate Article obj to pass it to DB
-								Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
-//				Article art = new Article(test.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), null);
-				//				Article art = new Article(ArtInfo.getDefaultArtInfo().getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), null);
+				Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
 				try
 				{
 					this.getHelper().getDaoArticle().create(art);
@@ -424,47 +420,65 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			else
 			{
 				//entry already exists... So what we must do in that case? Need to think about it... =)
+				//Actually nothing to do, cause we only get here initial ArtInfo from site list
+				//in other cases we can update artText or preview and so on, but not here
 			}
 
 		}
-		//test logging writened to DB arts
-		List<Article> listFromDB = null;
-		try
+
+		//and fill ArtCatTable with entries of arts
+		//TODO check if it's loading from top (new) of from bottom (previous)
+		//TODO if previous so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
+		//
+		/////check if there are arts of given category
+		//{
+		//if so ...
+		//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
+		//(match by id, that we gain from Article table by gain Arts by url)
+		//
+		//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
+		//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
+		//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+		//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
+				//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+		//}
+		//if not just insert entries (with art id and cat id)
+		// and set given category sink to true;
+		//{
+		//}
+
+	}
+
+	//write refreshed date to entry of given category
+	public void updateRefreshedDate(String categoryToLoad)
+	{
+		if (this.isCategory(categoryToLoad))
 		{
-			listFromDB = this.getHelper().getDaoArticle().queryForAll();
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (listFromDB.size() != 0)
-		{
-			Log.d(LOG_TAG, "listFromDB.size(): " + listFromDB.size());
-			for (Article a : listFromDB)
+			try
 			{
-				Author aut = a.getAuthor();
-				try
-				{
-					this.getHelper().getDaoAuthor().refresh(aut);
-				} catch (SQLException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (aut != null)
-				{
-					Log.d(LOG_TAG, a.getTitle() + ", author: " + aut.getName());
-				}
-				else
-				{
-					Log.d(LOG_TAG, a.getTitle() + ", author=null");
-				}
+				UpdateBuilder<Category, Integer> updateBuilder = this.getHelper().getDaoCategory().updateBuilder();
+				updateBuilder.updateColumnValue(Category.REFRESHED_FIELD_NAME, new Date(System.currentTimeMillis()));
+				updateBuilder.where().eq(Category.URL_FIELD_NAME, categoryToLoad);
+				updateBuilder.update();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
 			}
-
 		}
-		//write refreshed date to entry of given category
-		//and fill ArtCatTable with entries of arts 
-
+		else
+		{
+			try
+			{
+				UpdateBuilder<Author, Integer> updateBuilder = this.getHelper().getDaoAuthor().updateBuilder();
+				updateBuilder.updateColumnValue(Author.REFRESHED_FIELD_NAME, new Date(System.currentTimeMillis()));
+				//DO NOT forget, that we can recive categoryToLoad with or without "/" at the and!
+				updateBuilder.where().eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
+				updateBuilder.update();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -491,49 +505,26 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 	}
 
-	//dummy testing code
-	//	List<Category> allCatsListFromDB = null;
-	//	try
-	//	{
-	//		allCatsListFromDB = this.getHelper().getDaoCategory().queryForAll();
-	//		if (allCatsListFromDB != null)
-	//		{
-	//			Log.d(LOG_TAG, "allCatsListFromDB.size(): " + allCatsListFromDB.size());
-	//			for (Category c : allCatsListFromDB)
-	//			{
-	//				Log.d(LOG_TAG, c.getTitle() + " url: " + c.getUrl());
-	//			}
-	//		}
-	//		else
-	//		{
-	//			Log.d(LOG_TAG, "allCatsListFromDB=null");
-	//		}
-	//	} catch (SQLException e)
-	//	{
-	//		// TODO Auto-generated catch block
-	//		e.printStackTrace();
-	//	}
-	//
-	//	List<Author> allAuthorsListFromDB = null;
-	//	try
-	//	{
-	//		allAuthorsListFromDB = this.getHelper().getDaoAuthor().queryForAll();
-	//		if (allAuthorsListFromDB != null)
-	//		{
-	//			Log.d(LOG_TAG, "allAuthorsListFromDB.size(): " + allAuthorsListFromDB.size());
-	//			for (Author c : allAuthorsListFromDB)
-	//			{
-	//				Log.d(LOG_TAG, c.getName() + " url: " + c.getBlog_url());
-	//			}
-	//		}
-	//		else
-	//		{
-	//			Log.d(LOG_TAG, "allCatsListFromDB=null");
-	//		}
-	//	} catch (SQLException e)
-	//	{
-	//		// TODO Auto-generated catch block
-	//		e.printStackTrace();
-	//	}
+	public boolean isCategory(String url)
+	{
+		boolean isCategory = false;
+		try
+		{
+			Category cat = this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url)
+			.queryForFirst();
+			if (cat != null)
+			{
+				isCategory = true;
+			}
+			else
+			{
+				isCategory = false;
+			}
+		} catch (SQLException e)
+		{
+			Log.e("err", "SQLException isCategory");
+		}
+		return isCategory;
 
+	}
 }

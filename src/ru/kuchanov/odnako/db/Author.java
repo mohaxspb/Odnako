@@ -16,6 +16,8 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Author
 {
 	public final static String URL_FIELD_NAME = "blog_url";
+	public final static String REFRESHED_FIELD_NAME = "refreshed";
+	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -38,7 +40,7 @@ public class Author
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String avatarBig;
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
+	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
 	private Date refreshed;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
@@ -56,7 +58,7 @@ public class Author
 	//and so load MORE arts by web;
 	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
 	//so next MORE arts we'll get from DB
-	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false)
+	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
 	private boolean sinhronised = false;
 
 	public Author()
@@ -177,6 +179,22 @@ public class Author
 	public void setSinhronised(boolean sinhronised)
 	{
 		this.sinhronised = sinhronised;
+	}
+
+	/**
+	 * 
+	 * @param url
+	 *            URL to format (can be with or without "/" at the end)
+	 * @return URL without "/" at the end if it is
+	 */
+	public static String getURLwithoutSlashAtTheEnd(String url)
+	{
+		//delete last char "/" if it is, as in res/ we have author blog_url without it
+		if (url.endsWith("/"))
+		{
+			url = url.substring(0, url.length() - 1);
+		}
+		return url;
 	}
 
 }

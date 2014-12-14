@@ -15,7 +15,9 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "category")
 public class Category
 {
-	public final static String URL_FIELD_NAME="url"; 
+	public final static String URL_FIELD_NAME = "url";
+	public final static String REFRESHED_FIELD_NAME = "refreshed";
+	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -35,12 +37,12 @@ public class Category
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
 	private String img_file_name;
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
+	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
 	private Date refreshed;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
 	private Date lastArticleDate;
-	
+
 	//true if there are full list of arts without intervals
 	//false if we have arts, with interval, that we catch while loading arts from web;
 	//i.e. on first launch we have no arts at all, so it's false
@@ -53,8 +55,8 @@ public class Category
 	//and so load MORE arts by web;
 	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
 	//so next MORE arts we'll get from DB
-	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false)
-	private boolean sinhronised=false;
+	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
+	private boolean sinhronised = false;
 
 	public Category()
 	{
@@ -89,10 +91,10 @@ public class Category
 		return id;
 	}
 
-//	public void setId(int id)
-//	{
-//		this.id = id;
-//	}
+	//	public void setId(int id)
+	//	{
+	//		this.id = id;
+	//	}
 
 	public String getUrl()
 	{
