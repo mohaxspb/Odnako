@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
-
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -14,10 +13,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "art_cat_table")
 public class ArtCatTable
 {
-	public final static String ARTICLE_ID_FIELD_NAME="article_id";
-	public final static String CATEGORY_ID_FIELD_NAME="category_id"; 
+	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
+	public final static String CATEGORY_ID_FIELD_NAME = "category_id";
+	private static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
+	private static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
 
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert=true)
+	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
 	private int id;
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
@@ -25,7 +26,13 @@ public class ArtCatTable
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = CATEGORY_ID_FIELD_NAME)
 	private int category_id;
-	
+
+	@DatabaseField(dataType = DataType.STRING, columnName = NEXT_ART_URL_FIELD_NAME)
+	private String nextArtUrl;
+
+	@DatabaseField(dataType = DataType.STRING, columnName = PREVIOUS_ART_URL_FIELD_NAME)
+	private String previousArtUrl;
+
 	public ArtCatTable()
 	{
 		// TODO need empty constructor for ORMlite

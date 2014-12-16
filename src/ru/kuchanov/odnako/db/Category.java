@@ -18,6 +18,7 @@ public class Category
 	public final static String URL_FIELD_NAME = "url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
 	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
+	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
 	@DatabaseField(generatedId = true)
 	private int id;
@@ -57,6 +58,12 @@ public class Category
 	//so next MORE arts we'll get from DB
 	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
 	private boolean sinhronised = false;
+
+	//we need this to check if we have all arts at the end of category's list
+	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,
+	//or in same case while requesting arts from bottom
+	@DatabaseField(dataType = DataType.STRING, columnName = FIRST_ARTICLE_URL_FIELD_NAME)
+	private String firstArticleURL;
 
 	public Category()
 	{
@@ -174,6 +181,16 @@ public class Category
 	public void setSinhronised(boolean sinhronised)
 	{
 		this.sinhronised = sinhronised;
+	}
+
+	public String getFirstArticleURL()
+	{
+		return firstArticleURL;
+	}
+
+	public void setFirstArticleURL(String firstArticleURL)
+	{
+		this.firstArticleURL = firstArticleURL;
 	}
 
 }

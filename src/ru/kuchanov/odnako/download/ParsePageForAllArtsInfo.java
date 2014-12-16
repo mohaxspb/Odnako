@@ -29,9 +29,6 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	ActionBarActivity act;
 	Context ctx;
 
-	/**
-	 * 
-	 */
 	//	public ParsePageForAllArtsInfo(String category, int page, ActionBarActivity act)
 	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback)
 	{
@@ -84,7 +81,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//check internet
 		if (output != null)
 		{
-			callback.doSomething(output, this.category);
+			callback.doSomething(output, this.category, this.page);
 		}
 		//NO internet
 		else

@@ -91,89 +91,106 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			//gain category
 			String catToLoad;
 			catToLoad = intent.getStringExtra("categoryToLoad");
-			Log.d(LOG_TAG, catToLoad);
-			//get pageToLoad
-			int pageToLoad;
-			pageToLoad = intent.getIntExtra("pageToLoad", 1);
-			//get timeStamp
-			Long timeStamp;
-			timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
-			Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
-			cal.setTimeInMillis(timeStamp);
 			//get startDownload flag
 			boolean startDownload;
 			startDownload = intent.getBooleanExtra("startDownload", false);
-			//			Log.d(LOG_TAG,
-			//			cal.get(Calendar.YEAR) + "." + cal.get(Calendar.MONTH) + "." + cal.get(Calendar.DAY_OF_MONTH) + "."
-			//			+ cal.get(Calendar.HOUR_OF_DAY) + "." + cal.get(Calendar.MINUTE));
-			//			Log.d(LOG_TAG, cal.getTime().toString());
-			//			Log.d(LOG_TAG,
-			//			cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("ru"))
-			//			+ " " + cal.get(Calendar.YEAR));
-
-			//if there is frag to download we do not need to go to DB
-			//we simply start download
-			if (startDownload)
+			//firstly: if we load from top or not? Get it by pageToLoad
+			//get pageToLoad
+			int pageToLoad;
+			pageToLoad = intent.getIntExtra("pageToLoad", 1);
+			if (pageToLoad == 1)
 			{
-				//TODO start download
+				//if pageToLoad=1 we load from top
+				Log.d(LOG_TAG, "LOAD FROM TOP!");
+				//get timeStamp
+				Long timeStamp;
+				timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
+				Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
+				cal.setTimeInMillis(timeStamp);
+
+				//if there is flag to download we do not need to go to DB
+				//we simply start download
+				if (startDownload)
+				{
+					this.startDownLoad(catToLoad, 1);
+				}
+				else
+				{
+					//get info from appDB. 
+					//if it's null - start load and notify caller about it
+					//if not, check timeStamp of appBD; 
+					//if it's more than 15 min less then given timeStamp return appDB info and notify, that download starts
+					//otherwise return appDB and notify that it is upToDate
+
+					//method getInfoFromDB will return result of searching throw DB
+					String DBRezult = this.getInfoFromDB(catToLoad, cal, pageToLoad);
+					Log.d(LOG_TAG, DBRezult);
+
+					switch (DBRezult)
+					{
+						case DB_ANSWER_SQLEXCEPTION_CAT:
+							Toast.makeText(this, "Ошибка чтения Базы Данных, КАТЕГОРИЯ", Toast.LENGTH_LONG).show();
+						break;
+						case DB_ANSWER_SQLEXCEPTION_AUTHOR:
+							Toast.makeText(this, "Ошибка чтения Базы Данных, АВТОР", Toast.LENGTH_LONG).show();
+						break;
+						case DB_ANSWER_SQLEXCEPTION_ARTS:
+							Toast.makeText(this, "Ошибка чтения Базы Данных, Статья", Toast.LENGTH_LONG).show();
+						break;
+						case DB_ANSWER_SQLEXCEPTION_ARTCAT:
+							Toast.makeText(this, "Ошибка чтения Базы Данных, СТАТЬЯ_КАТЕГОРИЯ", Toast.LENGTH_LONG)
+							.show();
+						break;
+						case DB_ANSWER_NEVER_REFRESHED:
+							//was never refreshed, so start to refresh
+							//so start download category with 1-st page
+							this.startDownLoad(catToLoad, 1);
+						break;
+						case DB_ANSWER_REFRESH_BY_PERIOD:
+							//was refreshed more than max period, so start to refresh
+							//so start download category with 1-st page
+							//but firstly we must show old articles
+							this.startDownLoad(catToLoad, 1);
+						break;
+
+						case DB_ANSWER_NO_ENTRY_OF_ARTS:
+							//no arts in DB (why?)
+							//we get it if there is no need to refresh by period, so we have one successful load in past...
+							//but no art's in db... that's realy strange! =)
+							//so start download from web
+							this.startDownLoad(catToLoad, 1);
+						break;
+						case DB_ANSWER_UNKNOWN_CATEGORY:
+						//TODO here we must create new entry in Category (or Author) table
+						//and start download arts of this category
+
+						break;
+						case DB_ANSWER_INFO_SENDED_TO_FRAG:
+						//here we have nothing to do... Cause there is no need to load somthing from web,
+						//and arts have been already sended to frag
+						break;
+					}
+				}
 			}
 			else
 			{
-				//get info from appDB. 
-				//if it's null - start load and notify caller about it
-				//if not, check timeStamp of appBD; 
-				//if it's more than 15 min less then given timeStamp return appDB info and notify, that download starts
-				//otherwise return appDB and notify that it is upToDate
-				//maybe we need FLAG here to start downLoad in all cases
-				//				this.getInfoFromDB(catToLoad, timeStamp/* , startDownload */, pageToLoad);
-				//method getInfoFromDB will return result of searching throw DB
-				String DBRezult = this.getInfoFromDB(catToLoad, cal, pageToLoad);
-				Log.d(LOG_TAG, DBRezult);
-
-				switch (DBRezult)
-				{
-					case DB_ANSWER_SQLEXCEPTION_CAT:
-						Toast.makeText(this, "Ошибка чтения Базы Данных, КАТЕГОРИЯ", Toast.LENGTH_LONG).show();
-					break;
-					case DB_ANSWER_SQLEXCEPTION_AUTHOR:
-						Toast.makeText(this, "Ошибка чтения Базы Данных, АВТОР", Toast.LENGTH_LONG).show();
-					break;
-					case DB_ANSWER_SQLEXCEPTION_ARTS:
-						Toast.makeText(this, "Ошибка чтения Базы Данных, Статья", Toast.LENGTH_LONG).show();
-					break;
-					case DB_ANSWER_SQLEXCEPTION_ARTCAT:
-						Toast.makeText(this, "Ошибка чтения Базы Данных, СТАТЬЯ_КАТЕГОРИЯ", Toast.LENGTH_LONG).show();
-					break;
-					case DB_ANSWER_NEVER_REFRESHED:
-						//TODO was never refreshed, so start to refresh
-						//so start download category with 1-st page
-						this.startDownLoad(catToLoad, 1);
-					break;
-					case DB_ANSWER_REFRESH_BY_PERIOD:
-						//TODO was refreshed more than max period, so start to refresh
-						//so start download category with 1-st page
-						//but firstly we must show old articles
-						this.startDownLoad(catToLoad, 1);
-					break;
-
-					case DB_ANSWER_NO_ENTRY_OF_ARTS:
-						//TODO no arts in DB (why?)
-						//we get it if there is no need to refresh by period, so we have one successful load in past...
-						//but no art's in db... that's realy strange! =)
-						//so start download from web
-						this.startDownLoad(catToLoad, 1);
-					break;
-					case DB_ANSWER_UNKNOWN_CATEGORY:
-					//TODO here we must create new entry in Category (or Author) table
-					//and start download arts of this category
-
-					break;
-					case DB_ANSWER_INFO_SENDED_TO_FRAG:
-					//TODO here we have nothing to do... Cause there is no need to load somthing from web,
-					//and arts have been already sended to frag
-					break;
-				}
+				//if pageToLoad!=1 we load from bottom
+				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
+				//here we ask DB  if it's sinked
+				////TODO if so aks db for arts
+				//////if we have no arts, we load them from web
+				//////if we have >30 we pass 30 to fragment
+				//////else we ask category if it has firstArtURL
+				////////if so we pass arts to fragment
+				////////else we must load arts from web
+				//////////if we get <30 we set last art's URL as first art of category and write arts to db(Article and ArtCat)
+				//////////else simply write arts to db(Article and ArtCat)
+				////TODO if unsinked we load arts from web
+				////match gained arts with ArtCat entries from id>30*pageToLoad
+				/////if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match
+				/////else write arts to db after id>30*pageToLoad
 			}
+
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -220,7 +237,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					{
 						//we do not have to refresh by period,
 						//so go to check if there is info in db
-						//						return "do not refresh by period";
 					}
 
 				}
@@ -230,13 +246,11 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				{
 					artCat = this.getHelper().getDaoArtCatTable().queryBuilder().where()
 					.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, catId).query();
-					Log.d(LOG_TAG, "artCat.size(): " + artCat.size());
 					if (artCat.size() != 0)
 					{
 						//TODO so there is some arts in DB by category, that we can send to frag and show
 						//sending...
 						return DB_ANSWER_INFO_SENDED_TO_FRAG;
-						//						return "there_are_entries_in_db";
 					}
 					else
 					{
@@ -296,7 +310,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					{
 						//we do not have to refresh by period,
 						//so go to check if there is info in db
-						//						return "do not refresh by period";
 					}
 				}
 				//				int catId = aut.getId();
@@ -342,7 +355,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		System.out.println("startDownLoad " + catToLoad + "/page-" + pageToLoad);
+		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 		Context context = getApplicationContext();
 		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
 		parse.execute();
@@ -350,16 +363,15 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	// Send an Intent with an action named "custom-event-name". The Intent sent should 
 	// be received by the ReceiverActivity.
-	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad)
+	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
-		//		Log.d("sender", "Broadcasting message");
 		Intent intent = new Intent(categoryToLoad);
 		Bundle b = new Bundle();
 		if (someResult.size() != 0)
 		{
 			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
 			//before sending message to listener (frag) we must write gained info to DB
-			this.writeArtsToDB(someResult, categoryToLoad);
+			this.writeArtsToDB(someResult, categoryToLoad, pageToLoad);
 		}
 		else
 		{
@@ -371,20 +383,27 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		intent.putExtras(b);
 
-		//now update REFRESHED field of Category or Author entry in table
-		this.updateRefreshedDate(categoryToLoad);
-		
+		//now update REFRESHED field of Category or Author entry in table if we load from top
+		if (pageToLoad == 1)
+		{
+			this.updateRefreshedDate(categoryToLoad);
+		}
+		else
+		{
+			//we don need to update refreshed Date, cause we do it only when loading from top
+		}
+
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 
-	private void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad)
+	private void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
 		//here we'll write gained arts to Article table
 
 		///////////////
 		for (ArtInfo a : someResult)
 		{
-			//check if there is no already exsisted arts in DB by queryForURL
+			//check if there is no already existing arts in DB by queryForURL
 			Article existingArt = null;
 			try
 			{
@@ -427,25 +446,102 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 
 		//and fill ArtCatTable with entries of arts
-		//TODO check if it's loading from top (new) of from bottom (previous)
-		//TODO if previous so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
-		//
-		/////check if there are arts of given category
-		//{
-		//if so ...
-		//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
-		//(match by id, that we gain from Article table by gain Arts by url)
-		//
-		//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
-		//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
-		//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
-		//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
-				//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
-		//}
-		//if not just insert entries (with art id and cat id)
-		// and set given category sink to true;
-		//{
-		//}
+		//check if it was loading from top (new) of from bottom (previous)
+		if(pageToLoad==1)
+		{
+			//from top
+			/////check if there are arts of given category
+			try
+			{
+				//switch by Category or Author
+				List<Integer> artsIds=new ArrayList<Integer>();
+				List<Article> catArtsList=new ArrayList<Article>();
+				if(this.isCategory(categoryToLoad))
+				{
+					//this is Category, so...
+					//get Category id
+					int categoryId=this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, categoryToLoad).queryForFirst().getId();
+					//get all ArtCat entries with given Category id
+					List<ArtCatTable> artCatEntries=this.getHelper().getDaoArtCatTable().queryBuilder().where().eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId).query();
+					//check if there are any arts in category
+					if(artCatEntries.size()!=0)
+					{
+						//get first 30 (max num of arts on page) category's arts ids
+						for(int i=0; i<30 && i<artCatEntries.size(); i++)
+						{
+							ArtCatTable a=artCatEntries.get(i);
+							artsIds.add(a.getArticle_id());
+						}
+						//now get first 30 (max num of arts on page) Article objects of category by id
+						//TODO I think we do NOT need more then 1-st Article... We'll match only with first!
+						for(int id: artsIds)
+						{
+							catArtsList.add(this.getHelper().getDaoArticle().queryForId(id));
+						}
+						//and match their urls with loaded art's urls
+						for(int i=0; i<someResult.size(); i++)
+						{
+							if(someResult.get(i).url.equals(catArtsList.get(0).getUrl()))
+							{
+								//TODO matched! So we can mark category as sinked
+								//and write not matched arts in ArtCatTable
+								//and set previous Article of matched Article
+								
+								//break loop on matching
+								break;
+							}
+							else
+							{
+								//check if it's last iteration
+								if(i==someResult.size()-1)
+								{
+									//TODO no matches, so mark Category unsinked and write new artCat entries to db
+									Log.d(LOG_TAG, "no matches, so mark Category unsinked and write new artCat entries to db");
+								}
+							}
+						}
+						
+					}
+					else
+					{
+						//TODO there are no arts, so just write them!
+					}
+					
+				}
+				else
+				{
+					//TODO this is Author, so...
+//					artsIds=this.getHelper().getDaoArtAutTable()
+				}
+				
+			}
+			catch(SQLException e)
+			{
+				
+			}
+			//if so ...
+			
+			//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
+			//(match by id, that we gain from Article table by gain Arts by url)
+			//
+			//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
+			//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
+			//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+			//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
+					//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+			//}
+			//if not just insert entries (with art id and cat id)
+			// and set given category sink to true;
+			//{
+			//}
+		}
+		else
+		{
+			//from bottom
+			//so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
+		}
+		
+		
 
 	}
 
@@ -482,9 +578,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	}
 
 	@Override
-	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad)
+	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
-		this.sendMessage(someResult, categoryToLoad);
+		this.sendMessage(someResult, categoryToLoad, pageToLoad);
 	}
 
 	public IBinder onBind(Intent intent)
@@ -528,3 +624,11 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	}
 }
+
+//Log.d(LOG_TAG,
+//			cal.get(Calendar.YEAR) + "." + cal.get(Calendar.MONTH) + "." + cal.get(Calendar.DAY_OF_MONTH) + "."
+//			+ cal.get(Calendar.HOUR_OF_DAY) + "." + cal.get(Calendar.MINUTE));
+//			Log.d(LOG_TAG, cal.getTime().toString());
+//			Log.d(LOG_TAG,
+//			cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("ru"))
+//			+ " " + cal.get(Calendar.YEAR));

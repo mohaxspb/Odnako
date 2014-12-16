@@ -81,7 +81,7 @@ public class GetInfoService extends Service implements AllArtsInfoCallback
 	}
 
 	@Override
-	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad)
+	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
 		this.sendMessage(someResult, categoryToLoad);
 	}
