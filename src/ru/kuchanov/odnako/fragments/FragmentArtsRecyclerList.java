@@ -34,6 +34,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout.LayoutParams;
 
 public class FragmentArtsRecyclerList extends Fragment
@@ -104,7 +105,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
-		//reciver for notify when frag sselected
+		//reciver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 	}
@@ -281,7 +282,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		//		R.color.material_grey_700,
 		//		R.color.material_grey_900);
 		//////////////
-
 		this.swipeRef.setRefreshing(true);
 
 		Intent intent = new Intent(this.act, ServiceDB.class);

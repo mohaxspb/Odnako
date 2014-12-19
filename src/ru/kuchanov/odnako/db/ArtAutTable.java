@@ -38,6 +38,25 @@ public class ArtAutTable
 		// TODO need empty constructor for ORMlite
 	}
 
+	public ArtAutTable(Integer id, int article_id, int author_id, String nextArtUrl, String previousArtUrl)
+	{
+		//as I understand, if we do not set any value to id it will be genereted automatically.
+		//so set it only if it's (!null);
+		if (id != null)
+		{
+			this.id = id;
+		}
+		else
+		{
+			//gained id=null, so it must be set automatically by ORMLite
+		}
+
+		this.article_id = article_id;
+		this.author_id = author_id;
+		this.setNextArtUrl(nextArtUrl);
+		this.setPreviousArtUrl(previousArtUrl);
+	}
+
 	public ArtAutTable(int id, int articleId, int authorId)
 	{
 		this.id = id;
@@ -73,6 +92,26 @@ public class ArtAutTable
 	public void setCategory_id(int category_id)
 	{
 		this.author_id = category_id;
+	}
+
+	public String getPreviousArtUrl()
+	{
+		return previousArtUrl;
+	}
+
+	public void setPreviousArtUrl(String previousArtUrl)
+	{
+		this.previousArtUrl = previousArtUrl;
+	}
+
+	public String getNextArtUrl()
+	{
+		return nextArtUrl;
+	}
+
+	public void setNextArtUrl(String nextArtUrl)
+	{
+		this.nextArtUrl = nextArtUrl;
 	}
 
 }

@@ -6,10 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "category")
@@ -191,6 +193,69 @@ public class Category
 	public void setFirstArticleURL(String firstArticleURL)
 	{
 		this.firstArticleURL = firstArticleURL;
+	}
+
+	//static methods for querying
+	/**
+	 * 
+	 * @param h
+	 * @param id
+	 * @return Category or null on SQLException
+	 */
+	public static Category getCategoryById(DataBaseHelper h, int id)
+	{
+		Category c = null;
+		try
+		{
+			c = h.getDaoCategory().queryForId(id);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return c;
+	}
+
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return id or null on SQLException
+	 */
+	public static int getCategoryIdByURL(DataBaseHelper h, String url)
+	{
+		Integer id = null;
+		try
+		{
+			id = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url).queryForFirst().getId();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @param isSynked
+	 * 
+	 * set Category entry sinked or not
+	 */
+	public static void setCategorySinchronized(DataBaseHelper h, String url, boolean isSynked)
+	{
+		UpdateBuilder<Category, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoCategory().updateBuilder();
+			updateBuilder.updateColumnValue(Category.SINCHRONISED_FIELD_NAME, isSynked);
+			updateBuilder.where().eq(Category.URL_FIELD_NAME, url);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 }

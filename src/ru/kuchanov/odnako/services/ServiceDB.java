@@ -453,16 +453,16 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			/////check if there are arts of given category
 			try
 			{
-				//switch by Category or Author
 				List<Integer> artsIds=new ArrayList<Integer>();
 				List<Article> catArtsList=new ArrayList<Article>();
+				//switch by Category or Author				
 				if(this.isCategory(categoryToLoad))
 				{
 					//this is Category, so...
 					//get Category id
-					int categoryId=this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, categoryToLoad).queryForFirst().getId();
+					int categoryId=Category.getCategoryIdByURL(getHelper(), categoryToLoad);
 					//get all ArtCat entries with given Category id
-					List<ArtCatTable> artCatEntries=this.getHelper().getDaoArtCatTable().queryBuilder().where().eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId).query();
+					List<ArtCatTable> artCatEntries=ArtCatTable.getArtCatTableListByCategoryId(getHelper(), categoryId);
 					//check if there are any arts in category
 					if(artCatEntries.size()!=0)
 					{
@@ -470,7 +470,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						for(int i=0; i<30 && i<artCatEntries.size(); i++)
 						{
 							ArtCatTable a=artCatEntries.get(i);
-							artsIds.add(a.getArticle_id());
+							artsIds.add(a.getArticleId());
 						}
 						//now get first 30 (max num of arts on page) Article objects of category by id
 						//TODO I think we do NOT need more then 1-st Article... We'll match only with first!
@@ -483,8 +483,42 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						{
 							if(someResult.get(i).url.equals(catArtsList.get(0).getUrl()))
 							{
-								//TODO matched! So we can mark category as sinked
-								//and write not matched arts in ArtCatTable
+								// matched! So we can mark category as sinked
+								Category.setCategorySinchronized(getHelper(), categoryToLoad, true);
+								//TODO and write not matched arts in ArtCatTable in front of category arts
+								//i.e. i=5, so we have 5 new arts (0,1,2,3,4)
+								//so we must get their id's from Article and create new ArtCatTable obj
+								//and write them to db
+								for(int u=0; u<i; u++)
+								{
+									//get Article id by url
+									int articleId=Article.getArticleIdByURL(getHelper(), someResult.get(u).url);
+									//get next Article url by asking gained from web list
+									String nextArtUrl=null;
+									try
+									{
+										nextArtUrl=someResult.get(u+1).url;
+									}
+									catch(Exception e)
+									{
+										
+									}
+									//get previous Article url by asking gained from web list
+									String previousArtUrl=null;
+									try
+									{
+										previousArtUrl=someResult.get(u-1).url;
+									}
+									catch(Exception e)
+									{
+										
+									}
+									//now calculate id for new entry
+									//here we must gain first ActCatTable entry id for given category
+									//because it's loading from top
+									int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
+									ArtCatTable aCT=new ArtCatTable(id, articleId, categoryId, nextArtUrl, previousArtUrl);
+								}
 								//and set previous Article of matched Article
 								
 								//break loop on matching

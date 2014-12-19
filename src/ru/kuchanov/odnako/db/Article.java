@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
 import java.util.Date;
 import ru.kuchanov.odnako.utils.DateParse;
 
@@ -341,6 +342,19 @@ public class Article
 	public void setAuthor(Author author)
 	{
 		this.author = author;
+	}
+
+	public static int getArticleIdByURL(DataBaseHelper h, String url)
+	{
+		Integer id=null;
+		try
+		{
+			id=h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getId();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 }
