@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.j256.ormlite.field.DataType;
@@ -16,12 +17,13 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "art_cat_table")
 public class ArtCatTable
 {
+	public final static String ID_FIELD_NAME = "id";
 	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
 	public final static String CATEGORY_ID_FIELD_NAME = "category_id";
-	private static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
-	private static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
+	public static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
+	public static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
 
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
+	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
@@ -164,6 +166,63 @@ public class ArtCatTable
 
 		return id;
 
+	}
+
+	/**
+	 * 
+	 * @param helper
+	 * @param categoryId
+	 * @return
+	 */
+	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
+	{
+		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
+
+		int id = getIdForFirstArticleInCategory(h, categoryId);
+
+		try
+		{
+			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
+			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return artCatTableListByCategoryIdFromGivenId;
+	}
+
+	/**
+	 * 
+	 * @param helper
+	 * @param id
+	 * 
+	 *            delete all entries from given id to the end
+	 */
+	public static void deleteEntriesFromGivenIdToEnd(DataBaseHelper h, int id)
+	{
+		List<Integer> ids = new ArrayList<Integer>();
+
+		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+		try
+		{
+			artCatTableList = h.getDaoArtCatTable().queryBuilder().where().ge(ArtCatTable.ID_FIELD_NAME, id).query();
+		} catch (SQLException e1)
+		{
+			e1.printStackTrace();
+		}
+		for (ArtCatTable a : artCatTableList)
+		{
+			ids.add(a.getId());
+		}
+
+		try
+		{
+			h.getDaoArtCatTable().deleteIds(ids);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -63,7 +63,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (dataBaseHelper == null)
 		{
 			//			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 11);
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 12);
 			//			this.dataBaseHelper.clearArticleTable();
 		}
 		return dataBaseHelper;
@@ -489,6 +489,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 								//i.e. i=5, so we have 5 new arts (0,1,2,3,4)
 								//so we must get their id's from Article and create new ArtCatTable obj
 								//and write them to db
+								//List<ArtCatTable> artCatTableList of new arts and all other, that will be written to DB
+								List<ArtCatTable> artCatTableList=new ArrayList<ArtCatTable>();
+								
 								for(int u=0; u<i; u++)
 								{
 									//get Article id by url
@@ -516,10 +519,32 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 									//now calculate id for new entry
 									//here we must gain first ActCatTable entry id for given category
 									//because it's loading from top
-									int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
-									ArtCatTable aCT=new ArtCatTable(id, articleId, categoryId, nextArtUrl, previousArtUrl);
+									int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId)+u;
+									artCatTableList.add(new ArtCatTable(id, articleId, categoryId, nextArtUrl, previousArtUrl));
+								}
+								//So here we have list<T> with new Arts...
+								//then find other arts from firstId to the end...
+								List<ArtCatTable> artCatTableListFromGivenId=ArtCatTable.getArtCatTableListByCategoryIdFromFirstId(getHelper(), categoryId);
+								//and change their id's (increment them by new arts quont (size of existed list))...
+								for(ArtCatTable a: artCatTableListFromGivenId)
+								{
+									a.setId(a.getId()+artCatTableList.size());
 								}
 								//and set previous Article of matched Article
+								int lastNewArtId=artCatTableList.get(artCatTableList.size()-1).getArticleId();
+								String lastNewArtUrl=Article.getArticleUrlById(getHelper(), lastNewArtId);
+								artCatTableListFromGivenId.get(0).setPreviousArtUrl(lastNewArtUrl);
+								//finally add them to list
+								artCatTableList.addAll(artCatTableListFromGivenId);
+								
+								//and now we must delete all entries from firstId of category and write our list to db
+								ArtCatTable.deleteEntriesFromGivenIdToEnd(getHelper(), artCatTableList.get(0).getId());
+								
+								//FINALLY write new enrties with updated ids and new Arts to ArtCatTable
+								for(ArtCatTable a: artCatTableList)
+								{
+									this.getHelper().getDaoArtCatTable().create(a);
+								}
 								
 								//break loop on matching
 								break;
@@ -539,6 +564,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					else
 					{
 						//TODO there are no arts, so just write them!
+						so write!
 					}
 					
 				}

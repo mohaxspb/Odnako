@@ -45,7 +45,7 @@ public class Article
 	private Date pubDate;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
-	private Date refreshed=new Date(0);
+	private Date refreshed = new Date(0);
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = true)
 	private int numOfComments = 0;
@@ -78,7 +78,9 @@ public class Article
 	private String img_author;
 
 	//foreignKeys
-	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME/*, foreignAutoRefresh = true*/, canBeNull = true)
+	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME/* ,
+																 * foreignAutoRefresh
+																 * = true */, canBeNull = true)
 	private Author author;
 
 	public Article()
@@ -110,37 +112,37 @@ public class Article
 		this.to_read_main = artInfoArr[14];
 		this.to_read_more = artInfoArr[15];
 		this.img_author = artInfoArr[16];
-		
+
 		//refreshed date
 		//set it only if we have not null or "empty" artText value
 		//and, ofcours not null given Date refreshed
-		if(this.artText!=null)
+		if (this.artText != null)
 		{
-			if(!this.artText.equals("empty"))
+			if (!this.artText.equals("empty"))
 			{
-				if(refreshed!=null)
+				if (refreshed != null)
 				{
-					this.refreshed=refreshed;
+					this.refreshed = refreshed;
 				}
-//				else
-//				{
-//					this.refreshed=new Date(0);
-//				}
+				//				else
+				//				{
+				//					this.refreshed=new Date(0);
+				//				}
 			}
-//			else
-//			{
-//				this.refreshed=new Date(0);
-//			}
+			//			else
+			//			{
+			//				this.refreshed=new Date(0);
+			//			}
 		}
-//		else
-//		{
-//			this.refreshed=new Date(0);
-//		}
-		
+		//		else
+		//		{
+		//			this.refreshed=new Date(0);
+		//		}
+
 		//author object
-		if(author!=null)
+		if (author != null)
 		{
-			this.author=author;
+			this.author = author;
 		}
 	}
 
@@ -346,15 +348,36 @@ public class Article
 
 	public static int getArticleIdByURL(DataBaseHelper h, String url)
 	{
-		Integer id=null;
+		Integer id = null;
 		try
 		{
-			id=h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getId();
+			id = h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 		return id;
+	}
+
+	/**
+	 * 
+	 * @param h
+	 * @param id
+	 * @return url of Article or null on SQLException
+	 */
+	public static String getArticleUrlById(DataBaseHelper h, int id)
+	{
+		String url = null;
+
+		try
+		{
+			url = h.getDaoArticle().queryForId(id).getUrl();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return url;
 	}
 
 }
