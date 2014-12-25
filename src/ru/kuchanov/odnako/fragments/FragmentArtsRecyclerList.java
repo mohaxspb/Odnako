@@ -34,8 +34,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
 
 public class FragmentArtsRecyclerList extends Fragment
 {
@@ -108,7 +108,30 @@ public class FragmentArtsRecyclerList extends Fragment
 		//reciver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
+
+		//reciver for messages from dbService
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(dbAnswer,
+		new IntentFilter(this.getCategoryToLoad() + "msg"));
 	}
+
+	private BroadcastReceiver dbAnswer = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			String msg = intent.getStringExtra("msg");
+			switch (msg)
+			{
+				case (ServiceDB.Msg.NO_NEW):
+					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+				break;
+				case (ServiceDB.Msg.NEW_QUONT):
+					int quont = intent.getIntExtra(ServiceDB.Msg.QUONT, 0);
+					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
+				break;
+			}
+		}
+	};
 
 	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
 	{
@@ -140,7 +163,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
+			//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
 
@@ -155,6 +178,11 @@ public class FragmentArtsRecyclerList extends Fragment
 			else
 			{
 				System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
+			}
+
+			if (swipeRef.isRefreshing())
+			{
+				swipeRef.setRefreshing(false);
 			}
 
 		}
@@ -178,6 +206,11 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
 			fragSelectedReceiver = null;
+		}
+		if (dbAnswer != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
+			dbAnswer = null;
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();
@@ -297,7 +330,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		System.out.println("ArticlesListFragment onViewCreated");
+		//		System.out.println("ArticlesListFragment onViewCreated");
 		super.onViewCreated(view, savedInstanceState);
 	}
 

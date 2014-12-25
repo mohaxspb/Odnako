@@ -77,7 +77,7 @@ public class ArticleFragment extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		System.out.println("ArticleFragment onCreate");
+//		System.out.println("ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -170,7 +170,7 @@ public class ArticleFragment extends Fragment
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 		int width = displayMetrics.widthPixels;
 		int minWidth = 800;
-		//		if(twoPane) we must set width to width/4*3 
+		//if(twoPane) we must set width to width/4*3 
 		if (twoPane)
 		{
 			width = displayMetrics.widthPixels / 3 * 2;
@@ -642,11 +642,4 @@ public class ArticleFragment extends Fragment
 			}
 		}
 	}
-
-//	public ArtInfo getCurArtInfo()
-//	{
-//		this.curArtInfo = new ArtInfo(this.getArguments().getStringArray("curArtInfo"));
-//		return this.curArtInfo;
-//	}
-
 }

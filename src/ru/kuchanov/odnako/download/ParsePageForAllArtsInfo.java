@@ -42,7 +42,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	protected ArrayList<ArtInfo> doInBackground(Void... arg)
 	{
-		System.out.println("ParsePageForAllArtsInfo: doInBackground");
+//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		ArrayList<ArtInfo> output = null;
 		String link;
 		if(this.category.startsWith("http://"))
@@ -53,7 +53,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		{
 		link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
 		}
-		System.out.println(link);
+//		System.out.println(link);
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(new URL(link));
@@ -77,7 +77,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	protected void onPostExecute(ArrayList<ArtInfo> output)
 	{
-		System.out.println("ParseBlogsPageNew: onPostExecute");
+//		System.out.println("ParseBlogsPageNew: onPostExecute");
 		//check internet
 		if (output != null)
 		{

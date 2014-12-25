@@ -116,7 +116,11 @@ public class CatData
 		return allCategoriesMenuNames;
 	}
 
-//	public static String[] getAllCategoriesMenuLinks(ActionBarActivity act)
+	/**
+	 * 
+	 * @param act
+	 * @return String array filled with links (urls) of catagories (and authors) represented in drawer menu
+	 */
 	public static String[] getAllCategoriesMenuLinks(Context act)
 	{
 		authorsMenuLinks = act.getResources().getStringArray(R.array.authors_links);

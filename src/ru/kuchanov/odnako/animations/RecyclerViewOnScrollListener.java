@@ -50,7 +50,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 		switch (newState)
 		{
 			case (RecyclerView.SCROLL_STATE_DRAGGING):
-				System.out.println("dragging");
+//				System.out.println("dragging");
 				//mesuring initialDistance between actionBar and 1-st item
 				if (initialDistance == -100000)
 				{
@@ -62,7 +62,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 			break;
 			//scroll finished
 			case (RecyclerView.SCROLL_STATE_IDLE):
-				System.out.println("SCROLL_STATE_IDLE");
+//				System.out.println("SCROLL_STATE_IDLE");
 				if (topImg.getY() > 0)
 				{
 					topImg.setY(0);
@@ -84,7 +84,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
-				System.out.println("SCROLL_STATE_SETTLING");
+//				System.out.println("SCROLL_STATE_SETTLING");
 			break;
 		}
 	}

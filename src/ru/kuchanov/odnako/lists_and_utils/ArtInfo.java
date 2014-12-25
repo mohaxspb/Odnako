@@ -269,7 +269,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("AllTegs var is empty!");
+//			System.out.println("AllTegs var is empty!");
 			allTegsArr = null;
 		}
 

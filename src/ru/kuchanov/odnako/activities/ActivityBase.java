@@ -64,7 +64,7 @@ public class ActivityBase extends ActionBarActivity
 
 	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
 
-	int curentCategoryPosition = 11;
+	int currentCategoryPosition = 11;
 
 	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
@@ -262,7 +262,7 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void saveCurentCategoryPosition(Bundle state)
 	{
-		state.putInt("curentCategoryPosition", curentCategoryPosition);
+		state.putInt("curentCategoryPosition", currentCategoryPosition);
 	}
 
 	protected void restoreGroupChildPosition(Bundle state)
@@ -302,7 +302,7 @@ public class ActivityBase extends ActionBarActivity
 
 		if (state.containsKey("curentCategoryPosition"))
 		{
-			this.curentCategoryPosition = state.getInt("curentCategoryPosition");
+			this.currentCategoryPosition = state.getInt("curentCategoryPosition");
 		}
 	}
 
@@ -314,6 +314,40 @@ public class ActivityBase extends ActionBarActivity
 	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
 	{
 		this.allCatArtsInfo.put(category, newData);
+	}
+	
+	public int getCurentCategoryPosition()
+	{
+		return currentCategoryPosition;
+	}
+
+	public void setCurentCategoryPosition(int curentCategoryPosition)
+	{
+		this.currentCategoryPosition = curentCategoryPosition;
+
+		int[] groupChild = this.getGroupChildPositionByCurentPosition(curentCategoryPosition);
+
+		this.setGroupChildPosition(groupChild[0], groupChild[1]);
+	}
+	
+	public int[] getGroupChildPositionByCurentPosition(int curentPosition)
+	{
+		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
+
+		int group = -1;
+		int child = -1;
+
+		if (curentPosition >= firstCategoryChildrenQuontity)
+		{
+			group = 1;
+			child = curentPosition - firstCategoryChildrenQuontity;
+		}
+		else
+		{
+			group = 0;
+			child = curentPosition;
+		}
+		return new int[] { group, child };
 	}
 
 	@Override

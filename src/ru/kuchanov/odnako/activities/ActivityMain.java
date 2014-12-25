@@ -50,7 +50,7 @@ public class ActivityMain extends ActivityBase
 	Toolbar toolbarMain;
 
 	//curent displayed info
-	//AllArtsList Arrays for aithor's and categories links
+	//AllArtsList Arrays for author's and categories links
 	//HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
 
 	//curent cat position
@@ -188,14 +188,14 @@ public class ActivityMain extends ActivityBase
 				//when there is only 1-st art is shown and other can be shown only from articlesPager
 				//when switching articles
 				String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-				Intent intentToListFrag = new Intent(allCatsLinks[curentCategoryPosition] + "_notify_that_selected");
+				Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition] + "_notify_that_selected");
 				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 				if (twoPane)
 				{
-					if (curentCategoryPosition != 3 && curentCategoryPosition != 13)
+					if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 					{
 						pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
-						.getAllCategoriesMenuLinks(act)[curentCategoryPosition], act);
+						.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
 						pager.setAdapter(pagerAdapter);
 						pager.setPageTransformer(true, new RotationPageTransformer());
 						pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -210,9 +210,9 @@ public class ActivityMain extends ActivityBase
 								}
 								System.out.println("onPageSelected in articlePager; position: " + position);
 								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-								allCatListsSelectedArtPosition.put(allCatsLinks[curentCategoryPosition], position);
+								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
 
-								Intent intentToListFrag = new Intent(allCatsLinks[curentCategoryPosition]
+								Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
 								+ "art_position");
 								Bundle b = new Bundle();
 								b.putInt("position", position);
@@ -221,7 +221,7 @@ public class ActivityMain extends ActivityBase
 								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 							}
 						});
-						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[curentCategoryPosition]);
+						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
 						Log.i("curARTSelected", "curPos: "+curPos);
 						
 						pager.setCurrentItem(curPos, true);
@@ -236,7 +236,7 @@ public class ActivityMain extends ActivityBase
 				}
 			}
 		});
-		this.artsListPager.setCurrentItem(this.curentCategoryPosition, true);
+		this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
 
 		///////////////
 
@@ -398,19 +398,7 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	public int getCurentCategoryPosition()
-	{
-		return curentCategoryPosition;
-	}
-
-	public void setCurentCategoryPosition(int curentCategoryPosition)
-	{
-		this.curentCategoryPosition = curentCategoryPosition;
-
-		int[] groupChild = this.getGroupChildPositionByCurentPosition(curentCategoryPosition);
-
-		this.setGroupChildPosition(groupChild[0], groupChild[1]);
-	}
+	
 
 	public int getCurentPositionByGroupChildPosition(int group, int child)
 	{
@@ -428,25 +416,7 @@ public class ActivityMain extends ActivityBase
 		return curPos;
 	}
 
-	public int[] getGroupChildPositionByCurentPosition(int curentPosition)
-	{
-		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
-
-		int group = -1;
-		int child = -1;
-
-		if (curentPosition >= firstCategoryChildrenQuontity)
-		{
-			group = 1;
-			child = curentPosition - firstCategoryChildrenQuontity;
-		}
-		else
-		{
-			group = 0;
-			child = curentPosition;
-		}
-		return new int[] { group, child };
-	}
+	
 
 	@Override
 	protected void onResume()
@@ -567,11 +537,11 @@ public class ActivityMain extends ActivityBase
 	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
 	{
 		this.allCatArtsInfo.put(category, newData);
-		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[curentCategoryPosition];
+		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
 		if (twoPane && category.equals(curCategoryLink))
 		{
 			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
-			CatData.getAllCategoriesMenuLinks(act)[curentCategoryPosition], act);
+			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
 			pager.setAdapter(pagerAdapter);
 		}
 	}
@@ -585,7 +555,7 @@ public class ActivityMain extends ActivityBase
 			//			int curentCategoryPosition = this.getCurentPositionByGroupChildPosition(groupChildPosition[0],
 			//			groupChildPosition[1]);
 			//			this.setCurentCategoryPosition(curentCategoryPosition);
-			curentCategoryPosition = this.getCurentPositionByGroupChildPosition(groupChildPosition[0],
+			currentCategoryPosition = this.getCurentPositionByGroupChildPosition(groupChildPosition[0],
 			groupChildPosition[1]);
 		}
 		else

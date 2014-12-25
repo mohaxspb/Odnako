@@ -21,6 +21,8 @@ public class AddAds
 {
 	ActionBarActivity act;
 	AdView adView;
+	
+	boolean isTestDevice;
 
 	public AddAds(ActionBarActivity act, AdView adView)
 	{
@@ -111,12 +113,12 @@ public class AddAds
 		if (isAv == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED || isAv == ConnectionResult.SERVICE_MISSING || isAv == ConnectionResult.SERVICE_DISABLED
 		|| isAv == ConnectionResult.SERVICE_INVALID)
 		{
-			System.out.println("google PLAY SERCICE CHECK: " + GooglePlayServicesUtil.isGooglePlayServicesAvailable(act));
+//			System.out.println("google PLAY SERCICE CHECK: " + GooglePlayServicesUtil.isGooglePlayServicesAvailable(act));
 //			return;
 		}
 		else if(isAv==ConnectionResult.SUCCESS)
 		{
-			System.out.println("google PLAY SERCICE CHECK: ConnectionResult.SUCCESS");
+//			System.out.println("google PLAY SERCICE CHECK: ConnectionResult.SUCCESS");
 		}
 		//end of check google play service available
 		
@@ -160,8 +162,8 @@ public class AddAds
 		//end of To Test
 		/////////
 
-		boolean isTestDevice = adRequest.isTestDevice(act);
-		System.out.println("is Admob Test Device ? " + deviceId + " " + isTestDevice);
+		isTestDevice = adRequest.isTestDevice(act);
+//		System.out.println("is Admob Test Device ? " + deviceId + " " + isTestDevice);
 		// Загрузка adView с объявлением.
 		if (pref.getBoolean("adsOn", false))
 		{
