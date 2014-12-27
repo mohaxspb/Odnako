@@ -634,4 +634,10 @@ implements Filterable
 			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
 		}
 	}
+	
+	///////
+	public ArrayList<ArtInfo> getAllArtsInfo()
+	{
+		return this.artsInfo;
+	}
 }

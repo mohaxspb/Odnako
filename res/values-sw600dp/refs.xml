@@ -8,5 +8,6 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <!-- <item name="layout_main" type="layout">@layout/layout_main_large</item> -->
+   <!--  <item name="ic_launcer" type="drawable">@drawable/ic_launcer</item> -->
 
 </resources>

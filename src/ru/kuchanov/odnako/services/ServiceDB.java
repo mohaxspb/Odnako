@@ -62,9 +62,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		if (dataBaseHelper == null)
 		{
-			//			dataBaseHelper = OpenHelperManager.getHelper(this, DataBaseHelper.class);
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 14);
-			//			this.dataBaseHelper.clearArticleTable();
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 16);
 		}
 		return dataBaseHelper;
 	}
@@ -112,7 +110,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//we simply start download
 				if (startDownload)
 				{
-					this.startDownLoad(catToLoad, 1);
+					this.startDownLoad(catToLoad, 1, "http://kuchanov.ru/odnako/blogs0.html");
 				}
 				else
 				{
@@ -358,6 +356,23 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 		Context context = getApplicationContext();
 		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
+		//////test
+		if(catToLoad.equals("odnako.org/blogs"))
+		{
+			parse.setLink("http://kuchanov.ru/odnako/blogs1.html");
+		}
+		////
+		parse.execute();
+	}
+	
+	private void startDownLoad(String catToLoad, int pageToLoad, String link)
+	{
+		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+		Context context = getApplicationContext();
+		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
+		//////test
+//		parse.setLink(link);
+		////
 		parse.execute();
 	}
 
@@ -576,7 +591,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 								if (i == someResult.size() - 1)
 								{
 									//no matches, so mark Category unsinked and write new artCat entries to db in front of other entries
-									Log.d(LOG_TAG,
+									Log.d(categoryToLoad,
 									"no matches, so mark Category unsinked and write new artCat entries to db");
 
 									Category.setCategorySinchronized(getHelper(), categoryToLoad, false);

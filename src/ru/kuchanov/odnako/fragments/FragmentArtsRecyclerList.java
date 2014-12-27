@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,7 +66,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//				System.out.println("ArticlesListFragment onCreate");
+		//						System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
@@ -219,7 +220,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//				System.out.println("ArticlesListFragment onCreateView");
+		//						System.out.println("ArticlesListFragment onCreateView");
 		//inflate root view
 		View v;
 
@@ -238,6 +239,18 @@ public class FragmentArtsRecyclerList extends Fragment
 		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
 
 		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+		////set on swipe listener
+		this.swipeRef.setOnRefreshListener(new OnRefreshListener()
+		{
+
+			@Override
+			public void onRefresh()
+			{
+				getAllArtsInfo(true);
+			}
+		});
+
+		////
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
@@ -247,7 +260,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			Log.i(categoryToLoad, "this.allArtsInfo=NULL");
 
-			this.getAllArtsInfo();
+			this.getAllArtsInfo(false);
 
 			//			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
 			//			this.allArtsInfo = def;
@@ -255,6 +268,18 @@ public class FragmentArtsRecyclerList extends Fragment
 			//			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
 			//			
 			//			this.artsList.setAdapter(artsListAdapter);
+			try
+			{
+				Log.e(categoryToLoad, "savedInstanceState==null: "
+				+ String.valueOf(savedInstanceState == null));
+				Log.e(
+				categoryToLoad,
+				"savedInstanceState.containsKey('STATE_ACTIVATED_POSITION'): "
+				+ String.valueOf(savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)));
+			} catch (Exception e)
+			{
+				Log.e("catched exception", "catched exception");
+			}
 
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
 			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
@@ -297,7 +322,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		return v;
 	}
 
-	private void getAllArtsInfo()
+	private void getAllArtsInfo(boolean startDownload)
 	{
 		Log.i(categoryToLoad, "getAllArtsInfo called");
 		// TODO Auto-generated method stub
@@ -322,7 +347,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		b.putString("categoryToLoad", this.getCategoryToLoad());
 		b.putInt("pageToLoad", 1);
 		b.putLong("timeStamp", System.currentTimeMillis());
-		b.putBoolean("startDownload", false);
+		b.putBoolean("startDownload", startDownload);
 		intent.putExtras(b);
 		this.act.startService(intent);
 	}

@@ -6,6 +6,9 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+//tags for logCat
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore)    tag:^(?!EGL)
+
 import java.sql.SQLException;
 import java.util.Date;
 import ru.kuchanov.odnako.utils.DateParse;

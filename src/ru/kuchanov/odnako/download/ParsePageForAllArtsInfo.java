@@ -15,6 +15,7 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
@@ -22,6 +23,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	/////test CallBack
 	AllArtsInfoCallback callback;
 	/////////
+	
+	String link;
 	
 	String category;
 	int page;
@@ -39,6 +42,11 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 		this.ctx = ctx;
 	}
+	
+	public void setLink(String link)
+	{
+		this.link=link;
+	}
 
 	protected ArrayList<ArtInfo> doInBackground(Void... arg)
 	{
@@ -53,7 +61,13 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		{
 		link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
 		}
-//		System.out.println(link);
+//		link="http://kuchanov.ru/odnako/blogs1.html";
+		if(this.link!=null)
+		{
+			link=this.link;
+			Log.d(category, link);
+		}
+		
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(new URL(link));
