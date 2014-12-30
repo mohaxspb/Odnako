@@ -57,6 +57,8 @@ public class FragmentArtsRecyclerList extends Fragment
 	ArtInfo curArtInfo;
 	private int position = 0;
 
+	static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
+
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -166,11 +168,12 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
-			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
+			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG+categoryToLoad);
 
 			if (newAllArtsInfo != null)
 			{
-				allArtsInfo.clear();
+				//				allArtsInfo.clear();
+				allArtsInfo = new ArrayList<ArtInfo>();
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
@@ -272,9 +275,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			{
 				Log.e(categoryToLoad, "savedInstanceState==null: "
 				+ String.valueOf(savedInstanceState == null));
-				Log.e(
-				categoryToLoad,
-				"savedInstanceState.containsKey('STATE_ACTIVATED_POSITION'): "
+				Log.e(categoryToLoad, "savedInstanceState.containsKey('STATE_ACTIVATED_POSITION'): "
 				+ String.valueOf(savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)));
 			} catch (Exception e)
 			{
@@ -362,7 +363,8 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		//		System.out.println("ArticlesListFragment onSaveInstanceState");
+		//				System.out.println("ArticlesListFragment onSaveInstanceState");
+		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
 		super.onSaveInstanceState(outState);
 
 		//category saving
@@ -375,6 +377,31 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
 		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
+	}
+
+	private void restoreState(Bundle state)
+	{
+		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
+
+		if (state.containsKey("curArtInfo"))
+		{
+			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		}
+		else
+		{
+			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+		}
+		if (state.containsKey("position"))
+		{
+			this.position = state.getInt("position");
+		}
+		else
+		{
+			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
+		}
+		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG+categoryToLoad);
+		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
 	}
 
 	public void setActivatedPosition(int position)
@@ -424,30 +451,6 @@ public class FragmentArtsRecyclerList extends Fragment
 	public void setTopImgYCoord(int topImgYCoord)
 	{
 		this.topImgYCoord = topImgYCoord;
-	}
-
-	protected void restoreState(Bundle state)
-	{
-		//		System.out.println("restoring state from " + this.getClass().getSimpleName());
-
-		if (state.containsKey("curArtInfo"))
-		{
-			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
-		}
-		else
-		{
-			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
-		if (state.containsKey("position"))
-		{
-			this.position = state.getInt("position");
-		}
-		else
-		{
-			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
-		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
-
 	}
 
 	public String getCategoryToLoad()

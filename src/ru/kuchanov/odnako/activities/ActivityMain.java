@@ -289,7 +289,7 @@ public class ActivityMain extends ActivityBase
 		for (int i = 0; i < allCatLinks.length; i++)
 		{
 			ArrayList<ArtInfo> data = null;
-			data = ArtInfo.restoreAllArtsInfoFromBundle(b, allCatLinks[i]);
+			data = ArtInfo.restoreAllArtsInfoFromBundleByCategory(b, allCatLinks[i]);
 			this.allCatArtsInfo.put(allCatLinks[i], data);
 		}
 	}
@@ -432,7 +432,7 @@ public class ActivityMain extends ActivityBase
 //		System.out.println("ActivityMain: onSaveInstanceState");
 
 		//save allArtsInfo
-		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
+//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
 
 		this.saveGroupChildPosition(outState);
 

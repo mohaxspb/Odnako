@@ -32,6 +32,7 @@ import android.widget.ListView;
 
 public class FragmentArticlesListView extends Fragment
 {
+	private static final String LOG_TAG = FragmentArticlesListView.class.getSimpleName();
 	private ListView artsList;
 	private ArtsListVIEWAdapter artsListAdapter;
 
@@ -120,7 +121,7 @@ public class FragmentArticlesListView extends Fragment
 		{
 			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
 			// Get extra data included in the Intent
-			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
+			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG+categoryToLoad);
 
 			if (newAllArtsInfo != null)
 			{
@@ -292,7 +293,7 @@ public class FragmentArticlesListView extends Fragment
 		{
 			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG+categoryToLoad);
 
 	}
 

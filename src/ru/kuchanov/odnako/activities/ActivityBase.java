@@ -43,6 +43,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ActivityBase extends ActionBarActivity
 {
+	private static final String LOG_TAG = ActivityBase.class.getSimpleName();
 	protected ActionBarActivity act;
 	protected boolean twoPane;
 	protected SharedPreferences pref;
@@ -298,7 +299,7 @@ public class ActivityBase extends ActionBarActivity
 		{
 			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, act);
+		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG);
 
 		if (state.containsKey("curentCategoryPosition"))
 		{

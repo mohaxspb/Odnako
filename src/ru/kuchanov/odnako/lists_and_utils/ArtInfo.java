@@ -10,9 +10,11 @@ import ru.kuchanov.odnako.R;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 public class ArtInfo implements Comparable<ArtInfo>
 {
+	static String LOG_TAG=ArtInfo.class.getSimpleName()+"/";
 
 	private String[] AllInfo = new String[17];
 
@@ -396,7 +398,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("onSaveInstanceState. allArtsInfo=null");
+//			System.out.println("onSaveInstanceState. allArtsInfo=null");
+			Log.e(LOG_TAG, "allArtsInfo=null");
 		}
 		//save curArtInfo
 		if (curArtInfo != null)
@@ -409,7 +412,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 	}
 
-	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, ActionBarActivity act)
+	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String caller)
+//	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b)
 	{
 		ArrayList<ArtInfo> allArtsInfo = null;
 		if (b.containsKey("allArtsInfo_00"))
@@ -443,7 +447,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			System.out.println("this.allArtsInfo in Bundle in " + act.getClass().getSimpleName() + " =null");
+			Log.e(LOG_TAG+caller, "b.containsKey('allArtsInfo_00')=false");
 		}
 
 		return allArtsInfo;
@@ -552,7 +556,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 	}
 
-	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String category)
+	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundleByCategory(Bundle b, String category)
 	{
 		//		System.out.println("category: "+category);
 		//		System.out.println("b.containsKey(category+'_allArtsInfo_00'): "+String.valueOf(b.containsKey(category+"_allArtsInfo_00")));

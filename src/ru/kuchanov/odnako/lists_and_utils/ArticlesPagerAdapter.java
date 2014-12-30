@@ -23,6 +23,8 @@ import android.support.v7.app.ActionBarActivity;
 
 public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 {
+	static String LOG_TAG=ArticlesPagerAdapter.class.getSimpleName();
+	
 	ArrayList<ArtInfo> allArtsInfo;
 
 	String category;
@@ -37,8 +39,8 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 		this.act = act;
 
 		this.allArtsInfo = ((ActivityMain) act).getAllCatArtsInfo().get(category);
-		
-//		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
+
+		//		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
 
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents
@@ -54,13 +56,13 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 		public void onReceive(Context context, Intent intent)
 		{
 			// Get extra data included in the Intent
-			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), act);
+			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG);
 
 			if (newAllArtsInfo != null)
 			{
 				allArtsInfo.clear();
 				allArtsInfo.addAll(newAllArtsInfo);
-//				notifyDataSetChanged();
+				notifyDataSetChanged();
 			}
 			else
 			{
