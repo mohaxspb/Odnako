@@ -39,6 +39,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore)    tag:^(?!EGL)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
 	SharedPreferences pref;

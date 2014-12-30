@@ -9,14 +9,16 @@ import java.util.Set;
 import ru.kuchanov.odnako.R;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class ArtInfo implements Comparable<ArtInfo>
+public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 {
-	static String LOG_TAG=ArtInfo.class.getSimpleName()+"/";
+	static String LOG_TAG = ArtInfo.class.getSimpleName() + "/";
 
-	private String[] AllInfo = new String[17];
+	private String[] allInfo = new String[17];
 
 	//get it from blogs page
 	public String url, title, img_art, authorBlogUrl, authorName;
@@ -62,25 +64,25 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.to_read_main = "empty";
 			this.to_read_more = "empty";
 
-			this.AllInfo[0] = url;
-			this.AllInfo[1] = title;
-			this.AllInfo[2] = img_art;
-			this.AllInfo[3] = authorBlogUrl;
-			this.AllInfo[4] = authorName;
+			this.allInfo[0] = url;
+			this.allInfo[1] = title;
+			this.allInfo[2] = img_art;
+			this.allInfo[3] = authorBlogUrl;
+			this.allInfo[4] = authorName;
 
-			this.AllInfo[5] = "empty";
-			this.AllInfo[6] = "empty";
+			this.allInfo[5] = "empty";
+			this.allInfo[6] = "empty";
 
-			this.AllInfo[7] = "0";
-			this.AllInfo[8] = "0";
-			this.AllInfo[9] = "empty";
-			this.AllInfo[10] = "empty";
-			this.AllInfo[11] = "empty";
-			this.AllInfo[12] = "empty";
-			this.AllInfo[13] = "empty";
-			this.AllInfo[14] = "empty";
-			this.AllInfo[15] = "empty";
-			this.AllInfo[16] = "empty";
+			this.allInfo[7] = "0";
+			this.allInfo[8] = "0";
+			this.allInfo[9] = "empty";
+			this.allInfo[10] = "empty";
+			this.allInfo[11] = "empty";
+			this.allInfo[12] = "empty";
+			this.allInfo[13] = "empty";
+			this.allInfo[14] = "empty";
+			this.allInfo[15] = "empty";
+			this.allInfo[16] = "empty";
 		}
 		//from RSS
 		else if (artInfoArr.length == 7)
@@ -104,26 +106,26 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.to_read_main = "empty";
 			this.to_read_more = "empty";
 
-			this.AllInfo[0] = url;
-			this.AllInfo[1] = title;
-			this.AllInfo[2] = img_art;
-			this.AllInfo[3] = authorBlogUrl;
-			this.AllInfo[4] = authorName;
+			this.allInfo[0] = url;
+			this.allInfo[1] = title;
+			this.allInfo[2] = img_art;
+			this.allInfo[3] = authorBlogUrl;
+			this.allInfo[4] = authorName;
 
-			this.AllInfo[5] = preview;
-			this.AllInfo[6] = pubDate;
+			this.allInfo[5] = preview;
+			this.allInfo[6] = pubDate;
 
-			this.AllInfo[7] = "0";
-			this.AllInfo[8] = "0";
+			this.allInfo[7] = "0";
+			this.allInfo[8] = "0";
 
-			this.AllInfo[9] = "empty";
-			this.AllInfo[10] = "empty";
-			this.AllInfo[11] = "empty";
-			this.AllInfo[12] = "empty";
-			this.AllInfo[13] = "empty";
-			this.AllInfo[14] = "empty";
-			this.AllInfo[15] = "empty";
-			this.AllInfo[16] = "empty";
+			this.allInfo[9] = "empty";
+			this.allInfo[10] = "empty";
+			this.allInfo[11] = "empty";
+			this.allInfo[12] = "empty";
+			this.allInfo[13] = "empty";
+			this.allInfo[14] = "empty";
+			this.allInfo[15] = "empty";
+			this.allInfo[16] = "empty";
 		}
 		//from article
 		else if (artInfoArr.length == 17)
@@ -148,25 +150,25 @@ public class ArtInfo implements Comparable<ArtInfo>
 			this.to_read_more = artInfoArr[15];
 			this.img_author = artInfoArr[16];
 
-			this.AllInfo[0] = url;
-			this.AllInfo[1] = title;
-			this.AllInfo[2] = img_art;
-			this.AllInfo[3] = authorBlogUrl;
-			this.AllInfo[4] = authorName;
+			this.allInfo[0] = url;
+			this.allInfo[1] = title;
+			this.allInfo[2] = img_art;
+			this.allInfo[3] = authorBlogUrl;
+			this.allInfo[4] = authorName;
 
-			this.AllInfo[5] = preview;
-			this.AllInfo[6] = pubDate;
+			this.allInfo[5] = preview;
+			this.allInfo[6] = pubDate;
 
-			this.AllInfo[7] = String.valueOf(numOfComments);
-			this.AllInfo[8] = String.valueOf(numOfSharings);
-			this.AllInfo[9] = this.artText;
-			this.AllInfo[10] = this.authorDescr;
-			this.AllInfo[11] = this.tegs_main;
-			this.AllInfo[12] = this.tegs_all;
-			this.AllInfo[13] = this.share_quont;
-			this.AllInfo[14] = this.to_read_main;
-			this.AllInfo[15] = this.to_read_more;
-			this.AllInfo[16] = this.img_author;
+			this.allInfo[7] = String.valueOf(numOfComments);
+			this.allInfo[8] = String.valueOf(numOfSharings);
+			this.allInfo[9] = this.artText;
+			this.allInfo[10] = this.authorDescr;
+			this.allInfo[11] = this.tegs_main;
+			this.allInfo[12] = this.tegs_all;
+			this.allInfo[13] = this.share_quont;
+			this.allInfo[14] = this.to_read_main;
+			this.allInfo[15] = this.to_read_more;
+			this.allInfo[16] = this.img_author;
 
 		}
 		else
@@ -198,25 +200,25 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.to_read_main = "empty";
 		this.to_read_more = "empty";
 
-		this.AllInfo[0] = url;
-		this.AllInfo[1] = title;
-		this.AllInfo[2] = img;
-		this.AllInfo[3] = authorBlogUrl;
-		this.AllInfo[4] = authorName;
+		this.allInfo[0] = url;
+		this.allInfo[1] = title;
+		this.allInfo[2] = img;
+		this.allInfo[3] = authorBlogUrl;
+		this.allInfo[4] = authorName;
 
-		this.AllInfo[5] = "empty";
-		this.AllInfo[6] = "empty";
+		this.allInfo[5] = "empty";
+		this.allInfo[6] = "empty";
 
-		this.AllInfo[7] = "0";
-		this.AllInfo[8] = "0";
-		this.AllInfo[9] = "empty";
-		this.AllInfo[10] = "empty";
-		this.AllInfo[11] = "empty";
-		this.AllInfo[12] = "empty";
-		this.AllInfo[13] = "empty";
-		this.AllInfo[14] = "empty";
-		this.AllInfo[15] = "empty";
-		this.AllInfo[16] = "empty";
+		this.allInfo[7] = "0";
+		this.allInfo[8] = "0";
+		this.allInfo[9] = "empty";
+		this.allInfo[10] = "empty";
+		this.allInfo[11] = "empty";
+		this.allInfo[12] = "empty";
+		this.allInfo[13] = "empty";
+		this.allInfo[14] = "empty";
+		this.allInfo[15] = "empty";
+		this.allInfo[16] = "empty";
 	}
 
 	public void updateArtInfoFromRSS(String preView, String pubDate)
@@ -224,8 +226,8 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.preview = preView;
 		this.pubDate = pubDate;
 
-		this.AllInfo[5] = preView;
-		this.AllInfo[6] = pubDate;
+		this.allInfo[5] = preView;
+		this.allInfo[6] = pubDate;
 	}
 
 	public void updateArtInfoFromARTICLE(int numOfComments, int numOfSharings, String artText, String authorDescr,
@@ -244,21 +246,21 @@ public class ArtInfo implements Comparable<ArtInfo>
 		this.to_read_more = to_read_more;
 		this.img_author = img_author;
 
-		this.AllInfo[7] = String.valueOf(this.numOfComments);
-		this.AllInfo[8] = String.valueOf(this.numOfSharings);
-		this.AllInfo[9] = this.artText;
-		this.AllInfo[10] = this.authorDescr;
-		this.AllInfo[11] = this.tegs_main;
-		this.AllInfo[12] = this.tegs_all;
-		this.AllInfo[13] = this.share_quont;
-		this.AllInfo[14] = this.to_read_main;
-		this.AllInfo[15] = this.to_read_more;
-		this.AllInfo[16] = this.img_author;
+		this.allInfo[7] = String.valueOf(this.numOfComments);
+		this.allInfo[8] = String.valueOf(this.numOfSharings);
+		this.allInfo[9] = this.artText;
+		this.allInfo[10] = this.authorDescr;
+		this.allInfo[11] = this.tegs_main;
+		this.allInfo[12] = this.tegs_all;
+		this.allInfo[13] = this.share_quont;
+		this.allInfo[14] = this.to_read_main;
+		this.allInfo[15] = this.to_read_more;
+		this.allInfo[16] = this.img_author;
 	}
 
 	public String[] getArtInfoAsStringArray()
 	{
-		return this.AllInfo;
+		return this.allInfo;
 	}
 
 	public String[] getAllTegsArr()
@@ -337,7 +339,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 	@Override
 	public String toString()
 	{
-		return Arrays.toString(this.AllInfo);
+		return Arrays.toString(this.allInfo);
 	}
 
 	@Override
@@ -398,7 +400,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-//			System.out.println("onSaveInstanceState. allArtsInfo=null");
+			//			System.out.println("onSaveInstanceState. allArtsInfo=null");
 			Log.e(LOG_TAG, "allArtsInfo=null");
 		}
 		//save curArtInfo
@@ -413,7 +415,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 	}
 
 	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String caller)
-//	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b)
+	//	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b)
 	{
 		ArrayList<ArtInfo> allArtsInfo = null;
 		if (b.containsKey("allArtsInfo_00"))
@@ -447,7 +449,7 @@ public class ArtInfo implements Comparable<ArtInfo>
 		}
 		else
 		{
-			Log.e(LOG_TAG+caller, "b.containsKey('allArtsInfo_00')=false");
+			Log.e(LOG_TAG + caller, "b.containsKey('allArtsInfo_00')=false");
 		}
 
 		return allArtsInfo;
@@ -603,5 +605,90 @@ public class ArtInfo implements Comparable<ArtInfo>
 
 		return allArtsInfo;
 	}
+
+	//////PARCEL implementation
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		//		private String[] AllInfo = new String[17];
+
+		//		public String url, title, img_art, authorBlogUrl, authorName;
+
+		//		public String preview, pubDate = "empty";
+
+		//		public int numOfComments, numOfSharings = 0;
+
+		//		public String artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more,
+		//		img_author = "empty";
+		dest.writeString(url);
+		dest.writeString(title);
+		dest.writeString(img_art);
+		dest.writeString(authorBlogUrl);
+		dest.writeString(authorName);
+
+		dest.writeString(preview);
+		dest.writeString(pubDate);
+
+		dest.writeInt(numOfComments);
+		dest.writeInt(numOfSharings);
+
+		dest.writeString(artText);
+		dest.writeString(authorDescr);
+		dest.writeString(tegs_main);
+		dest.writeString(tegs_all);
+		dest.writeString(share_quont);
+		dest.writeString(to_read_main);
+		dest.writeString(to_read_more);
+		dest.writeString(img_author);
+
+		dest.writeStringArray(allInfo);
+	}
+
+	private ArtInfo(Parcel in)
+	{
+		this.url = in.readString();
+		this.title = in.readString();
+		this.img_art = in.readString();
+		this.authorBlogUrl = in.readString();
+		this.authorName = in.readString();
+
+		this.preview = in.readString();
+		this.pubDate = in.readString();
+
+		this.numOfComments = in.readInt();
+		this.numOfSharings = in.readInt();
+		this.artText = in.readString();
+		this.authorDescr = in.readString();
+		this.tegs_main = in.readString();
+		this.tegs_all = in.readString();
+		this.share_quont = in.readString();
+		this.to_read_main = in.readString();
+		this.to_read_more = in.readString();
+		this.img_author = in.readString();
+
+		in.readStringArray(allInfo);
+	}
+
+	public static final Parcelable.Creator<ArtInfo> CREATOR = new Parcelable.Creator<ArtInfo>()
+	{
+
+		@Override
+		public ArtInfo createFromParcel(Parcel source)
+		{
+			return new ArtInfo(source);
+		}
+
+		@Override
+		public ArtInfo[] newArray(int size)
+		{
+			return new ArtInfo[size];
+		}
+	};
 
 }

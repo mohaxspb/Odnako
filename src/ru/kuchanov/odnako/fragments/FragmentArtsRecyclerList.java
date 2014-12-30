@@ -376,7 +376,11 @@ public class FragmentArtsRecyclerList extends Fragment
 		outState.putInt("initialDistance", this.initialDistance);
 
 		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
-		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+//		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
+		//test Parcel
+		outState.putParcelableArrayList("allArtInfo", allArtsInfo);
+		outState.putParcelable("curArtInfo", allArtsInfo.get(position));
+		//////
 		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
 	}
 
@@ -386,11 +390,12 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		if (state.containsKey("curArtInfo"))
 		{
-			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+//			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+			this.curArtInfo=state.getParcelable("curArtInfo");
 		}
 		else
 		{
-			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+			//System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
 		if (state.containsKey("position"))
 		{
@@ -400,7 +405,8 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG+categoryToLoad);
+//		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG+categoryToLoad);
+		this.allArtsInfo=state.getParcelableArrayList("allArtInfo");
 		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
 	}
 
