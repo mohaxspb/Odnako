@@ -68,7 +68,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//						System.out.println("ArticlesListFragment onCreate");
+		//System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
@@ -77,7 +77,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-			//			Log.i(categoryToLoad, "fromArgs != null");
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
 		}
 		else
@@ -88,7 +87,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-			//			Log.i(categoryToLoad, "savedInstanceState != null");
 			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
 			this.initialDistance = savedInstanceState.getInt("initialDistance");
@@ -101,7 +99,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents
 		// with actions named "custom-event-name".
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(mMessageReceiver,
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
 		new IntentFilter(this.getCategoryToLoad()));
 
 		//reciver for scrolling and highligting selected position
@@ -161,13 +159,12 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	// Our handler for received Intents. This will be called whenever an Intent
 	// with an action named "custom-event-name" is broadcasted.
-	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
+	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			//			Log.i(categoryToLoad, "mMessageReceiver onReceive called");
-			// Get extra data included in the Intent
+			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
 			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG+categoryToLoad);
 
 			if (newAllArtsInfo != null)
@@ -201,10 +198,10 @@ public class FragmentArtsRecyclerList extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
 			artSelectedReceiver = null;
 		}
-		if (mMessageReceiver != null)
+		if (artsDataReceiver != null)
 		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(mMessageReceiver);
-			mMessageReceiver = null;
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
+			artsDataReceiver = null;
 		}
 		if (fragSelectedReceiver != null)
 		{
@@ -271,17 +268,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			//			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
 			//			
 			//			this.artsList.setAdapter(artsListAdapter);
-			try
-			{
-				Log.e(categoryToLoad, "savedInstanceState==null: "
-				+ String.valueOf(savedInstanceState == null));
-				Log.e(categoryToLoad, "savedInstanceState.containsKey('STATE_ACTIVATED_POSITION'): "
-				+ String.valueOf(savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)));
-			} catch (Exception e)
-			{
-				Log.e("catched exception", "catched exception");
-			}
-
+			
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
 			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
 			this.allArtsInfo = def;
@@ -293,7 +280,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		else
 		{
-			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
+//			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 
@@ -363,8 +350,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		//				System.out.println("ArticlesListFragment onSaveInstanceState");
-		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
+//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
 		super.onSaveInstanceState(outState);
 
 		//category saving
@@ -376,21 +362,16 @@ public class FragmentArtsRecyclerList extends Fragment
 		outState.putInt("initialDistance", this.initialDistance);
 
 		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
-//		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
-		//test Parcel
 		outState.putParcelableArrayList("allArtInfo", allArtsInfo);
 		outState.putParcelable("curArtInfo", allArtsInfo.get(position));
-		//////
-		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
+//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
 	}
 
 	private void restoreState(Bundle state)
 	{
-		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
-
+//		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
 		if (state.containsKey("curArtInfo"))
 		{
-//			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
 			this.curArtInfo=state.getParcelable("curArtInfo");
 		}
 		else
@@ -405,14 +386,13 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-//		this.allArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG+categoryToLoad);
 		this.allArtsInfo=state.getParcelableArrayList("allArtInfo");
-		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
+//		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
 	}
 
 	public void setActivatedPosition(int position)
 	{
-		System.out.println("setActivatedPosition(int position: " + position);
+//		System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
 		scrollToActivatedPosition();
