@@ -155,7 +155,7 @@ implements Filterable
 
 	public ArtInfo getArtInfoByPosition(int position)
 	{
-		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
+//		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
 		ArtInfo p;
 		if (position < 15)
 		{

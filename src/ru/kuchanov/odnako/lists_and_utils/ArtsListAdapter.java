@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
@@ -151,36 +150,38 @@ implements Filterable
 		}
 		int header = 1;
 		//		int footer=1;
-		int numOfAds = 1;
+//		int numOfAds = 1;
 
-		return this.artsInfo.size() + header + /* footer */+numOfAds;
+		return this.artsInfo.size() + header /*+  footer +numOfAds*/;
 	}
 
 	public ArtInfo getArtInfoByPosition(int position)
 	{
-		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
+//		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
 		ArtInfo p;
-		if (position < 15)
-		{
-			p = this.artsInfo.get(position - 1);
-		}
-		else
-		{
-			p = this.artsInfo.get(position - 2);
-		}
+//		if (position < 15)
+//		{
+//			p = this.artsInfo.get(position - 1);
+//		}
+//		else
+//		{
+//			p = this.artsInfo.get(position - 2);
+//		}
+		p = this.artsInfo.get(position-1);
 		return p;
 	}
 
 	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
 	{
-		if (recyclerViewPosition < 15)
-		{
-			return recyclerViewPosition - 1;
-		}
-		else
-		{
-			return recyclerViewPosition - 2;
-		}
+//		if (recyclerViewPosition < 15)
+//		{
+//			return recyclerViewPosition - 1;
+//		}
+//		else
+//		{
+//			return recyclerViewPosition - 2;
+//		}
+		return recyclerViewPosition - 1;
 	}
 
 	public static int getPositionInRecyclerView(int artsListPosition)

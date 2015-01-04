@@ -7,7 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -63,7 +62,7 @@ public class ActivityBase extends ActionBarActivity
 	protected int[] groupChildPosition = new int[] { 1, 7 };
 	///drawer
 
-	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+//	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
 
 	int currentCategoryPosition = 11;
 
@@ -283,14 +282,14 @@ public class ActivityBase extends ActionBarActivity
 	{
 		//		System.out.println("restoring state from " + this.getClass().getSimpleName());
 
-		if (state.containsKey("curArtInfo"))
-		{
-			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
-		}
-		else
-		{
-			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
+//		if (state.containsKey("curArtInfo"))
+//		{
+//			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+//		}
+//		else
+//		{
+//			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
+//		}
 		if (state.containsKey("position"))
 		{
 			this.curArtPosition = state.getInt("position");
@@ -299,7 +298,7 @@ public class ActivityBase extends ActionBarActivity
 		{
 			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
 		}
-		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG);
+//		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG);
 
 		if (state.containsKey("curentCategoryPosition"))
 		{
@@ -307,15 +306,15 @@ public class ActivityBase extends ActionBarActivity
 		}
 	}
 
-	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
-	{
-		return this.allCatArtsInfo;
-	}
-
-	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-	{
-		this.allCatArtsInfo.put(category, newData);
-	}
+//	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
+//	{
+//		return this.allCatArtsInfo;
+//	}
+//
+//	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
+//	{
+//		this.allCatArtsInfo.put(category, newData);
+//	}
 	
 	public int getCurentCategoryPosition()
 	{

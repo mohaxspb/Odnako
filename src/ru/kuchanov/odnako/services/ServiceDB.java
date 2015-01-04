@@ -385,7 +385,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Bundle b = new Bundle();
 		if (someResult.size() != 0)
 		{
-			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+//			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 			//before sending message to listener (frag) we must write gained info to DB
 			this.writeArtsToDB(someResult, categoryToLoad, pageToLoad);
 		}
@@ -395,7 +396,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
 			//			empty.add(new ArtInfo(artInfoArr));
 			someResult.add(new ArtInfo(artInfoArr));
-			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+//			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
+			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 		}
 		intent.putExtras(b);
 

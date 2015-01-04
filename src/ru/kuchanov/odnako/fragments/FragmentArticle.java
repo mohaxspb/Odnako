@@ -7,8 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -23,9 +21,12 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,8 +37,10 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class ArticleFragment extends Fragment
+public class FragmentArticle extends Fragment implements FragArtUPD
 {
+	
+	
 	private ActionBarActivity act;
 	private LayoutInflater inflater;
 	private SharedPreferences pref;
@@ -48,6 +51,7 @@ public class ArticleFragment extends Fragment
 	private TextView artTextView;
 
 	private ScrollView scroll;
+	SwipeRefreshLayout swipeRef;
 
 	private TextView artTitleTV;
 	private TextView artAuthorTV;
@@ -60,12 +64,12 @@ public class ArticleFragment extends Fragment
 	private ImageView artAuthorDescriptionIV;
 	private ImageView artAuthorArticlesIV;
 
-	LinearLayout bottomPanel;
-	CardView shareCard;
-	CardView commentsBottomBtn;
-	CardView allTegsCard;
-	CardView alsoByThemeCard;
-	CardView alsoToReadCard;
+	private LinearLayout bottomPanel;
+	private CardView shareCard;
+	private CardView commentsBottomBtn;
+	private CardView allTegsCard;
+	private CardView alsoByThemeCard;
+	private CardView alsoToReadCard;
 
 	private ArtInfo curArtInfo;
 	int position;/* position in all art arr; need to show next/previous arts */
@@ -77,7 +81,7 @@ public class ArticleFragment extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-//		System.out.println("ArticleFragment onCreate");
+		//		System.out.println("ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -87,16 +91,16 @@ public class ArticleFragment extends Fragment
 		{
 			this.restoreState(stateFromArgs);
 		}
-//		else if (savedState != null)
-//		{
-//			this.restoreState(savedState);
-//		}
-//		//all is null, so start request for info
-//		else
-//		{
-//			// TODO
-//			System.out.println("ActivityArticle: all bundles are null, so make request for info");
-//		}
+		//		else if (savedState != null)
+		//		{
+		//			this.restoreState(savedState);
+		//		}
+		//		//all is null, so start request for info
+		//		else
+		//		{
+		//			// TODO
+		//			System.out.println("ActivityArticle: all bundles are null, so make request for info");
+		//		}
 		if (savedState != null)
 		{
 			this.restoreState(savedState);
@@ -112,43 +116,131 @@ public class ArticleFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		//		System.out.println("ArticleFragment onCreateView");
-		View v = inflater.inflate(R.layout.fragment_art, container, false);
-
 		this.inflater = inflater;
+		View v = inflater.inflate(R.layout.fragment_art, container, false);
 
 		//find all views
 		this.findViews(v);
 
-		this.fillFielsdsWithInfo(v);
-
-		//setting size of Images and text
-		this.setSizeAndTheme();
-		//End of setting size of Images and text
-
-		//scroll to previous position
-		if (savedInstanceState != null && savedInstanceState.keySet().contains("ARTICLE_SCROLL_POSITION"))
-		{
-			final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-			if (position != null)
-			{
-				if (position != null)
-				{
-					scroll.post(new Runnable()
-					{
-						public void run()
-						{
-							scroll.scrollTo(position[0], position[1]);
-						}
-					});
-				}
-			}
-		}
+		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
+		this.checkCurArtInfo(savedInstanceState);
 
 		return v;
 	}
 
+	private void checkCurArtInfo(Bundle savedInstanceState)
+	{
+		if (this.curArtInfo == null)
+		{
+			//load...
+			this.swipeRef.setRefreshing(true);
+		}
+		else
+		{
+			if (this.curArtInfo.artText == null)
+			{
+				//load...
+				this.swipeRef.setRefreshing(true);
+				
+				this.fillFielsdsWithInfo(this.getView());
+
+				//setting size of Images and text
+				this.setSizeAndTheme();
+				//End of setting size of Images and text
+			}
+			else if (this.curArtInfo.artText.equals("empty"))
+			{
+				//load...
+				this.swipeRef.setRefreshing(true);
+				
+				this.fillFielsdsWithInfo(this.getView());
+
+				//setting size of Images and text
+				this.setSizeAndTheme();
+				//End of setting size of Images and text
+			}
+			else
+			{
+				//show it...
+				if (this.swipeRef.isRefreshing())
+				{
+					this.swipeRef.setRefreshing(false);
+				}
+
+				this.shareCard.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						Actions.shareUrl(curArtInfo.url, act);
+					}
+				});
+				this.commentsBottomBtn.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						Actions.showComments(allArtsInfo, position, act);
+					}
+				});
+
+//				this.fillFielsdsWithInfo(v);
+				this.fillFielsdsWithInfo(this.getView());
+
+				//setting size of Images and text
+				this.setSizeAndTheme();
+				//End of setting size of Images and text
+
+				//scroll to previous position
+				if (savedInstanceState != null && savedInstanceState.keySet().contains("ARTICLE_SCROLL_POSITION"))
+				{
+					final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+					if (position != null)
+					{
+						if (position != null)
+						{
+							scroll.post(new Runnable()
+							{
+								public void run()
+								{
+									scroll.scrollTo(position[0], position[1]);
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void findViews(View v)
 	{
+		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
+		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
+		//as I understand before onResume of Activity
+		this.swipeRef.setColorSchemeColors(R.color.material_red_300,
+		R.color.material_red_500,
+		R.color.material_red_500,
+		R.color.material_red_500);
+
+		TypedValue typed_value = new TypedValue();
+		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+
+		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+		////set on swipe listener
+		this.swipeRef.setOnRefreshListener(new OnRefreshListener()
+		{
+
+			@Override
+			public void onRefresh()
+			{
+				//TODO
+			}
+		});
+
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
 		//		this.artTextView.setText(R.string.version_history);
 
@@ -185,15 +277,7 @@ public class ArticleFragment extends Fragment
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel_landscape, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);
 		}
-		this.shareCard.setOnClickListener(new OnClickListener()
-		{
 
-			@Override
-			public void onClick(View v)
-			{
-				Actions.shareUrl(curArtInfo.url, act);
-			}
-		});
 		//setShareIcon
 		ImageView shareIcon = (ImageView) this.shareCard.findViewById(R.id.art_share_all);
 		if (this.pref.getString("theme", "dark").equals("dark"))
@@ -207,15 +291,7 @@ public class ArticleFragment extends Fragment
 
 		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
 		//set onClickListener
-		this.commentsBottomBtn.setOnClickListener(new OnClickListener()
-		{
 
-			@Override
-			public void onClick(View v)
-			{
-				Actions.showComments(allArtsInfo, position, act);
-			}
-		});
 		this.bottomPanel.addView(this.commentsBottomBtn);
 
 		this.allTegsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
@@ -608,38 +684,24 @@ public class ArticleFragment extends Fragment
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		outState.putInt("position", this.position);
-		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, this.curArtInfo);
+		//		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, this.curArtInfo);
+		outState.putParcelable(ArtInfo.KEY_CURENT_ART, curArtInfo);
+		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 	}
 
 	private void restoreState(Bundle state)
 	{
-		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
 		this.position = state.getInt("position");
-		//restore AllArtsInfo
-		this.allArtsInfo = new ArrayList<ArtInfo>();
-		Set<String> keySet = state.keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		for (int i = 0; i < keySetSortedArrList.size(); i++)
-		{
-			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-			{
-				if (i < 10)
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
-					+ String.valueOf(i))));
-				}
-				else
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
-					+ String.valueOf(i))));
-				}
+		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+	}
 
-			}
-			else
-			{
-				break;
-			}
-		}
+	@Override
+	public void update(ArrayList<ArtInfo> allArtInfo)
+	{
+		this.curArtInfo=allArtInfo.get(position);
+		this.checkCurArtInfo(null);
 	}
 }
+
+

@@ -6,14 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.AuthorsListsPagerAdapter;
@@ -110,14 +108,14 @@ public class ActivityMain extends ActivityBase
 			this.restoreGroupChildPosition(savedInstanceState);
 			//			this.curentCategoryPosition=this.getCurentPositionByGroupChildPosition(this.groupChildPosition[0], this.groupChildPosition[1]);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
-			this.restoreAllCatArtsInfo(savedInstanceState);
+//			this.restoreAllCatArtsInfo(savedInstanceState);
 			this.restoreAllCatListsSelectedArtPosition(savedInstanceState);
 		}
 		//get artsInfo data from DB
-		if (this.allCatArtsInfo == null)
-		{
-			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
-		}
+//		if (this.allCatArtsInfo == null)
+//		{
+//			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
+//		}
 
 		//set selected pos for all cats if they are null (first launch without any state)
 		if (this.allCatListsSelectedArtPosition == null)
@@ -280,30 +278,30 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	private void restoreAllCatArtsInfo(Bundle b)
-	{
-		this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
-
-		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-
-		for (int i = 0; i < allCatLinks.length; i++)
-		{
-			ArrayList<ArtInfo> data = null;
-			data = ArtInfo.restoreAllArtsInfoFromBundleByCategory(b, allCatLinks[i]);
-			this.allCatArtsInfo.put(allCatLinks[i], data);
-		}
-	}
-
-	private void saveAllCatArtsInfo(Bundle savedInstanceState)
-	{
-		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < allCatLinks.length; i++)
-		{
-			String category = allCatLinks[i];
-			ArrayList<ArtInfo> data = this.allCatArtsInfo.get(category);
-			ArtInfo.writeAllArtsInfoToBundle(savedInstanceState, data, category);
-		}
-	}
+//	private void restoreAllCatArtsInfo(Bundle b)
+//	{
+//		this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
+//
+//		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
+//
+//		for (int i = 0; i < allCatLinks.length; i++)
+//		{
+//			ArrayList<ArtInfo> data = null;
+//			data = ArtInfo.restoreAllArtsInfoFromBundleByCategory(b, allCatLinks[i]);
+//			this.allCatArtsInfo.put(allCatLinks[i], data);
+//		}
+//	}
+//
+//	private void saveAllCatArtsInfo(Bundle savedInstanceState)
+//	{
+//		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
+//		for (int i = 0; i < allCatLinks.length; i++)
+//		{
+//			String category = allCatLinks[i];
+//			ArrayList<ArtInfo> data = this.allCatArtsInfo.get(category);
+//			ArtInfo.writeAllArtsInfoToBundle(savedInstanceState, data, category);
+//		}
+//	}
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
@@ -442,7 +440,7 @@ public class ActivityMain extends ActivityBase
 		saveAllCatToolbartopImgYCoord(outState);
 
 		//save all cat arts info
-		saveAllCatArtsInfo(outState);
+//		saveAllCatArtsInfo(outState);
 
 		//save selected pos
 		this.saveAllCatListsSelectedArtPosition(outState);
@@ -533,18 +531,18 @@ public class ActivityMain extends ActivityBase
 		this.allCatToolbarTopImgYCoord.put(category, coords);
 	}
 
-	@Override
-	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-	{
-		this.allCatArtsInfo.put(category, newData);
-		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-		if (twoPane && category.equals(curCategoryLink))
-		{
-			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
-			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-			pager.setAdapter(pagerAdapter);
-		}
-	}
+//	@Override
+//	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
+//	{
+//		this.allCatArtsInfo.put(category, newData);
+//		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
+//		if (twoPane && category.equals(curCategoryLink))
+//		{
+//			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
+//			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
+//			pager.setAdapter(pagerAdapter);
+//		}
+//	}
 
 	@Override
 	protected void restoreGroupChildPosition(Bundle state)

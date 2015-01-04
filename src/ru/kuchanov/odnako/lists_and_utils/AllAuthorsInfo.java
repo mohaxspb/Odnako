@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import android.support.v7.app.ActionBarActivity;
 
+/**
+ * Data model of all info of all Authors, storred in resources.
+ * 
+ * Contains String[]  allNames,	 allBlogLinks, allAvaImgsUrls, allAvaBIGImgsUrls, allDescription, allWho;
+ */
 public class AllAuthorsInfo
 {
 	ActionBarActivity act;

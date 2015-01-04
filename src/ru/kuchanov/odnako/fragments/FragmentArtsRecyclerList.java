@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -165,16 +164,19 @@ public class FragmentArtsRecyclerList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
-			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG+categoryToLoad);
+			ArrayList<ArtInfo> newAllArtsInfo;// = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG
+			//			+ categoryToLoad);
+			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
 			if (newAllArtsInfo != null)
 			{
-				//				allArtsInfo.clear();
-				allArtsInfo = new ArrayList<ArtInfo>();
+				//				if(allArtsInfo.clear();
+//				allArtsInfo = new ArrayList<ArtInfo>();
+				allArtsInfo.clear();
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
-				((ActivityMain) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
+				//				((ActivityMain) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
 			}
 			else
 			{
@@ -188,34 +190,6 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		}
 	};
-
-	@Override
-	public void onDestroy()
-	{
-		// If the DownloadStateReceiver still exists, unregister it and set it to null
-		if (artSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
-			artSelectedReceiver = null;
-		}
-		if (artsDataReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
-			artsDataReceiver = null;
-		}
-		if (fragSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-			fragSelectedReceiver = null;
-		}
-		if (dbAnswer != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
-			dbAnswer = null;
-		}
-		// Must always call the super method at the end.
-		super.onDestroy();
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -268,7 +242,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			//			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
 			//			
 			//			this.artsList.setAdapter(artsListAdapter);
-			
+
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
 			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
 			this.allArtsInfo = def;
@@ -280,7 +254,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		else
 		{
-//			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
+			//			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 
@@ -321,12 +295,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		//		intent.putExtras(b);
 		//		this.act.startService(intent);
 
-		//		this.swipeRef.setProgressViewEndTarget(false, (int) DipToPx.convert(56, act));
-		//		this.swipeRef.setProgressBackgroundColor(R.color.odnako);
-		//		this.swipeRef.setColorSchemeColors(R.color.material_grey_300,
-		//		R.color.material_grey_500,
-		//		R.color.material_grey_700,
-		//		R.color.material_grey_900);
 		//////////////
 		this.swipeRef.setRefreshing(true);
 
@@ -350,7 +318,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
+		//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
 		super.onSaveInstanceState(outState);
 
 		//category saving
@@ -362,37 +330,23 @@ public class FragmentArtsRecyclerList extends Fragment
 		outState.putInt("initialDistance", this.initialDistance);
 
 		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
-		outState.putParcelableArrayList("allArtInfo", allArtsInfo);
-		outState.putParcelable("curArtInfo", allArtsInfo.get(position));
-//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
+		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
+		//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
 	}
 
 	private void restoreState(Bundle state)
 	{
-//		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
-		if (state.containsKey("curArtInfo"))
-		{
-			this.curArtInfo=state.getParcelable("curArtInfo");
-		}
-		else
-		{
-			//System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
-		if (state.containsKey("position"))
-		{
-			this.position = state.getInt("position");
-		}
-		else
-		{
-			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
-		this.allArtsInfo=state.getParcelableArrayList("allArtInfo");
-//		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
+		//		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
+		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
+		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+		this.position = state.getInt("position");
+		//		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
 	}
 
 	public void setActivatedPosition(int position)
 	{
-//		System.out.println("setActivatedPosition(int position: " + position);
+		//		System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
 		scrollToActivatedPosition();
@@ -447,5 +401,33 @@ public class FragmentArtsRecyclerList extends Fragment
 	public void setCategoryToLoad(String categoryToLoad)
 	{
 		this.categoryToLoad = categoryToLoad;
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		if (artSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
+			artSelectedReceiver = null;
+		}
+		if (artsDataReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
+			artsDataReceiver = null;
+		}
+		if (fragSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+			fragSelectedReceiver = null;
+		}
+		if (dbAnswer != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
+			dbAnswer = null;
+		}
+		// Must always call the super method at the end.
+		super.onDestroy();
 	}
 }

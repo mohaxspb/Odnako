@@ -16,6 +16,10 @@ import android.util.Log;
 
 public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 {
+	public static final String KEY_CURENT_ART="curArtInfo";
+	public static final String KEY_ALL_ART_INFO="allArtInfo";
+	
+	
 	static String LOG_TAG = ArtInfo.class.getSimpleName() + "/";
 
 	private String[] allInfo = new String[17];

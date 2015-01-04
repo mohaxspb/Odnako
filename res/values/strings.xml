@@ -66,6 +66,8 @@
     <string name="fio">Фамилия Имя Отчество</string>
     <string name="email">example@kuchanov.ru</string>
     <string name="feature_login">Когда-нибудь разработчик разберётся как залогиниться на сайте через приложение и тут будет ваша автатарка, ваши ФИО и ваш логин. И вы сможете комментировать статьи через приложение! =)</string>
+    <string name="loading">Загружаю, подождите, пожалуйста.</string>
+    <string name="article_loading">Тут появится текст статьи, когда она загрузится!</string>
 
     <string-array name="entries">
         <item>30</item>
