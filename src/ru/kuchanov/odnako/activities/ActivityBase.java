@@ -7,9 +7,11 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -28,6 +30,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -62,11 +65,14 @@ public class ActivityBase extends ActionBarActivity
 	protected int[] groupChildPosition = new int[] { 1, 7 };
 	///drawer
 
-//	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+	/**
+	 * map with lists of articles info for menu categories
+	 */
+	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
 
 	int currentCategoryPosition = 11;
 
-	protected ArtInfo curArtInfo = null;
+	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
 	protected int curArtPosition = 0;
 	protected ArrayList<ArtInfo> curAllArtsInfo = null;
@@ -126,6 +132,7 @@ public class ActivityBase extends ActionBarActivity
 	@SuppressLint("NewApi")
 	protected void myRecreate()
 	{
+		Log.i(LOG_TAG, "myRecreate called");
 		if (android.os.Build.VERSION.SDK_INT >= 11)
 		{
 			super.recreate();
@@ -280,45 +287,51 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void restoreState(Bundle state)
 	{
-		//		System.out.println("restoring state from " + this.getClass().getSimpleName());
-
-//		if (state.containsKey("curArtInfo"))
-//		{
-//			this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
-//		}
-//		else
-//		{
-//			//			System.out.println("this.curArtInfo in Bundle in " + this.getClass().getSimpleName() + " =null");
-//		}
-		if (state.containsKey("position"))
-		{
-			this.curArtPosition = state.getInt("position");
-		}
-		else
-		{
-			//			System.out.println("this.position in Bundle in " + this.getClass().getSimpleName() + " =null");
-		}
-//		this.curAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(state, LOG_TAG);
-
-		if (state.containsKey("curentCategoryPosition"))
-		{
-			this.currentCategoryPosition = state.getInt("curentCategoryPosition");
-		}
+		this.curArtPosition = state.getInt("position");
+		this.curAllArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
+		this.restoreAllCatArtsInfo(state);
 	}
 
-//	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
-//	{
-//		return this.allCatArtsInfo;
-//	}
-//
-//	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-//	{
-//		this.allCatArtsInfo.put(category, newData);
-//	}
-	
+	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
+	{
+		return this.allCatArtsInfo;
+	}
+
+	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
+	{
+		this.allCatArtsInfo.put(category, newData);
+	}
+
 	public int getCurentCategoryPosition()
 	{
 		return currentCategoryPosition;
+	}
+
+	protected void restoreAllCatArtsInfo(Bundle b)
+	{
+		this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
+
+		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
+
+		for (int i = 0; i < allCatLinks.length; i++)
+		{
+			ArrayList<ArtInfo> data = null;
+			String category = allCatLinks[i];
+			data = b.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO + category);
+			this.allCatArtsInfo.put(allCatLinks[i], data);
+		}
+	}
+
+	protected void saveAllCatArtsInfo(Bundle b)
+	{
+		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
+		for (int i = 0; i < allCatLinks.length; i++)
+		{
+			String category = allCatLinks[i];
+			ArrayList<ArtInfo> data = this.allCatArtsInfo.get(category);
+			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO + category, data);
+		}
 	}
 
 	public void setCurentCategoryPosition(int curentCategoryPosition)
@@ -329,7 +342,7 @@ public class ActivityBase extends ActionBarActivity
 
 		this.setGroupChildPosition(groupChild[0], groupChild[1]);
 	}
-	
+
 	public int[] getGroupChildPositionByCurentPosition(int curentPosition)
 	{
 		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;

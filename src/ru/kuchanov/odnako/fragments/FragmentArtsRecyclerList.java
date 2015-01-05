@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -164,19 +165,18 @@ public class FragmentArtsRecyclerList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
-			ArrayList<ArtInfo> newAllArtsInfo;// = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG
-			//			+ categoryToLoad);
+			ArrayList<ArtInfo> newAllArtsInfo;
 			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
 			if (newAllArtsInfo != null)
 			{
 				//				if(allArtsInfo.clear();
-//				allArtsInfo = new ArrayList<ArtInfo>();
+				//				allArtsInfo = new ArrayList<ArtInfo>();
 				allArtsInfo.clear();
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
-				//				((ActivityMain) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
+				((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
 			}
 			else
 			{

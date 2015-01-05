@@ -7,11 +7,13 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.activities;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
 import ru.kuchanov.odnako.lists_and_utils.AuthorsListsPagerAdapter;
@@ -34,7 +36,7 @@ import android.widget.ImageView;
 public class ActivityMain extends ActivityBase
 {
 	//ViewPager and it's adapter for articles/comments
-	ViewPager pager;
+	ViewPager artCommsPager;
 	PagerAdapter pagerAdapter;
 
 	//ViewPager and it's adapter for artsLists
@@ -72,7 +74,7 @@ public class ActivityMain extends ActivityBase
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-//		System.out.println("ActivityMain onCreate");
+		//		System.out.println("ActivityMain onCreate");
 		this.act = this;
 
 		//get default settings to get all settings later
@@ -106,16 +108,16 @@ public class ActivityMain extends ActivityBase
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
-			//			this.curentCategoryPosition=this.getCurentPositionByGroupChildPosition(this.groupChildPosition[0], this.groupChildPosition[1]);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
-//			this.restoreAllCatArtsInfo(savedInstanceState);
+			this.restoreAllCatArtsInfo(savedInstanceState);
 			this.restoreAllCatListsSelectedArtPosition(savedInstanceState);
 		}
 		//get artsInfo data from DB
-//		if (this.allCatArtsInfo == null)
-//		{
-//			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
-//		}
+		if (this.allCatArtsInfo == null)
+		{
+			//			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
+			this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
+		}
 
 		//set selected pos for all cats if they are null (first launch without any state)
 		if (this.allCatListsSelectedArtPosition == null)
@@ -158,7 +160,7 @@ public class ActivityMain extends ActivityBase
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		if (this.twoPane)
 		{
-			this.pager = (ViewPager) this.findViewById(R.id.article_comments_container);
+			this.artCommsPager = (ViewPager) this.findViewById(R.id.article_comments_container);
 		}
 
 		/////////////////////////////
@@ -194,9 +196,9 @@ public class ActivityMain extends ActivityBase
 					{
 						pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
 						.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-						pager.setAdapter(pagerAdapter);
-						pager.setPageTransformer(true, new RotationPageTransformer());
-						pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+						artCommsPager.setAdapter(pagerAdapter);
+						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
+						artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 						{
 							@Override
 							public void onPageSelected(int position)
@@ -220,16 +222,16 @@ public class ActivityMain extends ActivityBase
 							}
 						});
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-						Log.i("curARTSelected", "curPos: "+curPos);
-						
-						pager.setCurrentItem(curPos, true);
+						Log.i("curARTSelected", "curPos: " + curPos);
+
+						artCommsPager.setCurrentItem(curPos, true);
 					}
 					else
 					{
 						//TODO show all authors and categories adapters
 						pagerAdapter = new AuthorsListsPagerAdapter(act.getSupportFragmentManager(), act);
-						pager.setAdapter(pagerAdapter);
-						pager.setPageTransformer(true, new RotationPageTransformer());
+						artCommsPager.setAdapter(pagerAdapter);
+						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
 					}
 				}
 			}
@@ -274,34 +276,10 @@ public class ActivityMain extends ActivityBase
 		String[] catLinks = CatData.getAllCategoriesMenuLinks(act);
 		for (int i = 0; i < catLinks.length; i++)
 		{
-			this.allCatListsSelectedArtPosition.put(catLinks[i], b.getInt("allCatListsSelectedArtPosition_"+String.valueOf(i)));
+			this.allCatListsSelectedArtPosition.put(catLinks[i],
+			b.getInt("allCatListsSelectedArtPosition_" + String.valueOf(i)));
 		}
 	}
-
-//	private void restoreAllCatArtsInfo(Bundle b)
-//	{
-//		this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
-//
-//		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-//
-//		for (int i = 0; i < allCatLinks.length; i++)
-//		{
-//			ArrayList<ArtInfo> data = null;
-//			data = ArtInfo.restoreAllArtsInfoFromBundleByCategory(b, allCatLinks[i]);
-//			this.allCatArtsInfo.put(allCatLinks[i], data);
-//		}
-//	}
-//
-//	private void saveAllCatArtsInfo(Bundle savedInstanceState)
-//	{
-//		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-//		for (int i = 0; i < allCatLinks.length; i++)
-//		{
-//			String category = allCatLinks[i];
-//			ArrayList<ArtInfo> data = this.allCatArtsInfo.get(category);
-//			ArtInfo.writeAllArtsInfoToBundle(savedInstanceState, data, category);
-//		}
-//	}
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
@@ -396,8 +374,6 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	
-
 	public int getCurentPositionByGroupChildPosition(int group, int child)
 	{
 		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
@@ -414,12 +390,10 @@ public class ActivityMain extends ActivityBase
 		return curPos;
 	}
 
-	
-
 	@Override
 	protected void onResume()
 	{
-//		System.out.println("ActivityMain onResume");
+		//		System.out.println("ActivityMain onResume");
 		super.onResume();
 	}
 
@@ -427,10 +401,10 @@ public class ActivityMain extends ActivityBase
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-//		System.out.println("ActivityMain: onSaveInstanceState");
+		//		System.out.println("ActivityMain: onSaveInstanceState");
 
 		//save allArtsInfo
-//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
+		//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
 
 		this.saveGroupChildPosition(outState);
 
@@ -440,7 +414,7 @@ public class ActivityMain extends ActivityBase
 		saveAllCatToolbartopImgYCoord(outState);
 
 		//save all cat arts info
-//		saveAllCatArtsInfo(outState);
+		saveAllCatArtsInfo(outState);
 
 		//save selected pos
 		this.saveAllCatListsSelectedArtPosition(outState);
@@ -467,8 +441,8 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				Intent intent=new Intent(this.act, ServiceDB.class);
-				Bundle b=new Bundle();
+				Intent intent = new Intent(this.act, ServiceDB.class);
+				Bundle b = new Bundle();
 				b.putString("categoryToLoad", "odnako.org/blogs");
 				b.putLong("timeStamp", System.currentTimeMillis());
 				b.putBoolean("startDownload", true);
@@ -531,18 +505,17 @@ public class ActivityMain extends ActivityBase
 		this.allCatToolbarTopImgYCoord.put(category, coords);
 	}
 
-//	@Override
-//	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-//	{
-//		this.allCatArtsInfo.put(category, newData);
+	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
+	{
+		this.allCatArtsInfo.put(category, newData);
 //		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
 //		if (twoPane && category.equals(curCategoryLink))
 //		{
 //			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
 //			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-//			pager.setAdapter(pagerAdapter);
+//			artCommsPager.setAdapter(pagerAdapter);
 //		}
-//	}
+	}
 
 	@Override
 	protected void restoreGroupChildPosition(Bundle state)

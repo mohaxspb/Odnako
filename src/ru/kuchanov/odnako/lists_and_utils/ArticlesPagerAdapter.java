@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.fragments.FragArtUPD;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import android.content.BroadcastReceiver;
@@ -39,7 +40,7 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 		this.category = category;
 		this.act = act;
 
-		//		this.allArtsInfo = ((ActivityMain) act).getAllCatArtsInfo().get(category);
+		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 
 		//		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
 
@@ -58,19 +59,19 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 		{
 			Log.i(LOG_TAG, "artsDataReceiver onReceive called");
 			ArrayList<ArtInfo> newAllArtsInfo;
-			newAllArtsInfo=intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
-			Log.i(LOG_TAG, "allArtsInfo!=null: "+String.valueOf(allArtsInfo!=null));
-			
+			Log.i(LOG_TAG, "allArtsInfo!=null: " + String.valueOf(allArtsInfo != null));
+
 			if (newAllArtsInfo != null)
 			{
-				if(allArtsInfo!=null)
+				if (allArtsInfo != null)
 				{
 					allArtsInfo.clear();
 				}
 				else
 				{
-					allArtsInfo=new ArrayList<ArtInfo>();
+					allArtsInfo = new ArrayList<ArtInfo>();
 					allArtsInfo.clear();
 				}
 				allArtsInfo.addAll(newAllArtsInfo);
@@ -89,11 +90,11 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 	{
 		FragmentArticle artFrag = new FragmentArticle();
 		Bundle b = new Bundle();
-		if(this.allArtsInfo==null)
+		if (this.allArtsInfo == null)
 		{
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, null);
 			b.putParcelable(ArtInfo.KEY_CURENT_ART, null);
-			
+
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
 			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
 			this.allArtsInfo = def;
@@ -103,7 +104,7 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, this.allArtsInfo);
 			b.putParcelable(ArtInfo.KEY_CURENT_ART, this.allArtsInfo.get(position));
 		}
-		
+
 		b.putInt("position", position);
 		artFrag.setArguments(b);
 
@@ -122,13 +123,15 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 			return this.allArtsInfo.size();
 		}
 	}
-	
+
 	@Override
-	public int getItemPosition(Object object) {
-	    if (object instanceof FragArtUPD) {
-	        ((FragArtUPD) object).update(this.allArtsInfo);
-	    }
-	    //don't return POSITION_NONE, avoid fragment recreation. 
-	    return super.getItemPosition(object);
+	public int getItemPosition(Object object)
+	{
+		if (object instanceof FragArtUPD)
+		{
+			((FragArtUPD) object).update(this.allArtsInfo);
+		}
+		//don't return POSITION_NONE, avoid fragment recreation. 
+		return super.getItemPosition(object);
 	}
 }

@@ -64,7 +64,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 			//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
-		else if (savedInstanceState != null)
+		if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
@@ -161,7 +161,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 	@Override
 	protected void onResume()
 	{
-		System.out.println("ActivityComments onResume");
+		//		System.out.println("ActivityComments onResume");
 		super.onResume();
 	}
 
@@ -169,10 +169,8 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		System.out.println("ActivityArticle: onSaveInstanceState");
 
-		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
-
+		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, curAllArtsInfo);
 		this.saveGroupChildPosition(outState);
 	}
 

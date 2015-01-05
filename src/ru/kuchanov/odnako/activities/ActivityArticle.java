@@ -124,7 +124,8 @@ public class ActivityArticle extends ActivityBase
 				Actions.showComments(curAllArtsInfo, curArtPosition, act);//.showComments(allArtsInfo, position, act);
 				return true;
 			case R.id.share:
-				Actions.shareUrl(this.curArtInfo.url, this.act);
+//				Actions.shareUrl(this.curArtInfo.url, this.act);
+				Actions.shareUrl(this.curAllArtsInfo.get(this.curArtPosition).url, this.act);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -173,7 +174,8 @@ public class ActivityArticle extends ActivityBase
 		System.out.println("ActivityArticle: onSaveInstanceState");
 
 		//save allArtsInfo
-		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
+//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
+		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, curAllArtsInfo);
 
 	}
 
