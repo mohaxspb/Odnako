@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/arts_list_refresh"
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="ru.kuchanov.odnako.activities.ActivityMain" >

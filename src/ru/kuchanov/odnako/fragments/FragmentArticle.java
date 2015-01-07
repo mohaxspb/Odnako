@@ -307,92 +307,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	}
 
-	private void setUpAllTegsLayout(View rooView)
-	{
-		String[] allTegs = this.curArtInfo.getAllTegsArr();
-		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
-		if (allTegs != null)
-		{
-			this.bottomPanel.addView(this.allTegsCard);
-			LinearLayout allTegsLin = (LinearLayout) allTegsCard.findViewById(R.id.all_tegs_lin);
-			LinearLayout firstLin = (LinearLayout) allTegsCard.findViewById(R.id.first_tegs_lin);
-			LayoutInflater inflater = act.getLayoutInflater();
-			int curLinId = 0;
-			LinearLayout curLinLay = firstLin;
-
-			//max width
-			int width;
-			DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
-			if (this.twoPane)
-			{
-				width = displayMetrics.widthPixels / 4 * 3;
-			}
-			else
-			{
-				width = displayMetrics.widthPixels;
-			}
-
-			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
-			int bPad = this.bottomPanel.getPaddingLeft() + this.bottomPanel.getPaddingRight();
-			int cPad = this.allTegsCard.getPaddingLeft() + this.allTegsCard.getPaddingRight();
-			int minusPaddings = vPad + bPad + cPad;
-			//		System.out.println("width: " + width);
-			//		System.out.println("minusPaddings: "+minusPaddings);
-			width -= minusPaddings;
-			//		System.out.println("minusPaddings: "+minusPaddings);
-			int minHeight = 0;
-			//		System.out.println("width: " + width);
-			//
-			for (int i = 0; i < allTegs.length; i++)
-			{
-
-				CardView c = (CardView) inflater.inflate(R.layout.teg_card, curLinLay, false);
-				TextView tag = (TextView) c.findViewById(R.id.teg_tv);
-				tag.setText(allTegs[i]);
-				curLinLay.addView(c);
-
-				//calculate total linLay width
-				int curLinChildrenWidth = 0;
-
-				for (int u = 0; u < curLinLay.getChildCount(); u++)
-				{
-					curLinLay.getChildAt(u).measure(0, 0);
-					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
-				}
-				//plus 10*2 (2xpaddings of each tag
-				curLinChildrenWidth += curLinLay.getChildCount() * 10 * 2;
-				if (i == 0)
-				{
-					curLinLay.getChildAt(1).measure(0, 0);
-					minHeight = curLinLay.getChildAt(1).getMeasuredHeight();
-				}
-				//curLinLay.getChildAt(curLinLay.getChildCount()-1).measure(0, 0);
-				int height = curLinLay.getChildAt(curLinLay.getChildCount() - 1).getMeasuredHeight();
-				//check if it's too much
-				//must check not device, but View width
-				//so if it's planshet we must take only 3/4 of device width
-				//			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
-				//			System.out.println("height: " + height+"/ minHeight: " + minHeight);
-
-				if (curLinChildrenWidth >= width || height > minHeight)
-				{
-					curLinId++;
-					LinearLayout nextLin = new LinearLayout(act);
-					nextLin.setOrientation(LinearLayout.HORIZONTAL);
-					LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-					nextLin.setLayoutParams(params);
-					nextLin.setId(curLinId);
-
-					//remove previous and add it to next
-					curLinLay.removeView(c);
-					curLinLay = nextLin;
-					curLinLay.addView(c);
-
-					allTegsLin.addView(curLinLay);
-				}
-			}
-		}
-	}
+	
 
 	private void setUpAlsoByTheme()
 	{
@@ -658,6 +573,93 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.setUpAllTegsLayout(rootView);
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
+	}
+	
+	private void setUpAllTegsLayout(View rooView)
+	{
+		String[] allTegs = this.curArtInfo.getAllTegsArr();
+		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
+		if (allTegs != null)
+		{
+			this.bottomPanel.addView(this.allTegsCard);
+			LinearLayout allTegsLin = (LinearLayout) allTegsCard.findViewById(R.id.all_tegs_lin);
+			LinearLayout firstLin = (LinearLayout) allTegsCard.findViewById(R.id.first_tegs_lin);
+			LayoutInflater inflater = act.getLayoutInflater();
+			int curLinId = 0;
+			LinearLayout curLinLay = firstLin;
+
+			//max width
+			int width;
+			DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
+			if (this.twoPane)
+			{
+				width = displayMetrics.widthPixels / 4 * 3;
+			}
+			else
+			{
+				width = displayMetrics.widthPixels;
+			}
+
+			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
+			int bPad = this.bottomPanel.getPaddingLeft() + this.bottomPanel.getPaddingRight();
+			int cPad = this.allTegsCard.getPaddingLeft() + this.allTegsCard.getPaddingRight();
+			int minusPaddings = vPad + bPad + cPad;
+			//		System.out.println("width: " + width);
+			//		System.out.println("minusPaddings: "+minusPaddings);
+			width -= minusPaddings;
+			//		System.out.println("minusPaddings: "+minusPaddings);
+			int minHeight = 0;
+			//		System.out.println("width: " + width);
+			//
+			for (int i = 0; i < allTegs.length; i++)
+			{
+
+				CardView c = (CardView) inflater.inflate(R.layout.teg_card, curLinLay, false);
+				TextView tag = (TextView) c.findViewById(R.id.teg_tv);
+				tag.setText(allTegs[i]);
+				curLinLay.addView(c);
+
+				//calculate total linLay width
+				int curLinChildrenWidth = 0;
+
+				for (int u = 0; u < curLinLay.getChildCount(); u++)
+				{
+					curLinLay.getChildAt(u).measure(0, 0);
+					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
+				}
+				//plus 10*2 (2xpaddings of each tag
+				curLinChildrenWidth += curLinLay.getChildCount() * 10 * 2;
+				if (i == 0)
+				{
+					curLinLay.getChildAt(1).measure(0, 0);
+					minHeight = curLinLay.getChildAt(1).getMeasuredHeight();
+				}
+				//curLinLay.getChildAt(curLinLay.getChildCount()-1).measure(0, 0);
+				int height = curLinLay.getChildAt(curLinLay.getChildCount() - 1).getMeasuredHeight();
+				//check if it's too much
+				//must check not device, but View width
+				//so if it's planshet we must take only 3/4 of device width
+				//			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
+				//			System.out.println("height: " + height+"/ minHeight: " + minHeight);
+
+				if (curLinChildrenWidth >= width || height > minHeight)
+				{
+					curLinId++;
+					LinearLayout nextLin = new LinearLayout(act);
+					nextLin.setOrientation(LinearLayout.HORIZONTAL);
+					LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+					nextLin.setLayoutParams(params);
+					nextLin.setId(curLinId);
+
+					//remove previous and add it to next
+					curLinLay.removeView(c);
+					curLinLay = nextLin;
+					curLinLay.addView(c);
+
+					allTegsLin.addView(curLinLay);
+				}
+			}
+		}
 	}
 
 	@Override

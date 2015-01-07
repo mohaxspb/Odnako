@@ -167,6 +167,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
 			ArrayList<ArtInfo> newAllArtsInfo;
 			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+//			newAllArtsInfo=intent.getExtras().getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 
 			if (newAllArtsInfo != null)
 			{
@@ -180,7 +181,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			}
 			else
 			{
-				System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
+				System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
 			}
 
 			if (swipeRef.isRefreshing())

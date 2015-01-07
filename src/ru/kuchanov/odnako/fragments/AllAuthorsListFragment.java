@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
@@ -48,13 +49,13 @@ public class AllAuthorsListFragment extends Fragment
 		//				System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
-		this.act = (ActionBarActivity) this.getActivity();
+		this.act = (ActivityMain) this.getActivity();
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-			this.restoreState(savedInstanceState);
+			this.position = savedInstanceState.getInt("position");
 		}
 		// Register to receive messages.
 
@@ -88,23 +89,7 @@ public class AllAuthorsListFragment extends Fragment
 		}
 	};
 
-	@Override
-	public void onDestroy()
-	{
-		// If the DownloadStateReceiver still exists, unregister it and set it to null
-		if (artSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
-			artSelectedReceiver = null;
-		}
-		if (fragSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-			fragSelectedReceiver = null;
-		}
-		// Must always call the super method at the end.
-		super.onDestroy();
-	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -183,15 +168,6 @@ public class AllAuthorsListFragment extends Fragment
 		return this.position;
 	}
 
-	protected void restoreState(Bundle state)
-	{
-		//		System.out.println("restoring state from " + this.getClass().getSimpleName());
-		if (state.containsKey("position"))
-		{
-			this.position = state.getInt("position");
-		}
-	}
-
 	public String getCategoryToLoad()
 	{
 		return categoryToLoad;
@@ -200,5 +176,23 @@ public class AllAuthorsListFragment extends Fragment
 	public void setCategoryToLoad(String categoryToLoad)
 	{
 		this.categoryToLoad = categoryToLoad;
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		if (artSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
+			artSelectedReceiver = null;
+		}
+		if (fragSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+			fragSelectedReceiver = null;
+		}
+		// Must always call the super method at the end.
+		super.onDestroy();
 	}
 }

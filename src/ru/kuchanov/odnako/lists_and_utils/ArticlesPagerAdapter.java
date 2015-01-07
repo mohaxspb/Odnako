@@ -61,8 +61,6 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 			ArrayList<ArtInfo> newAllArtsInfo;
 			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
-			Log.i(LOG_TAG, "allArtsInfo!=null: " + String.valueOf(allArtsInfo != null));
-
 			if (newAllArtsInfo != null)
 			{
 				if (allArtsInfo != null)

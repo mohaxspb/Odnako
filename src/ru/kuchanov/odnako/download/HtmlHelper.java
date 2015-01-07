@@ -10,7 +10,6 @@ import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
 
 import android.text.Html;
-import android.util.Log;
 
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
@@ -251,27 +250,27 @@ public class HtmlHelper
 			TagNode element2 = element1.findElementByAttValue("class", "m-news-text", true, true);
 			TagNode element3 = element2.findElementByName("a", true);
 
-//			TagNode imgDiv=element.findElementByAttValue("class", "m-news-pic-wrap", true, false);
+			//			TagNode imgDiv=element.findElementByAttValue("class", "m-news-pic-wrap", true, false);
 			TagNode imgEl = element.findElementByName("img", true);
 
 			//			TagNode author = element.findElementByAttValue("class", "m-news-author-wrap", true, false);
 			//			TagNode[] author1 = author.getElementsByName("a", true);
 
 			info[0] = element3.getAttributeByName("href").toString();
-//			Log.d(tag, "info[0]" + info[0]);
+			//			Log.d(tag, "info[0]" + info[0]);
 			info[1] = Html.fromHtml(element3.getAttributeByName("title").toString()).toString();
-//			Log.d(tag, "info[1]" + info[1]);
+			//			Log.d(tag, "info[1]" + info[1]);
 
-			if (imgEl==null)
+			if (imgEl == null)
 			{
 				info[2] = "empty";
 			}
 			else
 			{
 				String imgSrc = imgEl.getAttributeByName("src").toString();
-				Log.d(tag, "imgSrc: '" + imgSrc+"'");
-				Log.d(tag, "imgSrc.isEmpty(): " + String.valueOf(imgSrc.isEmpty()));
-				if(imgSrc.isEmpty())
+				//				Log.d(tag, "imgSrc: '" + imgSrc+"'");
+				//				Log.d(tag, "imgSrc.isEmpty(): " + String.valueOf(imgSrc.isEmpty()));
+				if (imgSrc.isEmpty())
 				{
 					info[2] = "empty";
 				}
@@ -287,15 +286,15 @@ public class HtmlHelper
 						info[2] = imgSrc;
 					}
 				}
-				
+
 			}
-			
-			Log.d(tag, "info[2]: '" + info[2]+"'");
+
+			//			Log.d(tag, "info[2]: '" + info[2]+"'");
 
 			info[3] = "empty";
 			info[4] = "empty";
-//			Log.d(tag, "info[3]" + info[3]);
-//			Log.d(tag, "info[4]" + info[4]);
+			//			Log.d(tag, "info[3]" + info[3]);
+			//			Log.d(tag, "info[4]" + info[4]);
 
 			allArtsInfo.add(new ArtInfo(info));
 		}

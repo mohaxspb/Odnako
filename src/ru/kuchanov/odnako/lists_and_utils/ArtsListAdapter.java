@@ -39,8 +39,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 implements Filterable
 {
 	private static final int HEADER = 0;
-	private static final int ADS = 1;
-	private static final int ARTICLE = 2;
+	//	private static final int ADS = 1;
+	private static final int ARTICLE = 1;
 	ActionBarActivity act;
 	LayoutInflater lInflater;
 
@@ -129,10 +129,6 @@ implements Filterable
 		{
 			return HEADER;
 		}
-		else if (position == 15)
-		{
-			return ADS;
-		}
 		else
 		{
 			return ARTICLE;
@@ -142,58 +138,29 @@ implements Filterable
 	@Override
 	public int getItemCount()
 	{
-		// TODO Auto-generated method stub
 		//this for all cats and authors
 		if (this.artsInfo == null)
 		{
 			return 1;
 		}
 		int header = 1;
-		//		int footer=1;
-//		int numOfAds = 1;
 
-		return this.artsInfo.size() + header /*+  footer +numOfAds*/;
+		return this.artsInfo.size() + header;
 	}
 
 	public ArtInfo getArtInfoByPosition(int position)
 	{
-//		this.artsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.artsListFrag.getCategoryToLoad());
-		ArtInfo p;
-//		if (position < 15)
-//		{
-//			p = this.artsInfo.get(position - 1);
-//		}
-//		else
-//		{
-//			p = this.artsInfo.get(position - 2);
-//		}
-		p = this.artsInfo.get(position-1);
-		return p;
+		return this.artsInfo.get(position - 1);
 	}
 
 	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
 	{
-//		if (recyclerViewPosition < 15)
-//		{
-//			return recyclerViewPosition - 1;
-//		}
-//		else
-//		{
-//			return recyclerViewPosition - 2;
-//		}
 		return recyclerViewPosition - 1;
 	}
 
 	public static int getPositionInRecyclerView(int artsListPosition)
 	{
-		if (artsListPosition < 15)
-		{
-			return artsListPosition + 1;
-		}
-		else
-		{
-			return artsListPosition + 2;
-		}
+		return artsListPosition + 1;
 	}
 
 	@Override
@@ -203,9 +170,6 @@ implements Filterable
 		{
 			case (HEADER):
 
-			break;
-			case (ADS):
-			//TODO
 			break;
 			case (ARTICLE):
 				//				System.out.println("position: "+position);
@@ -560,13 +524,6 @@ implements Filterable
 
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
-			case (ADS):
-				//TODO
-				itemLayoutView = new LinearLayout(act);
-				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 255));
-
-				holder = new HeaderHolder(itemLayoutView);
-				return holder;
 			case (ARTICLE):
 				// create a new view
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,
@@ -635,7 +592,7 @@ implements Filterable
 			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
 		}
 	}
-	
+
 	///////
 	public ArrayList<ArtInfo> getAllArtsInfo()
 	{

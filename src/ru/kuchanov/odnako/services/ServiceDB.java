@@ -44,7 +44,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 {
 	SharedPreferences pref;
 
-	final private static String LOG_TAG = "ServiceDB";
+	final private static String LOG_TAG = ServiceDB.class.getSimpleName();
 
 	final public static String DB_ANSWER_NEVER_REFRESHED = "never refreshed";
 	final public static String DB_ANSWER_REFRESH_BY_PERIOD = "refresh by period";
@@ -111,7 +111,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//we simply start download
 				if (startDownload)
 				{
-					this.startDownLoad(catToLoad, 1, "http://kuchanov.ru/odnako/blogs0.html");
+//					this.startDownLoad(catToLoad, 1, "http://kuchanov.ru/odnako/blogs0.html");
+					this.startDownLoad(catToLoad, pageToLoad);
 				}
 				else
 				{
@@ -358,24 +359,24 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Context context = getApplicationContext();
 		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
 		//////test
-		if(catToLoad.equals("odnako.org/blogs"))
-		{
-			parse.setLink("http://kuchanov.ru/odnako/blogs1.html");
-		}
+//		if(catToLoad.equals("odnako.org/blogs"))
+//		{
+//			parse.setLink("http://kuchanov.ru/odnako/blogs1.html");
+//		}
 		////
 		parse.execute();
 	}
 	
-	private void startDownLoad(String catToLoad, int pageToLoad, String link)
-	{
-		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
-		Context context = getApplicationContext();
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
-		//////test
-//		parse.setLink(link);
-		////
-		parse.execute();
-	}
+//	void startDownLoad(String catToLoad, int pageToLoad, String link)
+//	{
+//		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+//		Context context = getApplicationContext();
+//		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
+//		//////test
+////		parse.setLink(link);
+//		////
+//		parse.execute();
+//	}
 
 	// Send an Intent with an action named "custom-event-name". The Intent sent should 
 	// be received by the ReceiverActivity.

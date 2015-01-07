@@ -2594,7 +2594,7 @@ containing a value of this type.
         public static final int article_comments_container=0x7f0c005e;
         public static final int article_container=0x7f0c0055;
         public static final int arts_list_container=0x7f0c005d;
-        public static final int arts_list_refresh=0x7f0c00a1;
+        public static final int arts_list_refresh=0x7f0c00a2;
         public static final int arts_list_view=0x7f0c0091;
         public static final int author_card_bottom_lin=0x7f0c007e;
         public static final int author_name=0x7f0c0070;
@@ -2615,7 +2615,7 @@ containing a value of this type.
         public static final int comm_text=0x7f0c0086;
         public static final int comments=0x7f0c00ba;
         public static final int comments_container=0x7f0c0058;
-        public static final int comments_fragment=0x7f0c00a2;
+        public static final int comments_fragment=0x7f0c00a1;
         public static final int comments_img=0x7f0c0075;
         public static final int comments_list_view=0x7f0c00a3;
         public static final int date=0x7f0c0064;

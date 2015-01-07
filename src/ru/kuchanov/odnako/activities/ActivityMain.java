@@ -35,6 +35,8 @@ import android.widget.ImageView;
 
 public class ActivityMain extends ActivityBase
 {
+	final private static String LOG_TAG = ActivityMain.class.getSimpleName();
+
 	//ViewPager and it's adapter for articles/comments
 	ViewPager artCommsPager;
 	PagerAdapter pagerAdapter;
@@ -98,20 +100,26 @@ public class ActivityMain extends ActivityBase
 		super.onCreate(savedInstanceState);
 		/////
 
-		Bundle stateFromIntent = this.getIntent().getExtras();
-		if (stateFromIntent != null)
-		{
-			this.restoreState(stateFromIntent);
-			this.restoreGroupChildPosition(stateFromIntent);
-		}
+//		Bundle stateFromIntent = this.getIntent().getExtras();
+//		if (stateFromIntent != null)
+//		{
+//			this.restoreState(stateFromIntent);
+//			this.restoreGroupChildPosition(stateFromIntent);
+//		}
 		if (savedInstanceState != null)
 		{
-			this.restoreState(savedInstanceState);
+//			this.restoreState(savedInstanceState);
+			this.curArtPosition = savedInstanceState.getInt("position");
+			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
+			this.restoreAllCatArtsInfo(savedInstanceState);
+			
 			this.restoreGroupChildPosition(savedInstanceState);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
 			this.restoreAllCatArtsInfo(savedInstanceState);
 			this.restoreAllCatListsSelectedArtPosition(savedInstanceState);
 		}
+
 		//get artsInfo data from DB
 		if (this.allCatArtsInfo == null)
 		{
@@ -168,6 +176,10 @@ public class ActivityMain extends ActivityBase
 		this.setNavDrawer();
 		//End of setNavDraw
 
+		/////////////TODO delete; it's test
+		//		Log.d(LOG_TAG, "select artsListPager position= " + position);
+		Log.e(LOG_TAG, "BEFORE currentCategoryPosition: " + currentCategoryPosition);
+		////////////
 		//set arts lists viewPager
 		this.artsListPagerAdapter = new ArtsListsPagerAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
@@ -177,7 +189,8 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public void onPageSelected(int position)
 			{
-				System.out.println("select artsListPager position= " + position);
+				//				System.out.println("select artsListPager position= " + position);
+				Log.d(LOG_TAG, "select artsListPager position= " + position);
 
 				//this will set current pos, and adapters group/child pos
 				setCurentCategoryPosition(position);
@@ -236,7 +249,14 @@ public class ActivityMain extends ActivityBase
 				}
 			}
 		});
-		this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
+		if (pagerAdapter == null)
+		{
+			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
+		}
+		else
+		{
+			Log.e(LOG_TAG, "pagerAdapter!=null");
+		}
 
 		///////////////
 
@@ -380,11 +400,10 @@ public class ActivityMain extends ActivityBase
 		int curPos = -1;
 		if (group == 0)
 		{
-			curPos = child + 1;
+			curPos = child;
 		}
 		else if (group == 1)
 		{
-			//			curPos = firstCategoryChildrenQuontity + child +1;
 			curPos = firstCategoryChildrenQuontity + child;
 		}
 		return curPos;
@@ -403,11 +422,9 @@ public class ActivityMain extends ActivityBase
 		super.onSaveInstanceState(outState);
 		//		System.out.println("ActivityMain: onSaveInstanceState");
 
-		//save allArtsInfo
-		//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
-
 		this.saveGroupChildPosition(outState);
 
+		Log.e(LOG_TAG + "/onSaveInstanceState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
 
 		//save toolbar and topImg Y coord
@@ -508,13 +525,13 @@ public class ActivityMain extends ActivityBase
 	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
 	{
 		this.allCatArtsInfo.put(category, newData);
-//		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-//		if (twoPane && category.equals(curCategoryLink))
-//		{
-//			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
-//			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-//			artCommsPager.setAdapter(pagerAdapter);
-//		}
+		//		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
+		//		if (twoPane && category.equals(curCategoryLink))
+		//		{
+		//			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
+		//			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
+		//			artCommsPager.setAdapter(pagerAdapter);
+		//		}
 	}
 
 	@Override

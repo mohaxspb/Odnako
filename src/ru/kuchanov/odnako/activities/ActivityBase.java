@@ -290,6 +290,7 @@ public class ActivityBase extends ActionBarActivity
 		this.curArtPosition = state.getInt("position");
 		this.curAllArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
+		Log.e(LOG_TAG+"/restoreState", "getCurentCategoryPosition(): "+getCurentCategoryPosition());
 		this.restoreAllCatArtsInfo(state);
 	}
 

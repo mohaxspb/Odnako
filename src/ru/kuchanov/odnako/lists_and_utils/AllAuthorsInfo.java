@@ -14,7 +14,8 @@ import android.support.v7.app.ActionBarActivity;
 /**
  * Data model of all info of all Authors, storred in resources.
  * 
- * Contains String[]  allNames,	 allBlogLinks, allAvaImgsUrls, allAvaBIGImgsUrls, allDescription, allWho;
+ * Contains String[] allNames, allBlogLinks, allAvaImgsUrls, allAvaBIGImgsUrls,
+ * allDescription, allWho;
  */
 public class AllAuthorsInfo
 {
@@ -27,6 +28,9 @@ public class AllAuthorsInfo
 	String[] allDescription;
 	String[] allWho;
 
+	/**
+	 * Quantity of authors from resources
+	 */
 	public static int numOfAuthors;
 
 	/**
