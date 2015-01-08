@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.FragmentArticlesListView;
+import ru.kuchanov.odnako.fragments.FragmentArtsListView;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
@@ -59,7 +59,7 @@ implements Filterable
 
 	boolean twoPane;
 
-	FragmentArticlesListView artsListFrag;
+	FragmentArtsListView artsListFrag;
 
 	public ArtsListVIEWAdapter(ActionBarActivity act, int resource, ArrayList<ArtInfo> objects)
 	{
@@ -74,7 +74,7 @@ implements Filterable
 		imageLoader = UniversalImageLoader.get(act);
 	}
 
-	public void setArgs(FragmentArticlesListView artsListFrag, ListView artsListView)
+	public void setArgs(FragmentArtsListView artsListFrag, ListView artsListView)
 	{
 		this.artsListView = artsListView;
 

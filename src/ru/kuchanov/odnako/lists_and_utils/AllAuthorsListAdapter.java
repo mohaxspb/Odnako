@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.AllAuthorsListFragment;
+import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
@@ -44,13 +44,13 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	boolean twoPane;
 
-	AllAuthorsListFragment artsListFrag;
+	FragmentAllAuthorsList artsListFrag;
 
 	AllAuthorsInfo allAuthorsInfo;
 	ArrayList<AuthorInfo> allAuthrsInfoList;
 	ArrayList<AuthorInfo> orig;
 
-	public AllAuthorsListAdapter(ActionBarActivity act, RecyclerView artsListView, AllAuthorsListFragment artsListFrag)
+	public AllAuthorsListAdapter(ActionBarActivity act, RecyclerView artsListView, FragmentAllAuthorsList artsListFrag)
 	{
 		this.act = act;
 

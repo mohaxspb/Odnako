@@ -81,9 +81,7 @@ public class Article
 	private String img_author;
 
 	//foreignKeys
-	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME/* ,
-																 * foreignAutoRefresh
-																 * = true */, canBeNull = true)
+	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
 	private Author author;
 
 	public Article()
@@ -347,6 +345,34 @@ public class Article
 	public void setAuthor(Author author)
 	{
 		this.author = author;
+	}
+	
+	//method for getting Article data as String[] to set it to ArtInfo object
+	public String[] getAsStringArray()
+	{
+		String[] allInfo=new String[17];
+		
+		allInfo[0] = url;
+		allInfo[1] = title;
+		allInfo[2] = img_art;
+		allInfo[3] = authorBlogUrl;
+		allInfo[4] = authorName;
+
+		allInfo[5] = preview;
+		allInfo[6] = pubDate.toString();
+
+		allInfo[7] = String.valueOf(numOfComments);
+		allInfo[8] = String.valueOf(numOfSharings);
+		allInfo[9] = artText;
+		allInfo[10] = authorDescr;
+		allInfo[11] = tegs_main;
+		allInfo[12] = tegs_all;
+		allInfo[13] = share_quont;
+		allInfo[14] = to_read_main;
+		allInfo[15] = to_read_more;
+		allInfo[16] = img_author;
+		
+		return allInfo;
 	}
 
 	public static int getArticleIdByURL(DataBaseHelper h, String url)

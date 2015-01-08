@@ -6,7 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
-import ru.kuchanov.odnako.fragments.AllAuthorsListFragment;
+import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +14,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 
-public class ArtsListsPagerAdapter extends FragmentStatePagerAdapter
+/**
+ * PagerAdapter for mainActivity, which shows main menu Categories
+ */
+public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 
-	public ArtsListsPagerAdapter(FragmentManager fm, ActionBarActivity act)
+	public PagerArtsListsAdapter(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
 		this.act = act;
@@ -38,7 +41,7 @@ public class ArtsListsPagerAdapter extends FragmentStatePagerAdapter
 		}
 		else if(position==3)
 		{
-			AllAuthorsListFragment frag=new AllAuthorsListFragment();
+			FragmentAllAuthorsList frag=new FragmentAllAuthorsList();
 			return frag;
 		}
 		else

@@ -35,11 +35,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 /**
- * Fragment for articles list using ListView instead of RecyclerView
+ * Fragment for articles list using ListView instead of RecyclerView. We use it
+ * for artsList or Author's arts
  */
-public class FragmentArticlesListView extends Fragment
+public class FragmentArtsListView extends Fragment
 {
-	private static final String LOG_TAG = FragmentArticlesListView.class.getSimpleName();
+	private static final String LOG_TAG = FragmentArtsListView.class.getSimpleName();
 	private ListView artsList;
 	private ArtsListVIEWAdapter artsListAdapter;
 
@@ -90,7 +91,7 @@ public class FragmentArticlesListView extends Fragment
 
 		//reciver for scrolling and highligting selected position
 		//only if there is twoPane MODE and there is allAuthors list currently selected
-//		if (((ActivityMain) act).getCurentCategoryPosition() == 4 && this.pref.getBoolean("twoPane", false))
+		//		if (((ActivityMain) act).getCurentCategoryPosition() == 4 && this.pref.getBoolean("twoPane", false))
 		if (((ActivityMain) act).getCurentCategoryPosition() == 3 && this.pref.getBoolean("twoPane", false))
 		{
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
@@ -156,12 +157,8 @@ public class FragmentArticlesListView extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(categoryToLoad, "artsDATAReceiver onReceive called");
-			// Get extra data included in the Intent
-			//			ArrayList<ArtInfo> newAllArtsInfo = ArtInfo.restoreAllArtsInfoFromBundle(intent.getExtras(), LOG_TAG
-			//			+ categoryToLoad);
 			ArrayList<ArtInfo> newAllArtsInfo;
-			//			ArrayList<ArtInfo> newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-			newAllArtsInfo = intent.getExtras().getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
 			if (newAllArtsInfo != null)
 			{

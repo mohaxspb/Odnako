@@ -31,7 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 
-public class AllAuthorsListFragment extends Fragment
+public class FragmentAllAuthorsList extends Fragment
 {
 	private RecyclerView artsList;
 	AllAuthorsListAdapter adapter;

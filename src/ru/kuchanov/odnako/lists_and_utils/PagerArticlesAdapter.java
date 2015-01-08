@@ -23,9 +23,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
+public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 {
-	static String LOG_TAG = ArticlesPagerAdapter.class.getSimpleName();
+	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName();
 
 	ArrayList<ArtInfo> allArtsInfo;
 
@@ -33,7 +33,7 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 
 	ActionBarActivity act;
 
-	public ArticlesPagerAdapter(FragmentManager fm, String category, ActionBarActivity act)
+	public PagerArticlesAdapter(FragmentManager fm, String category, ActionBarActivity act)
 	{
 		super(fm);
 		System.out.println("ArticlesPagerAdapter called");
@@ -127,7 +127,14 @@ public class ArticlesPagerAdapter extends FragmentStatePagerAdapter
 	{
 		if (object instanceof FragArtUPD)
 		{
-			((FragArtUPD) object).update(this.allArtsInfo);
+			if(((Fragment) object).isAdded())
+			{
+				((FragArtUPD) object).update(this.allArtsInfo);
+			}
+			else
+			{
+				Log.e(LOG_TAG, "Fragment not added");
+			}
 		}
 		//don't return POSITION_NONE, avoid fragment recreation. 
 		return super.getItemPosition(object);

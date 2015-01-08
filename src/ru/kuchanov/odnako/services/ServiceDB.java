@@ -17,6 +17,7 @@ import java.util.TimeZone;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
+import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.ArtAutTable;
 import ru.kuchanov.odnako.db.ArtCatTable;
 import ru.kuchanov.odnako.db.Article;
@@ -39,7 +40,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore)    tag:^(?!EGL)
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
 	SharedPreferences pref;
@@ -221,13 +222,13 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				else
 				{
 					//check period from last sink
-					int secondsInMills = 1000;
-					int minutes = secondsInMills * 60;
-					int testCheckPeriod = 1;
-					int checkPeriod = this.pref.getInt("checkPeriod", testCheckPeriod);
+					int millsInSecond = 1000;
+					long millsInMinute = millsInSecond * 60;
+					//time in Minutes. Default period between refreshing.
+					int checkPeriod=this.getResources().getInteger(R.integer.checkPeriod);
 					long refreshed = cat.getRefreshed().getTime();
-					int givenMinutes = (int) (cal.getTimeInMillis() / minutes);
-					int refreshedMinutes = (int) (refreshed / minutes);
+					int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
+					int refreshedMinutes = (int) (refreshed / millsInMinute);
 					int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
 					if (periodFromRefreshedInMinutes > checkPeriod)
 					{
@@ -250,6 +251,25 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					{
 						//TODO so there is some arts in DB by category, that we can send to frag and show
 						//sending...
+						ArrayList<ArtInfo> data=new ArrayList<ArtInfo>();
+						//calculate initial art int list to send
+						int from=30*(pageToLoad-1);
+						List<ArtCatTable> dataFromDBToSend=artCat.subList(from, (30-1));
+						//TODO set ArtCatTable obj to ArtInfo
+						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
+						for(ArtCatTable a: dataFromDBToSend)
+						{
+							Article art=this.getHelper().getDaoArticle().queryForId(a.getArticleId());
+							ArtInfo artInfoObj=new ArtInfo(art.getAsStringArray());
+							data.add(artInfoObj);
+						}
+//						this.sendMessage(data, catToLoad, pageToLoad);
+						//send directly, cause it's from DB and we do not need to do something with this data
+						Intent intent=new Intent(catToLoad);
+						intent.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+						
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+						
 						return DB_ANSWER_INFO_SENDED_TO_FRAG;
 					}
 					else
@@ -294,13 +314,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				else
 				{
 					//check period from last sink
-					int secondsInMills = 1000;
-					int minutes = secondsInMills * 60;
-					int testCheckPeriod = 1;
-					int checkPeriod = this.pref.getInt("checkPeriod", testCheckPeriod);
+					//check period from last sink
+					int millsInSecond = 1000;
+					long millsInMinute = millsInSecond * 60;
+					//time in Minutes. Default period between refreshing.
+					int checkPeriod=this.getResources().getInteger(R.integer.checkPeriod);
 					long refreshed = aut.getRefreshed().getTime();
-					int givenMinutes = (int) (cal.getTimeInMillis() / minutes);
-					int refreshedMinutes = (int) (refreshed / minutes);
+					int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
+					int refreshedMinutes = (int) (refreshed / millsInMinute);
 					int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
 					if (periodFromRefreshedInMinutes > checkPeriod)
 					{
@@ -378,15 +399,13 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 //		parse.execute();
 //	}
 
-	// Send an Intent with an action named "custom-event-name". The Intent sent should 
-	// be received by the ReceiverActivity.
+	// Send intent with ArtInfo to recivers
 	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
 		Intent intent = new Intent(categoryToLoad);
 		Bundle b = new Bundle();
 		if (someResult.size() != 0)
 		{
-//			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 			//before sending message to listener (frag) we must write gained info to DB
 			this.writeArtsToDB(someResult, categoryToLoad, pageToLoad);
@@ -397,7 +416,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
 			//			empty.add(new ArtInfo(artInfoArr));
 			someResult.add(new ArtInfo(artInfoArr));
-//			ArtInfo.writeAllArtsInfoToBundle(b, someResult, someResult.get(0));
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 		}
 		intent.putExtras(b);

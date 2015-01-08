@@ -125,7 +125,7 @@ public class Actions
 //			curArtsListFrag.setActivatedPosition(position);
 			///////////
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
-			if (pager.getAdapter().getClass().getSimpleName().equals(ArticlesPagerAdapter.class.getSimpleName()))
+			if (pager.getAdapter().getClass().getSimpleName().equals(PagerArticlesAdapter.class.getSimpleName()))
 			{
 				pager.setCurrentItem(position, true);
 			}

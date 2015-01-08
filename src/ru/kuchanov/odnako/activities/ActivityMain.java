@@ -14,9 +14,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArticlesPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListsPagerAdapter;
-import ru.kuchanov.odnako.lists_and_utils.AuthorsListsPagerAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.services.ServiceDB;
 import ru.kuchanov.odnako.utils.DipToPx;
@@ -72,6 +72,9 @@ public class ActivityMain extends ActivityBase
 	//int in hashMap to store SelectedArtPosition
 	//we'll change it at runtime selecting artsCards and restore it and get it from activity
 	//def value is zero for all
+	/**
+	 * HashMap for storing position of selected (via right pager or clicking on item) item in list. Only in twoPane mode. 
+	 */
 	private HashMap<String, Integer> allCatListsSelectedArtPosition;
 
 	protected void onCreate(Bundle savedInstanceState)
@@ -176,12 +179,8 @@ public class ActivityMain extends ActivityBase
 		this.setNavDrawer();
 		//End of setNavDraw
 
-		/////////////TODO delete; it's test
-		//		Log.d(LOG_TAG, "select artsListPager position= " + position);
-		Log.e(LOG_TAG, "BEFORE currentCategoryPosition: " + currentCategoryPosition);
-		////////////
 		//set arts lists viewPager
-		this.artsListPagerAdapter = new ArtsListsPagerAdapter(this.getSupportFragmentManager(), act);
+		this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -189,8 +188,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public void onPageSelected(int position)
 			{
-				//				System.out.println("select artsListPager position= " + position);
-				Log.d(LOG_TAG, "select artsListPager position= " + position);
+//				Log.d(LOG_TAG, "select artsListPager position= " + position);
 
 				//this will set current pos, and adapters group/child pos
 				setCurentCategoryPosition(position);
@@ -207,7 +205,7 @@ public class ActivityMain extends ActivityBase
 				{
 					if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 					{
-						pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), CatData
+						pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
 						.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
 						artCommsPager.setAdapter(pagerAdapter);
 						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
@@ -216,6 +214,7 @@ public class ActivityMain extends ActivityBase
 							@Override
 							public void onPageSelected(int position)
 							{
+								//move topImg and toolBar while scrolling left list
 								if (android.os.Build.VERSION.SDK_INT >= 11)
 								{
 									toolbar.setY(0 - toolbar.getHeight());
@@ -235,16 +234,44 @@ public class ActivityMain extends ActivityBase
 							}
 						});
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-						Log.i("curARTSelected", "curPos: " + curPos);
-
 						artCommsPager.setCurrentItem(curPos, true);
 					}
-					else
+					else if(currentCategoryPosition == 3)
 					{
-						//TODO show all authors and categories adapters
-						pagerAdapter = new AuthorsListsPagerAdapter(act.getSupportFragmentManager(), act);
+						//show all authors adapters
+						pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
 						artCommsPager.setAdapter(pagerAdapter);
 						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
+						artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+						{
+							@Override
+							public void onPageSelected(int position)
+							{
+								//move topImg and toolBar while scrolling left list
+								if (android.os.Build.VERSION.SDK_INT >= 11)
+								{
+									toolbar.setY(0 - toolbar.getHeight());
+									topImg.setY(0 - topImg.getHeight());
+								}
+								System.out.println("onPageSelected in articlePager; position: " + position);
+								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
+
+								Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
+								+ "art_position");
+								Bundle b = new Bundle();
+								b.putInt("position", position);
+								intentToListFrag.putExtras(b);
+
+								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							}
+						});
+						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
+						artCommsPager.setCurrentItem(curPos, true);
+					}
+					else if(currentCategoryPosition == 13)
+					{
+						//TODO show all categories adapters
 					}
 				}
 			}
@@ -260,8 +287,6 @@ public class ActivityMain extends ActivityBase
 
 		///////////////
 
-		//onMain if we don't use twoPane mode we'll set alpha for action bar
-		//we'll do it after setNavDrawer, cause we find toolbar in it
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
 		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
@@ -424,7 +449,6 @@ public class ActivityMain extends ActivityBase
 
 		this.saveGroupChildPosition(outState);
 
-		Log.e(LOG_TAG + "/onSaveInstanceState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
 
 		//save toolbar and topImg Y coord

@@ -38,6 +38,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
+/**
+ * Fragment for artsList. We use it as main Fragment for menu categories instead of allAuthors and -Categories
+ */
 public class FragmentArtsRecyclerList extends Fragment
 {
 	private int topImgYCoord = 0;
