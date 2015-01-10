@@ -242,6 +242,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	{
 		super.close();
 		this.daoArtCatTable = null;
+		this.daoArtAutTable = null;
 		this.daoArticle = null;
 		this.daoAuthor = null;
 		this.daoCategory = null;

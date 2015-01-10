@@ -24,18 +24,16 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 	ActionBarActivity act;
 	ArrayList<AuthorInfo> allAuthorsInfo;
 
-	public PagerAuthorsListsAdapter(FragmentManager fm, ActionBarActivity act)//, ArrayList<AuthorInfo> allAuthorsInfo)
+	public PagerAuthorsListsAdapter(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
 		this.act = act;
-		//		this.allAuthorsInfo=allAuthorsInfo;
 		this.allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
 	}
 
 	@Override
 	public Fragment getItem(int position)
 	{
-//		ArticlesListFragment artsListFrag = new ArticlesListFragment();
 		FragmentArtsListView frag=new FragmentArtsListView();
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", allAuthorsInfo.get(position).blogLink);

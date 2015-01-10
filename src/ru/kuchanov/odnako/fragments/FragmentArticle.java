@@ -39,8 +39,7 @@ import android.widget.TextView;
 
 public class FragmentArticle extends Fragment implements FragArtUPD
 {
-	
-	
+
 	private ActionBarActivity act;
 	private LayoutInflater inflater;
 	private SharedPreferences pref;
@@ -141,7 +140,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				//load...
 				this.swipeRef.setRefreshing(true);
-				
+
 				this.fillFielsdsWithInfo(this.getView());
 
 				//setting size of Images and text
@@ -152,7 +151,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				//load...
 				this.swipeRef.setRefreshing(true);
-				
+
 				this.fillFielsdsWithInfo(this.getView());
 
 				//setting size of Images and text
@@ -186,7 +185,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					}
 				});
 
-//				this.fillFielsdsWithInfo(v);
+				//				this.fillFielsdsWithInfo(v);
 				this.fillFielsdsWithInfo(this.getView());
 
 				//setting size of Images and text
@@ -306,8 +305,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		super.onViewCreated(view, savedInstanceState);
 
 	}
-
-	
 
 	private void setUpAlsoByTheme()
 	{
@@ -493,14 +490,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			//set btn image
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_white_48dp,
-				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
 			}
 			else
 			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_up_grey600_48dp,
-				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_grey600_48dp);
 			}
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
@@ -512,14 +505,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			//set btn image
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
 			}
 			else
 			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-				//				artAuthorDescriptionIV);
 				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
 
 			}
@@ -574,7 +563,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}
-	
+
 	private void setUpAllTegsLayout(View rooView)
 	{
 		String[] allTegs = this.curArtInfo.getAllTegsArr();
@@ -665,7 +654,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	@Override
 	public void onAttach(Activity activity)
 	{
-		//		System.out.println("ArticleFragment onAttach position: "+this.position);
 		super.onAttach(activity);
 	}
 
@@ -686,7 +674,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		outState.putInt("position", this.position);
-		//		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, this.curArtInfo);
 		outState.putParcelable(ArtInfo.KEY_CURENT_ART, curArtInfo);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 	}
@@ -701,9 +688,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	@Override
 	public void update(ArrayList<ArtInfo> allArtInfo)
 	{
-		this.curArtInfo=allArtInfo.get(position);
+		this.curArtInfo = allArtInfo.get(position);
 		this.checkCurArtInfo(null);
 	}
 }
-
-

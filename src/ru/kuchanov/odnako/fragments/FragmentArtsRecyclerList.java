@@ -12,9 +12,10 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
+import ru.kuchanov.odnako.db.DBActions;
+import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import ru.kuchanov.odnako.services.ServiceDB;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,10 +40,13 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 /**
- * Fragment for artsList. We use it as main Fragment for menu categories instead of allAuthors and -Categories
+ * Fragment for artsList. We use it as main Fragment for menu categories instead
+ * of allAuthors and -Categories
  */
 public class FragmentArtsRecyclerList extends Fragment
 {
+	static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
+
 	private int topImgYCoord = 0;
 	private int toolbarYCoord = 0;
 	private int initialDistance;
@@ -60,18 +64,10 @@ public class FragmentArtsRecyclerList extends Fragment
 	ArtInfo curArtInfo;
 	private int position = 0;
 
-	static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
-
-	/**
-	 * The serialization (saved instance state) Bundle key representing the
-	 * activated item position. Only used on tablets.
-	 */
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//System.out.println("ArticlesListFragment onCreate");
+		//Log.d(LOG_TAG+categoryToLoad, "onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActionBarActivity) this.getActivity();
@@ -94,14 +90,12 @@ public class FragmentArtsRecyclerList extends Fragment
 			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
 			this.initialDistance = savedInstanceState.getInt("initialDistance");
 
-			//			this.position=savedInstanceState.getInt(STATE_ACTIVATED_POSITION);
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
-
-			this.restoreState(savedInstanceState);
+			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
+			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+			this.position = savedInstanceState.getInt("position");
 		}
-		// Register to receive messages.
-		// We are registering an observer (mMessageReceiver) to receive Intents
-		// with actions named "custom-event-name".
+
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
 		new IntentFilter(this.getCategoryToLoad()));
 
@@ -123,16 +117,27 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			String msg = intent.getStringExtra("msg");
+			String msg = intent.getStringExtra(DBActions.Msg.MSG);
 			switch (msg)
 			{
-				case (ServiceDB.Msg.NO_NEW):
+				case (DBActions.Msg.NO_NEW):
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 				break;
-				case (ServiceDB.Msg.NEW_QUONT):
-					int quont = intent.getIntExtra(ServiceDB.Msg.QUONT, 0);
+				case (DBActions.Msg.NEW_QUONT):
+					int quont = intent.getIntExtra(DBActions.Msg.QUONT, 0);
 					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
 				break;
+				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_CAT:
+					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_CAT, Toast.LENGTH_LONG).show();
+				break;
+				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_AUTHOR:
+					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_AUTHOR, Toast.LENGTH_LONG).show();
+				break;
+				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTS:
+					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTS, Toast.LENGTH_LONG).show();
+				break;
+				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTCAT:
+					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTCAT, Toast.LENGTH_LONG).show();
 			}
 		}
 	};
@@ -160,22 +165,17 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 	};
 
-	// Our handler for received Intents. This will be called whenever an Intent
-	// with an action named "custom-event-name" is broadcasted.
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
+			//			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
 			ArrayList<ArtInfo> newAllArtsInfo;
 			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-//			newAllArtsInfo=intent.getExtras().getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 
 			if (newAllArtsInfo != null)
 			{
-				//				if(allArtsInfo.clear();
-				//				allArtsInfo = new ArrayList<ArtInfo>();
 				allArtsInfo.clear();
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
@@ -198,10 +198,8 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//						System.out.println("ArticlesListFragment onCreateView");
-		//inflate root view
+		//		Log.d(LOG_TAG, "onCreateView");
 		View v;
-
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
@@ -228,8 +226,6 @@ public class FragmentArtsRecyclerList extends Fragment
 			}
 		});
 
-		////
-
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
@@ -240,25 +236,16 @@ public class FragmentArtsRecyclerList extends Fragment
 
 			this.getAllArtsInfo(false);
 
-			//			ArrayList<ArtInfo> def = ArtInfo.getDefaultAllArtsInfo(act);
-			//			this.allArtsInfo = def;
-			//
-			//			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
-			//			
-			//			this.artsList.setAdapter(artsListAdapter);
-
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
 			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
 			this.allArtsInfo = def;
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
-
 			this.artsList.setAdapter(artsListAdapter);
 
 		}
 		else
 		{
-			//			Log.i(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 
@@ -291,15 +278,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	private void getAllArtsInfo(boolean startDownload)
 	{
 		Log.i(categoryToLoad, "getAllArtsInfo called");
-		// TODO Auto-generated method stub
-		//		Intent intent = new Intent(this.act, GetInfoService.class);
-		//		Bundle b = new Bundle();
-		//		b.putString("categoryToLoad", this.getCategoryToLoad());
-		//		b.putInt("pageToLaod", 1);
-		//		intent.putExtras(b);
-		//		this.act.startService(intent);
 
-		//////////////
 		this.swipeRef.setRefreshing(true);
 
 		Intent intent = new Intent(this.act, ServiceDB.class);
@@ -310,13 +289,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		b.putBoolean("startDownload", startDownload);
 		intent.putExtras(b);
 		this.act.startService(intent);
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState)
-	{
-		//		System.out.println("ArticlesListFragment onViewCreated");
-		super.onViewCreated(view, savedInstanceState);
 	}
 
 	@Override
@@ -333,19 +305,10 @@ public class FragmentArtsRecyclerList extends Fragment
 		outState.putInt("toolbarYCoord", this.toolbarYCoord);
 		outState.putInt("initialDistance", this.initialDistance);
 
-		outState.putInt(STATE_ACTIVATED_POSITION, this.position);
+		outState.putInt("position", this.position);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
 		//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
-	}
-
-	private void restoreState(Bundle state)
-	{
-		//		Log.d(LOG_TAG + categoryToLoad, "restoreState called");
-		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
-		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
-		this.position = state.getInt("position");
-		//		Log.d(LOG_TAG + categoryToLoad, "restoreState finished");
 	}
 
 	public void setActivatedPosition(int position)
@@ -353,11 +316,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		//		System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
-		scrollToActivatedPosition();
-	}
-
-	public void scrollToActivatedPosition()
-	{
 		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
 	}
 

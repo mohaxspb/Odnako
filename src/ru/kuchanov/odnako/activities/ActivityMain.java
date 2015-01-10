@@ -13,12 +13,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.services.ServiceDB;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;

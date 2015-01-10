@@ -42,17 +42,10 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 
-		//		System.out.println("ArticlesPagerAdapter called allArtsInfo.size(): "+allArtsInfo.size());
-
-		// Register to receive messages.
-		// We are registering an observer (mMessageReceiver) to receive Intents
-		// with actions named "custom-event-name".
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(mMessageReceiver, new IntentFilter(category));
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver, new IntentFilter(category));
 	}
 
-	// Our handler for received Intents. This will be called whenever an Intent
-	// with an action named "custom-event-name" is broadcasted.
-	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
+	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)

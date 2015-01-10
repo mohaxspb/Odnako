@@ -10,10 +10,11 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.db.DBActions;
+import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListVIEWAdapter;
-import ru.kuchanov.odnako.services.ServiceDB;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -138,11 +139,11 @@ public class FragmentArtsListView extends Fragment
 			String msg = intent.getStringExtra("msg");
 			switch (msg)
 			{
-				case (ServiceDB.Msg.NO_NEW):
+				case (DBActions.Msg.NO_NEW):
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 				break;
-				case (ServiceDB.Msg.NEW_QUONT):
-					int quont = intent.getIntExtra(ServiceDB.Msg.QUONT, 0);
+				case (DBActions.Msg.NEW_QUONT):
+					int quont = intent.getIntExtra(DBActions.Msg.QUONT, 0);
 					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
 				break;
 			}

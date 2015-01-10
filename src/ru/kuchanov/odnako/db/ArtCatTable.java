@@ -40,7 +40,7 @@ public class ArtCatTable
 
 	public ArtCatTable()
 	{
-		// TODO need empty constructor for ORMlite
+		//need empty constructor for ORMlite
 	}
 
 	/**

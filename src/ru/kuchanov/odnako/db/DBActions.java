@@ -1,51 +1,32 @@
 /*
- 07.12.2014
-ServiceDB.java
+ 10.01.2015
+DBActions.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com
  */
-package ru.kuchanov.odnako.services;
+package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.db.ArtAutTable;
-import ru.kuchanov.odnako.db.ArtCatTable;
-import ru.kuchanov.odnako.db.Article;
-import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.db.Category;
-import ru.kuchanov.odnako.db.DataBaseHelper;
-import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
-import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-
 import android.util.Log;
-import android.widget.Toast;
 
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
-public class ServiceDB extends Service implements AllArtsInfoCallback
+/**
+ * Class with actions with DB
+ */
+public class DBActions
 {
-	SharedPreferences pref;
-
-	final private static String LOG_TAG = ServiceDB.class.getSimpleName();
+	final private static String LOG_TAG = DBActions.class.getSimpleName();
 
 	final public static String DB_ANSWER_NEVER_REFRESHED = "never refreshed";
 	final public static String DB_ANSWER_REFRESH_BY_PERIOD = "refresh by period";
@@ -57,147 +38,21 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	final public static String DB_ANSWER_SQLEXCEPTION_AUTHOR = "SQLException in aut.query()";
 	final public static String DB_ANSWER_UNKNOWN_CATEGORY = "no entries in Category and Author";
 
-	///////////
-	private DataBaseHelper dataBaseHelper = null;
+	private DataBaseHelper dataBaseHelper;
+	private Context ctx;
+
+	public DBActions(Context ctx, DataBaseHelper dataBaseHelper)
+	{
+		this.ctx = ctx;
+		this.dataBaseHelper = dataBaseHelper;
+	}
 
 	private DataBaseHelper getHelper()
 	{
-		if (dataBaseHelper == null)
-		{
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 16);
-		}
 		return dataBaseHelper;
 	}
 
-	///////////
-
-	public void onCreate()
-	{
-		super.onCreate();
-		Log.d(LOG_TAG, "onCreate");
-
-		//get access to my_awersomeDB
-		this.getHelper();
-
-		//pref
-		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
-	}
-
-	public int onStartCommand(Intent intent, int flags, int startId)
-	{
-		Log.d(LOG_TAG, "onStartCommand");
-		if (intent != null)
-		{
-			//gain category
-			String catToLoad;
-			catToLoad = intent.getStringExtra("categoryToLoad");
-			//get startDownload flag
-			boolean startDownload;
-			startDownload = intent.getBooleanExtra("startDownload", false);
-			//firstly: if we load from top or not? Get it by pageToLoad
-			//get pageToLoad
-			int pageToLoad;
-			pageToLoad = intent.getIntExtra("pageToLoad", 1);
-			if (pageToLoad == 1)
-			{
-				//if pageToLoad=1 we load from top
-				Log.d(LOG_TAG, "LOAD FROM TOP!");
-				//get timeStamp
-				Long timeStamp;
-				timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
-				Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
-				cal.setTimeInMillis(timeStamp);
-
-				//if there is flag to download we do not need to go to DB
-				//we simply start download
-				if (startDownload)
-				{
-//					this.startDownLoad(catToLoad, 1, "http://kuchanov.ru/odnako/blogs0.html");
-					this.startDownLoad(catToLoad, pageToLoad);
-				}
-				else
-				{
-					//get info from appDB. 
-					//if it's null - start load and notify caller about it
-					//if not, check timeStamp of appBD; 
-					//if it's more than 15 min less then given timeStamp return appDB info and notify, that download starts
-					//otherwise return appDB and notify that it is upToDate
-
-					//method getInfoFromDB will return result of searching throw DB
-					String DBRezult = this.getInfoFromDB(catToLoad, cal, pageToLoad);
-					Log.d(LOG_TAG, DBRezult);
-
-					switch (DBRezult)
-					{
-						case DB_ANSWER_SQLEXCEPTION_CAT:
-							Toast.makeText(this, "Ошибка чтения Базы Данных, КАТЕГОРИЯ", Toast.LENGTH_LONG).show();
-						break;
-						case DB_ANSWER_SQLEXCEPTION_AUTHOR:
-							Toast.makeText(this, "Ошибка чтения Базы Данных, АВТОР", Toast.LENGTH_LONG).show();
-						break;
-						case DB_ANSWER_SQLEXCEPTION_ARTS:
-							Toast.makeText(this, "Ошибка чтения Базы Данных, Статья", Toast.LENGTH_LONG).show();
-						break;
-						case DB_ANSWER_SQLEXCEPTION_ARTCAT:
-							Toast.makeText(this, "Ошибка чтения Базы Данных, СТАТЬЯ_КАТЕГОРИЯ", Toast.LENGTH_LONG)
-							.show();
-						break;
-						case DB_ANSWER_NEVER_REFRESHED:
-							//was never refreshed, so start to refresh
-							//so start download category with 1-st page
-							this.startDownLoad(catToLoad, 1);
-						break;
-						case DB_ANSWER_REFRESH_BY_PERIOD:
-							//was refreshed more than max period, so start to refresh
-							//so start download category with 1-st page
-							//but firstly we must show old articles
-							this.startDownLoad(catToLoad, 1);
-						break;
-
-						case DB_ANSWER_NO_ENTRY_OF_ARTS:
-							//no arts in DB (why?)
-							//we get it if there is no need to refresh by period, so we have one successful load in past...
-							//but no art's in db... that's realy strange! =)
-							//so start download from web
-							this.startDownLoad(catToLoad, 1);
-						break;
-						case DB_ANSWER_UNKNOWN_CATEGORY:
-						//TODO here we must create new entry in Category (or Author) table
-						//and start download arts of this category
-
-						break;
-						case DB_ANSWER_INFO_SENDED_TO_FRAG:
-						//here we have nothing to do... Cause there is no need to load somthing from web,
-						//and arts have been already sended to frag
-						break;
-					}
-				}
-			}
-			else
-			{
-				//if pageToLoad!=1 we load from bottom
-				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
-				//here we ask DB  if it's sinked
-				////TODO if so aks db for arts
-				//////if we have no arts, we load them from web
-				//////if we have >30 we pass 30 to fragment
-				//////else we ask category if it has firstArtURL
-				////////if so we pass arts to fragment
-				////////else we must load arts from web
-				//////////if we get <30 we set last art's URL as first art of category and write arts to db(Article and ArtCat)
-				//////////else simply write arts to db(Article and ArtCat)
-				////TODO if unsinked we load arts from web
-				////match gained arts with ArtCat entries from id>30*pageToLoad
-				/////if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match
-				/////else write arts to db after id>30*pageToLoad
-			}
-
-		}
-		return super.onStartCommand(intent, flags, startId);
-	}
-
-	//	private String getInfoFromDB(String catToLoad, Long timeStamp, /*boolean startDownload,*/ int pageToLoad)
-	private String getInfoFromDB(String catToLoad, Calendar cal, int pageToLoad)
+	public String getInfoFromDB(String catToLoad, Calendar cal, int pageToLoad)
 	{
 		Long lastRefreshedMills;
 		//try to find db entry for given catToLoad
@@ -208,7 +63,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			cat = this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, catToLoad)
 			.queryForFirst();
 
-			//Log.d(LOG_TAG, "cat != null: " + String.valueOf(cat != null));
 			//it can be null, if we have no entry for given catToLoad. Yes, we test it!
 			if (cat != null)
 			{
@@ -225,7 +79,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					int millsInSecond = 1000;
 					long millsInMinute = millsInSecond * 60;
 					//time in Minutes. Default period between refreshing.
-					int checkPeriod=this.getResources().getInteger(R.integer.checkPeriod);
+					int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
 					long refreshed = cat.getRefreshed().getTime();
 					int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
 					int refreshedMinutes = (int) (refreshed / millsInMinute);
@@ -249,27 +103,27 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, catId).query();
 					if (artCat.size() != 0)
 					{
-						//TODO so there is some arts in DB by category, that we can send to frag and show
+						//TODO
+						//so there is some arts in DB by category, that we can send to frag and show
 						//sending...
-						ArrayList<ArtInfo> data=new ArrayList<ArtInfo>();
+						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
 						//calculate initial art int list to send
-						int from=30*(pageToLoad-1);
-						List<ArtCatTable> dataFromDBToSend=artCat.subList(from, (30-1));
-						//TODO set ArtCatTable obj to ArtInfo
+						int from = 30 * (pageToLoad - 1);
+						List<ArtCatTable> dataFromDBToSend = artCat.subList(from, (30 - 1));
+						//set ArtCatTable obj to ArtInfo
 						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
-						for(ArtCatTable a: dataFromDBToSend)
+						for (ArtCatTable a : dataFromDBToSend)
 						{
-							Article art=this.getHelper().getDaoArticle().queryForId(a.getArticleId());
-							ArtInfo artInfoObj=new ArtInfo(art.getAsStringArray());
+							Article art = this.getHelper().getDaoArticle().queryForId(a.getArticleId());
+							ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
 							data.add(artInfoObj);
 						}
-//						this.sendMessage(data, catToLoad, pageToLoad);
 						//send directly, cause it's from DB and we do not need to do something with this data
-						Intent intent=new Intent(catToLoad);
+						Intent intent = new Intent(catToLoad);
 						intent.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
-						
-						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-						
+
+						LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+
 						return DB_ANSWER_INFO_SENDED_TO_FRAG;
 					}
 					else
@@ -318,7 +172,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					int millsInSecond = 1000;
 					long millsInMinute = millsInSecond * 60;
 					//time in Minutes. Default period between refreshing.
-					int checkPeriod=this.getResources().getInteger(R.integer.checkPeriod);
+					int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
 					long refreshed = aut.getRefreshed().getTime();
 					int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
 					int refreshedMinutes = (int) (refreshed / millsInMinute);
@@ -374,70 +228,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 	}
 
-	private void startDownLoad(String catToLoad, int pageToLoad)
-	{
-		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
-		Context context = getApplicationContext();
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
-		//////test
-//		if(catToLoad.equals("odnako.org/blogs"))
-//		{
-//			parse.setLink("http://kuchanov.ru/odnako/blogs1.html");
-//		}
-		////
-		parse.execute();
-	}
-	
-//	void startDownLoad(String catToLoad, int pageToLoad, String link)
-//	{
-//		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
-//		Context context = getApplicationContext();
-//		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
-//		//////test
-////		parse.setLink(link);
-//		////
-//		parse.execute();
-//	}
-
-	// Send intent with ArtInfo to recivers
-	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
-	{
-		Intent intent = new Intent(categoryToLoad);
-		Bundle b = new Bundle();
-		if (someResult.size() != 0)
-		{
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
-			//before sending message to listener (frag) we must write gained info to DB
-			this.writeArtsToDB(someResult, categoryToLoad, pageToLoad);
-		}
-		else
-		{
-			//			ArrayList<ArtInfo> empty = new ArrayList<ArtInfo>();
-			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
-			//			empty.add(new ArtInfo(artInfoArr));
-			someResult.add(new ArtInfo(artInfoArr));
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
-		}
-		intent.putExtras(b);
-
-		//now update REFRESHED field of Category or Author entry in table if we load from top
-		if (pageToLoad == 1)
-		{
-			this.updateRefreshedDate(categoryToLoad);
-		}
-		else
-		{
-			//we don need to update refreshed Date, cause we do it only when loading from top
-		}
-
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-	}
-
-	private void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
+	public void writeArtsToDB(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
 		//here we'll write gained arts to Article table
-
-		///////////////
 		for (ArtInfo a : someResult)
 		{
 			//check if there is no already existing arts in DB by queryForURL
@@ -446,9 +239,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				existingArt = this.getHelper().getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, a.url)
 				.queryForFirst();
-			} catch (SQLException e1)
+			} catch (SQLException e)
 			{
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
 			if (existingArt == null)
 			{
@@ -479,7 +272,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//Actually nothing to do, cause we only get here initial ArtInfo from site list
 				//in other cases we can update artText or preview and so on, but not here
 			}
-
 		}
 
 		//and fill ArtCatTable with entries of arts
@@ -487,6 +279,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (pageToLoad == 1)
 		{
 			//from top
+			
+			
+			
 			/////check if there are arts of given category
 			try
 			{
@@ -504,6 +299,24 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					//check if there are any arts in category
 					if (artCatEntries.size() != 0)
 					{
+						//TODO
+						//if so ...
+
+						//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
+						//(match by id, that we gain from Article table by gain Arts by url)
+						//
+						//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
+						//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
+						//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+						//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
+						//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
+						//}
+						//if not just insert entries (with art id and cat id)
+						// and set given category sink to true;
+						//{
+						//}
+						
+						
 						//get first 30 (max num of arts on page) category's arts ids
 						for (int i = 0; i < 30 && i < artCatEntries.size(); i++)
 						{
@@ -528,10 +341,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 								if (i == 0)
 								{
 									//if so - Toast it and finish operation
-									Log.d(categoryToLoad, "Новых статей не обнаружено!");
+//									Log.d(categoryToLoad, "Новых статей не обнаружено!");
 									Intent intent = new Intent(categoryToLoad + "msg");
 									intent.putExtra("msg", Msg.NO_NEW);
-									LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 								}
 								else
 								{
@@ -540,7 +353,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 									Intent intent = new Intent(categoryToLoad + "msg");
 									intent.putExtra("msg", Msg.NEW_QUONT);
 									intent.putExtra(Msg.QUONT, i);
-									LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 									//and write not matched arts in ArtCatTable in front of category arts
 									//i.e. i=5, so we have 5 new arts (0,1,2,3,4)
 									//so we must get their id's from Article and create new ArtCatTable obj
@@ -707,8 +520,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 							}
 							//we do not set ID manually, cause it's initial arts of given category, so we do not need to specify it
-							artCatTableList
-							.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
+							artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 						}
 						//So here we have list<T> with new Arts...						
 						//FINALLY write new enrties with new Arts to ArtCatTable
@@ -729,21 +541,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 
 			}
-			//if so ...
-
-			//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
-			//(match by id, that we gain from Article table by gain Arts by url)
-			//
-			//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
-			//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
-			//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
-			//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
-			//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
-			//}
-			//if not just insert entries (with art id and cat id)
-			// and set given category sink to true;
-			//{
-			//}
+			
 		}
 		else
 		{
@@ -785,30 +583,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 	}
 
-	@Override
-	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
-	{
-		this.sendMessage(someResult, categoryToLoad, pageToLoad);
-	}
-
-	public IBinder onBind(Intent intent)
-	{
-		Log.d(LOG_TAG, "onBind");
-		return null;
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		Log.d(LOG_TAG, "onDestroy");
-		if (dataBaseHelper != null)
-		{
-			OpenHelperManager.releaseHelper();
-			dataBaseHelper = null;
-		}
-	}
-
 	public boolean isCategory(String url)
 	{
 		boolean isCategory = false;
@@ -834,16 +608,16 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	public class Msg
 	{
+		public final static String MSG = "msg";
+
+		public final static String DB_ANSWER_SQLEXCEPTION_CAT = "Ошибка чтения Базы Данных, КАТЕГОРИЯ";
+		public final static String DB_ANSWER_SQLEXCEPTION_AUTHOR = "Ошибка чтения Базы Данных, АВТОР";
+		public final static String DB_ANSWER_SQLEXCEPTION_ARTS = "Ошибка чтения Базы Данных, СТАТЬЯ";
+		public final static String DB_ANSWER_SQLEXCEPTION_ARTCAT = "Ошибка чтения Базы Данных, СТАТЬЯ_КАТЕГОРИЯ";
+
 		public final static String NO_NEW = "no new";
 		public final static String QUONT = "quont";
 		public final static String NEW_QUONT = "new quont";
 	}
-}
 
-//Log.d(LOG_TAG,
-//			cal.get(Calendar.YEAR) + "." + cal.get(Calendar.MONTH) + "." + cal.get(Calendar.DAY_OF_MONTH) + "."
-//			+ cal.get(Calendar.HOUR_OF_DAY) + "." + cal.get(Calendar.MINUTE));
-//			Log.d(LOG_TAG, cal.getTime().toString());
-//			Log.d(LOG_TAG,
-//			cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("ru"))
-//			+ " " + cal.get(Calendar.YEAR));
+}
