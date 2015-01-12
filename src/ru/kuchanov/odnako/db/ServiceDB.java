@@ -212,7 +212,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		if (dataBaseHelper == null)
 		{
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 17);
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 18);
 		}
 		return dataBaseHelper;
 	}

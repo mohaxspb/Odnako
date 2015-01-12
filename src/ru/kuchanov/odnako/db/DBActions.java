@@ -107,7 +107,7 @@ public class DBActions
 						//so there is some arts in DB by category, that we can send to frag and show
 						//sending...
 						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
-						//calculate initial art int list to send
+						//calculate initial art in list to send
 						int from = 30 * (pageToLoad - 1);
 						List<ArtCatTable> dataFromDBToSend = artCat.subList(from, (30 - 1));
 						//set ArtCatTable obj to ArtInfo
@@ -279,14 +279,11 @@ public class DBActions
 		if (pageToLoad == 1)
 		{
 			//from top
-			
-			
-			
 			/////check if there are arts of given category
 			try
 			{
-				List<Integer> artsIds = new ArrayList<Integer>();
-				List<Article> catArtsList = new ArrayList<Article>();
+//				List<Integer> artsIds = new ArrayList<Integer>();
+//				List<Article> catArtsList = new ArrayList<Article>();
 				//switch by Category or Author				
 				if (this.isCategory(categoryToLoad))
 				{
@@ -305,7 +302,7 @@ public class DBActions
 						//firstly check how many of gained arts are new by calculating how many dismatches with table entries 
 						//(match by id, that we gain from Article table by gain Arts by url)
 						//
-						//if(new=0) there is no new arts, so mark category sinked and do NO inserts in DB table
+						//if(new=0) there is no new arts, so mark category SINKED and do NO inserts in DB table
 						//else if(new<30) set Category SINKED and insert Arts in front of this category entries 
 						//so we must increment all arts ids for arts, that have id>=id of 1-st art of this category by "new"
 						//else if(new>=30) set Category UNSINKED and insert Arts in front of this category entries 
@@ -317,31 +314,25 @@ public class DBActions
 						//}
 						
 						
-						//get first 30 (max num of arts on page) category's arts ids
-						for (int i = 0; i < 30 && i < artCatEntries.size(); i++)
-						{
-							ArtCatTable a = artCatEntries.get(i);
-							artsIds.add(a.getArticleId());
-						}
-						//now get first 30 (max num of arts on page) Article objects of category by id
-						//TODO I think we do NOT need more then 1-st Article... We'll match only with first!
-						for (int id : artsIds)
-						{
-							catArtsList.add(this.getHelper().getDaoArticle().queryForId(id));
-						}
-						//and match their urls with loaded art's urls
+						//match url of IS_TOP ArtCatTable with given list and calculate quont of new
+						////new=0 =>do noting
+						////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+						////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+						
+						//match url of IS_TOP ArtCatTable with given list and calculate quont of new
+						ArtCatTable topArtCat=ArtCatTable.getTopArtCat(getHelper(), true);
+						String topArtUrl=Article.getArticleUrlById(getHelper(), topArtCat.getArticleId());
+						
 						for (int i = 0; i < someResult.size(); i++)
 						{
-							if (someResult.get(i).url.equals(catArtsList.get(0).getUrl()))
+							if (someResult.get(i).url.equals(topArtUrl))
 							{
-								// matched! So we can mark category as sinked
-								Category.setCategorySinchronized(getHelper(), categoryToLoad, true);
-
-								//check if there is no new arts (if(i==0))
+								Category.setCategorySinchronized(getHelper(), categoryToLoad, false);
+								
+								//check if there is no new arts
 								if (i == 0)
 								{
-									//if so - Toast it and finish operation
-//									Log.d(categoryToLoad, "Новых статей не обнаружено!");
+								////new=0 =>do noting
 									Intent intent = new Intent(categoryToLoad + "msg");
 									intent.putExtra("msg", Msg.NO_NEW);
 									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
@@ -354,11 +345,8 @@ public class DBActions
 									intent.putExtra("msg", Msg.NEW_QUONT);
 									intent.putExtra(Msg.QUONT, i);
 									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
-									//and write not matched arts in ArtCatTable in front of category arts
-									//i.e. i=5, so we have 5 new arts (0,1,2,3,4)
-									//so we must get their id's from Article and create new ArtCatTable obj
-									//and write them to db
-									//List<ArtCatTable> artCatTableList of new arts and all other, that will be written to DB
+									
+								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 									List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
 
 									for (int u = 0; u < i; u++)
@@ -383,35 +371,17 @@ public class DBActions
 										{
 
 										}
-										//now calculate id for new entry
-										//here we must gain first ActCatTable entry id for given category
-										//because it's loading from top
-										int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId)
-										+ u;
-										artCatTableList.add(new ArtCatTable(id, articleId, categoryId, nextArtUrl,
-										previousArtUrl));
+										ArtCatTable tr=new ArtCatTable(null, articleId, categoryId, nextArtUrl,	previousArtUrl);
+										artCatTableList.add(tr);
 									}
-									//So here we have list<T> with new Arts...
-									//then find other arts from firstId to the end...
-									List<ArtCatTable> artCatTableListFromGivenId = ArtCatTable
-									.getArtCatTableListByCategoryIdFromFirstId(getHelper(), categoryId);
-									//and change their id's (increment them by new arts quont (size of existed list))...
-									for (ArtCatTable a : artCatTableListFromGivenId)
-									{
-										a.setId(a.getId() + artCatTableList.size());
-									}
-									//and set previous Article of matched Article
-									int lastNewArtId = artCatTableList.get(artCatTableList.size() - 1).getArticleId();
-									String lastNewArtUrl = Article.getArticleUrlById(getHelper(), lastNewArtId);
-									artCatTableListFromGivenId.get(0).setPreviousArtUrl(lastNewArtUrl);
-									//and add them to list
-									artCatTableList.addAll(artCatTableListFromGivenId);
-
-									//and now we must delete all entries from firstId of category and write our list to db
-									ArtCatTable.deleteEntriesFromGivenIdToEnd(getHelper(), artCatTableList.get(0)
-									.getId());
-
-									//FINALLY write new enrties with updated ids and new Arts to ArtCatTable
+									//update isTop to null for old entry
+									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									//update previous url for old TOP_ART
+									String nextArtUrlOfLastInList=artCatTableList.get(artCatTableList.size()-1).getNextArtUrl();
+									ArtCatTable.updatePreviousArt(getHelper(), topArtCat, nextArtUrlOfLastInList);
+									//set new TOP_ART for first of given from web
+									artCatTableList.get(0).isTop(true);
+									//FINALLY write new entries to ArtCatTable
 									for (ArtCatTable a : artCatTableList)
 									{
 										this.getHelper().getDaoArtCatTable().create(a);
@@ -425,15 +395,15 @@ public class DBActions
 								//check if it's last iteration
 								if (i == someResult.size() - 1)
 								{
-									//no matches, so mark Category unsinked and write new artCat entries to db in front of other entries
-									Log.d(categoryToLoad,
-									"no matches, so mark Category unsinked and write new artCat entries to db");
+									//no matches, so mark Category unsinked and write new artCat entries to db
+									Log.d(categoryToLoad, "no matches, so mark Category unsinked and write new artCat entries to db");
 
 									Category.setCategorySinchronized(getHelper(), categoryToLoad, false);
-
-									//create ArtCatTable objects with id>=first found entry of given category
+									
+								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 									List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
-									for (int u = 0; u < someResult.size(); u++)
+
+									for (int u = 0; u < i; u++)
 									{
 										//get Article id by url
 										int articleId = Article.getArticleIdByURL(getHelper(), someResult.get(u).url);
@@ -455,31 +425,14 @@ public class DBActions
 										{
 
 										}
-										//now calculate id for new entry
-										//here we must gain first ActCatTable entry id for given category
-										//because it's loading from top
-										int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId)
-										+ u;
-										artCatTableList.add(new ArtCatTable(id, articleId, categoryId, nextArtUrl,
-										previousArtUrl));
+										ArtCatTable tr=new ArtCatTable(null, articleId, categoryId, nextArtUrl,	previousArtUrl);
+										artCatTableList.add(tr);
 									}
-									//add to their list all entries, that have id>=first found entry of given category,
-									//with incrementing their ID's by num of new entries
-									//find arts from firstId to the end...
-									List<ArtCatTable> artCatTableListFromFirstIdOfCategory = ArtCatTable
-									.getArtCatTableListByCategoryIdFromFirstId(getHelper(), categoryId);
-									//and change their id's (increment them by new arts quont (size of existed list))...
-									for (ArtCatTable a : artCatTableListFromFirstIdOfCategory)
-									{
-										a.setId(a.getId() + artCatTableList.size());
-									}
-									//and add them to list
-									artCatTableList.addAll(artCatTableListFromFirstIdOfCategory);
-									////
-									//delete all entries, that have id>=first found entry of given category
-									ArtCatTable.deleteEntriesFromGivenIdToEnd(getHelper(), artCatTableList.get(0)
-									.getId());
-									//finally write full list to db
+									//update isTop to null for old entry
+									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									//set new TOP_ART for first of given from web
+									artCatTableList.get(0).isTop(true);
+									//FINALLY write new entries to ArtCatTable
 									for (ArtCatTable a : artCatTableList)
 									{
 										this.getHelper().getDaoArtCatTable().create(a);
@@ -487,7 +440,6 @@ public class DBActions
 								}
 							}
 						}
-
 					}
 					else
 					{
@@ -522,7 +474,9 @@ public class DBActions
 							//we do not set ID manually, cause it's initial arts of given category, so we do not need to specify it
 							artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 						}
-						//So here we have list<T> with new Arts...						
+						//So here we have list<T> with new Arts...			
+						//set IS_TOP to true for first in list
+						artCatTableList.get(0).isTop(true);
 						//FINALLY write new enrties with new Arts to ArtCatTable
 						for (ArtCatTable a : artCatTableList)
 						{
@@ -621,3 +575,173 @@ public class DBActions
 	}
 
 }
+	
+//	//get first 30 (max num of arts on page) category's arts ids
+//	for (int i = 0; i < 30 && i < artCatEntries.size(); i++)
+//	{
+//		ArtCatTable a = artCatEntries.get(i);
+//		artsIds.add(a.getArticleId());
+//	}
+//	//now get first 30 (max num of arts on page) Article objects of category by id
+//	//TODO I think we do NOT need more then 1-st Article... We'll match only with first!
+//	for (int id : artsIds)
+//	{
+//		catArtsList.add(this.getHelper().getDaoArticle().queryForId(id));
+//	}
+//	//and match their urls with loaded art's urls
+//	for (int i = 0; i < someResult.size(); i++)
+//	{
+//		if (someResult.get(i).url.equals(catArtsList.get(0).getUrl()))
+//		{
+//			// matched! So we can mark category as sinked
+//			Category.setCategorySinchronized(getHelper(), categoryToLoad, true);
+//
+//			//check if there is no new arts (if(i==0))
+//			if (i == 0)
+//			{
+//				//if so - Toast it and finish operation
+//				Intent intent = new Intent(categoryToLoad + "msg");
+//				intent.putExtra("msg", Msg.NO_NEW);
+//				LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//			}
+//			else
+//			{
+//				//if not - Toast how many new arts gained
+//				Log.d(categoryToLoad, "Обнаружено " + i + " новых статей");
+//				Intent intent = new Intent(categoryToLoad + "msg");
+//				intent.putExtra("msg", Msg.NEW_QUONT);
+//				intent.putExtra(Msg.QUONT, i);
+//				LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//				//and write not matched arts in ArtCatTable in front of category arts
+//				//i.e. i=5, so we have 5 new arts (0,1,2,3,4)
+//				//so we must get their id's from Article and create new ArtCatTable obj
+//				//and write them to db
+//				//List<ArtCatTable> artCatTableList of new arts and all other, that will be written to DB
+//				List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+//
+//				for (int u = 0; u < i; u++)
+//				{
+//					//get Article id by url
+//					int articleId = Article.getArticleIdByURL(getHelper(), someResult.get(u).url);
+//					//get next Article url by asking gained from web list
+//					String nextArtUrl = null;
+//					try
+//					{
+//						nextArtUrl = someResult.get(u + 1).url;
+//					} catch (Exception e)
+//					{
+//
+//					}
+//					//get previous Article url by asking gained from web list
+//					String previousArtUrl = null;
+//					try
+//					{
+//						previousArtUrl = someResult.get(u - 1).url;
+//					} catch (Exception e)
+//					{
+//
+//					}
+//					//now calculate id for new entry
+//					//here we must gain first ActCatTable entry id for given category
+//					//because it's loading from top
+//					int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId)
+//					+ u;
+//					artCatTableList.add(new ArtCatTable(id, articleId, categoryId, nextArtUrl,
+//					previousArtUrl));
+//				}
+//				//So here we have list<T> with new Arts...
+//				//then find other arts from firstId to the end...
+//				List<ArtCatTable> artCatTableListFromGivenId = ArtCatTable
+//				.getArtCatTableListByCategoryIdFromFirstId(getHelper(), categoryId);
+//				//and change their id's (increment them by new arts quont (size of existed list))...
+//				for (ArtCatTable a : artCatTableListFromGivenId)
+//				{
+//					a.setId(a.getId() + artCatTableList.size());
+//				}
+//				//and set previous Article of matched Article
+//				int lastNewArtId = artCatTableList.get(artCatTableList.size() - 1).getArticleId();
+//				String lastNewArtUrl = Article.getArticleUrlById(getHelper(), lastNewArtId);
+//				artCatTableListFromGivenId.get(0).setPreviousArtUrl(lastNewArtUrl);
+//				//and add them to list
+//				artCatTableList.addAll(artCatTableListFromGivenId);
+//
+//				//and now we must delete all entries from firstId of category and write our list to db
+//				ArtCatTable.deleteEntriesFromGivenIdToEnd(getHelper(), artCatTableList.get(0)
+//				.getId());
+//
+//				//FINALLY write new enrties with updated ids and new Arts to ArtCatTable
+//				for (ArtCatTable a : artCatTableList)
+//				{
+//					this.getHelper().getDaoArtCatTable().create(a);
+//				}
+//			}
+//			//break loop on matching
+//			break;
+//		}
+//		else
+//		{
+//			//check if it's last iteration
+//			if (i == someResult.size() - 1)
+//			{
+//				//no matches, so mark Category unsinked and write new artCat entries to db in front of other entries
+//				Log.d(categoryToLoad,
+//				"no matches, so mark Category unsinked and write new artCat entries to db");
+//
+//				Category.setCategorySinchronized(getHelper(), categoryToLoad, false);
+//
+//				//create ArtCatTable objects with id>=first found entry of given category
+//				List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+//				for (int u = 0; u < someResult.size(); u++)
+//				{
+//					//get Article id by url
+//					int articleId = Article.getArticleIdByURL(getHelper(), someResult.get(u).url);
+//					//get next Article url by asking gained from web list
+//					String nextArtUrl = null;
+//					try
+//					{
+//						nextArtUrl = someResult.get(u + 1).url;
+//					} catch (Exception e)
+//					{
+//
+//					}
+//					//get previous Article url by asking gained from web list
+//					String previousArtUrl = null;
+//					try
+//					{
+//						previousArtUrl = someResult.get(u - 1).url;
+//					} catch (Exception e)
+//					{
+//
+//					}
+//					//now calculate id for new entry
+//					//here we must gain first ActCatTable entry id for given category
+//					//because it's loading from top
+//					int id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId)
+//					+ u;
+//					artCatTableList.add(new ArtCatTable(id, articleId, categoryId, nextArtUrl,
+//					previousArtUrl));
+//				}
+//				//add to their list all entries, that have id>=first found entry of given category,
+//				//with incrementing their ID's by num of new entries
+//				//find arts from firstId to the end...
+//				List<ArtCatTable> artCatTableListFromFirstIdOfCategory = ArtCatTable
+//				.getArtCatTableListByCategoryIdFromFirstId(getHelper(), categoryId);
+//				//and change their id's (increment them by new arts quont (size of existed list))...
+//				for (ArtCatTable a : artCatTableListFromFirstIdOfCategory)
+//				{
+//					a.setId(a.getId() + artCatTableList.size());
+//				}
+//				//and add them to list
+//				artCatTableList.addAll(artCatTableListFromFirstIdOfCategory);
+//				////
+//				//delete all entries, that have id>=first found entry of given category
+//				ArtCatTable.deleteEntriesFromGivenIdToEnd(getHelper(), artCatTableList.get(0)
+//				.getId());
+//				//finally write full list to db
+//				for (ArtCatTable a : artCatTableList)
+//				{
+//					this.getHelper().getDaoArtCatTable().create(a);
+//				}
+//			}
+//		}
+//	}

@@ -15,8 +15,9 @@ public class ArtAutTable
 {
 	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
 	public final static String AUTHOR_ID_FIELD_NAME = "author_id";
-	private static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
-	private static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
+	public static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
+	public static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
+	public static final String IS_TOP_FIELD_NAME = "isTop";
 
 	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
 	private int id;
@@ -32,6 +33,12 @@ public class ArtAutTable
 
 	@DatabaseField(dataType = DataType.STRING, columnName = PREVIOUS_ART_URL_FIELD_NAME)
 	private String previousArtUrl;
+	
+	/**
+	 * boolean isTop for the most top article in list. May be true for top, false for very bottom (initial in category) or null for others
+	 */
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOP_FIELD_NAME)
+	private boolean isTop;
 
 	public ArtAutTable()
 	{
@@ -112,6 +119,16 @@ public class ArtAutTable
 	public void setNextArtUrl(String nextArtUrl)
 	{
 		this.nextArtUrl = nextArtUrl;
+	}
+	
+	public boolean isTop()
+	{
+		return isTop;
+	}
+
+	public void isTop(boolean isTop)
+	{
+		this.isTop = isTop;
 	}
 
 }
