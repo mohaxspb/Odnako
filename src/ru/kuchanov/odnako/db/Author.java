@@ -12,6 +12,10 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * id,blog_url,name,description,who,avatar,avatarBig,refreshed,lastArticleDate,
+ * sinhronised,firstArticleURL
+ */
 @DatabaseTable(tableName = "author")
 public class Author
 {
@@ -202,6 +206,36 @@ public class Author
 			url = url.substring(0, url.length() - 1);
 		}
 		return url;
+	}
+
+	public String[] getAsStringArray()
+	{
+		String[] allInfo = new String[11];
+
+		allInfo[0] = String.valueOf(id);
+		allInfo[1] = blog_url;
+		allInfo[2] = name;
+		allInfo[3] = description;
+		allInfo[4] = who;
+		allInfo[5] = avatar;
+
+		allInfo[6] = avatarBig;
+		allInfo[7] = refreshed.toString();
+		allInfo[8] = lastArticleDate.toString();
+		allInfo[9] = String.valueOf(sinhronised);
+		allInfo[10] = firstArticleURL;
+
+		return allInfo;
+	}
+
+	/**
+	 * returns String arr with names of all Table columns
+	 */
+	public static String[] getFieldsNames()
+	{
+		String[] arrStr1 = { "id", "blog_url", "name", "description", "who", "avatar", "avatarBig", "refreshed",
+				"lastArticleDate", "sinhronised", "firstArticleURL" };
+		return arrStr1;
 	}
 
 }

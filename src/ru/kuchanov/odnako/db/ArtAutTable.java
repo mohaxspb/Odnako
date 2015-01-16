@@ -10,6 +10,9 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+* id,article_id,category_id,nextArtUrl,previousArtUrl,isTop
+*/
 @DatabaseTable(tableName = "art_aut_table")
 public class ArtAutTable
 {
@@ -129,6 +132,29 @@ public class ArtAutTable
 	public void isTop(boolean isTop)
 	{
 		this.isTop = isTop;
+	}
+	
+	public String[] getAsStringArray()
+	{
+		String[] allInfo = new String[6];
+
+		allInfo[0] = String.valueOf(id);
+		allInfo[1] = String.valueOf(article_id);
+		allInfo[2] = String.valueOf(author_id);
+		allInfo[3] = nextArtUrl;
+		allInfo[4] = previousArtUrl;
+		allInfo[5] = String.valueOf(isTop);
+
+		return allInfo;
+	}
+
+	/**
+	 * returns String arr with names of all Table columns
+	 */
+	public static String[] getFieldsNames()
+	{
+		String[] arrStr1 = { "id", "article_id", "author_id", "nextArtUrl", "previousArtUrl", "isTop" };
+		return arrStr1;
 	}
 
 }

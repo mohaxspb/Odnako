@@ -13,6 +13,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.ExportDatabaseCSVTask;
+import ru.kuchanov.odnako.db.ExportDatabaseXLSTask;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
@@ -73,7 +75,8 @@ public class ActivityMain extends ActivityBase
 	//we'll change it at runtime selecting artsCards and restore it and get it from activity
 	//def value is zero for all
 	/**
-	 * HashMap for storing position of selected (via right pager or clicking on item) item in list. Only in twoPane mode. 
+	 * HashMap for storing position of selected (via right pager or clicking on
+	 * item) item in list. Only in twoPane mode.
 	 */
 	private HashMap<String, Integer> allCatListsSelectedArtPosition;
 
@@ -103,20 +106,20 @@ public class ActivityMain extends ActivityBase
 		super.onCreate(savedInstanceState);
 		/////
 
-//		Bundle stateFromIntent = this.getIntent().getExtras();
-//		if (stateFromIntent != null)
-//		{
-//			this.restoreState(stateFromIntent);
-//			this.restoreGroupChildPosition(stateFromIntent);
-//		}
+		//		Bundle stateFromIntent = this.getIntent().getExtras();
+		//		if (stateFromIntent != null)
+		//		{
+		//			this.restoreState(stateFromIntent);
+		//			this.restoreGroupChildPosition(stateFromIntent);
+		//		}
 		if (savedInstanceState != null)
 		{
-//			this.restoreState(savedInstanceState);
+			//			this.restoreState(savedInstanceState);
 			this.curArtPosition = savedInstanceState.getInt("position");
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.restoreAllCatArtsInfo(savedInstanceState);
-			
+
 			this.restoreGroupChildPosition(savedInstanceState);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
 			this.restoreAllCatArtsInfo(savedInstanceState);
@@ -188,7 +191,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public void onPageSelected(int position)
 			{
-//				Log.d(LOG_TAG, "select artsListPager position= " + position);
+				//				Log.d(LOG_TAG, "select artsListPager position= " + position);
 
 				//this will set current pos, and adapters group/child pos
 				setCurentCategoryPosition(position);
@@ -236,7 +239,7 @@ public class ActivityMain extends ActivityBase
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
 						artCommsPager.setCurrentItem(curPos, true);
 					}
-					else if(currentCategoryPosition == 3)
+					else if (currentCategoryPosition == 3)
 					{
 						//show all authors adapters
 						pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
@@ -269,7 +272,7 @@ public class ActivityMain extends ActivityBase
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
 						artCommsPager.setCurrentItem(curPos, true);
 					}
-					else if(currentCategoryPosition == 13)
+					else if (currentCategoryPosition == 13)
 					{
 						//TODO show all categories adapters
 					}
@@ -482,13 +485,18 @@ public class ActivityMain extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				Intent intent = new Intent(this.act, ServiceDB.class);
-				Bundle b = new Bundle();
-				b.putString("categoryToLoad", "odnako.org/blogs");
-				b.putLong("timeStamp", System.currentTimeMillis());
-				b.putBoolean("startDownload", true);
-				intent.putExtras(b);
-				this.startService(intent);
+				//				Intent intent = new Intent(this.act, ServiceDB.class);
+				//				Bundle b = new Bundle();
+				//				b.putString("categoryToLoad", "odnako.org/blogs");
+				//				b.putLong("timeStamp", System.currentTimeMillis());
+				//				b.putBoolean("startDownload", true);
+				//				intent.putExtras(b);
+				//				this.startService(intent);
+//				ExportDatabaseCSVTask task = new ExportDatabaseCSVTask(act);
+//				task.execute();
+				
+				ExportDatabaseXLSTask task = new ExportDatabaseXLSTask(act);
+				task.execute();
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

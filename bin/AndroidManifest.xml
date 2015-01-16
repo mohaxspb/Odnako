@@ -113,28 +113,6 @@
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/downloads" />
-        <!--
-        <service
-            android:name="ru.kuchanov.odnako.download.MyService"
-            android:enabled="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/downloads" />
-        <service
-            android:name="ru.kuchanov.odnako.download.AllDownloadService"
-            android:enabled="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/download_all" />
-        <service
-            android:name="ru.kuchanov.odnako.download.DeleteService"
-            android:enabled="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/deleteBtn" />
-        <service
-            android:name="ru.kuchanov.odnako.onboot.CheckNewService"
-            android:enabled="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/check_new" />
-        -->
 
         <receiver
             android:name="ru.kuchanov.odnako.recivers.BootBroadReciver"
@@ -144,16 +122,13 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <!--
-        <receiver
-            android:name="ru.kuchanov.odnako.download.TimerReciver"
-            android:enabled="true"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="action_2" />
-            </intent-filter>
-        </receiver>
-        -->
+
+        <provider
+            android:name="ru.kuchanov.odnako.db.ContentProviderOdnakoDB"
+            android:authorities="ru.kuchanov.odnako.db.ContentProviderOdnakoDB"
+            android:exported="true"
+            android:grantUriPermissions="true" >
+        </provider>
     </application>
 
 </manifest>

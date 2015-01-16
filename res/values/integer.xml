@@ -8,4 +8,6 @@
     <integer
         name="checkPeriod">60</integer>
     
+    <integer name="db_version">20</integer>
+    
 </resources>

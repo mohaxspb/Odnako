@@ -7,7 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 //tags for logCat
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore)    tag:^(?!EGL)
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -17,13 +17,19 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * id, url, title, img_art, authorBlogUrl, authorName, preview, pubDate,
+ * refreshed, numOfComments, numOfSharings, artText, authorDescr, tegs_main,
+ * tegs_all, share_quont, to_read_main, to_read_more, img_author, author
+ */
 @DatabaseTable(tableName = "article")
 public class Article
 {
+	public final static String ID_FIELD_NAME = "id";
 	public final static String AUTHOR_FIELD_NAME = "author";
 	public final static String URL_FIELD_NAME = "url";
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
@@ -125,20 +131,20 @@ public class Article
 				{
 					this.refreshed = refreshed;
 				}
-				//				else
-				//				{
-				//					this.refreshed=new Date(0);
-				//				}
+				else
+				{
+					this.refreshed = new Date(0);
+				}
 			}
-			//			else
-			//			{
-			//				this.refreshed=new Date(0);
-			//			}
+			else
+			{
+				this.refreshed = new Date(0);
+			}
 		}
-		//		else
-		//		{
-		//			this.refreshed=new Date(0);
-		//		}
+		else
+		{
+			this.refreshed = new Date(0);
+		}
 
 		//author object
 		if (author != null)
@@ -346,12 +352,12 @@ public class Article
 	{
 		this.author = author;
 	}
-	
+
 	//method for getting Article data as String[] to set it to ArtInfo object
 	public String[] getAsStringArray()
 	{
-		String[] allInfo=new String[17];
-		
+		String[] allInfo = new String[17];
+
 		allInfo[0] = url;
 		allInfo[1] = title;
 		allInfo[2] = img_art;
@@ -371,7 +377,49 @@ public class Article
 		allInfo[14] = to_read_main;
 		allInfo[15] = to_read_more;
 		allInfo[16] = img_author;
-		
+
+		return allInfo;
+	}
+
+	public String[] getAsStringArrayWithAuthorIdIfIs()
+	{
+		String[] allInfo = new String[20];
+
+		allInfo[0] = String.valueOf(id);
+		allInfo[1] = url;
+		allInfo[2] = title;
+		allInfo[3] = img_art;
+		allInfo[4] = authorBlogUrl;
+		allInfo[5] = authorName;
+
+		allInfo[6] = preview;
+		allInfo[7] = pubDate.toString();
+
+		allInfo[8] = this.refreshed.toString();
+
+		allInfo[9] = String.valueOf(numOfComments);
+		allInfo[10] = String.valueOf(numOfSharings);
+		allInfo[11] = artText;
+		allInfo[12] = authorDescr;
+		allInfo[13] = tegs_main;
+		allInfo[14] = tegs_all;
+		allInfo[15] = share_quont;
+		allInfo[16] = to_read_main;
+		allInfo[17] = to_read_more;
+		allInfo[18] = img_author;
+
+		String author;
+		if (this.getAuthor() != null)
+		{
+			author = String.valueOf(this.getAuthor().getId());
+		}
+		else
+		{
+			author = "null";
+		}
+
+		allInfo[19] = author;
+
 		return allInfo;
 	}
 
@@ -407,6 +455,27 @@ public class Article
 		}
 
 		return url;
+	}
+
+	/**
+	 * returns String arr with names of all Table columns
+	 */
+	public static String[] getFieldsNames()
+	{
+		String[] arrStr1 = { "id", "url", "title", "img_art", "authorBlogUrl",
+				"authorName", "preview", "pubDate", "refreshed", "numOfComments",
+				"numOfSharings", "artText", "authorDescr", "tegs_main", "tegs_all",
+				"share_quont", "to_read_main", "to_read_more", "img_author", "author" };
+		return arrStr1;
+	}
+	
+	/**
+	 * returns URL field value
+	 */
+	@Override
+	public String toString()
+	{
+		return this.getAsStringArray()[1];
 	}
 
 }

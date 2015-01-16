@@ -14,6 +14,10 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * "id", "url", "title", "description", "img_url", "img_file_name",
+ *	"refreshed", "lastArticleDate", "sinhronised", "firstArticleURL"
+ */
 @DatabaseTable(tableName = "category")
 public class Category
 {
@@ -240,7 +244,7 @@ public class Category
 	 * @param url
 	 * @param isSynked
 	 * 
-	 * set Category entry sinked or not
+	 *            set Category entry sinked or not
 	 */
 	public static void setCategorySinchronized(DataBaseHelper h, String url, boolean isSynked)
 	{
@@ -255,7 +259,36 @@ public class Category
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public String[] getAsStringArray()
+	{
+		String[] allInfo = new String[10];
 
+		allInfo[0] = String.valueOf(id);
+		allInfo[1] = url;
+		allInfo[2] = title;
+		allInfo[3] = description;
+		allInfo[4] = img_url;
+		allInfo[5] = img_file_name;
+
+		allInfo[6] = refreshed.toString();
+		allInfo[7] = lastArticleDate.toString();
+
+		allInfo[8] = String.valueOf(sinhronised);
+		allInfo[9] = firstArticleURL;
+
+		return allInfo;
+	}
+
+	/**
+	 * returns String arr with names of all Table columns
+	 */
+	public static String[] getFieldsNames()
+	{
+		String[] arrStr1 = { "id", "url", "title", "description", "img_url", "img_file_name",
+				"refreshed", "lastArticleDate", "sinhronised", "firstArticleURL" };
+		return arrStr1;
 	}
 
 }

@@ -282,8 +282,6 @@ public class DBActions
 			/////check if there are arts of given category
 			try
 			{
-//				List<Integer> artsIds = new ArrayList<Integer>();
-//				List<Article> catArtsList = new ArrayList<Article>();
 				//switch by Category or Author				
 				if (this.isCategory(categoryToLoad))
 				{
@@ -375,10 +373,12 @@ public class DBActions
 										artCatTableList.add(tr);
 									}
 									//update isTop to null for old entry
-									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 									//update previous url for old TOP_ART
 									String nextArtUrlOfLastInList=artCatTableList.get(artCatTableList.size()-1).getNextArtUrl();
-									ArtCatTable.updatePreviousArt(getHelper(), topArtCat, nextArtUrlOfLastInList);
+//									ArtCatTable.updatePreviousArt(getHelper(), topArtCat, nextArtUrlOfLastInList);
+									ArtCatTable.updatePreviousArt(getHelper(), topArtCat.getId(), nextArtUrlOfLastInList);
 									//set new TOP_ART for first of given from web
 									artCatTableList.get(0).isTop(true);
 									//FINALLY write new entries to ArtCatTable
@@ -429,7 +429,8 @@ public class DBActions
 										artCatTableList.add(tr);
 									}
 									//update isTop to null for old entry
-									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 									//set new TOP_ART for first of given from web
 									artCatTableList.get(0).isTop(true);
 									//FINALLY write new entries to ArtCatTable
@@ -477,7 +478,7 @@ public class DBActions
 						//So here we have list<T> with new Arts...			
 						//set IS_TOP to true for first in list
 						artCatTableList.get(0).isTop(true);
-						//FINALLY write new enrties with new Arts to ArtCatTable
+						//FINALLY write new entries with new Arts to ArtCatTable
 						for (ArtCatTable a : artCatTableList)
 						{
 							this.getHelper().getDaoArtCatTable().create(a);

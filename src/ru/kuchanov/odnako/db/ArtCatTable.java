@@ -15,6 +15,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * id,article_id,category_id,nextArtUrl,previousArtUrl,isTop
+ */
 @DatabaseTable(tableName = "art_cat_table")
 public class ArtCatTable
 {
@@ -44,8 +47,8 @@ public class ArtCatTable
 	 * boolean isTop for the most top article in list. May be true for top,
 	 * false for very bottom (initial in category) or null for others
 	 */
-	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOP_FIELD_NAME)
-	private boolean isTop;
+	@DatabaseField(dataType = DataType.BOOLEAN_OBJ, columnName = IS_TOP_FIELD_NAME, canBeNull = true)
+	private Boolean isTop;
 
 	public ArtCatTable()
 	{
@@ -233,16 +236,18 @@ public class ArtCatTable
 		return a;
 	}
 
-	/** 
+	/**
 	 * updates isTop value to TRUE, FALSE or NULL
 	 */
-	public static void updateIsTop(DataBaseHelper h, ArtCatTable a, Boolean isTop)
+	//	public static void updateIsTop(DataBaseHelper h, ArtCatTable a, Boolean isTop)
+	public static void updateIsTop(DataBaseHelper h, int id, Boolean isTop)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			updateBuilder.where().equals(a);
+			//			updateBuilder.where().equals(a);
+			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.IS_TOP_FIELD_NAME, isTop);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -250,17 +255,19 @@ public class ArtCatTable
 			e.printStackTrace();
 		}
 	}
-	
-	/** 
+
+	/**
 	 * updates nextUrl
 	 */
-	public static void updateNextArt(DataBaseHelper h, ArtCatTable a, String url)
+	//	public static void updateNextArt(DataBaseHelper h, ArtCatTable a, String url)
+	public static void updateNextArt(DataBaseHelper h, int id, String url)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			updateBuilder.where().equals(a);
+			//			updateBuilder.where().equals(a);
+			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.NEXT_ART_URL_FIELD_NAME, url);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -268,17 +275,19 @@ public class ArtCatTable
 			e.printStackTrace();
 		}
 	}
-	
-	/** 
+
+	/**
 	 * updates previousUrl
 	 */
-	public static void updatePreviousArt(DataBaseHelper h, ArtCatTable a, String url)
+	//	public static void updatePreviousArt(DataBaseHelper h, ArtCatTable a, String url)
+	public static void updatePreviousArt(DataBaseHelper h, int id, String url)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			updateBuilder.where().equals(a);
+			//			updateBuilder.where().equals(a);
+			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, url);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -318,6 +327,29 @@ public class ArtCatTable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public String[] getAsStringArray()
+	{
+		String[] allInfo = new String[6];
+
+		allInfo[0] = String.valueOf(id);
+		allInfo[1] = String.valueOf(article_id);
+		allInfo[2] = String.valueOf(category_id);
+		allInfo[3] = nextArtUrl;
+		allInfo[4] = previousArtUrl;
+		allInfo[5] = String.valueOf(isTop);
+
+		return allInfo;
+	}
+
+	/**
+	 * returns String arr with names of all Table columns
+	 */
+	public static String[] getFieldsNames()
+	{
+		String[] arrStr1 = { "id", "article_id", "category_id", "nextArtUrl", "previousArtUrl", "isTop" };
+		return arrStr1;
 	}
 
 }

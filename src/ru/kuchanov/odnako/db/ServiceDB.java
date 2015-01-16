@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.DBActions.Msg;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
@@ -212,7 +213,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		if (dataBaseHelper == null)
 		{
-			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, 18);
+			int dbVer=this.getResources().getInteger(R.integer.db_version);
+			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, dbVer);
 		}
 		return dataBaseHelper;
 	}
