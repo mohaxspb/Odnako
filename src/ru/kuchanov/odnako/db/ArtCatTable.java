@@ -351,5 +351,4 @@ public class ArtCatTable
 		String[] arrStr1 = { "id", "article_id", "category_id", "nextArtUrl", "previousArtUrl", "isTop" };
 		return arrStr1;
 	}
-
 }

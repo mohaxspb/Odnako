@@ -35,14 +35,19 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	private static final String AUTHORITY = "ru.kuchanov.odnako.db.ContentProviderOdnakoDB";
 
 	/**
-	 * URI ID for route: /cards
+	 * URI ID for route: /article
 	 */
 	public static final int ROUTE_ARTICLE = 1;
 
 	/**
-	 * URI ID for route: /cards/{ID}
+	 * URI ID for route: /article/{ID}
 	 */
 	public static final int ROUTE_ARTICLE_ID = 2;
+
+	/**
+	 * URI ID for route: /artcat
+	 */
+	public static final int ROUTE_ART_CAT = 3;
 
 	/**
 	 * UriMatcher, used to decode incoming URIs.
@@ -52,6 +57,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	{
 		sUriMatcher.addURI(AUTHORITY, "article", ROUTE_ARTICLE);
 		sUriMatcher.addURI(AUTHORITY, "article/*", ROUTE_ARTICLE_ID);
+		sUriMatcher.addURI(AUTHORITY, "artcat", ROUTE_ART_CAT);
 	}
 
 	@Override
@@ -65,10 +71,8 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
 	{
-		Log.d(TAG, "Cursor query CALLED!");
-
+		Log.d(TAG + uri.toString(), "Cursor query CALLED!");
 		int uriMatch = sUriMatcher.match(uri);
-
 		switch (uriMatch)
 		{
 			case ROUTE_ARTICLE:
@@ -82,7 +86,6 @@ public class ContentProviderOdnakoDB extends ContentProvider
 					qb = this.getHelper().getDaoArticle().queryBuilder();
 				} catch (SQLException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -91,7 +94,6 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				Cursor cursor = null;
 				try
 				{
-					//qb.query();
 					iterator = this.getHelper().getDaoArticle()
 					.iterator(qb.where().ge(Article.ID_FIELD_NAME, 0).prepare());
 					// get the raw results which can be cast under Android
@@ -102,32 +104,47 @@ public class ContentProviderOdnakoDB extends ContentProvider
 					e.printStackTrace();
 				} finally
 				{
-					//iterator.closeQuietly();
+//					iterator.closeQuietly();
 				}
-				
-
+				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				String msg = String.valueOf(cursor.getCount());
 				Log.d(TAG, "cursor.getCount(): " + msg);
-				//some test
-				cursor.moveToFirst();
-				//				if (cursor.moveToFirst())
-				//				{
-				//					while (!cursor.isAfterLast())
-				//					{
-				//						String data = cursor.getString(cursor.getColumnIndex(Article.URL_FIELD_NAME));
-				//						// do what ever you want here
-				//						Log.d(TAG, "cursor.getPosition(): "+String.valueOf(cursor.getPosition())+" = " + data);
-				//						cursor.moveToNext();
-				//					}
-				//				}
-				if (cursor.moveToFirst())
-				{
-					String data = cursor.getString(cursor.getColumnIndex(Article.URL_FIELD_NAME));
-					Log.d(TAG, "cursor.getPosition(): " + String.valueOf(cursor.getPosition()) + " = " + data);
-				}
-				
-				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				return cursor;
+			case ROUTE_ART_CAT:
+				// Return all known entries.
+				// Note: Notification URI must be manually set here for loaders to correctly
+				// register ContentObservers.
+				// build your query
+				QueryBuilder<ArtCatTable, Integer> artCatQB = null;
+				try
+				{
+					artCatQB = this.getHelper().getDaoArtCatTable().queryBuilder();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+
+				// when you are done, prepare your query and build an iterator
+				CloseableIterator<ArtCatTable> i = null;
+				Cursor c = null;
+				try
+				{
+					i = this.getHelper().getDaoArtCatTable()
+					.iterator(artCatQB.where().ge(ArtCatTable.ID_FIELD_NAME, 0).prepare());
+					// get the raw results which can be cast under Android
+					AndroidDatabaseResults results = (AndroidDatabaseResults) i.getRawResults();
+					c = results.getRawCursor();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				} finally
+				{
+//					i.closeQuietly();
+				}
+				c.setNotificationUri(this.getContext().getContentResolver(), uri);
+				String m = String.valueOf(c.getCount());
+				Log.d(TAG, "cursor.getCount(): " + m);
+				return c;
 		}
 
 		return null;
