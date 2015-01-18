@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer
-        name="width">75</integer>
-    <integer
-        name="heigth">75</integer>
-    
-    <integer
-        name="checkPeriod">60</integer>
-    
-    <integer name="db_version">20</integer>
-    
+
+    <integer name="width">75</integer>
+    <integer name="heigth">75</integer>
+    <integer name="checkPeriod">60</integer>
+    <integer name="db_version">22</integer>
+
 </resources>

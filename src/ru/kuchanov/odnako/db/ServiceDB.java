@@ -80,9 +80,18 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					//if it's more than 15 min less then given timeStamp return appDB info and notify, that download starts
 					//otherwise return appDB and notify that it is upToDate
 
-					//method getInfoFromDB will return result of searching throw DB
-					DBActions dbActions=new DBActions(this, this.getHelper());
-					dbActions.test(catToLoad);
+					//method will return result of searching throw DB
+					DBActions dbActions = new DBActions(this, this.getHelper());
+					try
+					{
+						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
+						{
+							dbActions.test(catToLoad);
+						}
+					} catch (Exception e)
+					{
+						//
+					}
 					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
 					Log.d(LOG_TAG, DBRezult);
 
@@ -215,7 +224,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		if (dataBaseHelper == null)
 		{
-			int dbVer=this.getResources().getInteger(R.integer.db_version);
+			int dbVer = this.getResources().getInteger(R.integer.db_version);
 			dataBaseHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME, null, dbVer);
 		}
 		return dataBaseHelper;

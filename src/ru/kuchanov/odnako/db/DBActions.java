@@ -18,6 +18,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.utils.DateParse;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -62,7 +63,7 @@ public class DBActions
 	public void test(String catToLoad)
 	{
 		PreparedQuery<Category> pQ;
-		Integer categoryId=null;
+		Integer categoryId = null;
 		try
 		{
 			pQ = this.getHelper().getDaoCategory().queryBuilder().where()
@@ -73,32 +74,29 @@ public class DBActions
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		//delete some entries in artCat
 		try
 		{
 			//this is first. We'll delete it
-			String firstArtUrl = "http://www.odnako.org/blogs/k-dosrochnim-viboram-v-serbii-vozmozhnosti-dlya-rossii/";
+			//			String firstArtUrl = "http://www.odnako.org/blogs/k-dosrochnim-viboram-v-serbii-vozmozhnosti-dlya-rossii/";
 			//and this is second. We'll mark it as first
-			String secondArtUrl = "http://www.odnako.org/blogs/eshchyo-nikomu-ne-udavalos-dogovoritsya-s-nacistami/";
+			String newFirstArtUrl = "http://www.odnako.org/blogs/eshchyo-nikomu-ne-udavalos-dogovoritsya-s-nacistami/";
 
-			
 			//			List<ArtCatTable> artCatList = this.getHelper().getDaoArtCatTable()
 			//			.queryForEq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
 
-			Article firstArticle = this.getHelper().getDaoArticle().queryBuilder().where()
-			.eq(Article.URL_FIELD_NAME, firstArtUrl).queryForFirst();
+			ArtCatTable firstArtCatTable = ArtCatTable.getTopArtCat(getHelper(), categoryId, true);
 
 			DeleteBuilder<ArtCatTable, Integer> dB = this.getHelper().getDaoArtCatTable().deleteBuilder();
-			dB.where().eq(ArtCatTable.ARTICLE_ID_FIELD_NAME, firstArticle.getId()).and()
-			.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+			dB.where().eq(ArtCatTable.ID_FIELD_NAME, firstArtCatTable.getId());
 			dB.delete();
 
-			Article secondArticle = this.getHelper().getDaoArticle().queryBuilder().where()
-			.eq(Article.URL_FIELD_NAME, secondArtUrl).queryForFirst();
+			Article newFirstArticle = this.getHelper().getDaoArticle().queryBuilder().where()
+			.eq(Article.URL_FIELD_NAME, newFirstArtUrl).queryForFirst();
 
 			UpdateBuilder<ArtCatTable, Integer> uB = this.getHelper().getDaoArtCatTable().updateBuilder();
-			uB.where().eq(ArtCatTable.ARTICLE_ID_FIELD_NAME, secondArticle.getId()).and()
+			uB.where().eq(ArtCatTable.ARTICLE_ID_FIELD_NAME, newFirstArticle.getId()).and()
 			.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
 			uB.updateColumnValue(ArtCatTable.IS_TOP_FIELD_NAME, true);
 			uB.updateColumnValue(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, null);
@@ -113,19 +111,25 @@ public class DBActions
 		try
 		{
 			String lastArtUrl = "http://www.odnako.org/blogs/rossiya-perenapravit-ukrainskiy-gaz-na-novuyu-trubu-v-turciyu-evrope-pridetsya-stroit-svoy-gazoprovod/";
-			
+
 			//update next art of now last
 			//NOW WE GET SIMPLY 30th art in list MAY BE ERROR HERE!!!
 			List<ArtCatTable> artCatList = this.getHelper().getDaoArtCatTable()
-						.queryForEq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
-			ArtCatTable nowLastArtCat=artCatList.get(artCatList.size()-1);
+			.queryForEq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+			ArtCatTable nowLastArtCat = artCatList.get(artCatList.size() - 1);
 			ArtCatTable.updateNextArt(getHelper(), nowLastArtCat.getId(), lastArtUrl);
-			
-			Article lastArticle = this.getHelper().getDaoArticle().queryBuilder().where()
-			.eq(Article.URL_FIELD_NAME, lastArtUrl).queryForFirst();
-			
-			String previousArtUrl=this.getHelper().getDaoArticle().queryBuilder().where().eq(Article.ID_FIELD_NAME, nowLastArtCat.getArticleId()).queryForFirst().getUrl();
-			ArtCatTable lastArtCat=new ArtCatTable(null, lastArticle.getId(), categoryId, null, previousArtUrl);
+
+			Article lastArticle;
+			//			String[] artInfoArr = { url, title, img_art, authorBlogUrl, authorName, preview, pubDate, numOfComments, numOfSharings, artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more, img_author };
+			String[] artInfoArr = { lastArtUrl, "последняя тестовая статья", "empty", "empty", "empty", "empty", "0", "0", "0", "empty", "empty", "empty", "empty", "empty", "empty", "empty", "empty" };
+			lastArticle = new Article(artInfoArr, new Date(0), null);
+			this.getHelper().getDaoArticle().create(lastArticle);
+			//			lastArticle = this.getHelper().getDaoArticle().queryBuilder().where()
+			//			.eq(Article.URL_FIELD_NAME, lastArtUrl).queryForFirst();
+
+			String previousArtUrl = this.getHelper().getDaoArticle().queryBuilder().where()
+			.eq(Article.ID_FIELD_NAME, nowLastArtCat.getArticleId()).queryForFirst().getUrl();
+			ArtCatTable lastArtCat = new ArtCatTable(null, lastArticle.getId(), categoryId, null, previousArtUrl);
 			this.getHelper().getDaoArtCatTable().create(lastArtCat);
 		} catch (SQLException e)
 		{
