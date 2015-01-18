@@ -27,7 +27,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
 	final private static String LOG_TAG = ServiceDB.class.getSimpleName();
@@ -81,7 +81,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					//otherwise return appDB and notify that it is upToDate
 
 					//method getInfoFromDB will return result of searching throw DB
-					String DBRezult = new DBActions(this, this.getHelper()).getInfoFromDB(catToLoad, cal, pageToLoad);
+					DBActions dbActions=new DBActions(this, this.getHelper());
+					dbActions.test(catToLoad);
+					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
 					Log.d(LOG_TAG, DBRezult);
 
 					Intent i = new Intent(catToLoad + DBActions.Msg.MSG);

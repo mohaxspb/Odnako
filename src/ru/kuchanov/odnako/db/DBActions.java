@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.R;
@@ -50,6 +52,85 @@ public class DBActions
 	private DataBaseHelper getHelper()
 	{
 		return dataBaseHelper;
+	}
+
+	/**
+	 * update ArtCatTable to test it's behavior. I.e. we chage IsTop article,
+	 * add some new, so we can test behavior on loading from top if we have new
+	 * arts from web
+	 */
+	public void test(String catToLoad)
+	{
+		PreparedQuery<Category> pQ;
+		Integer categoryId=null;
+		try
+		{
+			pQ = this.getHelper().getDaoCategory().queryBuilder().where()
+			.eq(Category.URL_FIELD_NAME, catToLoad).prepare();
+			categoryId = this.getHelper().getDaoCategory().queryForFirst(pQ).getId();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//delete some entries in artCat
+		try
+		{
+			//this is first. We'll delete it
+			String firstArtUrl = "http://www.odnako.org/blogs/k-dosrochnim-viboram-v-serbii-vozmozhnosti-dlya-rossii/";
+			//and this is second. We'll mark it as first
+			String secondArtUrl = "http://www.odnako.org/blogs/eshchyo-nikomu-ne-udavalos-dogovoritsya-s-nacistami/";
+
+			
+			//			List<ArtCatTable> artCatList = this.getHelper().getDaoArtCatTable()
+			//			.queryForEq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+
+			Article firstArticle = this.getHelper().getDaoArticle().queryBuilder().where()
+			.eq(Article.URL_FIELD_NAME, firstArtUrl).queryForFirst();
+
+			DeleteBuilder<ArtCatTable, Integer> dB = this.getHelper().getDaoArtCatTable().deleteBuilder();
+			dB.where().eq(ArtCatTable.ARTICLE_ID_FIELD_NAME, firstArticle.getId()).and()
+			.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+			dB.delete();
+
+			Article secondArticle = this.getHelper().getDaoArticle().queryBuilder().where()
+			.eq(Article.URL_FIELD_NAME, secondArtUrl).queryForFirst();
+
+			UpdateBuilder<ArtCatTable, Integer> uB = this.getHelper().getDaoArtCatTable().updateBuilder();
+			uB.where().eq(ArtCatTable.ARTICLE_ID_FIELD_NAME, secondArticle.getId()).and()
+			.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+			uB.updateColumnValue(ArtCatTable.IS_TOP_FIELD_NAME, true);
+			uB.updateColumnValue(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, null);
+			uB.update();
+
+		} catch (SQLException e)
+		{
+			Log.e(LOG_TAG, "Error in test. delete");
+		}
+		//write some other entries
+		//this is first on page-2, so we we'll set it as last of 1st page
+		try
+		{
+			String lastArtUrl = "http://www.odnako.org/blogs/rossiya-perenapravit-ukrainskiy-gaz-na-novuyu-trubu-v-turciyu-evrope-pridetsya-stroit-svoy-gazoprovod/";
+			
+			//update next art of now last
+			//NOW WE GET SIMPLY 30th art in list MAY BE ERROR HERE!!!
+			List<ArtCatTable> artCatList = this.getHelper().getDaoArtCatTable()
+						.queryForEq(ArtCatTable.CATEGORY_ID_FIELD_NAME, categoryId);
+			ArtCatTable nowLastArtCat=artCatList.get(artCatList.size()-1);
+			ArtCatTable.updateNextArt(getHelper(), nowLastArtCat.getId(), lastArtUrl);
+			
+			Article lastArticle = this.getHelper().getDaoArticle().queryBuilder().where()
+			.eq(Article.URL_FIELD_NAME, lastArtUrl).queryForFirst();
+			
+			String previousArtUrl=this.getHelper().getDaoArticle().queryBuilder().where().eq(Article.ID_FIELD_NAME, nowLastArtCat.getArticleId()).queryForFirst().getUrl();
+			ArtCatTable lastArtCat=new ArtCatTable(null, lastArticle.getId(), categoryId, null, previousArtUrl);
+			this.getHelper().getDaoArtCatTable().create(lastArtCat);
+		} catch (SQLException e)
+		{
+			Log.e(LOG_TAG, "Error in test. add");
+		}
 	}
 
 	public String getInfoFromDB(String catToLoad, Calendar cal, int pageToLoad)
@@ -310,27 +391,26 @@ public class DBActions
 						// and set given category sink to true;
 						//{
 						//}
-						
-						
+
 						//match url of IS_TOP ArtCatTable with given list and calculate quont of new
 						////new=0 =>do noting
 						////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 						////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
-						
+
 						//match url of IS_TOP ArtCatTable with given list and calculate quont of new
-						ArtCatTable topArtCat=ArtCatTable.getTopArtCat(getHelper(), true);
-						String topArtUrl=Article.getArticleUrlById(getHelper(), topArtCat.getArticleId());
-						
+						ArtCatTable topArtCat = ArtCatTable.getTopArtCat(getHelper(), categoryId, true);
+						String topArtUrl = Article.getArticleUrlById(getHelper(), topArtCat.getArticleId());
+
 						for (int i = 0; i < someResult.size(); i++)
 						{
 							if (someResult.get(i).url.equals(topArtUrl))
 							{
 								Category.setCategorySinchronized(getHelper(), categoryToLoad, false);
-								
+
 								//check if there is no new arts
 								if (i == 0)
 								{
-								////new=0 =>do noting
+									////new=0 =>do noting
 									Intent intent = new Intent(categoryToLoad + "msg");
 									intent.putExtra("msg", Msg.NO_NEW);
 									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
@@ -343,8 +423,8 @@ public class DBActions
 									intent.putExtra("msg", Msg.NEW_QUONT);
 									intent.putExtra(Msg.QUONT, i);
 									LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
-									
-								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+
+									////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 									List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
 
 									for (int u = 0; u < i; u++)
@@ -369,16 +449,19 @@ public class DBActions
 										{
 
 										}
-										ArtCatTable tr=new ArtCatTable(null, articleId, categoryId, nextArtUrl,	previousArtUrl);
+										ArtCatTable tr = new ArtCatTable(null, articleId, categoryId, nextArtUrl,
+										previousArtUrl);
 										artCatTableList.add(tr);
 									}
 									//update isTop to null for old entry
-//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
 									ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 									//update previous url for old TOP_ART
-									String nextArtUrlOfLastInList=artCatTableList.get(artCatTableList.size()-1).getNextArtUrl();
-//									ArtCatTable.updatePreviousArt(getHelper(), topArtCat, nextArtUrlOfLastInList);
-									ArtCatTable.updatePreviousArt(getHelper(), topArtCat.getId(), nextArtUrlOfLastInList);
+									String nextArtUrlOfLastInList = artCatTableList.get(artCatTableList.size() - 1)
+									.getNextArtUrl();
+									//									ArtCatTable.updatePreviousArt(getHelper(), topArtCat, nextArtUrlOfLastInList);
+									ArtCatTable.updatePreviousArt(getHelper(), topArtCat.getId(),
+									nextArtUrlOfLastInList);
 									//set new TOP_ART for first of given from web
 									artCatTableList.get(0).isTop(true);
 									//FINALLY write new entries to ArtCatTable
@@ -396,11 +479,12 @@ public class DBActions
 								if (i == someResult.size() - 1)
 								{
 									//no matches, so mark Category unsinked and write new artCat entries to db
-									Log.d(categoryToLoad, "no matches, so mark Category unsinked and write new artCat entries to db");
+									Log.d(categoryToLoad,
+									"no matches, so mark Category unsinked and write new artCat entries to db");
 
 									Category.setCategorySinchronized(getHelper(), categoryToLoad, false);
-									
-								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+
+									////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 									List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
 
 									for (int u = 0; u < i; u++)
@@ -425,11 +509,12 @@ public class DBActions
 										{
 
 										}
-										ArtCatTable tr=new ArtCatTable(null, articleId, categoryId, nextArtUrl,	previousArtUrl);
+										ArtCatTable tr = new ArtCatTable(null, articleId, categoryId, nextArtUrl,
+										previousArtUrl);
 										artCatTableList.add(tr);
 									}
 									//update isTop to null for old entry
-//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
+									//									ArtCatTable.updateIsTop(getHelper(), topArtCat, null);
 									ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 									//set new TOP_ART for first of given from web
 									artCatTableList.get(0).isTop(true);
@@ -473,7 +558,8 @@ public class DBActions
 
 							}
 							//we do not set ID manually, cause it's initial arts of given category, so we do not need to specify it
-							artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
+							artCatTableList
+							.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 						}
 						//So here we have list<T> with new Arts...			
 						//set IS_TOP to true for first in list
@@ -496,7 +582,7 @@ public class DBActions
 			{
 
 			}
-			
+
 		}
 		else
 		{
@@ -576,7 +662,7 @@ public class DBActions
 	}
 
 }
-	
+
 //	//get first 30 (max num of arts on page) category's arts ids
 //	for (int i = 0; i < 30 && i < artCatEntries.size(); i++)
 //	{

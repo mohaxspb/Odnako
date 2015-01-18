@@ -102,9 +102,6 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
-				} finally
-				{
-//					iterator.closeQuietly();
 				}
 				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				String msg = String.valueOf(cursor.getCount());
@@ -137,9 +134,6 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
-				} finally
-				{
-//					i.closeQuietly();
 				}
 				c.setNotificationUri(this.getContext().getContentResolver(), uri);
 				String m = String.valueOf(c.getCount());

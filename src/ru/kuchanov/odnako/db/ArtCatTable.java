@@ -217,17 +217,18 @@ public class ArtCatTable
 	/**
 	 * 
 	 * @param h
+	 * @param categoryId ID of category
 	 * @param isTop
 	 *            true for top art, false for initial
 	 * @return
 	 */
-	public static ArtCatTable getTopArtCat(DataBaseHelper h, boolean isTop)
+	public static ArtCatTable getTopArtCat(DataBaseHelper h, int categoryId, boolean isTop)
 	{
 		ArtCatTable a = null;
 
 		try
 		{
-			a = h.getDaoArtCatTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).queryForFirst();
+			a = h.getDaoArtCatTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and().eq(CATEGORY_ID_FIELD_NAME, categoryId).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -327,6 +328,29 @@ public class ArtCatTable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 
+	 * @return id of the next article of given artCat id or null if !exists
+	 *         (empty nextArtUrl field)
+	 */
+	public static Integer getNextArtCatId(DataBaseHelper h, int id)
+	{
+		Integer nextArtCatId = null;
+		try
+		{
+			ArtCatTable a = h.getDaoArtCatTable().queryForId(id);
+			String nextArtUrl = a.getNextArtUrl();
+			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
+			.queryForFirst();
+			nextArtCatId = h.getDaoArtCatTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())
+			.and().eq(CATEGORY_ID_FIELD_NAME, a.getCategoryId()).queryForFirst().getId();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return nextArtCatId;
 	}
 
 	public String[] getAsStringArray()
