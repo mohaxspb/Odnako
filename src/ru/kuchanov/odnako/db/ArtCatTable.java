@@ -190,12 +190,12 @@ public class ArtCatTable
 
 	}
 
-	/**
-	 * 
-	 * @param helper
-	 * @param categoryId
-	 * @return
-	 */
+//	/**
+//	 * 
+//	 * @param helper
+//	 * @param categoryId
+//	 * @return
+//	 */
 //	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
 //	{
 //		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
@@ -214,20 +214,42 @@ public class ArtCatTable
 //		return artCatTableListByCategoryIdFromGivenId;
 //	}
 	
+	/**
+	 * 
+	 * @param h
+	 * @param categoryId
+	 * @param id of ArtCat from witch we calculate first ArtCat of returning list
+	 * @return List of ArtCat with <=30 entries  
+	 */
 	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id)
 	{
 		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
 
 		try
 		{
-			ArtCatTable firstArtCat=h.getDaoArtCatTable().queryForId(id);
-			artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
-			
-			for(int i=1; i<30; i++)
+			ArtCatTable firstArtCat=h.getDaoArtCatTable().queryForId(ArtCatTable.getNextArtCatId(h, id));
+			if(firstArtCat!=null)
 			{
-				int nextArtCatId=ArtCatTable.getNextArtCatId(h, artCatTableListByCategoryIdFromGivenId.get(i-1).getId());
-				ArtCatTable nextArtCat=h.getDaoArtCatTable().queryForId(nextArtCatId);
-				artCatTableListByCategoryIdFromGivenId.add(nextArtCat);							
+				artCatTableListByCategoryIdFromGivenId=new ArrayList<ArtCatTable>();
+				artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
+				
+				for(int i=1; i<30; i++)
+				{
+					Integer nextArtCatId=ArtCatTable.getNextArtCatId(h, artCatTableListByCategoryIdFromGivenId.get(i-1).getId());
+					if(nextArtCatId!=null)
+					{
+						ArtCatTable nextArtCat=h.getDaoArtCatTable().queryForId(nextArtCatId);
+						artCatTableListByCategoryIdFromGivenId.add(nextArtCat);	
+					}
+					else
+					{
+						return artCatTableListByCategoryIdFromGivenId;
+					}
+				}
+			}
+			else
+			{
+				return artCatTableListByCategoryIdFromGivenId;
 			}
 		} catch (SQLException e)
 		{

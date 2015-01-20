@@ -13,13 +13,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 {
-	private static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
+	static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
 
 	ActionBarActivity act;
 
@@ -39,20 +37,15 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	private int visibleThreshold = 5;
 	int firstVisibleItem, visibleItemCount, totalItemCount;
 
-//	private int current_page = 1;
-//
-//	private int defaultRowsOnPage = 30;
-
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad)//, FragmentArtsRecyclerList frag)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
 
-//		this.frag = frag;
 		this.categoryToLoad=categoryToLoad;
 	}
 
@@ -61,8 +54,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
-
-//		this.current_page = recyclerView.getAdapter().getItemCount() / defaultRowsOnPage;
 
 		switch (newState)
 		{
@@ -113,21 +104,9 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	{
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-		//TODO test more data loading
-//		this.current_page = manager.getItemCount() / defaultRowsOnPage;
-
 		visibleItemCount = manager.getChildCount();
 		totalItemCount = manager.getItemCount();
 		firstVisibleItem  = manager.findFirstVisibleItemPosition();
-
-//		if (loading)
-//		{
-//			if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
-//			{
-//				loading = false;
-//				Log.v(TAG, "Last Item Wow !");
-//			}
-//		}
 
 		if (loading)
 		{
@@ -144,12 +123,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			onLoadMore();
 
 			loading = true;
-			
-			//test setting loading View
-//			TextView tV=new TextView(this.act);
-//			tV.setText("LOADING!!!!!!!!!!");
-//			recyclerView.addView(tV, recyclerView.getLayoutManager().getChildCount());
-//			this.manager.addView(tV, this.manager.getItemCount());
 		}
 
 		//////////////
