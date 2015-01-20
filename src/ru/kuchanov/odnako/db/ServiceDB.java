@@ -82,16 +82,15 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 					//method will return result of searching throw DB
 					DBActions dbActions = new DBActions(this, this.getHelper());
-					try
-					{
-						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
-						{
-							dbActions.test(catToLoad);
-						}
-					} catch (Exception e)
-					{
-						//
-					}
+//					try
+//					{
+//						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
+//						{
+//							dbActions.test(catToLoad);
+//						}
+//					} catch (Exception e)
+//					{
+//					}
 					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
 					Log.d(LOG_TAG, DBRezult);
 
@@ -149,8 +148,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				//if pageToLoad!=1 we load from bottom
 				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
-				//here we ask DB  if it's sinked
-				////TODO if so aks db for arts
+				//TODO DO NOT NEED????!!! here we ask DB  if it's sinked
+				////aks db for arts
+//				List<ArtCatTable> allArts=ArtCatTable
 				//////if we have no arts, we load them from web
 				//////if we have >30 we pass 30 to fragment
 				//////else we ask category if it has firstArtURL
@@ -158,10 +158,12 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				////////else we must load arts from web
 				//////////if we get <30 we set last art's URL as first art of category and write arts to db(Article and ArtCat)
 				//////////else simply write arts to db(Article and ArtCat)
-				////TODO if unsinked we load arts from web
-				////match gained arts with ArtCat entries from id>30*pageToLoad
-				/////if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match
-				/////else write arts to db after id>30*pageToLoad
+				
+				
+				////TODO DO NOT NEED????!!!  if unsinked we load arts from web
+				////XXX match gained arts with ArtCat entries from id>30*pageToLoad
+				/////XXX if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match
+				/////XXX else write arts to db after id>30*pageToLoad
 			}
 
 		}

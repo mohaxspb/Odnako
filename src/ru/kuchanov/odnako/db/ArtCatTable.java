@@ -196,16 +196,39 @@ public class ArtCatTable
 	 * @param categoryId
 	 * @return
 	 */
-	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
+//	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
+//	{
+//		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
+//
+//		int id = getIdForFirstArticleInCategory(h, categoryId);
+//
+//		try
+//		{
+//			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
+//			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
+//		} catch (SQLException e)
+//		{
+//			e.printStackTrace();
+//		}
+//
+//		return artCatTableListByCategoryIdFromGivenId;
+//	}
+	
+	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id)
 	{
 		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
 
-		int id = getIdForFirstArticleInCategory(h, categoryId);
-
 		try
 		{
-			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
-			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
+			ArtCatTable firstArtCat=h.getDaoArtCatTable().queryForId(id);
+			artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
+			
+			for(int i=1; i<30; i++)
+			{
+				int nextArtCatId=ArtCatTable.getNextArtCatId(h, artCatTableListByCategoryIdFromGivenId.get(i-1).getId());
+				ArtCatTable nextArtCat=h.getDaoArtCatTable().queryForId(nextArtCatId);
+				artCatTableListByCategoryIdFromGivenId.add(nextArtCat);							
+			}
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -291,39 +314,6 @@ public class ArtCatTable
 			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, url);
 			updateBuilder.update();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 
-	 * @param helper
-	 * @param id
-	 * 
-	 *            delete all entries from given id to the end
-	 */
-	public static void deleteEntriesFromGivenIdToEnd(DataBaseHelper h, int id)
-	{
-		List<Integer> ids = new ArrayList<Integer>();
-
-		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
-		try
-		{
-			artCatTableList = h.getDaoArtCatTable().queryBuilder().where().ge(ArtCatTable.ID_FIELD_NAME, id).query();
-		} catch (SQLException e1)
-		{
-			e1.printStackTrace();
-		}
-		for (ArtCatTable a : artCatTableList)
-		{
-			ids.add(a.getId());
-		}
-
-		try
-		{
-			h.getDaoArtCatTable().deleteIds(ids);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

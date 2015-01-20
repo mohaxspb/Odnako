@@ -8,19 +8,23 @@ package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class RecyclerViewOnScrollListener extends OnScrollListener
+public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 {
+	private static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
+
 	ActionBarActivity act;
 
-	FragmentArtsRecyclerList frag;
+//	FragmentArtsRecyclerList frag;
+	String categoryToLoad;
 
 	int initialDistance = -100000;
 	int curentDistance = -1;
@@ -29,16 +33,27 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 	Toolbar toolbar;
 	ImageView topImg;
 
+	private boolean loading = true; // True if we are still waiting for the last set of data to load.
+	private int previousTotal = 0; // The total number of items in the dataset after the last load
+	// The minimum amount of items to have below your current scroll position before loading more.
+	private int visibleThreshold = 5;
+	int firstVisibleItem, visibleItemCount, totalItemCount;
+
+//	private int current_page = 1;
+//
+//	private int defaultRowsOnPage = 30;
+
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, FragmentArtsRecyclerList frag)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad)//, FragmentArtsRecyclerList frag)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
 
-		this.frag = frag;
+//		this.frag = frag;
+		this.categoryToLoad=categoryToLoad;
 	}
 
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -47,10 +62,12 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
 
+//		this.current_page = recyclerView.getAdapter().getItemCount() / defaultRowsOnPage;
+
 		switch (newState)
 		{
 			case (RecyclerView.SCROLL_STATE_DRAGGING):
-//				System.out.println("dragging");
+				//				System.out.println("dragging");
 				//mesuring initialDistance between actionBar and 1-st item
 				if (initialDistance == -100000)
 				{
@@ -62,7 +79,7 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 			break;
 			//scroll finished
 			case (RecyclerView.SCROLL_STATE_IDLE):
-//				System.out.println("SCROLL_STATE_IDLE");
+				//				System.out.println("SCROLL_STATE_IDLE");
 				if (topImg.getY() > 0)
 				{
 					topImg.setY(0);
@@ -75,16 +92,18 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 					}
 				}
 				//save position to frag
-				this.frag.setTopImgYCoord((int) this.topImg.getY());
-				this.frag.setToolbarYCoord((int) this.toolbar.getY());
-				this.frag.setInitialDistance(this.initialDistance);
+//				this.frag.setTopImgYCoord((int) this.topImg.getY());
+//				this.frag.setToolbarYCoord((int) this.toolbar.getY());
+//				this.frag.setInitialDistance(this.initialDistance);
 				//save coord to ActivityMain
 				ActivityMain actM = (ActivityMain) act;
-				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
+//				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
+//				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
+				actM.updateAllCatToolbarTopImgYCoord(this.categoryToLoad,
 				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
-//				System.out.println("SCROLL_STATE_SETTLING");
+			//				System.out.println("SCROLL_STATE_SETTLING");
 			break;
 		}
 	}
@@ -93,6 +112,48 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 	public void onScrolled(RecyclerView recyclerView, int x, int y)
 	{
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+		//TODO test more data loading
+//		this.current_page = manager.getItemCount() / defaultRowsOnPage;
+
+		visibleItemCount = manager.getChildCount();
+		totalItemCount = manager.getItemCount();
+		firstVisibleItem  = manager.findFirstVisibleItemPosition();
+
+//		if (loading)
+//		{
+//			if ((visibleItemCount + pastVisiblesItems) >= totalItemCount)
+//			{
+//				loading = false;
+//				Log.v(TAG, "Last Item Wow !");
+//			}
+//		}
+
+		if (loading)
+		{
+			if (totalItemCount > previousTotal)
+			{
+				loading = false;
+				previousTotal = totalItemCount;
+			}
+		}
+		if (!loading && (totalItemCount - visibleItemCount)
+		<= (firstVisibleItem + visibleThreshold))
+		{
+			// End has been reached
+			onLoadMore();
+
+			loading = true;
+			
+			//test setting loading View
+//			TextView tV=new TextView(this.act);
+//			tV.setText("LOADING!!!!!!!!!!");
+//			recyclerView.addView(tV, recyclerView.getLayoutManager().getChildCount());
+//			this.manager.addView(tV, this.manager.getItemCount());
+		}
+
+		//////////////
+
 		boolean scrollToUp = y > 0;
 		//move picture
 		if (scrollToUp)
@@ -210,4 +271,6 @@ public class RecyclerViewOnScrollListener extends OnScrollListener
 
 		}
 	}
+	
+	public abstract void onLoadMore();
 }

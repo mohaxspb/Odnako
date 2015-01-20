@@ -12,6 +12,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
+import ru.kuchanov.odnako.animations.ScaleInOutItemAnimator;
 import ru.kuchanov.odnako.db.DBActions;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -47,9 +48,11 @@ public class FragmentArtsRecyclerList extends Fragment
 {
 	static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
 
-	private int topImgYCoord = 0;
-	private int toolbarYCoord = 0;
-	private int initialDistance;
+//	private int topImgYCoord = 0;
+//	private int toolbarYCoord = 0;
+//	private int initialDistance;
+	
+	int pageToLoad=1;
 
 	SwipeRefreshLayout swipeRef;
 
@@ -86,9 +89,11 @@ public class FragmentArtsRecyclerList extends Fragment
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
-			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
-			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
-			this.initialDistance = savedInstanceState.getInt("initialDistance");
+//			this.topImgYCoord = savedInstanceState.getInt("topImgYCoord");
+//			this.toolbarYCoord = savedInstanceState.getInt("toolbarYCoord");
+//			this.initialDistance = savedInstanceState.getInt("initialDistance");
+			
+			this.pageToLoad=savedInstanceState.getInt("pageToLoad");
 
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
 			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
@@ -176,7 +181,10 @@ public class FragmentArtsRecyclerList extends Fragment
 
 			if (newAllArtsInfo != null)
 			{
-				allArtsInfo.clear();
+				if(pageToLoad==1)
+				{
+					allArtsInfo.clear();
+				}
 				allArtsInfo.addAll(newAllArtsInfo);
 				artsListAdapter.notifyDataSetChanged();
 
@@ -222,12 +230,14 @@ public class FragmentArtsRecyclerList extends Fragment
 			@Override
 			public void onRefresh()
 			{
+				pageToLoad=1;
 				getAllArtsInfo(true);
 			}
 		});
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
+//		this.artsList.setItemAnimator(new ScaleInOutItemAnimator(artsList));
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
 		if (this.allArtsInfo == null)
@@ -242,6 +252,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
+			
 
 		}
 		else
@@ -257,7 +268,16 @@ public class FragmentArtsRecyclerList extends Fragment
 		//set onScrollListener
 		if (android.os.Build.VERSION.SDK_INT >= 11)
 		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this));
+			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad)
+			{
+				public void onLoadMore()
+				{
+//					if(loading)
+					pageToLoad++;
+					getAllArtsInfo(true);
+					Log.e(LOG_TAG, "Start loading from bottom!");
+				}
+			});
 		}
 		else if (this.pref.getBoolean("animate_lists", false) == true)
 		{
@@ -284,7 +304,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		Intent intent = new Intent(this.act, ServiceDB.class);
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", this.getCategoryToLoad());
-		b.putInt("pageToLoad", 1);
+		b.putInt("pageToLoad", this.pageToLoad);
 		b.putLong("timeStamp", System.currentTimeMillis());
 		b.putBoolean("startDownload", startDownload);
 		intent.putExtras(b);
@@ -301,9 +321,11 @@ public class FragmentArtsRecyclerList extends Fragment
 		outState.putString("categoryToLoad", categoryToLoad);
 
 		//save topImg and toolbar prop's
-		outState.putInt("topImgYCoord", this.topImgYCoord);
-		outState.putInt("toolbarYCoord", this.toolbarYCoord);
-		outState.putInt("initialDistance", this.initialDistance);
+//		outState.putInt("topImgYCoord", this.topImgYCoord);
+//		outState.putInt("toolbarYCoord", this.toolbarYCoord);
+//		outState.putInt("initialDistance", this.initialDistance);
+		
+		;outState.putInt("pageToLoad", this.pageToLoad);
 
 		outState.putInt("position", this.position);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
@@ -325,35 +347,35 @@ public class FragmentArtsRecyclerList extends Fragment
 	}
 
 	////////setters and getters for TopImg and Toolbar position and Alpha
-	public int getToolbarYCoord()
-	{
-		return toolbarYCoord;
-	}
+//	public int getToolbarYCoord()
+//	{
+//		return toolbarYCoord;
+//	}
+//
+//	public void setToolbarYCoord(int toolbarYCoord)
+//	{
+//		this.toolbarYCoord = toolbarYCoord;
+//	}
+//
+//	public void setInitialDistance(int initialDistance)
+//	{
+//		this.initialDistance = initialDistance;
+//	}
 
-	public void setToolbarYCoord(int toolbarYCoord)
-	{
-		this.toolbarYCoord = toolbarYCoord;
-	}
-
-	public void setInitialDistance(int initialDistance)
-	{
-		this.initialDistance = initialDistance;
-	}
-
-	public int getInitialDistance()
-	{
-		return initialDistance;
-	}
-
-	public int getTopImgYCoord()
-	{
-		return topImgYCoord;
-	}
-
-	public void setTopImgYCoord(int topImgYCoord)
-	{
-		this.topImgYCoord = topImgYCoord;
-	}
+//	public int getInitialDistance()
+//	{
+//		return initialDistance;
+//	}
+//
+//	public int getTopImgYCoord()
+//	{
+//		return topImgYCoord;
+//	}
+//
+//	public void setTopImgYCoord(int topImgYCoord)
+//	{
+//		this.topImgYCoord = topImgYCoord;
+//	}
 
 	public String getCategoryToLoad()
 	{

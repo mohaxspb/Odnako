@@ -13,9 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.db.ExportDatabaseCSVTask;
 import ru.kuchanov.odnako.db.ExportDatabaseXLSTask;
-import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;

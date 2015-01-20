@@ -27,6 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -39,8 +41,9 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 implements Filterable
 {
 	private static final int HEADER = 0;
-	//	private static final int ADS = 1;
 	private static final int ARTICLE = 1;
+	private static final int FOOTER = 2;
+
 	ActionBarActivity act;
 	LayoutInflater lInflater;
 
@@ -55,6 +58,9 @@ implements Filterable
 	boolean twoPane;
 
 	FragmentArtsRecyclerList artsListFrag;
+
+	// Allows to remember the last item shown on screen
+	private int lastPosition = -1;
 
 	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
 	FragmentArtsRecyclerList artsListFrag)
@@ -129,6 +135,10 @@ implements Filterable
 		{
 			return HEADER;
 		}
+		else if (((position -1) % 30) == 0 && (position == this.getItemCount() - 1))
+		{
+			return FOOTER;
+		}
 		else
 		{
 			return ARTICLE;
@@ -144,8 +154,9 @@ implements Filterable
 			return 1;
 		}
 		int header = 1;
+		int footer = 1;
 
-		return this.artsInfo.size() + header;
+		return this.artsInfo.size() + header +footer;
 	}
 
 	public ArtInfo getArtInfoByPosition(int position)
@@ -169,6 +180,9 @@ implements Filterable
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
+
+			break;
+			case (FOOTER):
 
 			break;
 			case (ARTICLE):
@@ -499,6 +513,10 @@ implements Filterable
 						}
 					});
 					////end of comments btn
+
+					/////////animation
+					// Here you apply the animation when the view is bound
+					setAnimation(vg, position);
 				} catch (Exception e)
 				{
 					return;
@@ -510,6 +528,21 @@ implements Filterable
 
 	}
 
+	/**
+	 * Here is the key method to apply the animation
+	 */
+	private void setAnimation(View viewToAnimate, int position)
+	{
+		// If the bound view wasn't previously displayed on screen, it's animated
+		if (position > lastPosition)
+		{
+			Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.slide_in_left);
+			//        	Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.fade_in);
+			viewToAnimate.startAnimation(animation);
+			lastPosition = position;
+		}
+	}
+
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position)
 	{
@@ -519,6 +552,15 @@ implements Filterable
 		{
 			case (HEADER):
 				itemLayoutView = new LinearLayout(act);
+				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165,
+				act)));
+
+				holder = new HeaderHolder(itemLayoutView);
+				return holder;
+
+			case (FOOTER):
+				itemLayoutView = new ImageView(act);
+				((ImageView) itemLayoutView).setImageResource(R.drawable.ic_launcher);
 				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165,
 				act)));
 
@@ -543,6 +585,15 @@ implements Filterable
 	{
 
 		HeaderHolder(View itemLayoutView)
+		{
+			super(itemLayoutView);
+		}
+	}
+
+	static class FooterHolder extends RecyclerView.ViewHolder
+	{
+
+		FooterHolder(View itemLayoutView)
 		{
 			super(itemLayoutView);
 		}
@@ -594,8 +645,8 @@ implements Filterable
 	}
 
 	///////
-	public ArrayList<ArtInfo> getAllArtsInfo()
-	{
-		return this.artsInfo;
-	}
+//	public ArrayList<ArtInfo> getAllArtsInfo()
+//	{
+//		return this.artsInfo;
+//	}
 }

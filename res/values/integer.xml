@@ -3,7 +3,7 @@
 
     <integer name="width">75</integer>
     <integer name="heigth">75</integer>
-    <integer name="checkPeriod">60</integer>
+    <integer name="checkPeriod">120</integer>
     <integer name="db_version">22</integer>
 
 </resources>

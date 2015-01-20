@@ -18,7 +18,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.utils.DateParse;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -188,15 +187,24 @@ public class DBActions
 					.eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, catId).query();
 					if (artCat.size() != 0)
 					{
-						//TODO
 						//so there is some arts in DB by category, that we can send to frag and show
 						//sending...
-						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+						
 						//calculate initial art in list to send
-						int from = 30 * (pageToLoad - 1);
-						List<ArtCatTable> dataFromDBToSend = artCat.subList(from, (30 - 1));
+//						int from = 30 * (pageToLoad - 1);
+						List<ArtCatTable> dataFromDBToSend=new ArrayList<ArtCatTable>();// = artCat.subList(from, (30 - 1));
+						ArtCatTable topArtCat=ArtCatTable.getTopArtCat(getHelper(), catId, true);
+						dataFromDBToSend.add(topArtCat);
+						//i=1, cause we've already set first item
+						for(int i=1; i<30; i++)
+						{
+							int nextArtCatId=ArtCatTable.getNextArtCatId(getHelper(), dataFromDBToSend.get(i-1).getId());
+							ArtCatTable nextArtCat=this.getHelper().getDaoArtCatTable().queryForId(nextArtCatId);
+							dataFromDBToSend.add(nextArtCat);							
+						}
 						//set ArtCatTable obj to ArtInfo
 						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
+						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
 						for (ArtCatTable a : dataFromDBToSend)
 						{
 							Article art = this.getHelper().getDaoArticle().queryForId(a.getArticleId());
