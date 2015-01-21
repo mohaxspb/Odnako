@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -82,15 +83,15 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 					//method will return result of searching throw DB
 					DBActions dbActions = new DBActions(this, this.getHelper());
-//					try
-//					{
-//						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
-//						{
-//							dbActions.test(catToLoad);
-//						}
-//					} catch (Exception e)
-//					{
-//					}
+					//					try
+					//					{
+					//						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
+					//						{
+					//							dbActions.test(catToLoad);
+					//						}
+					//					} catch (Exception e)
+					//					{
+					//					}
 					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
 					Log.d(LOG_TAG, DBRezult);
 
@@ -150,16 +151,55 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
 				//TODO DO NOT NEED????!!! here we ask DB  if it's sinked
 				////aks db for arts
-//				List<ArtCatTable> allArts=ArtCatTable
+				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);
+				Integer id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
+				List<ArtCatTable> allArts;
+				allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
 				//////if we have no arts, we load them from web
-				//////if we have >30 we pass 30 to fragment
-				//////else we ask category if it has firstArtURL
-				////////if so we pass arts to fragment
-				////////else we must load arts from web
-				//////////if we get <30 we set last art's URL as first art of category and write arts to db(Article and ArtCat)
-				//////////else simply write arts to db(Article and ArtCat)
-				
-				
+				if (allArts == null)
+				{
+					//TODO load from web
+				}
+				else
+				{
+					if (allArts.size() == 30)
+					{
+						//////TODO if we have 30 we pass 30 to fragment
+					}
+					else
+					{
+						//////else we ask category if it has firstArtURL
+						String firstArtInCatURL = null;
+						firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
+						if (firstArtInCatURL == null)
+						{
+							////////TODO if so we load from web
+							//if we get <30 we set last art's URL as first art of Category
+							//and write arts to db(Article and ArtCat)
+							////else simply write arts to db(Article and ArtCat)
+						}
+						else
+						{
+							//check matching last of gained URL with initial (first)
+							String lastInListArtsUrl = Article.getArticleUrlById(getHelper(),
+							allArts.get(allArts.size() - 1).getArticleId());
+							if (firstArtInCatURL.equals(lastInListArtsUrl))
+							{
+								//TODO so it is real end of all arts in category
+								//send arts to frag
+								//notify not to load (may be we can pass initial art to sharedPrefs...)
+							}
+							else
+							{
+								////////TODO else we must load arts from web
+								//if we get <30 we set last art's URL as first art of Category
+								//and write arts to db(Article and ArtCat)
+								////else simply write arts to db(Article and ArtCat)
+							}
+						}
+					}
+				}
+
 				////TODO DO NOT NEED????!!!  if unsinked we load arts from web
 				////XXX match gained arts with ArtCat entries from id>30*pageToLoad
 				/////XXX if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match

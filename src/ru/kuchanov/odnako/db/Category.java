@@ -15,18 +15,19 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * "id", "url", "title", "description", "img_url", "img_file_name",
- *	"refreshed", "lastArticleDate", "sinhronised", "firstArticleURL"
+ * "id", "url", "title", "description", "img_url", "img_file_name", "refreshed",
+ * "lastArticleDate", "sinhronised", "firstArticleURL"
  */
 @DatabaseTable(tableName = "category")
 public class Category
 {
+	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
 	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
@@ -239,6 +240,25 @@ public class Category
 	}
 
 	/**
+	 * @return URL of initial article in category
+	 */
+	public static String getFirstArticleURLById(DataBaseHelper h, int categoryId)
+	{
+		String firstArtUrl = null;
+
+		try
+		{
+			firstArtUrl = h.getDaoCategory().queryBuilder().where().eq(ID_FIELD_NAME, categoryId).queryForFirst()
+			.getFirstArticleURL();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return firstArtUrl;
+	}
+
+	/**
 	 * 
 	 * @param h
 	 * @param url
@@ -260,7 +280,7 @@ public class Category
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String[] getAsStringArray()
 	{
 		String[] allInfo = new String[10];
