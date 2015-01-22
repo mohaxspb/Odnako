@@ -422,7 +422,28 @@ public class Article
 
 		return allInfo;
 	}
-
+	
+	public static String getTitleById(DataBaseHelper h, int id)
+	{
+		String title=null;
+		
+		try
+		{
+			title=h.getDaoArticle().queryForId(id).getTitle();
+		} catch (SQLException e)
+		{
+			
+		}
+		
+		return title;
+	}
+	
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return id or null on SQLException
+	 */
 	public static int getArticleIdByURL(DataBaseHelper h, String url)
 	{
 		Integer id = null;

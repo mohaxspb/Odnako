@@ -153,18 +153,42 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				////aks db for arts
 				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);
 				Integer id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
+				List<ArtCatTable> allArtsFromFirst;
+				allArtsFromFirst = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
+				
+				//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
+				if(allArtsFromFirst.size()<30)
+				{
+					//TODO DO NOTHING, return, that it's start of list
+				}
+				//so now we have first 30 arts. Now get next 30 by passing last id to same method
 				List<ArtCatTable> allArts;
-				allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
+				int lastId=allArtsFromFirst.get(allArtsFromFirst.size()-1).getId();
+				allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId);
+				/////test logging
+				if(allArts!=null)
+				{
+					Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
+					for(ArtCatTable a:allArts)
+					{
+						Log.e(LOG_TAG, Article.getTitleById(getHelper(), a.getArticleId()));
+					}
+				}
+				
+				/////////
 				//////if we have no arts, we load them from web
 				if (allArts == null)
 				{
 					//TODO load from web
+					Log.d(LOG_TAG, "No arts at all, load from web");
+					this.startDownLoad(catToLoad, pageToLoad);
 				}
 				else
 				{
 					if (allArts.size() == 30)
 					{
-						//////TODO if we have 30 we pass 30 to fragment
+						//////TODO if we have 30, so we pass 30 to fragment
+						Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 					}
 					else
 					{
@@ -174,6 +198,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						if (firstArtInCatURL == null)
 						{
 							////////TODO if so we load from web
+							Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
+							Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
+							this.startDownLoad(catToLoad, pageToLoad);
 							//if we get <30 we set last art's URL as first art of Category
 							//and write arts to db(Article and ArtCat)
 							////else simply write arts to db(Article and ArtCat)
@@ -185,6 +212,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 							allArts.get(allArts.size() - 1).getArticleId());
 							if (firstArtInCatURL.equals(lastInListArtsUrl))
 							{
+								Log.d(LOG_TAG,
+								"we have LESS than 30, and have match to initial. So send all and never load more");
+								Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
 								//TODO so it is real end of all arts in category
 								//send arts to frag
 								//notify not to load (may be we can pass initial art to sharedPrefs...)
@@ -192,6 +222,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 							else
 							{
 								////////TODO else we must load arts from web
+								Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
+								Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
+								this.startDownLoad(catToLoad, pageToLoad);
 								//if we get <30 we set last art's URL as first art of Category
 								//and write arts to db(Article and ArtCat)
 								////else simply write arts to db(Article and ArtCat)
@@ -244,7 +277,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		else
 		{
-			//we don need to update refreshed Date, cause we do it only when loading from top
+			//we don't need to update refreshed Date, cause we do it only when loading from top
 		}
 
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

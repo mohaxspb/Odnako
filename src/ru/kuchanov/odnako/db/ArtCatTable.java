@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -21,6 +23,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "art_cat_table")
 public class ArtCatTable
 {
+	final private static String LOG = ArtCatTable.class.getSimpleName();
+	
 	public final static String ID_FIELD_NAME = "id";
 	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
 	public final static String CATEGORY_ID_FIELD_NAME = "category_id";
@@ -228,8 +232,13 @@ public class ArtCatTable
 		try
 		{
 			ArtCatTable firstArtCat=h.getDaoArtCatTable().queryForId(ArtCatTable.getNextArtCatId(h, id));
+			
 			if(firstArtCat!=null)
 			{
+				///test log
+				String a=Article.getTitleById(h, firstArtCat.getArticleId());
+				Log.e(LOG, a);
+				///////
 				artCatTableListByCategoryIdFromGivenId=new ArrayList<ArtCatTable>();
 				artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
 				
@@ -239,6 +248,10 @@ public class ArtCatTable
 					if(nextArtCatId!=null)
 					{
 						ArtCatTable nextArtCat=h.getDaoArtCatTable().queryForId(nextArtCatId);
+						///test log
+						String t=Article.getTitleById(h, nextArtCat.getArticleId());
+						Log.e(LOG, t);
+						///////
 						artCatTableListByCategoryIdFromGivenId.add(nextArtCat);	
 					}
 					else
@@ -253,7 +266,7 @@ public class ArtCatTable
 			}
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		return artCatTableListByCategoryIdFromGivenId;
@@ -360,9 +373,30 @@ public class ArtCatTable
 			.and().eq(CATEGORY_ID_FIELD_NAME, a.getCategoryId()).queryForFirst().getId();
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return nextArtCatId;
+	}
+	
+	/**
+	 * 
+	 * @param h
+	 * @param categoryId
+	 * @return 
+	 */
+	public static List<ArtCatTable> getAllRowsWithoutPrevArt(DataBaseHelper h, int categoryId)
+	{
+		List<ArtCatTable> allRowsWithoutPrevArt=null;
+		
+		try
+		{
+			h.getDaoArtCatTable().queryForEq(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, null);
+		} catch (SQLException e)
+		{
+//			e.printStackTrace();
+		}
+		
+		return allRowsWithoutPrevArt;
 	}
 
 	public String[] getAsStringArray()

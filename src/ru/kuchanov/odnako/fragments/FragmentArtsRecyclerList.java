@@ -264,10 +264,9 @@ public class FragmentArtsRecyclerList extends Fragment
 			{
 				public void onLoadMore()
 				{
-					//					if(loading)
 					pageToLoad++;
 					getAllArtsInfo(true);
-					Log.e(LOG_TAG, "Start loading from bottom!");
+					Log.e(LOG_TAG, "Start loading page "+pageToLoad+" from bottom!");
 				}
 			});
 		}

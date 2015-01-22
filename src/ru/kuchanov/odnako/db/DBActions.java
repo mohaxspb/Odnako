@@ -189,18 +189,19 @@ public class DBActions
 					{
 						//so there is some arts in DB by category, that we can send to frag and show
 						//sending...
-						
+
 						//calculate initial art in list to send
-//						int from = 30 * (pageToLoad - 1);
-						List<ArtCatTable> dataFromDBToSend=new ArrayList<ArtCatTable>();// = artCat.subList(from, (30 - 1));
-						ArtCatTable topArtCat=ArtCatTable.getTopArtCat(getHelper(), catId, true);
+						//						int from = 30 * (pageToLoad - 1);
+						List<ArtCatTable> dataFromDBToSend = new ArrayList<ArtCatTable>();// = artCat.subList(from, (30 - 1));
+						ArtCatTable topArtCat = ArtCatTable.getTopArtCat(getHelper(), catId, true);
 						dataFromDBToSend.add(topArtCat);
 						//i=1, cause we've already set first item
-						for(int i=1; i<30; i++)
+						for (int i = 1; i < 30; i++)
 						{
-							int nextArtCatId=ArtCatTable.getNextArtCatId(getHelper(), dataFromDBToSend.get(i-1).getId());
-							ArtCatTable nextArtCat=this.getHelper().getDaoArtCatTable().queryForId(nextArtCatId);
-							dataFromDBToSend.add(nextArtCat);							
+							int nextArtCatId = ArtCatTable.getNextArtCatId(getHelper(), dataFromDBToSend.get(i - 1)
+							.getId());
+							ArtCatTable nextArtCat = this.getHelper().getDaoArtCatTable().queryForId(nextArtCatId);
+							dataFromDBToSend.add(nextArtCat);
 						}
 						//set ArtCatTable obj to ArtInfo
 						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
@@ -598,7 +599,65 @@ public class DBActions
 		}
 		else
 		{
-			//from bottom
+			//TODO from bottom
+			if (this.isCategory(categoryToLoad))
+			{
+				//this.isCategory, so...
+				//here we can have some variants:
+				//1) we load as we have no next arts
+				//2) we load as we have less than 30 arts
+				//anyway we must find our previous last artCat and change its nextArtUrl
+				int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+				ArtCatTable topArt = ArtCatTable.getTopArtCat(getHelper(), categoryId, true);
+				ArtCatTable lastArtCat=null;
+				List<ArtCatTable> allArtCatList=new ArrayList<ArtCatTable>();
+				for (int i = 0; i < pageToLoad; i++)
+				{
+					allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(),
+					categoryId, topArt.getId()));
+					topArt=allArtCatList.get(allArtCatList.size()-1);
+				}
+				Log.e(LOG_TAG, "allArtCatList.size(): "+allArtCatList.size());
+				lastArtCat=allArtCatList.get(allArtCatList.size()-1);
+				ArtCatTable.updateNextArt(getHelper(), lastArtCat.getId(), someResult.get(0).url);
+				//then we must match each art with all artCat, that have no previousArtUrl
+				//get list of all artCat without previous art
+				List<ArtCatTable> withoutPrev=ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(), categoryId);
+				if(withoutPrev!=null)
+				{
+					//XXX WARNING!!! "someResult.size()-1" because there is no nextArt for last, so we can't check matching
+					for(int i=0; i<someResult.size()-1; i++)
+					{
+						for(int u=0; u<withoutPrev.size(); u++)
+						{
+							//get url of checking ArtCat entry
+							String url=Article.getArticleUrlById(getHelper(), withoutPrev.get(u).getArticleId());
+							if(someResult.get(i+1).url.equals(url))
+							{
+								//TODO matched! So we write only previous of matched (+matched)
+								//and update entry, that matched, by previousArtUrl
+							}
+							else
+							{
+								//check if it's last iteration and so we didn't find any matches
+								if(i==someResult.size()-1-1 && u==withoutPrev.size()-1)
+								{
+									//TODO if we can't find any, we simply write all artCats
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					//TODO no arts without missing prev art, so
+					//
+				}
+			}
+			else
+			{
+				//TODO this.isAuthor, so...
+			}
 			//so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
 		}
 
