@@ -422,22 +422,22 @@ public class Article
 
 		return allInfo;
 	}
-	
+
 	public static String getTitleById(DataBaseHelper h, int id)
 	{
-		String title=null;
-		
+		String title = null;
+
 		try
 		{
-			title=h.getDaoArticle().queryForId(id).getTitle();
+			title = h.getDaoArticle().queryForId(id).getTitle();
 		} catch (SQLException e)
 		{
-			
+
 		}
-		
+
 		return title;
 	}
-	
+
 	/**
 	 * 
 	 * @param h
@@ -478,6 +478,21 @@ public class Article
 		return url;
 	}
 
+	public static Article getArticleById(DataBaseHelper h, int id)
+	{
+		Article art = null;
+		try
+		{
+			art = h.getDaoArticle().queryForId(id);
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return art;
+	}
+
 	/**
 	 * returns String arr with names of all Table columns
 	 */
@@ -489,7 +504,7 @@ public class Article
 				"share_quont", "to_read_main", "to_read_more", "img_author", "author" };
 		return arrStr1;
 	}
-	
+
 	/**
 	 * returns URL field value
 	 */

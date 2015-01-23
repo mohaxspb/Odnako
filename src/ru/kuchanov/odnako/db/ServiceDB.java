@@ -152,16 +152,19 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//TODO DO NOT NEED????!!! here we ask DB  if it's sinked
 				////aks db for arts
 				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);
-				Integer id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
+//				Integer id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
 				List<ArtCatTable> allArtsFromFirst;
-				allArtsFromFirst = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
+//				allArtsFromFirst = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
+				
+				//pageToLoad-1 because here we do not need next arts, only arts, that already showed
+				allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad-1);
 				
 				//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
 				if(allArtsFromFirst.size()<30)
 				{
 					//TODO DO NOTHING, return, that it's start of list
 				}
-				//so now we have first 30 arts. Now get next 30 by passing last id to same method
+				//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
 				List<ArtCatTable> allArts;
 				int lastId=allArtsFromFirst.get(allArtsFromFirst.size()-1).getId();
 				allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId);
@@ -187,8 +190,23 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				{
 					if (allArts.size() == 30)
 					{
-						//////TODO if we have 30, so we pass 30 to fragment
+						//////if we have 30, so we pass 30 to fragment
 						Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
+						
+						//set ArtCatTable obj to ArtInfo
+						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
+						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+						for (ArtCatTable a : allArts)
+						{
+							Article art = Article.getArticleById(getHelper(), a.getArticleId());
+							ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
+							data.add(artInfoObj);
+						}
+						//send directly, cause it's from DB and we do not need to do something with this data
+						Intent intentWithData = new Intent(catToLoad);
+						intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+						
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 					else
 					{
@@ -197,7 +215,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
 						if (firstArtInCatURL == null)
 						{
-							////////TODO if so we load from web
+							////////if so we load from web
 							Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
 							Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
 							this.startDownLoad(catToLoad, pageToLoad);
@@ -221,7 +239,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 							}
 							else
 							{
-								////////TODO else we must load arts from web
+								////////else we must load arts from web
 								Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
 								Log.d(LOG_TAG, "allArts.size(): "+allArts.size());
 								this.startDownLoad(catToLoad, pageToLoad);

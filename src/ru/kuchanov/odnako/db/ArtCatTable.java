@@ -24,7 +24,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class ArtCatTable
 {
 	final private static String LOG = ArtCatTable.class.getSimpleName();
-	
+
 	public final static String ID_FIELD_NAME = "id";
 	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
 	public final static String CATEGORY_ID_FIELD_NAME = "category_id";
@@ -194,36 +194,38 @@ public class ArtCatTable
 
 	}
 
-//	/**
-//	 * 
-//	 * @param helper
-//	 * @param categoryId
-//	 * @return
-//	 */
-//	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
-//	{
-//		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
-//
-//		int id = getIdForFirstArticleInCategory(h, categoryId);
-//
-//		try
-//		{
-//			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
-//			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
-//		} catch (SQLException e)
-//		{
-//			e.printStackTrace();
-//		}
-//
-//		return artCatTableListByCategoryIdFromGivenId;
-//	}
-	
+	//	/**
+	//	 * 
+	//	 * @param helper
+	//	 * @param categoryId
+	//	 * @return
+	//	 */
+	//	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
+	//	{
+	//		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
+	//
+	//		int id = getIdForFirstArticleInCategory(h, categoryId);
+	//
+	//		try
+	//		{
+	//			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
+	//			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
+	//		} catch (SQLException e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+	//
+	//		return artCatTableListByCategoryIdFromGivenId;
+	//	}
+
 	/**
 	 * 
 	 * @param h
 	 * @param categoryId
-	 * @param id of ArtCat from witch we calculate first ArtCat of returning list
-	 * @return List of ArtCat with <=30 entries  
+	 * @param id
+	 *            of ArtCat from witch we calculate first ArtCat of returning
+	 *            list
+	 * @return List of ArtCat with <=30 entries
 	 */
 	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id)
 	{
@@ -231,28 +233,31 @@ public class ArtCatTable
 
 		try
 		{
-			ArtCatTable firstArtCat=h.getDaoArtCatTable().queryForId(ArtCatTable.getNextArtCatId(h, id));
+			Integer firstArtCatID=ArtCatTable.getNextArtCatId(h, id);
 			
-			if(firstArtCat!=null)
+
+			if (firstArtCatID != null)
 			{
+				ArtCatTable firstArtCat = h.getDaoArtCatTable().queryForId(firstArtCatID);
 				///test log
-				String a=Article.getTitleById(h, firstArtCat.getArticleId());
-				Log.e(LOG, a);
+//				String a = Article.getTitleById(h, firstArtCat.getArticleId());
+//				Log.e(LOG, a);
 				///////
-				artCatTableListByCategoryIdFromGivenId=new ArrayList<ArtCatTable>();
+				artCatTableListByCategoryIdFromGivenId = new ArrayList<ArtCatTable>();
 				artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
-				
-				for(int i=1; i<30; i++)
+
+				for (int i = 1; i < 30; i++)
 				{
-					Integer nextArtCatId=ArtCatTable.getNextArtCatId(h, artCatTableListByCategoryIdFromGivenId.get(i-1).getId());
-					if(nextArtCatId!=null)
+					Integer nextArtCatId = ArtCatTable.getNextArtCatId(h,
+					artCatTableListByCategoryIdFromGivenId.get(i - 1).getId());
+					if (nextArtCatId != null)
 					{
-						ArtCatTable nextArtCat=h.getDaoArtCatTable().queryForId(nextArtCatId);
+						ArtCatTable nextArtCat = h.getDaoArtCatTable().queryForId(nextArtCatId);
 						///test log
-						String t=Article.getTitleById(h, nextArtCat.getArticleId());
-						Log.e(LOG, t);
+//						String t = Article.getTitleById(h, nextArtCat.getArticleId());
+//						Log.e(LOG, t);
 						///////
-						artCatTableListByCategoryIdFromGivenId.add(nextArtCat);	
+						artCatTableListByCategoryIdFromGivenId.add(nextArtCat);
 					}
 					else
 					{
@@ -266,7 +271,7 @@ public class ArtCatTable
 			}
 		} catch (SQLException e)
 		{
-//			e.printStackTrace();
+			//			e.printStackTrace();
 		}
 
 		return artCatTableListByCategoryIdFromGivenId;
@@ -275,7 +280,8 @@ public class ArtCatTable
 	/**
 	 * 
 	 * @param h
-	 * @param categoryId ID of category
+	 * @param categoryId
+	 *            ID of category
 	 * @param isTop
 	 *            true for top art, false for initial
 	 * @return
@@ -286,7 +292,8 @@ public class ArtCatTable
 
 		try
 		{
-			a = h.getDaoArtCatTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and().eq(CATEGORY_ID_FIELD_NAME, categoryId).queryForFirst();
+			a = h.getDaoArtCatTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and()
+			.eq(CATEGORY_ID_FIELD_NAME, categoryId).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -367,35 +374,87 @@ public class ArtCatTable
 		{
 			ArtCatTable a = h.getDaoArtCatTable().queryForId(id);
 			String nextArtUrl = a.getNextArtUrl();
+
 			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
 			.queryForFirst();
 			nextArtCatId = h.getDaoArtCatTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())
 			.and().eq(CATEGORY_ID_FIELD_NAME, a.getCategoryId()).queryForFirst().getId();
 		} catch (SQLException e)
 		{
-//			e.printStackTrace();
+			//			e.printStackTrace();
 		}
 		return nextArtCatId;
 	}
 	
+	public static List<ArtCatTable> getListFromTop(DataBaseHelper h, int categoryId, int pageToLoad)
+	{
+		ArtCatTable topArt = ArtCatTable.getTopArtCat(h, categoryId, true);
+		List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
+		for (int i = 0; i < pageToLoad; i++)
+		{
+			allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+			categoryId, topArt.getId()));
+			topArt = allArtCatList.get(allArtCatList.size() - 1);
+		}
+
+		return allArtCatList;
+	}
+
+	/**
+	 * @param h
+	 * @param categoryId
+	 * @param pageToLoad need this for looping through each 30 rows 
+	 * @return ArtCatTable object that is last in list of entries one by one 
+	 */
+	public static ArtCatTable getLastEntryFromTop(DataBaseHelper h, int categoryId, int pageToLoad)
+	{
+		ArtCatTable topArt = ArtCatTable.getTopArtCat(h, categoryId, true);
+		ArtCatTable lastArtCat = null;
+		List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
+		for (int i = 0; i < pageToLoad; i++)
+		{
+			allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+			categoryId, topArt.getId()));
+			topArt = allArtCatList.get(allArtCatList.size() - 1);
+		}
+		Log.e(LOG, "allArtCatList.size(): " + allArtCatList.size());
+		lastArtCat = allArtCatList.get(allArtCatList.size() - 1);
+
+		return lastArtCat;
+	}
+
+	public static void write(DataBaseHelper h, List<ArtCatTable> dataToWrite)
+	{
+		for (ArtCatTable a : dataToWrite)
+		{
+			try
+			{
+				h.getDaoArtCatTable().create(a);
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * 
 	 * @param h
 	 * @param categoryId
-	 * @return 
+	 * @return
 	 */
 	public static List<ArtCatTable> getAllRowsWithoutPrevArt(DataBaseHelper h, int categoryId)
 	{
-		List<ArtCatTable> allRowsWithoutPrevArt=null;
-		
+		List<ArtCatTable> allRowsWithoutPrevArt = null;
+
 		try
 		{
 			h.getDaoArtCatTable().queryForEq(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, null);
 		} catch (SQLException e)
 		{
-//			e.printStackTrace();
+			//			e.printStackTrace();
 		}
-		
+
 		return allRowsWithoutPrevArt;
 	}
 

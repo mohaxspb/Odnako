@@ -588,7 +588,6 @@ public class DBActions
 				else
 				{
 					//TODO this is Author, so...
-					//					artsIds=this.getHelper().getDaoArtAutTable()
 				}
 
 			} catch (SQLException e)
@@ -602,6 +601,7 @@ public class DBActions
 			//TODO from bottom
 			if (this.isCategory(categoryToLoad))
 			{
+				//XXX TODO if someResult<30, we can write that we have first art!!!
 				//this.isCategory, so...
 				//here we can have some variants:
 				//1) we load as we have no next arts
@@ -609,40 +609,57 @@ public class DBActions
 				//anyway we must find our previous last artCat and change its nextArtUrl
 				int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
 				ArtCatTable topArt = ArtCatTable.getTopArtCat(getHelper(), categoryId, true);
-				ArtCatTable lastArtCat=null;
-				List<ArtCatTable> allArtCatList=new ArrayList<ArtCatTable>();
-				for (int i = 0; i < pageToLoad; i++)
+				ArtCatTable lastArtCat = null;
+				List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
+				for (int i = 0; i < pageToLoad-1; i++)//XXX Check this
 				{
 					allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(),
 					categoryId, topArt.getId()));
-					topArt=allArtCatList.get(allArtCatList.size()-1);
+					topArt = allArtCatList.get(allArtCatList.size() - 1);
 				}
-				Log.e(LOG_TAG, "allArtCatList.size(): "+allArtCatList.size());
-				lastArtCat=allArtCatList.get(allArtCatList.size()-1);
+				Log.e(LOG_TAG, "allArtCatList.size(): " + allArtCatList.size());
+				lastArtCat = allArtCatList.get(allArtCatList.size() - 1);
 				ArtCatTable.updateNextArt(getHelper(), lastArtCat.getId(), someResult.get(0).url);
 				//then we must match each art with all artCat, that have no previousArtUrl
 				//get list of all artCat without previous art
-				List<ArtCatTable> withoutPrev=ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(), categoryId);
-				if(withoutPrev!=null)
+				List<ArtCatTable> withoutPrev = ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(), categoryId);
+				if (withoutPrev != null)
 				{
 					//XXX WARNING!!! "someResult.size()-1" because there is no nextArt for last, so we can't check matching
-					for(int i=0; i<someResult.size()-1; i++)
+					for (int i = 0; i < someResult.size() - 1; i++)
 					{
-						for(int u=0; u<withoutPrev.size(); u++)
+						for (int u = 0; u < withoutPrev.size(); u++)
 						{
 							//get url of checking ArtCat entry
-							String url=Article.getArticleUrlById(getHelper(), withoutPrev.get(u).getArticleId());
-							if(someResult.get(i+1).url.equals(url))
+							String url = Article.getArticleUrlById(getHelper(), withoutPrev.get(u).getArticleId());
+							if (someResult.get(i + 1).url.equals(url))
 							{
-								//TODO matched! So we write only previous of matched (+matched)
+								//matched! So we write only previous of matched (+matched)
 								//and update entry, that matched, by previousArtUrl
+								List<ArtInfo> subListArtInfo=someResult.subList(0, i);
+								List<ArtCatTable> dataToWrite=this.initialiseArtCat(subListArtInfo, categoryId);
+								//set prevArtUrl for first entry
+								String prevArtUrl=Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
+								dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
+								//update previousArtUrl for matched ArtCat row
+								int id=withoutPrev.get(u).getId();
+								String prevArtUrlToUpdate=someResult.get(i).url;
+								ArtCatTable.updatePreviousArt(getHelper(),id , prevArtUrlToUpdate);
+								//write new entries with new Arts to ArtCatTable
+								ArtCatTable.write(getHelper(), dataToWrite);
 							}
 							else
 							{
 								//check if it's last iteration and so we didn't find any matches
-								if(i==someResult.size()-1-1 && u==withoutPrev.size()-1)
+								if (i == someResult.size() - 1 - 1 && u == withoutPrev.size() - 1)
 								{
-									//TODO if we can't find any, we simply write all artCats
+									//if we can't find any, we simply write all artCats
+									List<ArtCatTable> dataToWrite=this.initialiseArtCat(someResult, categoryId);
+									//set prevArtUrl for first entry
+									String prevArtUrl=Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
+									dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
+									//write new entries with new Arts to ArtCatTable
+									ArtCatTable.write(getHelper(), dataToWrite);
 								}
 							}
 						}
@@ -650,8 +667,14 @@ public class DBActions
 				}
 				else
 				{
-					//TODO no arts without missing prev art, so
-					//
+					//there are no arts without missing prev art, so
+					//just write them all!!!11 ARGHHH!!!
+					List<ArtCatTable> dataToWrite=this.initialiseArtCat(someResult, categoryId);
+					//set prevArtUrl for first entry
+					String prevArtUrl=Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
+					dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
+					//write new entries with new Arts to ArtCatTable
+					ArtCatTable.write(getHelper(), dataToWrite);
 				}
 			}
 			else
@@ -660,7 +683,6 @@ public class DBActions
 			}
 			//so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
 		}
-
 	}
 
 	//write refreshed date to entry of given category
@@ -732,6 +754,38 @@ public class DBActions
 		public final static String NEW_QUONT = "new quont";
 	}
 
+	private List<ArtCatTable> initialiseArtCat(List<ArtInfo> artToWrite, int categoryId)
+	{
+		//List<ArtCatTable> artCatTableList of new arts that will be written to DB
+		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+
+		for (int u = 0; u < artToWrite.size(); u++)
+		{
+			//get Article id by url
+			int articleId = Article.getArticleIdByURL(getHelper(), artToWrite.get(u).url);
+			//get next Article url by asking gained from web list
+			String nextArtUrl = null;
+			try
+			{
+				nextArtUrl = artToWrite.get(u + 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			//get previous Article url by asking gained from web list
+			String previousArtUrl = null;
+			try
+			{
+				previousArtUrl = artToWrite.get(u - 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
+		}
+
+		return artCatTableList;
+	}
 }
 
 //	//get first 30 (max num of arts on page) category's arts ids
