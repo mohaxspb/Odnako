@@ -168,7 +168,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			//			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
+			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
 			ArrayList<ArtInfo> newAllArtsInfo;
 			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
@@ -266,7 +266,7 @@ public class FragmentArtsRecyclerList extends Fragment
 				{
 					pageToLoad++;
 					getAllArtsInfo(true);
-					Log.e(LOG_TAG, "Start loading page "+pageToLoad+" from bottom!");
+					Log.e(LOG_TAG, "Start loading page " + pageToLoad + " from bottom!");
 				}
 			});
 		}
@@ -299,7 +299,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			TypedArray a = this.act.obtainStyledAttributes(typedValue.data, textSizeAttr);
 			int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
 			a.recycle();
-//			this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
+			//			this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
 			this.swipeRef.setProgressViewEndTarget(false, actionBarSize);
 		}
 		else

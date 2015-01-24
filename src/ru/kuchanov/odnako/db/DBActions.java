@@ -598,7 +598,7 @@ public class DBActions
 		}
 		else
 		{
-			//TODO from bottom
+			//from bottom
 			if (this.isCategory(categoryToLoad))
 			{
 				//XXX TODO if someResult<30, we can write that we have first art!!!
@@ -608,17 +608,12 @@ public class DBActions
 				//2) we load as we have less than 30 arts
 				//anyway we must find our previous last artCat and change its nextArtUrl
 				int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
-				ArtCatTable topArt = ArtCatTable.getTopArtCat(getHelper(), categoryId, true);
 				ArtCatTable lastArtCat = null;
-				List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
-				for (int i = 0; i < pageToLoad-1; i++)//XXX Check this
-				{
-					allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(),
-					categoryId, topArt.getId()));
-					topArt = allArtCatList.get(allArtCatList.size() - 1);
-				}
-				Log.e(LOG_TAG, "allArtCatList.size(): " + allArtCatList.size());
+				List<ArtCatTable> allArtCatList = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad-1);
 				lastArtCat = allArtCatList.get(allArtCatList.size() - 1);
+				//TODO check here situation, when publishing new art on site during our request
+				//so we can recive first art in someResult same as last in DB
+				//so we'll have to update lastInDBArt by real next.
 				ArtCatTable.updateNextArt(getHelper(), lastArtCat.getId(), someResult.get(0).url);
 				//then we must match each art with all artCat, that have no previousArtUrl
 				//get list of all artCat without previous art

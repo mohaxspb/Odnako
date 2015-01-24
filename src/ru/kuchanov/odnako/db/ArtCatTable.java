@@ -193,31 +193,6 @@ public class ArtCatTable
 		return id;
 
 	}
-
-	//	/**
-	//	 * 
-	//	 * @param helper
-	//	 * @param categoryId
-	//	 * @return
-	//	 */
-	//	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromFirstId(DataBaseHelper h, int categoryId)
-	//	{
-	//		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
-	//
-	//		int id = getIdForFirstArticleInCategory(h, categoryId);
-	//
-	//		try
-	//		{
-	//			artCatTableListByCategoryIdFromGivenId = h.getDaoArtCatTable().queryBuilder().where()
-	//			.ge(ArtCatTable.ID_FIELD_NAME, id).query();
-	//		} catch (SQLException e)
-	//		{
-	//			e.printStackTrace();
-	//		}
-	//
-	//		return artCatTableListByCategoryIdFromGivenId;
-	//	}
-
 	/**
 	 * 
 	 * @param h
@@ -225,16 +200,24 @@ public class ArtCatTable
 	 * @param id
 	 *            of ArtCat from witch we calculate first ArtCat of returning
 	 *            list
+	 * @param fromGivenId if false, returning list will start from next of given id 
 	 * @return List of ArtCat with <=30 entries
 	 */
-	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id)
+	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id, boolean fromGivenId)
 	{
 		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
 
 		try
 		{
-			Integer firstArtCatID=ArtCatTable.getNextArtCatId(h, id);
-			
+			Integer firstArtCatID=null;
+			if(fromGivenId)
+			{
+				firstArtCatID=id;
+			}
+			else
+			{
+				firstArtCatID=ArtCatTable.getNextArtCatId(h, id);
+			}
 
 			if (firstArtCatID != null)
 			{
@@ -392,8 +375,16 @@ public class ArtCatTable
 		List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
 		for (int i = 0; i < pageToLoad; i++)
 		{
-			allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
-			categoryId, topArt.getId()));
+			if(i==0)
+			{
+				allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+				categoryId, topArt.getId(), true));
+			}
+			else
+			{
+				allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+				categoryId, topArt.getId(), false));
+			}
 			topArt = allArtCatList.get(allArtCatList.size() - 1);
 		}
 
@@ -414,7 +405,7 @@ public class ArtCatTable
 		for (int i = 0; i < pageToLoad; i++)
 		{
 			allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
-			categoryId, topArt.getId()));
+			categoryId, topArt.getId(), false));
 			topArt = allArtCatList.get(allArtCatList.size() - 1);
 		}
 		Log.e(LOG, "allArtCatList.size(): " + allArtCatList.size());
