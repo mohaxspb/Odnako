@@ -70,14 +70,13 @@ public class DBActions
 	 */
 	public String getInfoFromDB(String categoryToLoad, Calendar cal, int pageToLoad)
 	{
-		Long lastRefreshedMills;
 		//try to find db entry for given catToLoad
 		//first in Category
 		if (this.isCategory(categoryToLoad))
 		{
 			Category cat = Category.getCategoryByURL(getHelper(), categoryToLoad);
 			//first try to know when was last sink
-			lastRefreshedMills = cat.getRefreshed().getTime();
+			long lastRefreshedMills = cat.getRefreshed().getTime();
 			if (lastRefreshedMills == 0)
 			{
 				//was never refreshed, so start to refresh
@@ -90,9 +89,9 @@ public class DBActions
 				long millsInMinute = millsInSecond * 60;
 				//time in Minutes. Default period between refreshing.
 				int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
-				long refreshed = cat.getRefreshed().getTime();
+				//				long refreshed = cat.getRefreshed().getTime();
 				int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
-				int refreshedMinutes = (int) (refreshed / millsInMinute);
+				int refreshedMinutes = (int) (lastRefreshedMills / millsInMinute);
 				int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
 				if (periodFromRefreshedInMinutes > checkPeriod)
 				{
@@ -129,80 +128,65 @@ public class DBActions
 		else
 		{
 			//this is Author
-			Author aut = null;
-			try
+			Author aut = Author.getAuthorByURL(getHelper(), Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
+
+			if (aut != null)
 			{
-				aut = this.getHelper().getDaoAuthor().queryBuilder().where().eq(Author.URL_FIELD_NAME, categoryToLoad)
-				.queryForFirst();
-				if (aut != null)
+				//first try to know when was last sink
+				long lastRefreshedMills = aut.getRefreshed().getTime();
+				if (lastRefreshedMills == 0)
 				{
-					//first try to know when was last sink
-					lastRefreshedMills = aut.getRefreshed().getTime();
-					if (lastRefreshedMills == 0)
-					{
-						//was never refreshed, so start to refresh
-						return DB_ANSWER_NEVER_REFRESHED;
-					}
-					else
-					{
-						//check period from last sink
-						//check period from last sink
-						int millsInSecond = 1000;
-						long millsInMinute = millsInSecond * 60;
-						//time in Minutes. Default period between refreshing.
-						int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
-						long refreshed = aut.getRefreshed().getTime();
-						int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
-						int refreshedMinutes = (int) (refreshed / millsInMinute);
-						int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
-						if (periodFromRefreshedInMinutes > checkPeriod)
-						{
-							return DB_ANSWER_REFRESH_BY_PERIOD;
-						}
-						else
-						{
-							//we do not have to refresh by period,
-							//so go to check if there is info in db
-						}
-					}
-					//				int catId = aut.getId();
-					List<ArtAutTable> arts = null;
-					try
-					{
-						arts = this.getHelper().getDaoArtAutTable().queryBuilder().where()
-						.eq(ArtAutTable.AUTHOR_ID_FIELD_NAME, aut.getId()).query();
-						Log.d(LOG_TAG, "arts.size(): " + arts.size());
-						if (arts.size() != 0)
-						{
-							//TODO so there is some arts in category, that we can send to frag and show
-							//sending...
-							return DB_ANSWER_INFO_SENDED_TO_FRAG;
-						}
-						else
-						{
-							//there are no arts of given category in bd, so start to load it
-							//but firstly we must notify frag about it (maybe not)
-							//						startDownload = true;
-							return DB_ANSWER_NO_ENTRY_OF_ARTS;
-						}
-					} catch (SQLException e)
-					{
-						//Auto-generated catch block
-						e.printStackTrace();
-						return DB_ANSWER_SQLEXCEPTION_ARTS;
-					}
+					//was never refreshed, so start to refresh
+					return DB_ANSWER_NEVER_REFRESHED;
 				}
 				else
 				{
-					//no entries in Category and Author... WTF?!
-					Log.e(LOG_TAG, "no entries in Category and Author... WTF?!");
-					return DB_ANSWER_UNKNOWN_CATEGORY;
+					//check period from last sink
+					//check period from last sink
+					int millsInSecond = 1000;
+					long millsInMinute = millsInSecond * 60;
+					//time in Minutes. Default period between refreshing.
+					int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
+					int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
+					int refreshedMinutes = (int) (lastRefreshedMills / millsInMinute);
+					int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
+					if (periodFromRefreshedInMinutes > checkPeriod)
+					{
+						return DB_ANSWER_REFRESH_BY_PERIOD;
+					}
+					else
+					{
+						//we do not have to refresh by period,
+						//so go to check if there is info in db
+					}
 				}
-			} catch (SQLException e)
+				//				int catId = aut.getId();
+				
+				int authorId = aut.getId();
+				if (ArtAutTable.authorArtsExists(getHelper(), authorId))
+				{
+					//so there is some arts in DB by category, that we can send to frag and show
+					List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
+					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
+
+					//send directly, cause it's from DB and we do not need to do something with this data
+					Intent intent = new Intent(categoryToLoad);
+					intent.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+
+					LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+
+					return DB_ANSWER_INFO_SENDED_TO_FRAG;
+				}
+				else
+				{
+					//there are no arts of given category in DB, so start to load it
+					return DB_ANSWER_NO_ENTRY_OF_ARTS;
+				}
+			}
+			else
 			{
-				//Auto-generated catch block
-				e.printStackTrace();
-				return DB_ANSWER_SQLEXCEPTION_AUTHOR;
+				Log.e(LOG_TAG, "It isn't category and aut=null, so it's unknown category");
+				return DB_ANSWER_UNKNOWN_CATEGORY;
 			}
 		}
 	}

@@ -6,13 +6,19 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
-* id,article_id,category_id,nextArtUrl,previousArtUrl,isTop
-*/
+ * id,article_id,category_id,nextArtUrl,previousArtUrl,isTop
+ */
 @DatabaseTable(tableName = "art_aut_table")
 public class ArtAutTable
 {
@@ -36,16 +42,17 @@ public class ArtAutTable
 
 	@DatabaseField(dataType = DataType.STRING, columnName = PREVIOUS_ART_URL_FIELD_NAME)
 	private String previousArtUrl;
-	
+
 	/**
-	 * boolean isTop for the most top article in list. May be true for top, false for very bottom (initial in category) or null for others
+	 * boolean isTop for the most top article in list. May be true for top,
+	 * false for very bottom (initial in category) or null for others
 	 */
 	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOP_FIELD_NAME)
 	private boolean isTop;
 
 	public ArtAutTable()
 	{
-		// TODO need empty constructor for ORMlite
+		//need empty constructor for ORMlite
 	}
 
 	public ArtAutTable(Integer id, int article_id, int author_id, String nextArtUrl, String previousArtUrl)
@@ -84,24 +91,24 @@ public class ArtAutTable
 		this.id = id;
 	}
 
-	public int getArticle_id()
+	public int getArticleId()
 	{
 		return article_id;
 	}
 
-	public void setArticle_id(int article_id)
+	public void setArticleId(int articleId)
 	{
-		this.article_id = article_id;
+		this.article_id = articleId;
 	}
 
-	public int getCategory_id()
+	public int getAuthorId()
 	{
 		return author_id;
 	}
 
-	public void setCategory_id(int category_id)
+	public void setAuthorId(int authorId)
 	{
-		this.author_id = category_id;
+		this.author_id = authorId;
 	}
 
 	public String getPreviousArtUrl()
@@ -123,7 +130,7 @@ public class ArtAutTable
 	{
 		this.nextArtUrl = nextArtUrl;
 	}
-	
+
 	public boolean isTop()
 	{
 		return isTop;
@@ -133,7 +140,182 @@ public class ArtAutTable
 	{
 		this.isTop = isTop;
 	}
+
+	//////
+	/**
+	 * Searches trough ArtCatTable for entry with given categoryId and TRUE
+	 * isTop value so, on success we return true (there are arts of category in
+	 * DB) and false on fail (there are NO arts of category in DB)
+	 * 
+	 * @param h
+	 * @param categoryId
+	 * @return
+	 */
+	public static boolean authorArtsExists(DataBaseHelper h, int categoryId)
+	{
+		boolean exists = false;
+		try
+		{
+			ArtCatTable topArt = h.getDaoArtCatTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, categoryId)
+			.and().eq(IS_TOP_FIELD_NAME, true).queryForFirst();
+			if (topArt != null)
+			{
+				exists = true;
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return exists;
+	}
+
+	/**
+	 * 
+	 * @param h
+	 * @param categoryId
+	 *            ID of category
+	 * @param isTop
+	 *            true for top art, false for initial
+	 * @return
+	 */
+	public static ArtAutTable getTopArtCat(DataBaseHelper h, int authorId, boolean isTop)
+	{
+		ArtAutTable a = null;
+		try
+		{
+			a = h.getDaoArtAutTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and()
+			.eq(AUTHOR_ID_FIELD_NAME, authorId).queryForFirst();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return a;
+	}
+
+	public static List<ArtAutTable> getListFromTop(DataBaseHelper h, int authorId, int pageToLoad)
+	{
+		ArtAutTable topArt = ArtAutTable.getTopArtCat(h, authorId, true);
+		List<ArtAutTable> allArtAutList = new ArrayList<ArtAutTable>();
+		for (int i = 0; i < pageToLoad; i++)
+		{
+			if (i == 0)
+			{
+				allArtAutList.addAll(ArtAutTable.getArtAutTableListByAuthorIdFromGivenId(h,
+				authorId, topArt.getId(), true));
+			}
+			else
+			{
+				allArtAutList.addAll(ArtAutTable.getArtAutTableListByAuthorIdFromGivenId(h,
+				authorId, topArt.getId(), false));
+			}
+			topArt = allArtAutList.get(allArtAutList.size() - 1);
+		}
+		return allArtAutList;
+	}
 	
+	/**
+	 * 
+	 * @param h
+	 * @param categoryId
+	 * @param id
+	 *            of ArtCat from witch we calculate first ArtCat of returning
+	 *            list
+	 * @param fromGivenId
+	 *            if false, returning list will start from next of given id
+	 * @return List of ArtCat with <=30 entries
+	 */
+	public static List<ArtAutTable> getArtAutTableListByAuthorIdFromGivenId(DataBaseHelper h, int authorId, int id,
+	boolean fromGivenId)
+	{
+		List<ArtAutTable> artAutTableListByAuthorIdFromGivenId = null;
+		try
+		{
+			Integer firstArtAutID = null;
+			if (fromGivenId)
+			{
+				firstArtAutID = id;
+			}
+			else
+			{
+				firstArtAutID = ArtAutTable.getNextArtAutId(h, id);
+			}
+
+			if (firstArtAutID != null)
+			{
+				ArtAutTable firstArtAut = h.getDaoArtAutTable().queryForId(firstArtAutID);
+				artAutTableListByAuthorIdFromGivenId = new ArrayList<ArtAutTable>();
+				artAutTableListByAuthorIdFromGivenId.add(firstArtAut);
+
+				for (int i = 1; i < 30; i++)
+				{
+					Integer nextArtAutId = ArtAutTable.getNextArtAutId(h,
+					artAutTableListByAuthorIdFromGivenId.get(i - 1).getId());
+					if (nextArtAutId != null)
+					{
+						ArtAutTable nextArtAut = h.getDaoArtAutTable().queryForId(nextArtAutId);
+						artAutTableListByAuthorIdFromGivenId.add(nextArtAut);
+					}
+					else
+					{
+						return artAutTableListByAuthorIdFromGivenId;
+					}
+				}
+			}
+			else
+			{
+				return artAutTableListByAuthorIdFromGivenId;
+			}
+		} catch (SQLException e)
+		{
+			//e.printStackTrace();
+		}
+		return artAutTableListByAuthorIdFromGivenId;
+	}
+	
+	/**
+	 * 
+	 * @return id of the next article of given artCat id or null if !exists
+	 *         (empty nextArtUrl field)
+	 */
+	public static Integer getNextArtAutId(DataBaseHelper h, int id)
+	{
+		Integer nextArtAutId = null;
+		try
+		{
+			ArtAutTable a = h.getDaoArtAutTable().queryForId(id);
+			String nextArtUrl = a.getNextArtUrl();
+
+			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
+			.queryForFirst();
+			nextArtAutId = h.getDaoArtAutTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())
+			.and().eq(AUTHOR_ID_FIELD_NAME, a.getAuthorId()).queryForFirst().getId();
+		} catch (SQLException e)
+		{
+			//e.printStackTrace();
+		}
+		return nextArtAutId;
+	}
+	
+	/**
+	 * this is used to create ArtInfo objects from given ArtCatTable objects
+	 * 
+	 * @param h
+	 * @param dBObjects
+	 * @return 
+	 */
+	public static ArrayList<ArtInfo> getArtInfoListFromArtAutList(DataBaseHelper h, List<ArtAutTable> dBObjects)
+	{
+		ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+		for (ArtAutTable a : dBObjects)
+		{
+			Article art = Article.getArticleById(h, a.getArticleId());
+			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
+			data.add(artInfoObj);
+		}
+		return data;
+	}
+
+	//methods for content provider
 	public String[] getAsStringArray()
 	{
 		String[] allInfo = new String[6];

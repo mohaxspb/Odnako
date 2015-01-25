@@ -131,8 +131,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			}
 			else
 			{
-				//TODO switch by category or author
 				//if pageToLoad!=1 we load from bottom
+				//TODO switch by category or author
+				
 				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
 				////aks db for arts
 				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);

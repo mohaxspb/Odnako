@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
@@ -13,15 +14,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * id,blog_url,name,description,who,avatar,avatarBig,refreshed,lastArticleDate,
- * sinhronised,firstArticleURL
+ * id, blog_url, name, description, who, avatar, avatarBig, refreshed, lastArticleDate, 
+ * firstArticleURL
  */
 @DatabaseTable(tableName = "author")
 public class Author
 {
 	public final static String URL_FIELD_NAME = "blog_url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
-	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
+//	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
 	@DatabaseField(generatedId = true)
@@ -63,8 +64,8 @@ public class Author
 	//and so load MORE arts by web;
 	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
 	//so next MORE arts we'll get from DB
-	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
-	private boolean sinhronised = false;
+//	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
+//	private boolean sinhronised = false;
 
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,
@@ -182,14 +183,27 @@ public class Author
 		this.lastArticleDate = lastArticleDate;
 	}
 
-	public boolean isSinhronised()
+//	public boolean isSinhronised()
+//	{
+//		return sinhronised;
+//	}
+//
+//	public void setSinhronised(boolean sinhronised)
+//	{
+//		this.sinhronised = sinhronised;
+//	}
+	
+	public static Author getAuthorByURL(DataBaseHelper h, String url)
 	{
-		return sinhronised;
-	}
-
-	public void setSinhronised(boolean sinhronised)
-	{
-		this.sinhronised = sinhronised;
+		Author a = null;
+		try
+		{
+			a = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return a;
 	}
 
 	/**
@@ -210,7 +224,7 @@ public class Author
 
 	public String[] getAsStringArray()
 	{
-		String[] allInfo = new String[11];
+		String[] allInfo = new String[10];
 
 		allInfo[0] = String.valueOf(id);
 		allInfo[1] = blog_url;
@@ -222,8 +236,8 @@ public class Author
 		allInfo[6] = avatarBig;
 		allInfo[7] = refreshed.toString();
 		allInfo[8] = lastArticleDate.toString();
-		allInfo[9] = String.valueOf(sinhronised);
-		allInfo[10] = firstArticleURL;
+//		allInfo[9] = String.valueOf(sinhronised);
+		allInfo[9] = firstArticleURL;
 
 		return allInfo;
 	}
@@ -234,7 +248,7 @@ public class Author
 	public static String[] getFieldsNames()
 	{
 		String[] arrStr1 = { "id", "blog_url", "name", "description", "who", "avatar", "avatarBig", "refreshed",
-				"lastArticleDate", "sinhronised", "firstArticleURL" };
+				"lastArticleDate", "firstArticleURL" };
 		return arrStr1;
 	}
 

@@ -167,7 +167,6 @@ public class ArtCatTable
 	public static boolean categoryArtsExists(DataBaseHelper h, int categoryId)
 	{
 		boolean exists = false;
-
 		try
 		{
 			ArtCatTable topArt = h.getDaoArtCatTable().queryBuilder().where().eq(CATEGORY_ID_FIELD_NAME, categoryId)
@@ -180,7 +179,6 @@ public class ArtCatTable
 		{
 			e.printStackTrace();
 		}
-
 		return exists;
 	}
 
@@ -199,7 +197,6 @@ public class ArtCatTable
 	boolean fromGivenId)
 	{
 		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
-
 		try
 		{
 			Integer firstArtCatID = null;
@@ -239,9 +236,8 @@ public class ArtCatTable
 			}
 		} catch (SQLException e)
 		{
-			//			e.printStackTrace();
+			//e.printStackTrace();
 		}
-
 		return artCatTableListByCategoryIdFromGivenId;
 	}
 
@@ -257,7 +253,6 @@ public class ArtCatTable
 	public static ArtCatTable getTopArtCat(DataBaseHelper h, int categoryId, boolean isTop)
 	{
 		ArtCatTable a = null;
-
 		try
 		{
 			a = h.getDaoArtCatTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and()
@@ -266,7 +261,6 @@ public class ArtCatTable
 		{
 			e.printStackTrace();
 		}
-
 		return a;
 	}
 
@@ -343,7 +337,7 @@ public class ArtCatTable
 			.and().eq(CATEGORY_ID_FIELD_NAME, a.getCategoryId()).queryForFirst().getId();
 		} catch (SQLException e)
 		{
-			//			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return nextArtCatId;
 	}
