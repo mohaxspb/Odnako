@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+
 import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
@@ -152,47 +154,36 @@ public class ArtCatTable
 	}
 
 	//static methods for querying
+
 	/**
-	 * 
+	 * Searches trough ArtCatTable for entry with given categoryId and TRUE isTop value
+	 * so, on success we return true (there are arts of category in DB)
+	 * and false on fail (there are NO arts of category in DB)
+	 *  
 	 * @param h
-	 * @param id
-	 * @return List<ArtCatTable> by given Category id or null on SQLException
-	 */
-	public static List<ArtCatTable> getArtCatTableListByCategoryId(DataBaseHelper h, int id)
-	{
-		List<ArtCatTable> l = null;
-		try
-		{
-			l = h.getDaoArtCatTable().queryBuilder().where().eq(ArtCatTable.CATEGORY_ID_FIELD_NAME, id).query();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-		return l;
-	}
-
-	/**
-	 * 
-	 * @param helper
 	 * @param categoryId
-	 * @return id for first entry of Article of given category's id or null on
-	 *         SQLException
+	 * @return
 	 */
-	public static int getIdForFirstArticleInCategory(DataBaseHelper h, int categoryId)
+	public static boolean categoryArtsExists(DataBaseHelper h, int categoryId)
 	{
-		Integer id = null;
+		boolean exists = false;
+
 		try
 		{
-			id = h.getDaoArtCatTable().queryBuilder().where().eq(CATEGORY_ID_FIELD_NAME, categoryId).queryForFirst()
-			.getId();
+			ArtCatTable topArt = h.getDaoArtCatTable().queryBuilder().where().eq(CATEGORY_ID_FIELD_NAME, categoryId)
+			.and().eq(IS_TOP_FIELD_NAME, true).queryForFirst();
+			if (topArt != null)
+			{
+				exists = true;
+			}
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 
-		return id;
-
+		return exists;
 	}
+
 	/**
 	 * 
 	 * @param h
@@ -200,32 +191,30 @@ public class ArtCatTable
 	 * @param id
 	 *            of ArtCat from witch we calculate first ArtCat of returning
 	 *            list
-	 * @param fromGivenId if false, returning list will start from next of given id 
+	 * @param fromGivenId
+	 *            if false, returning list will start from next of given id
 	 * @return List of ArtCat with <=30 entries
 	 */
-	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id, boolean fromGivenId)
+	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id,
+	boolean fromGivenId)
 	{
 		List<ArtCatTable> artCatTableListByCategoryIdFromGivenId = null;
 
 		try
 		{
-			Integer firstArtCatID=null;
-			if(fromGivenId)
+			Integer firstArtCatID = null;
+			if (fromGivenId)
 			{
-				firstArtCatID=id;
+				firstArtCatID = id;
 			}
 			else
 			{
-				firstArtCatID=ArtCatTable.getNextArtCatId(h, id);
+				firstArtCatID = ArtCatTable.getNextArtCatId(h, id);
 			}
 
 			if (firstArtCatID != null)
 			{
 				ArtCatTable firstArtCat = h.getDaoArtCatTable().queryForId(firstArtCatID);
-				///test log
-//				String a = Article.getTitleById(h, firstArtCat.getArticleId());
-//				Log.e(LOG, a);
-				///////
 				artCatTableListByCategoryIdFromGivenId = new ArrayList<ArtCatTable>();
 				artCatTableListByCategoryIdFromGivenId.add(firstArtCat);
 
@@ -236,10 +225,6 @@ public class ArtCatTable
 					if (nextArtCatId != null)
 					{
 						ArtCatTable nextArtCat = h.getDaoArtCatTable().queryForId(nextArtCatId);
-						///test log
-//						String t = Article.getTitleById(h, nextArtCat.getArticleId());
-//						Log.e(LOG, t);
-						///////
 						artCatTableListByCategoryIdFromGivenId.add(nextArtCat);
 					}
 					else
@@ -288,14 +273,12 @@ public class ArtCatTable
 	/**
 	 * updates isTop value to TRUE, FALSE or NULL
 	 */
-	//	public static void updateIsTop(DataBaseHelper h, ArtCatTable a, Boolean isTop)
 	public static void updateIsTop(DataBaseHelper h, int id, Boolean isTop)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			//			updateBuilder.where().equals(a);
 			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.IS_TOP_FIELD_NAME, isTop);
 			updateBuilder.update();
@@ -308,14 +291,12 @@ public class ArtCatTable
 	/**
 	 * updates nextUrl
 	 */
-	//	public static void updateNextArt(DataBaseHelper h, ArtCatTable a, String url)
 	public static void updateNextArt(DataBaseHelper h, int id, String url)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			//			updateBuilder.where().equals(a);
 			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.NEXT_ART_URL_FIELD_NAME, url);
 			updateBuilder.update();
@@ -328,14 +309,12 @@ public class ArtCatTable
 	/**
 	 * updates previousUrl
 	 */
-	//	public static void updatePreviousArt(DataBaseHelper h, ArtCatTable a, String url)
 	public static void updatePreviousArt(DataBaseHelper h, int id, String url)
 	{
 		UpdateBuilder<ArtCatTable, Integer> updateBuilder;
 		try
 		{
 			updateBuilder = h.getDaoArtCatTable().updateBuilder();
-			//			updateBuilder.where().equals(a);
 			updateBuilder.where().eq(ArtCatTable.ID_FIELD_NAME, id);
 			updateBuilder.updateColumnValue(ArtCatTable.PREVIOUS_ART_URL_FIELD_NAME, url);
 			updateBuilder.update();
@@ -368,14 +347,14 @@ public class ArtCatTable
 		}
 		return nextArtCatId;
 	}
-	
+
 	public static List<ArtCatTable> getListFromTop(DataBaseHelper h, int categoryId, int pageToLoad)
 	{
 		ArtCatTable topArt = ArtCatTable.getTopArtCat(h, categoryId, true);
 		List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
 		for (int i = 0; i < pageToLoad; i++)
 		{
-			if(i==0)
+			if (i == 0)
 			{
 				allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
 				categoryId, topArt.getId(), true));
@@ -387,15 +366,15 @@ public class ArtCatTable
 			}
 			topArt = allArtCatList.get(allArtCatList.size() - 1);
 		}
-
 		return allArtCatList;
 	}
 
 	/**
 	 * @param h
 	 * @param categoryId
-	 * @param pageToLoad need this for looping through each 30 rows 
-	 * @return ArtCatTable object that is last in list of entries one by one 
+	 * @param pageToLoad
+	 *            need this for looping through each 30 rows
+	 * @return ArtCatTable object that is last in list of entries one by one
 	 */
 	public static ArtCatTable getLastEntryFromTop(DataBaseHelper h, int categoryId, int pageToLoad)
 	{
@@ -423,7 +402,7 @@ public class ArtCatTable
 				h.getDaoArtCatTable().create(a);
 			} catch (SQLException e)
 			{
-				e.printStackTrace();
+				Log.e(LOG, "error while inserting ArtCatTable entry");
 			}
 		}
 	}
@@ -447,6 +426,25 @@ public class ArtCatTable
 		}
 
 		return allRowsWithoutPrevArt;
+	}
+	
+	/**
+	 * this is used to create ArtInfo objects from given ArtCatTable objects
+	 * 
+	 * @param h
+	 * @param dBObjects
+	 * @return 
+	 */
+	public static ArrayList<ArtInfo> getArtInfoListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
+	{
+		ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+		for (ArtCatTable a : dBObjects)
+		{
+			Article art = Article.getArticleById(h, a.getArticleId());
+			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
+			data.add(artInfoObj);
+		}
+		return data;
 	}
 
 	public String[] getAsStringArray()

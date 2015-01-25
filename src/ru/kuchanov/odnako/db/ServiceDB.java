@@ -75,23 +75,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				}
 				else
 				{
-					//get info from appDB. 
-					//if it's null - start load and notify caller about it
-					//if not, check timeStamp of appBD; 
-					//if it's more than 15 min less then given timeStamp return appDB info and notify, that download starts
-					//otherwise return appDB and notify that it is upToDate
-
-					//method will return result of searching throw DB
 					DBActions dbActions = new DBActions(this, this.getHelper());
-					//					try
-					//					{
-					//						if (Category.getCategoryIdByURL(getHelper(), catToLoad) == 84)
-					//						{
-					//							dbActions.test(catToLoad);
-					//						}
-					//					} catch (Exception e)
-					//					{
-					//					}
 					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
 					Log.d(LOG_TAG, DBRezult);
 
@@ -147,15 +131,12 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			}
 			else
 			{
+				//TODO switch by category or author
 				//if pageToLoad!=1 we load from bottom
 				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
-				//TODO DO NOT NEED????!!! here we ask DB  if it's sinked
 				////aks db for arts
 				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);
-				//				Integer id = ArtCatTable.getIdForFirstArticleInCategory(getHelper(), categoryId);
 				List<ArtCatTable> allArtsFromFirst;
-				//				allArtsFromFirst = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, id);
-
 				//pageToLoad-1 because here we do not need next arts, only arts, that already showed
 				allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
 
@@ -172,7 +153,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//////if we have no arts, we load them from web
 				if (allArts == null)
 				{
-					//TODO load from web
+					//load from web
 					Log.d(LOG_TAG, "No arts at all, load from web");
 					this.startDownLoad(catToLoad, pageToLoad);
 				}
@@ -240,13 +221,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						}
 					}
 				}
-
-				////TODO DO NOT NEED????!!!  if unsinked we load arts from web
-				////XXX match gained arts with ArtCat entries from id>30*pageToLoad
-				/////XXX if match we mark category as sinked and write arts to db between id>30*pageToLoad and first match
-				/////XXX else write arts to db after id>30*pageToLoad
 			}
-
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}

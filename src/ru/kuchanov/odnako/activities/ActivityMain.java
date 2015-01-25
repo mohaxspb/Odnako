@@ -13,7 +13,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.db.ExportDatabaseXLSTask;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
@@ -490,11 +489,6 @@ public class ActivityMain extends ActivityBase
 				//				b.putBoolean("startDownload", true);
 				//				intent.putExtras(b);
 				//				this.startService(intent);
-//				ExportDatabaseCSVTask task = new ExportDatabaseCSVTask(act);
-//				task.execute();
-				
-				ExportDatabaseXLSTask task = new ExportDatabaseXLSTask(act);
-				task.execute();
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

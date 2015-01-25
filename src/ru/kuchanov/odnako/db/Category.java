@@ -11,12 +11,11 @@ import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * "id", "url", "title", "description", "img_url", "img_file_name", "refreshed",
- * "lastArticleDate", "sinhronised", "firstArticleURL"
+ * "lastArticleDate", "firstArticleURL"
  */
 @DatabaseTable(tableName = "category")
 public class Category
@@ -24,7 +23,7 @@ public class Category
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
-	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
+	//	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
@@ -63,8 +62,9 @@ public class Category
 	//and so load MORE arts by web;
 	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
 	//so next MORE arts we'll get from DB
-	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
-	private boolean sinhronised = false;
+	//TODO DO NOT NEED THIS!!!s
+	//	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
+	//	private boolean sinhronised = false;
 
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,
@@ -72,9 +72,11 @@ public class Category
 	@DatabaseField(dataType = DataType.STRING, columnName = FIRST_ARTICLE_URL_FIELD_NAME)
 	private String firstArticleURL;
 
+	/**
+	 * empty constructor witch is need for OrmLite
+	 */
 	public Category()
 	{
-		// TODO Auto-generated constructor stub
 	}
 
 	public Category(String url, String title, String description, String img_url, String img_file_name, Date refreshed,
@@ -180,15 +182,15 @@ public class Category
 		this.lastArticleDate = lastArticleDate;
 	}
 
-	public boolean isSinhronised()
-	{
-		return sinhronised;
-	}
-
-	public void setSinhronised(boolean sinhronised)
-	{
-		this.sinhronised = sinhronised;
-	}
+	//	public boolean isSinhronised()
+	//	{
+	//		return sinhronised;
+	//	}
+	//
+	//	public void setSinhronised(boolean sinhronised)
+	//	{
+	//		this.sinhronised = sinhronised;
+	//	}
 
 	public String getFirstArticleURL()
 	{
@@ -213,6 +215,19 @@ public class Category
 		try
 		{
 			c = h.getDaoCategory().queryForId(id);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return c;
+	}
+
+	public static Category getCategoryByURL(DataBaseHelper h, String url)
+	{
+		Category c = null;
+		try
+		{
+			c = h.getDaoCategory().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -258,32 +273,32 @@ public class Category
 		return firstArtUrl;
 	}
 
-	/**
-	 * 
-	 * @param h
-	 * @param url
-	 * @param isSynked
-	 * 
-	 *            set Category entry sinked or not
-	 */
-	public static void setCategorySinchronized(DataBaseHelper h, String url, boolean isSynked)
-	{
-		UpdateBuilder<Category, Integer> updateBuilder;
-		try
-		{
-			updateBuilder = h.getDaoCategory().updateBuilder();
-			updateBuilder.updateColumnValue(Category.SINCHRONISED_FIELD_NAME, isSynked);
-			updateBuilder.where().eq(Category.URL_FIELD_NAME, url);
-			updateBuilder.update();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
+	//	/**
+	//	 * 
+	//	 * @param h
+	//	 * @param url
+	//	 * @param isSynked
+	//	 * 
+	//	 *            set Category entry sinked or not
+	//	 */
+	//	public static void setCategorySinchronized(DataBaseHelper h, String url, boolean isSynked)
+	//	{
+	//		UpdateBuilder<Category, Integer> updateBuilder;
+	//		try
+	//		{
+	//			updateBuilder = h.getDaoCategory().updateBuilder();
+	//			updateBuilder.updateColumnValue(Category.SINCHRONISED_FIELD_NAME, isSynked);
+	//			updateBuilder.where().eq(Category.URL_FIELD_NAME, url);
+	//			updateBuilder.update();
+	//		} catch (SQLException e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+	//	}
 
 	public String[] getAsStringArray()
 	{
-		String[] allInfo = new String[10];
+		String[] allInfo = new String[9];
 
 		allInfo[0] = String.valueOf(id);
 		allInfo[1] = url;
@@ -295,8 +310,8 @@ public class Category
 		allInfo[6] = refreshed.toString();
 		allInfo[7] = lastArticleDate.toString();
 
-		allInfo[8] = String.valueOf(sinhronised);
-		allInfo[9] = firstArticleURL;
+		//		allInfo[8] = String.valueOf(sinhronised);
+		allInfo[8] = firstArticleURL;
 
 		return allInfo;
 	}
@@ -307,7 +322,7 @@ public class Category
 	public static String[] getFieldsNames()
 	{
 		String[] arrStr1 = { "id", "url", "title", "description", "img_url", "img_file_name",
-				"refreshed", "lastArticleDate", "sinhronised", "firstArticleURL" };
+				"refreshed", "lastArticleDate", "firstArticleURL" };
 		return arrStr1;
 	}
 

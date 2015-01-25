@@ -10,8 +10,13 @@ package ru.kuchanov.odnako.db;
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.DateParse;
+
+import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -25,9 +30,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "article")
 public class Article
 {
+	private static final String LOG = Article.class.getSimpleName();
+	
 	public final static String ID_FIELD_NAME = "id";
 	public final static String AUTHOR_FIELD_NAME = "author";
 	public final static String URL_FIELD_NAME = "url";
+	
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -95,6 +103,18 @@ public class Article
 
 	}
 
+	/**
+	 * 
+	 * @param artInfoArr
+	 *            String[17] with article data from ArtInfo object. We get these
+	 *            info from web
+	 * @param refreshed
+	 *            date when article was refreshed (loaded text of it) it's must
+	 *            be null || 0 if we set initial article info from list of arts
+	 *            from site
+	 * @param author
+	 *            Author object of article. Can be null;
+	 */
 	public Article(String[] artInfoArr, Date refreshed, Author author)
 	{
 		this.url = artInfoArr[0];
@@ -353,7 +373,12 @@ public class Article
 		this.author = author;
 	}
 
-	//method for getting Article data as String[] to set it to ArtInfo object
+	/**
+	 * method for getting Article data as String[] to set it to ArtInfo object
+	 * 
+	 * @return String[17] without ID, refreshed Date and Author ID
+	 * @see Article.getAsStringArrayWithAuthorIdIfIs()
+	 */
 	public String[] getAsStringArray()
 	{
 		String[] allInfo = new String[17];
@@ -381,6 +406,12 @@ public class Article
 		return allInfo;
 	}
 
+	/**
+	 * 
+	 * @return String[20] with full data, including ID, refreshed Date and Author ID
+	 * 
+	 * @see Article.getAsStringArray()
+	 */
 	public String[] getAsStringArrayWithAuthorIdIfIs()
 	{
 		String[] allInfo = new String[20];
@@ -432,7 +463,7 @@ public class Article
 			title = h.getDaoArticle().queryForId(id).getTitle();
 		} catch (SQLException e)
 		{
-
+			e.printStackTrace();
 		}
 
 		return title;
@@ -442,9 +473,9 @@ public class Article
 	 * 
 	 * @param h
 	 * @param url
-	 * @return id or null on SQLException
+	 * @return id or null on SQLException or if art with this URL do not exists
 	 */
-	public static int getArticleIdByURL(DataBaseHelper h, String url)
+	public static Integer getArticleIdByURL(DataBaseHelper h, String url)
 	{
 		Integer id = null;
 		try
@@ -486,11 +517,64 @@ public class Article
 			art = h.getDaoArticle().queryForId(id);
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return art;
+	}
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return Article obj or null on SQLException or if Atr do not exists
+	 */
+	public static Article getArticleByURL(DataBaseHelper h, String url)
+	{
+		Article art = null;
+		try
+		{
+			art = h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return art;
+	}
+	
+	public static int writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
+	{
+		int quontOfWrittenArticles=0;
+		for (ArtInfo a : data)
+		{
+			//check if there is no already existing arts in DB by queryForURL
+			Article existingArt=Article.getArticleByURL(h, a.url);
+			if (existingArt == null)
+			{
+				//get author obj if it is in ArtInfo and Author table
+				Author aut = null;
+				try
+				{
+					aut = h.getDaoAuthor().queryBuilder().where()
+					.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(a.authorBlogUrl)).queryForFirst();
+
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+				//crate Article obj to pass it to DB
+				Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
+				try
+				{
+					h.getDaoArticle().create(art);
+					quontOfWrittenArticles++;
+				} catch (SQLException e)
+				{
+					Log.e(LOG, art.getTitle() + " error while INSERT");
+				}
+			}
+		}
+		return quontOfWrittenArticles;
 	}
 
 	/**
@@ -513,5 +597,4 @@ public class Article
 	{
 		return this.getAsStringArray()[1];
 	}
-
 }
