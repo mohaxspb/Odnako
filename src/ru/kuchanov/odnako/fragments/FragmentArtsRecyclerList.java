@@ -125,17 +125,6 @@ public class FragmentArtsRecyclerList extends Fragment
 					int quont = intent.getIntExtra(DBActions.Msg.QUONT, 0);
 					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
 				break;
-				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_CAT:
-					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_CAT, Toast.LENGTH_LONG).show();
-				break;
-				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_AUTHOR:
-					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_AUTHOR, Toast.LENGTH_LONG).show();
-				break;
-				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTS:
-					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTS, Toast.LENGTH_LONG).show();
-				break;
-				case DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTCAT:
-					Toast.makeText(act, DBActions.Msg.DB_ANSWER_SQLEXCEPTION_ARTCAT, Toast.LENGTH_LONG).show();
 			}
 		}
 	};

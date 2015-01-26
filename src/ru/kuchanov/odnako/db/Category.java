@@ -9,6 +9,8 @@ package ru.kuchanov.odnako.db;
 import java.sql.SQLException;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -20,6 +22,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "category")
 public class Category
 {
+	private static final String LOG = Category.class.getSimpleName();
+
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
@@ -271,6 +275,48 @@ public class Category
 		}
 
 		return firstArtUrl;
+	}
+
+	/**
+	 * @param url
+	 *            adress of category/ author on site, witch we search in
+	 *            Category table
+	 * @return true if we can find given URL in Category table, false if we find
+	 *         it in Author and null on SQLException and if we can't find it at
+	 *         all
+	 */
+	public static Boolean isCategory(DataBaseHelper h, String url)
+	{
+		Boolean isCategory = null;
+		try
+		{
+			Category cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url)
+			.queryForFirst();
+			if (cat != null)
+			{
+				isCategory = true;
+			}
+			else
+			{
+				//try find in Author
+				Author aut = h.getDaoAuthor().queryBuilder().where()
+				.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+				.queryForFirst();
+				if (aut != null)
+				{
+					isCategory = false;
+				}
+				else
+				{
+					//we can't find url both in Category and Author, so it's unknown Category; return null;
+					isCategory = null;
+				}
+			}
+		} catch (SQLException e)
+		{
+			Log.e(LOG, "SQLException isCategory");
+		}
+		return isCategory;
 	}
 
 	//	/**

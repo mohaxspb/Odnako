@@ -143,6 +143,10 @@ public class ArtCatTable
 		this.nextArtUrl = nextArtUrl;
 	}
 
+	/**
+	 * 
+	 * @return true if this is newest art in category and false if it is initial art in category
+	 */
 	public boolean isTop()
 	{
 		return isTop;
@@ -439,6 +443,43 @@ public class ArtCatTable
 			data.add(artInfoObj);
 		}
 		return data;
+	}
+	
+	/**
+	 * 
+	 * @param artToWrite
+	 *            list from web to made list of ArtCatTable objects
+	 * @param categoryId
+	 * @return list of ArtCatTable made from ArtInfo list
+	 */
+	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite, int categoryId)
+	{
+		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+		for (int u = 0; u < artToWrite.size(); u++)
+		{
+			//get Article id by url
+			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+			//get next Article url by asking gained from web list
+			String nextArtUrl = null;
+			try
+			{
+				nextArtUrl = artToWrite.get(u + 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			//get previous Article url by asking gained from web list
+			String previousArtUrl = null;
+			try
+			{
+				previousArtUrl = artToWrite.get(u - 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
+		}
+		return artCatTableList;
 	}
 
 	public String[] getAsStringArray()

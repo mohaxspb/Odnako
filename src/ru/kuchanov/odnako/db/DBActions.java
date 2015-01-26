@@ -35,10 +35,6 @@ public class DBActions
 	final public static String DB_ANSWER_REFRESH_BY_PERIOD = "refresh by period";
 	final public static String DB_ANSWER_INFO_SENDED_TO_FRAG = "we have already send info from DB to frag";
 	final public static String DB_ANSWER_NO_ENTRY_OF_ARTS = "no_entry_in_db";
-	final public static String DB_ANSWER_SQLEXCEPTION_ARTCAT = "SQLException in artCat.query()";
-	final public static String DB_ANSWER_SQLEXCEPTION_CAT = "SQLException in cat.query()";
-	final public static String DB_ANSWER_SQLEXCEPTION_ARTS = "SQLException in arts.query()";
-	final public static String DB_ANSWER_SQLEXCEPTION_AUTHOR = "SQLException in aut.query()";
 	final public static String DB_ANSWER_UNKNOWN_CATEGORY = "no entries in Category and Author";
 
 	private DataBaseHelper dataBaseHelper;
@@ -68,11 +64,11 @@ public class DBActions
 	 * @return answer, that is used to switch between next actions (loading from
 	 *         web/ get data from DB or some SQLException)
 	 */
-	public String getInfoFromDB(String categoryToLoad, Calendar cal, int pageToLoad)
+	public String askDBFromTop(String categoryToLoad, Calendar cal, int pageToLoad)
 	{
 		//try to find db entry for given catToLoad
 		//first in Category
-		if (this.isCategory(categoryToLoad))
+		if (Category.isCategory(this.getHelper(), categoryToLoad))
 		{
 			Category cat = Category.getCategoryByURL(getHelper(), categoryToLoad);
 			//first try to know when was last sink
@@ -161,7 +157,7 @@ public class DBActions
 					}
 				}
 				//				int catId = aut.getId();
-				
+
 				int authorId = aut.getId();
 				if (ArtAutTable.authorArtsExists(getHelper(), authorId))
 				{
@@ -191,6 +187,111 @@ public class DBActions
 		}
 	}
 
+	public String askDBFromBottom(String categoryToLoad, int pageToLoad)
+	{
+		//TODO switch by category or author
+
+		////aks db for arts
+		int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+		List<ArtCatTable> allArtsFromFirst;
+		//pageToLoad-1 because here we do not need next arts, only arts, that already showed
+		allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
+
+		//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
+		if (allArtsFromFirst.size() < 30)
+		{
+			//DO NOTHING, return, that it's start of list
+			return Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP;
+		}
+		//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
+		List<ArtCatTable> allArts;
+		int lastId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getId();
+		allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId, false);
+
+		//if we have no arts, we check if last shown art isVeryBottomOfCategory
+		//we can check it both by URL or isTop value of ArtCat
+		//if so we do nothing
+		//else we load them from web
+		if (allArts == null)
+		{
+			if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
+			{
+				return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+			}
+			else
+			{
+				//load from web
+				Log.d(LOG_TAG, "No arts at all, load from web");
+				//			this.startDownLoad(categoryToLoad, pageToLoad);
+				return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
+			}
+		}
+		else
+		{
+			if (allArts.size() == 30)
+			{
+				//////if we have 30, so we pass 30 to fragment
+				Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
+
+				//set ArtCatTable objects to ArtInfo
+				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+				//send directly, cause it's from DB and we do not need to do something with this data
+				Intent intentWithData = new Intent(categoryToLoad);
+				intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+
+				LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+				return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
+			}
+			else
+			{
+				//////else we ask category if it has firstArtURL
+				String firstArtInCatURL = null;
+				firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
+				if (firstArtInCatURL == null)
+				{
+					////////if so we load from web
+					Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
+					return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL;
+					//					this.startDownLoad(categoryToLoad, pageToLoad);
+					//TODO if we get <30 we set last art's URL as first art of Category
+					//and write arts to db(Article and ArtCat)
+					////else simply write arts to db(Article and ArtCat)
+				}
+				else
+				{
+					//check matching last of gained URL with initial (first)
+					String lastInListArtsUrl = Article.getArticleUrlById(getHelper(),
+					allArts.get(allArts.size() - 1).getArticleId());
+					if (firstArtInCatURL.equals(lastInListArtsUrl))
+					{
+						Log.d(LOG_TAG,
+						"we have LESS than 30, and have match to initial. So send all and never load more");
+						//so it is real end of all arts in category
+						//send arts to frag
+						//set ArtCatTable objects to ArtInfo
+						ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+						//send directly, cause it's from DB and we do not need to do something with this data
+						Intent intentWithData = new Intent(categoryToLoad);
+						intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+
+						LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
+					}
+					else
+					{
+						////////else we must load arts from web
+						Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
+						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL;
+//						this.startDownLoad(categoryToLoad, pageToLoad);
+						//TODO if we get <30 we set last art's URL as first art of Category
+						//and write arts to db(Article and ArtCat)
+						////else simply write arts to db(Article and ArtCat)
+					}
+				}
+			}
+		}
+	}
+
 	public void writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
 		//here we'll write gained arts to Article table
@@ -203,7 +304,7 @@ public class DBActions
 			//from top
 			/////check if there are arts of given category
 			//switch by Category or Author				
-			if (this.isCategory(categoryToLoad))
+			if (Category.isCategory(this.getHelper(), categoryToLoad))
 			{
 				//this is Category, so...
 				//get Category id
@@ -248,7 +349,8 @@ public class DBActions
 
 								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 								//and set isTop to TRUE to first of loaded list
-								List<ArtCatTable> artCatDataToWrite = this.initialiseArtCat(dataFromWeb, categoryId);
+								List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+								this.getHelper(), dataFromWeb, categoryId);
 								//update isTop to null for old entry
 								ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 								//update previous url for old TOP_ART
@@ -272,7 +374,8 @@ public class DBActions
 								"no matches, so write new artCat entries to db and update TOP art");
 								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
 								//set TRUE to first of given list
-								List<ArtCatTable> artCatDataToWrite = this.initialiseArtCat(dataFromWeb, categoryId);
+								List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+								this.getHelper(), dataFromWeb, categoryId);
 								//update isTop to null for old entry
 								ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 								//set new TOP_ART for first of given from web
@@ -289,7 +392,8 @@ public class DBActions
 					//I mean write all arts from someResult List<ArtInfo>, that we gained from web
 
 					//List<ArtCatTable> artCatTableList of new arts that will be written to DB
-					List<ArtCatTable> artCatDataToWrite = this.initialiseArtCat(dataFromWeb, categoryId);
+					List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
+					dataFromWeb, categoryId);
 					//set IS_TOP to true for first in list
 					artCatDataToWrite.get(0).isTop(true);
 					//FINALLY write new entries with new Arts to ArtCatTable
@@ -304,7 +408,7 @@ public class DBActions
 		else
 		{
 			//from bottom
-			if (this.isCategory(categoryToLoad))
+			if (Category.isCategory(this.getHelper(), categoryToLoad))
 			{
 				//XXX TODO if someResult<30, we can write that we have first art!!!
 				//this.isCategory, so...
@@ -337,7 +441,8 @@ public class DBActions
 								//matched! So we write only previous of matched (+matched)
 								//and update entry, that matched, by previousArtUrl
 								List<ArtInfo> subListArtInfo = dataFromWeb.subList(0, i);
-								List<ArtCatTable> dataToWrite = this.initialiseArtCat(subListArtInfo, categoryId);
+								List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+								this.getHelper(), subListArtInfo, categoryId);
 								//set prevArtUrl for first entry
 								String prevArtUrl = Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
 								dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
@@ -354,7 +459,8 @@ public class DBActions
 								if (i == dataFromWeb.size() - 1 - 1 && u == withoutPrev.size() - 1)
 								{
 									//if we can't find any, we simply write all artCats
-									List<ArtCatTable> dataToWrite = this.initialiseArtCat(dataFromWeb, categoryId);
+									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+									this.getHelper(), dataFromWeb, categoryId);
 									//set prevArtUrl for first entry
 									String prevArtUrl = Article.getArticleUrlById(getHelper(),
 									lastArtCat.getArticleId());
@@ -370,7 +476,8 @@ public class DBActions
 				{
 					//there are no arts without missing prev art, so
 					//just write them all!!!11 ARGHHH!!!
-					List<ArtCatTable> dataToWrite = this.initialiseArtCat(dataFromWeb, categoryId);
+					List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
+					dataFromWeb, categoryId);
 					//set prevArtUrl for first entry
 					String prevArtUrl = Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
 					dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
@@ -389,7 +496,7 @@ public class DBActions
 	//write refreshed date to entry of given category
 	public void updateRefreshedDate(String categoryToLoad)
 	{
-		if (this.isCategory(categoryToLoad))
+		if (Category.isCategory(this.getHelper(), categoryToLoad))
 		{
 			try
 			{
@@ -418,86 +525,21 @@ public class DBActions
 		}
 	}
 
-	/**
-	 * @param url
-	 *            adress of category/ author on site, witch we search in
-	 *            Category table
-	 * @return true if we can find given URL in Category table and false
-	 *         otherwise and on SQLException
-	 */
-	public boolean isCategory(String url)
-	{
-		boolean isCategory = false;
-		try
-		{
-			Category cat = this.getHelper().getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url)
-			.queryForFirst();
-			if (cat != null)
-			{
-				isCategory = true;
-			}
-			else
-			{
-				isCategory = false;
-			}
-		} catch (SQLException e)
-		{
-			Log.e(LOG_TAG, "SQLException isCategory");
-		}
-		return isCategory;
-
-	}
-
 	public class Msg
 	{
-		public final static String MSG = "msg";
+		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL = "we have LESS than 30, and have match to initial";
+		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL = "we have LESS than 30, and have NO match to initial";
+		public static final String DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN = "initial art is already shown, so we must do nothing";
+		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL = "we have LESS than 30, but no initial art";
+		public static final String DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG = "we have already send bottom info from DB to frag";
+		public static final String DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL = "no arts at all";
 
-		public final static String DB_ANSWER_SQLEXCEPTION_CAT = "Ошибка чтения Базы Данных, КАТЕГОРИЯ";
-		public final static String DB_ANSWER_SQLEXCEPTION_AUTHOR = "Ошибка чтения Базы Данных, АВТОР";
-		public final static String DB_ANSWER_SQLEXCEPTION_ARTS = "Ошибка чтения Базы Данных, СТАТЬЯ";
-		public final static String DB_ANSWER_SQLEXCEPTION_ARTCAT = "Ошибка чтения Базы Данных, СТАТЬЯ_КАТЕГОРИЯ";
+		public final static String MSG = "msg";
 
 		public final static String NO_NEW = "no new";
 		public final static String QUONT = "quont";
 		public final static String NEW_QUONT = "new quont";
-	}
 
-	/**
-	 * 
-	 * @param artToWrite
-	 *            list from web to made list of ArtCatTable objects
-	 * @param categoryId
-	 * @return list of ArtCatTable made from ArtInfo list
-	 */
-	private List<ArtCatTable> initialiseArtCat(List<ArtInfo> artToWrite, int categoryId)
-	{
-		//List<ArtCatTable> artCatTableList of new arts that will be written to DB
-		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
-
-		for (int u = 0; u < artToWrite.size(); u++)
-		{
-			//get Article id by url
-			int articleId = Article.getArticleIdByURL(getHelper(), artToWrite.get(u).url);
-			//get next Article url by asking gained from web list
-			String nextArtUrl = null;
-			try
-			{
-				nextArtUrl = artToWrite.get(u + 1).url;
-			} catch (Exception e)
-			{
-
-			}
-			//get previous Article url by asking gained from web list
-			String previousArtUrl = null;
-			try
-			{
-				previousArtUrl = artToWrite.get(u - 1).url;
-			} catch (Exception e)
-			{
-
-			}
-			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
-		}
-		return artCatTableList;
+		public final static String DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP = "less then 30 from top";
 	}
 }

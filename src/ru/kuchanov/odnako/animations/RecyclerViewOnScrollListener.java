@@ -21,7 +21,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 
 	ActionBarActivity act;
 
-//	FragmentArtsRecyclerList frag;
+	//	FragmentArtsRecyclerList frag;
 	String categoryToLoad;
 
 	int initialDistance = -100000;
@@ -46,7 +46,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		topImg = (ImageView) act.findViewById(R.id.top_img);
 
-		this.categoryToLoad=categoryToLoad;
+		this.categoryToLoad = categoryToLoad;
 	}
 
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -83,13 +83,13 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 					}
 				}
 				//save position to frag
-//				this.frag.setTopImgYCoord((int) this.topImg.getY());
-//				this.frag.setToolbarYCoord((int) this.toolbar.getY());
-//				this.frag.setInitialDistance(this.initialDistance);
+				//				this.frag.setTopImgYCoord((int) this.topImg.getY());
+				//				this.frag.setToolbarYCoord((int) this.toolbar.getY());
+				//				this.frag.setInitialDistance(this.initialDistance);
 				//save coord to ActivityMain
 				ActivityMain actM = (ActivityMain) act;
-//				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
-//				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
+				//				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
+				//				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 				actM.updateAllCatToolbarTopImgYCoord(this.categoryToLoad,
 				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 			break;
@@ -106,7 +106,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 
 		visibleItemCount = manager.getChildCount();
 		totalItemCount = manager.getItemCount();
-		firstVisibleItem  = manager.findFirstVisibleItemPosition();
+		firstVisibleItem = manager.findFirstVisibleItemPosition();
 
 		if (loading)
 		{
@@ -116,13 +116,23 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 				previousTotal = totalItemCount;
 			}
 		}
-		if (!loading && (totalItemCount - visibleItemCount)
-		<= (firstVisibleItem + visibleThreshold))
+		if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold))
 		{
 			// End has been reached
-			onLoadMore();
-
-			loading = true;
+			//check if totaItemCount -1 (cause of header) a multiple of 30
+			if((totalItemCount-1)%30==0)
+			{
+				// TODO if so we can load more from bottom
+				//CHECK here situation when total quont of arts on are multiple of 30
+				//to prevent a lot of requests
+				onLoadMore();
+				loading = true;
+			}
+			else
+			{
+				//if so, we have reached onSiteVeryBottomOfArtsList
+				//so we do not need to start download
+			}
 		}
 
 		//////////////
@@ -244,6 +254,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 
 		}
 	}
-	
+
 	public abstract void onLoadMore();
 }

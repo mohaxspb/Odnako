@@ -15,7 +15,6 @@ import java.util.TimeZone;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.db.DBActions.Msg;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -46,183 +45,84 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		Log.d(LOG_TAG, "onStartCommand");
-		if (intent != null)
+		if (intent == null)
 		{
-			//gain category
-			String catToLoad;
-			catToLoad = intent.getStringExtra("categoryToLoad");
-			//get startDownload flag
-			boolean startDownload;
-			startDownload = intent.getBooleanExtra("startDownload", false);
-			//firstly: if we load from top or not? Get it by pageToLoad
-			//get pageToLoad
-			int pageToLoad;
-			pageToLoad = intent.getIntExtra("pageToLoad", 1);
-			if (pageToLoad == 1)
+			Log.e(LOG_TAG, "intent=null!!! WTF?!");
+			return super.onStartCommand(intent, flags, startId);
+		}
+		//get category
+		String catToLoad = intent.getStringExtra("categoryToLoad");
+		//get startDownload flag
+		boolean startDownload = intent.getBooleanExtra("startDownload", false);
+		//firstly: if we load from top or not? Get it by pageToLoad
+		int pageToLoad = intent.getIntExtra("pageToLoad", 1);
+		if (pageToLoad == 1)
+		{
+			//if pageToLoad=1 we load from top
+			//get timeStamp
+			Long timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
+			Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
+			cal.setTimeInMillis(timeStamp);
+
+			//if there is flag to download we do not need to go to DB
+			//we simply start download
+			if (startDownload)
 			{
-				//if pageToLoad=1 we load from top
-				//get timeStamp
-				Long timeStamp;
-				timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
-				Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
-				cal.setTimeInMillis(timeStamp);
-
-				//if there is flag to download we do not need to go to DB
-				//we simply start download
-				if (startDownload)
-				{
-					this.startDownLoad(catToLoad, pageToLoad);
-				}
-				else
-				{
-					DBActions dbActions = new DBActions(this, this.getHelper());
-					String DBRezult = dbActions.getInfoFromDB(catToLoad, cal, pageToLoad);
-					Log.d(LOG_TAG, DBRezult);
-
-					Intent i = new Intent(catToLoad + DBActions.Msg.MSG);
-					switch (DBRezult)
-					{
-						case DBActions.DB_ANSWER_SQLEXCEPTION_CAT:
-							intent.putExtra(DBActions.Msg.MSG, Msg.DB_ANSWER_SQLEXCEPTION_CAT);
-							LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-						break;
-						case DBActions.DB_ANSWER_SQLEXCEPTION_AUTHOR:
-							intent.putExtra(DBActions.Msg.MSG, Msg.DB_ANSWER_SQLEXCEPTION_AUTHOR);
-							LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-						break;
-						case DBActions.DB_ANSWER_SQLEXCEPTION_ARTS:
-							intent.putExtra(DBActions.Msg.MSG, Msg.DB_ANSWER_SQLEXCEPTION_ARTS);
-							LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-						break;
-						case DBActions.DB_ANSWER_SQLEXCEPTION_ARTCAT:
-							intent.putExtra(DBActions.Msg.MSG, Msg.DB_ANSWER_SQLEXCEPTION_ARTCAT);
-							LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-						break;
-						case DBActions.DB_ANSWER_NEVER_REFRESHED:
-							//was never refreshed, so start to refresh
-							//so start download category with 1-st page
-							this.startDownLoad(catToLoad, pageToLoad);
-						break;
-						case DBActions.DB_ANSWER_REFRESH_BY_PERIOD:
-							//was refreshed more than max period, so start to refresh
-							//so start download category with 1-st page
-							//but firstly we must show old articles
-							this.startDownLoad(catToLoad, pageToLoad);
-						break;
-
-						case DBActions.DB_ANSWER_NO_ENTRY_OF_ARTS:
-							//no arts in DB (why?)
-							//we get it if there is no need to refresh by period, so we have one successful load in past...
-							//but no art's in db... that's realy strange! =)
-							//so start download from web
-							this.startDownLoad(catToLoad, pageToLoad);
-						break;
-						case DBActions.DB_ANSWER_UNKNOWN_CATEGORY:
-						//TODO here we must create new entry in Category (or Author) table
-						//and start download arts of this category
-
-						break;
-						case DBActions.DB_ANSWER_INFO_SENDED_TO_FRAG:
-						//here we have nothing to do... Cause there is no need to load somthing from web,
-						//and arts have been already sended to frag
-						break;
-					}
-				}
+				this.startDownLoad(catToLoad, pageToLoad);
 			}
 			else
 			{
-				//if pageToLoad!=1 we load from bottom
-				//TODO switch by category or author
-				
-				Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
-				////aks db for arts
-				int categoryId = Category.getCategoryIdByURL(getHelper(), catToLoad);
-				List<ArtCatTable> allArtsFromFirst;
-				//pageToLoad-1 because here we do not need next arts, only arts, that already showed
-				allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
+				DBActions dbActions = new DBActions(this, this.getHelper());
+				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
+				Log.d(LOG_TAG, DBRezult);
 
-				//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
-				if (allArtsFromFirst.size() < 30)
+				switch (DBRezult)
 				{
-					//TODO DO NOTHING, return, that it's start of list
-				}
-				//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
-				List<ArtCatTable> allArts;
-				int lastId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getId();
-				allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId, false);
+					case DBActions.DB_ANSWER_NEVER_REFRESHED:
+						//was never refreshed, so start to refresh
+						//so start download category with 1-st page
+						this.startDownLoad(catToLoad, pageToLoad);
+					break;
+					case DBActions.DB_ANSWER_REFRESH_BY_PERIOD:
+						//was refreshed more than max period, so start to refresh
+						//so start download category with 1-st page
+						//but firstly we must show old articles
+						this.startDownLoad(catToLoad, pageToLoad);
+					break;
 
-				//////if we have no arts, we load them from web
-				if (allArts == null)
-				{
-					//load from web
-					Log.d(LOG_TAG, "No arts at all, load from web");
-					this.startDownLoad(catToLoad, pageToLoad);
-				}
-				else
-				{
-					if (allArts.size() == 30)
-					{
-						//////if we have 30, so we pass 30 to fragment
-						Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
+					case DBActions.DB_ANSWER_NO_ENTRY_OF_ARTS:
+						//no arts in DB (why?)
+						//we get it if there is no need to refresh by period, so we have one successful load in past...
+						//but no art's in db... that's realy strange! =)
+						//so start download from web
+						this.startDownLoad(catToLoad, pageToLoad);
+					break;
+					case DBActions.DB_ANSWER_UNKNOWN_CATEGORY:
+					//TODO here we must create new entry in Category (or Author) table
+					//and start download arts of this category
 
-						//set ArtCatTable obj to ArtInfo
-						//firstly get Article by id then create new ArtInfo obj and add it to list, that we'll send
-						ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
-						for (ArtCatTable a : allArts)
-						{
-							Article art = Article.getArticleById(getHelper(), a.getArticleId());
-							ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
-							data.add(artInfoObj);
-						}
-						//send directly, cause it's from DB and we do not need to do something with this data
-						Intent intentWithData = new Intent(catToLoad);
-						intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
-
-						LocalBroadcastManager.getInstance(this).sendBroadcast(intentWithData);
-					}
-					else
-					{
-						//////else we ask category if it has firstArtURL
-						String firstArtInCatURL = null;
-						firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
-						if (firstArtInCatURL == null)
-						{
-							////////if so we load from web
-							Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
-							Log.d(LOG_TAG, "allArts.size(): " + allArts.size());
-							this.startDownLoad(catToLoad, pageToLoad);
-							//if we get <30 we set last art's URL as first art of Category
-							//and write arts to db(Article and ArtCat)
-							////else simply write arts to db(Article and ArtCat)
-						}
-						else
-						{
-							//check matching last of gained URL with initial (first)
-							String lastInListArtsUrl = Article.getArticleUrlById(getHelper(),
-							allArts.get(allArts.size() - 1).getArticleId());
-							if (firstArtInCatURL.equals(lastInListArtsUrl))
-							{
-								Log.d(LOG_TAG,
-								"we have LESS than 30, and have match to initial. So send all and never load more");
-								Log.d(LOG_TAG, "allArts.size(): " + allArts.size());
-								//TODO so it is real end of all arts in category
-								//send arts to frag
-								//notify not to load (may be we can pass initial art to sharedPrefs...)
-							}
-							else
-							{
-								////////else we must load arts from web
-								Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
-								Log.d(LOG_TAG, "allArts.size(): " + allArts.size());
-								this.startDownLoad(catToLoad, pageToLoad);
-								//if we get <30 we set last art's URL as first art of Category
-								//and write arts to db(Article and ArtCat)
-								////else simply write arts to db(Article and ArtCat)
-							}
-						}
-					}
+					break;
+					case DBActions.DB_ANSWER_INFO_SENDED_TO_FRAG:
+					//here we have nothing to do... Cause there is no need to load somthing from web,
+					//and arts have been already sended to frag
+					break;
 				}
 			}
+		}
+		else
+		{
+			//if pageToLoad!=1 we load from bottom
+			Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
+			DBActions dbActions = new DBActions(this, this.getHelper());
+			String DBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
+			Log.d(LOG_TAG, DBRezult);
+
+			switch (DBRezult)
+			{
+				case :
+					breakl
+			}
+			
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}

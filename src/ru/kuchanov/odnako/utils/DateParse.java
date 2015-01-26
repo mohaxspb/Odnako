@@ -17,8 +17,8 @@ import android.util.Log;
 public class DateParse
 {
 	//test values, that we can recive from site
-	public String dateStrEng = "Fri, 12 Dec 2014 22:06:00 +0400";
-	public String dateStrRu = "2 июня 2009";
+	static final String dateStrEng = "Fri, 12 Dec 2014 22:06:00 +0400";
+	static final String dateStrRu = "2 июня 2009";
 
 	public DateParse()
 	{
