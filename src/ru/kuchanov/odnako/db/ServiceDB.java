@@ -8,13 +8,13 @@ package ru.kuchanov.odnako.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.DBActions.Msg;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -114,13 +114,35 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			//if pageToLoad!=1 we load from bottom
 			Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
 			DBActions dbActions = new DBActions(this, this.getHelper());
-			String DBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-			Log.d(LOG_TAG, DBRezult);
+			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
+			Log.d(LOG_TAG, dBRezult);
 
-			switch (DBRezult)
+			switch (dBRezult)
 			{
-				case :
-					breakl
+				case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
+					//all is done, we can go to drink some vodka, Ivan! =)
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN:
+					//initial art is shown, do nothing
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
+					//arts already sended to frag with initial art, do nothing
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
+					//so load from web
+					this.startDownLoad(catToLoad, pageToLoad);
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL:
+					//so load from web
+					this.startDownLoad(catToLoad, pageToLoad);
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP:
+					//initial art is shown (less then 30 in category at all), do nothing
+					break;
+				case Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL:
+					//no arts except already shown, so load them from web
+					this.startDownLoad(catToLoad, pageToLoad);
+					break;
 			}
 			
 		}

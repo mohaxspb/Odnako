@@ -243,7 +243,7 @@ public class Category
 	 * 
 	 * @param h
 	 * @param url
-	 * @return id or null on SQLException
+	 * @return id or null on SQLException and if can't find 
 	 */
 	public static int getCategoryIdByURL(DataBaseHelper h, String url)
 	{
@@ -259,12 +259,11 @@ public class Category
 	}
 
 	/**
-	 * @return URL of initial article in category
+	 * @return URL of initial article in category or null if can't find
 	 */
 	public static String getFirstArticleURLById(DataBaseHelper h, int categoryId)
 	{
 		String firstArtUrl = null;
-
 		try
 		{
 			firstArtUrl = h.getDaoCategory().queryBuilder().where().eq(ID_FIELD_NAME, categoryId).queryForFirst()
@@ -273,7 +272,6 @@ public class Category
 		{
 			e.printStackTrace();
 		}
-
 		return firstArtUrl;
 	}
 

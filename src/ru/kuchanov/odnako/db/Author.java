@@ -20,12 +20,13 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "author")
 public class Author
 {
+	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "blog_url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
 //	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
@@ -182,6 +183,33 @@ public class Author
 	{
 		this.lastArticleDate = lastArticleDate;
 	}
+	
+	public String getFirstArticleURL()
+	{
+		return firstArticleURL;
+	}
+
+	public void setFirstArticleURL(String firstArticleURL)
+	{
+		this.firstArticleURL = firstArticleURL;
+	}
+
+	/**
+	 * @return URL of initial article in category or null if can't find
+	 */
+	public static String getFirstArticleURLById(DataBaseHelper h, int authorId)
+	{
+		String firstArtUrl = null;
+		try
+		{
+			firstArtUrl = h.getDaoAuthor().queryBuilder().where().eq(ID_FIELD_NAME, authorId).queryForFirst()
+			.getFirstArticleURL();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return firstArtUrl;
+	}
 
 //	public boolean isSinhronised()
 //	{
@@ -204,6 +232,25 @@ public class Author
 			e.printStackTrace();
 		}
 		return a;
+	}
+	
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return id or null on SQLException and if can't find 
+	 */
+	public static int getAuthorIdByURL(DataBaseHelper h, String url)
+	{
+		Integer id = null;
+		try
+		{
+			id = h.getDaoAuthor().queryBuilder().where().eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getId();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 	/**
@@ -237,7 +284,7 @@ public class Author
 		allInfo[7] = refreshed.toString();
 		allInfo[8] = lastArticleDate.toString();
 //		allInfo[9] = String.valueOf(sinhronised);
-		allInfo[9] = firstArticleURL;
+		allInfo[9] = getFirstArticleURL();
 
 		return allInfo;
 	}

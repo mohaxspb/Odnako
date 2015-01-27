@@ -189,108 +189,186 @@ public class DBActions
 
 	public String askDBFromBottom(String categoryToLoad, int pageToLoad)
 	{
-		//TODO switch by category or author
-
-		////aks db for arts
-		int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
-		List<ArtCatTable> allArtsFromFirst;
-		//pageToLoad-1 because here we do not need next arts, only arts, that already showed
-		allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
-
-		//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
-		if (allArtsFromFirst.size() < 30)
+		//switch by category or author
+		if(Category.isCategory(getHelper(), categoryToLoad))
 		{
-			//DO NOTHING, return, that it's start of list
-			return Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP;
-		}
-		//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
-		List<ArtCatTable> allArts;
-		int lastId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getId();
-		allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId, false);
+			//aks db for arts
+			int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+			List<ArtCatTable> allArtsFromFirst;
+			//pageToLoad-1 because here we do not need next arts, only arts, that already showed
+			allArtsFromFirst = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
 
-		//if we have no arts, we check if last shown art isVeryBottomOfCategory
-		//we can check it both by URL or isTop value of ArtCat
-		//if so we do nothing
-		//else we load them from web
-		if (allArts == null)
-		{
-			if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
+			//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
+			if (allArtsFromFirst.size() < 30)
 			{
-				return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+				//DO NOTHING, return, that it's start of list
+				return Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP;
 			}
-			else
-			{
-				//load from web
-				Log.d(LOG_TAG, "No arts at all, load from web");
-				//			this.startDownLoad(categoryToLoad, pageToLoad);
-				return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
-			}
-		}
-		else
-		{
-			if (allArts.size() == 30)
-			{
-				//////if we have 30, so we pass 30 to fragment
-				Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
+			//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
+			List<ArtCatTable> allArts;
+			int lastId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getId();
+			allArts = ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(getHelper(), categoryId, lastId, false);
 
-				//set ArtCatTable objects to ArtInfo
-				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
-				//send directly, cause it's from DB and we do not need to do something with this data
-				Intent intentWithData = new Intent(categoryToLoad);
-				intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
-
-				LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
-				return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
-			}
-			else
+			//if we have no arts, we check if last shown art isVeryBottomOfCategory
+			//we can check it both by URL or isTop value of ArtCat
+			//if so we do nothing
+			//else we load them from web
+			if (allArts == null)
 			{
-				//////else we ask category if it has firstArtURL
-				String firstArtInCatURL = null;
-				firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
-				if (firstArtInCatURL == null)
+				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
 				{
-					////////if so we load from web
-					Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
-					return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL;
-					//					this.startDownLoad(categoryToLoad, pageToLoad);
-					//TODO if we get <30 we set last art's URL as first art of Category
-					//and write arts to db(Article and ArtCat)
-					////else simply write arts to db(Article and ArtCat)
+					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
 				}
 				else
 				{
-					//check matching last of gained URL with initial (first)
-					String lastInListArtsUrl = Article.getArticleUrlById(getHelper(),
-					allArts.get(allArts.size() - 1).getArticleId());
-					if (firstArtInCatURL.equals(lastInListArtsUrl))
-					{
-						Log.d(LOG_TAG,
-						"we have LESS than 30, and have match to initial. So send all and never load more");
-						//so it is real end of all arts in category
-						//send arts to frag
-						//set ArtCatTable objects to ArtInfo
-						ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
-						//send directly, cause it's from DB and we do not need to do something with this data
-						Intent intentWithData = new Intent(categoryToLoad);
-						intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+					//load from web
+					Log.d(LOG_TAG, "No arts at all, load from web");
+					return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
+				}
+			}
+			else
+			{
+				if (allArts.size() == 30)
+				{
+					//if we have 30, so we pass 30 to fragment
+					Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 
-						LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
-						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
+					//set ArtCatTable objects to ArtInfo
+					ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+					//send directly, cause it's from DB and we do not need to do something with this data
+					Intent intentWithData = new Intent(categoryToLoad);
+					intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+
+					LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
+				}
+				else
+				{
+					//else we ask category if it has firstArtURL
+					String firstArtInCatURL = null;
+					firstArtInCatURL = Category.getFirstArticleURLById(getHelper(), categoryId);
+					if (firstArtInCatURL == null)
+					{
+						//if so we load from web
+						Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
+						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL;
 					}
 					else
 					{
-						////////else we must load arts from web
-						Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
-						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL;
-//						this.startDownLoad(categoryToLoad, pageToLoad);
-						//TODO if we get <30 we set last art's URL as first art of Category
-						//and write arts to db(Article and ArtCat)
-						////else simply write arts to db(Article and ArtCat)
-					}
+						//check matching last of gained URL with initial (first)
+						String lastInListArtsUrl;
+						lastInListArtsUrl = Article.getArticleUrlById(getHelper(), allArts.get(allArts.size() - 1)
+						.getArticleId());
+						if (firstArtInCatURL.equals(lastInListArtsUrl))
+						{
+							//so it is real end of all arts in category and we can send arts to frag
+							ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+							Intent intentWithData = new Intent(categoryToLoad);
+							intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+							LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
+						}
+						else
+						{
+							////////else we must load arts from web
+							Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
+							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL;
+						}//check matching to initial
+					}//we have initial art
+				}//we have !30 bottom arts
+			}//we have bottom arts
+		}//this is category
+		else
+		{
+			//this is author, so...
+			//aks db for arts
+			int authorId = Author.getAuthorIdByURL(getHelper(), Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
+			List<ArtAutTable> allArtsFromFirst;
+			//pageToLoad-1 because here we do not need next arts, only arts, that already showed
+			allArtsFromFirst = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad - 1);
+
+			//firstly, if we have <30 arts from top, there is initial art in this list, so we must DO NOTHING!
+			if (allArtsFromFirst.size() < 30)
+			{
+				//DO NOTHING, return, that it's start of list
+				return Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP;
+			}
+			//so now we have first 30*pageToLoad-1 arts. Now get next 30 by passing last id to same method
+			List<ArtAutTable> allArts;
+			int lastId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getId();
+			allArts = ArtAutTable.getArtAutTableListByAuthorIdFromGivenId(getHelper(), authorId, lastId, false);
+
+			//if we have no arts, we check if last shown art isVeryBottomOfAuthor
+			//we can check it both by URL or isTop value of ArtCat
+			//if so we do nothing
+			//else we load them from web
+			if (allArts == null)
+			{
+				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
+				{
+					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+				}
+				else
+				{
+					//load from web
+					Log.d(LOG_TAG, "No arts at all, load from web");
+					return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
 				}
 			}
+			else
+			{
+				if (allArts.size() == 30)
+				{
+					//if we have 30, so we pass 30 to fragment
+					Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
+
+					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
+					
+					Intent intentWithData = new Intent(categoryToLoad);
+					intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+					LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+					
+					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
+				}
+				else
+				{
+					//else we ask Author if it has firstArtURL
+					String firstArtInAutURL = null;
+					firstArtInAutURL = Author.getFirstArticleURLById(getHelper(), authorId);
+					if (firstArtInAutURL == null)
+					{
+						//if so we load from web
+						Log.d(LOG_TAG, "we have LESS than 30, but no initial art. So load from web");
+						return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL;
+					}
+					else
+					{
+						//check matching last of gained URL with initial (first)
+						String lastInListArtsUrl;
+						lastInListArtsUrl = Article.getArticleUrlById(getHelper(), allArts.get(allArts.size() - 1)
+						.getArticleId());
+						if (firstArtInAutURL.equals(lastInListArtsUrl))
+						{
+							//so it is real end of all arts in Author and we can send arts to frag
+							ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
+							
+							Intent intentWithData = new Intent(categoryToLoad);
+							intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+							LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+							
+							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
+						}
+						else
+						{
+							//else we must load arts from web
+							Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
+							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL;
+						}//check matching to initial
+					}//we have initial art
+				}//we have !30 bottom arts
+			}//we have bottom arts
 		}
-	}
+	}//askDBFromBottom
 
 	public void writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
@@ -314,7 +392,7 @@ public class DBActions
 				if (ArtCatTable.categoryArtsExists(getHelper(), categoryId))
 				{
 					//match url of IS_TOP ArtCatTable with given list and calculate quont of new
-					////new=0 => TODO check if there is new inner arts and update ArtCatTable if is;
+					////new=0 => check if there is new inner arts and update ArtCatTable if is;
 					////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 					////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
 
@@ -404,7 +482,7 @@ public class DBActions
 			{
 				//TODO this is Author, so...
 			}
-		}
+		}//pageToLoad=1
 		else
 		{
 			//from bottom
@@ -429,7 +507,7 @@ public class DBActions
 				List<ArtCatTable> withoutPrev = ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(), categoryId);
 				if (withoutPrev != null)
 				{
-					//XXX WARNING!!! "someResult.size()-1" because there is no nextArt for last, so we can't check matching
+					//"dataFromWeb.size()-1" because there is no nextArt for last, so we can't check matching
 					for (int i = 0; i < dataFromWeb.size() - 1; i++)
 					{
 						for (int u = 0; u < withoutPrev.size(); u++)
@@ -489,7 +567,6 @@ public class DBActions
 			{
 				//TODO this.isAuthor, so...
 			}
-			//so check how many matches by id in ArtCat(ArtAut) and insert AFTER last category article
 		}
 	}
 
