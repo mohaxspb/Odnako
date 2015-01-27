@@ -34,7 +34,7 @@ public class ArtCatTable
 	public static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
 	public static final String IS_TOP_FIELD_NAME = "isTop";
 
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = ID_FIELD_NAME)
+	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
@@ -149,6 +149,8 @@ public class ArtCatTable
 	 */
 	public boolean isTop()
 	{
+		//TODO check here if objects category has initialArtsUrl, match it to obj's art's url
+		//and on match, update it, and only then return value
 		return isTop;
 	}
 

@@ -12,8 +12,11 @@ import java.util.List;
 
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -22,13 +25,16 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "art_aut_table")
 public class ArtAutTable
 {
+	final private static String LOG = ArtAutTable.class.getSimpleName();
+
+	public final static String ID_FIELD_NAME = "id";
 	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
 	public final static String AUTHOR_ID_FIELD_NAME = "author_id";
 	public static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
 	public static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
 	public static final String IS_TOP_FIELD_NAME = "isTop";
 
-	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true)
+	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
 
 	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
@@ -133,12 +139,68 @@ public class ArtAutTable
 
 	public boolean isTop()
 	{
+		//TODO check here if objects category has initialArtsUrl, match it to obj's art's url
+		//and on match, update it, and only then return value
 		return isTop;
 	}
 
 	public void isTop(boolean isTop)
 	{
 		this.isTop = isTop;
+	}
+
+	/**
+	 * updates isTop value to TRUE, FALSE or NULL
+	 */
+	public static void updateIsTop(DataBaseHelper h, int id, Boolean isTop)
+	{
+		UpdateBuilder<ArtAutTable, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArtAutTable().updateBuilder();
+			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
+			updateBuilder.updateColumnValue(ArtAutTable.IS_TOP_FIELD_NAME, isTop);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * updates nextUrl
+	 */
+	public static void updateNextArt(DataBaseHelper h, int id, String url)
+	{
+		UpdateBuilder<ArtAutTable, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArtAutTable().updateBuilder();
+			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
+			updateBuilder.updateColumnValue(ArtAutTable.NEXT_ART_URL_FIELD_NAME, url);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * updates previousUrl
+	 */
+	public static void updatePreviousArt(DataBaseHelper h, int id, String url)
+	{
+		UpdateBuilder<ArtAutTable, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArtAutTable().updateBuilder();
+			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
+			updateBuilder.updateColumnValue(ArtAutTable.PREVIOUS_ART_URL_FIELD_NAME, url);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	//////
@@ -148,15 +210,15 @@ public class ArtAutTable
 	 * DB) and false on fail (there are NO arts of category in DB)
 	 * 
 	 * @param h
-	 * @param categoryId
+	 * @param authorId
 	 * @return
 	 */
-	public static boolean authorArtsExists(DataBaseHelper h, int categoryId)
+	public static boolean authorArtsExists(DataBaseHelper h, int authorId)
 	{
 		boolean exists = false;
 		try
 		{
-			ArtCatTable topArt = h.getDaoArtCatTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, categoryId)
+			ArtAutTable topArt = h.getDaoArtAutTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, authorId)
 			.and().eq(IS_TOP_FIELD_NAME, true).queryForFirst();
 			if (topArt != null)
 			{
@@ -178,7 +240,7 @@ public class ArtAutTable
 	 *            true for top art, false for initial
 	 * @return
 	 */
-	public static ArtAutTable getTopArtCat(DataBaseHelper h, int authorId, boolean isTop)
+	public static ArtAutTable getTopArt(DataBaseHelper h, int authorId, boolean isTop)
 	{
 		ArtAutTable a = null;
 		try
@@ -194,7 +256,7 @@ public class ArtAutTable
 
 	public static List<ArtAutTable> getListFromTop(DataBaseHelper h, int authorId, int pageToLoad)
 	{
-		ArtAutTable topArt = ArtAutTable.getTopArtCat(h, authorId, true);
+		ArtAutTable topArt = ArtAutTable.getTopArt(h, authorId, true);
 		List<ArtAutTable> allArtAutList = new ArrayList<ArtAutTable>();
 		for (int i = 0; i < pageToLoad; i++)
 		{
@@ -212,7 +274,7 @@ public class ArtAutTable
 		}
 		return allArtAutList;
 	}
-	
+
 	/**
 	 * 
 	 * @param h
@@ -271,7 +333,7 @@ public class ArtAutTable
 		}
 		return artAutTableListByAuthorIdFromGivenId;
 	}
-	
+
 	/**
 	 * 
 	 * @return id of the next article of given artCat id or null if !exists
@@ -295,13 +357,13 @@ public class ArtAutTable
 		}
 		return nextArtAutId;
 	}
-	
+
 	/**
 	 * this is used to create ArtInfo objects from given ArtCatTable objects
 	 * 
 	 * @param h
 	 * @param dBObjects
-	 * @return 
+	 * @return
 	 */
 	public static ArrayList<ArtInfo> getArtInfoListFromArtAutList(DataBaseHelper h, List<ArtAutTable> dBObjects)
 	{
@@ -313,6 +375,58 @@ public class ArtAutTable
 			data.add(artInfoObj);
 		}
 		return data;
+	}
+
+	/**
+	 * 
+	 * @param artToWrite
+	 *            list from web to made list of ArtCatTable objects
+	 * @param authorId
+	 * @return list of ArtCatTable made from ArtInfo list
+	 */
+	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+	int authorId)
+	{
+		List<ArtAutTable> artAutTableList = new ArrayList<ArtAutTable>();
+		for (int u = 0; u < artToWrite.size(); u++)
+		{
+			//get Article id by url
+			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+			//get next Article url by asking gained from web list
+			String nextArtUrl = null;
+			try
+			{
+				nextArtUrl = artToWrite.get(u + 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			//get previous Article url by asking gained from web list
+			String previousArtUrl = null;
+			try
+			{
+				previousArtUrl = artToWrite.get(u - 1).url;
+			} catch (Exception e)
+			{
+
+			}
+			artAutTableList.add(new ArtAutTable(null, articleId, authorId, nextArtUrl, previousArtUrl));
+		}
+		return artAutTableList;
+	}
+
+	public static void write(DataBaseHelper h, List<ArtAutTable> dataToWrite)
+	{
+		for (ArtAutTable a : dataToWrite)
+		{
+			try
+			{
+				h.getDaoArtAutTable().create(a);
+			} catch (SQLException e)
+			{
+				Log.e(LOG, "error while inserting ArtCatTable entry");
+			}
+		}
 	}
 
 	//methods for content provider

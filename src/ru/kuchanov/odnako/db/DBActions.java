@@ -190,7 +190,7 @@ public class DBActions
 	public String askDBFromBottom(String categoryToLoad, int pageToLoad)
 	{
 		//switch by category or author
-		if(Category.isCategory(getHelper(), categoryToLoad))
+		if (Category.isCategory(getHelper(), categoryToLoad))
 		{
 			//aks db for arts
 			int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
@@ -215,6 +215,7 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
+				//TODO check if there is no error and try to change by Category.getFirstArtsURL
 				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
 				{
 					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
@@ -304,6 +305,7 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
+				//TODO check if there is no error and try to change by Category.getFirstArtsURL
 				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
 				{
 					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
@@ -323,11 +325,11 @@ public class DBActions
 					Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 
 					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
-					
+
 					Intent intentWithData = new Intent(categoryToLoad);
 					intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
 					LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
-					
+
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
 				}
 				else
@@ -351,11 +353,11 @@ public class DBActions
 						{
 							//so it is real end of all arts in Author and we can send arts to frag
 							ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
-							
+
 							Intent intentWithData = new Intent(categoryToLoad);
 							intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
 							LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
-							
+
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
 						}
 						else
@@ -367,13 +369,29 @@ public class DBActions
 					}//we have initial art
 				}//we have !30 bottom arts
 			}//we have bottom arts
-		}
+		}//this is author
 	}//askDBFromBottom
 
 	public void writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
 		//here we'll write gained arts to Article table
 		Article.writeArtInfoToArticleTable(getHelper(), dataFromWeb);
+
+		//here if we recive less then 30 arts (const quont of arts on page)
+		//we KNOW that last of them is initial art in category (author)
+		//so WRITE it to DB!
+		if (Category.isCategory(this.getHelper(), categoryToLoad))
+		{
+			int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+			String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
+			Category.setInitialArtsUrl(this.getHelper(), categoryId, initialArtsUrl);
+		}
+		else
+		{
+			int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
+			String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
+			Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
+		}
 
 		//and fill ArtCatTable with entries of arts
 		//check if it was loading from top (new) of from bottom (previous)
@@ -468,8 +486,6 @@ public class DBActions
 				{
 					//there are no arts of given category in ArtCatTable, so just write them!
 					//I mean write all arts from someResult List<ArtInfo>, that we gained from web
-
-					//List<ArtCatTable> artCatTableList of new arts that will be written to DB
 					List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
 					dataFromWeb, categoryId);
 					//set IS_TOP to true for first in list
@@ -480,15 +496,104 @@ public class DBActions
 			}
 			else
 			{
-				//TODO this is Author, so...
-			}
+				//this is Author, so...
+				//get Author id
+				int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
+
+				//check if there are any arts in category by searching TOP art
+				if (ArtAutTable.authorArtsExists(getHelper(), authorId))
+				{
+					//match url of IS_TOP ArtAutTable with given list and calculate quont of new
+					////new=0 => check if there is new inner arts and update ArtAutTable if is;
+					////new<30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+					////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and set TRUE to first of given list
+
+					//match url of IS_TOP ArtAutTable with given list and calculate quont of new
+					ArtAutTable topArtAut = ArtAutTable.getTopArt(getHelper(), authorId, true);
+					String topArtUrl = Article.getArticleUrlById(getHelper(), topArtAut.getArticleId());
+
+					for (int i = 0; i < dataFromWeb.size(); i++)
+					{
+						if (dataFromWeb.get(i).url.equals(topArtUrl))
+						{
+							//check if there is no new arts
+							if (i == 0)
+							{
+								////new=0 =>do noting
+								//TODO here we can check if there were new art between 1st
+								//and last (publishing on site lag) and if so delete artAut in DB and replace them
+								//with loaded from web and update articles order
+								//need to think abouts logic of all this shit)
+								Intent intent = new Intent(categoryToLoad + "msg");
+								intent.putExtra("msg", Msg.NO_NEW);
+								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+							}
+							else
+							{
+								//if not - Toast how many new arts gained
+								Log.d(categoryToLoad, "Обнаружено " + i + " новых статей");
+								Intent intent = new Intent(categoryToLoad + "msg");
+								intent.putExtra("msg", Msg.NEW_QUONT);
+								intent.putExtra(Msg.QUONT, i);
+								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+
+								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
+								//and set isTop to TRUE to first of loaded list
+								List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
+								this.getHelper(), dataFromWeb, authorId);
+								//update isTop to null for old entry
+								ArtAutTable.updateIsTop(getHelper(), topArtAut.getId(), null);
+								//update previous url for old TOP_ART
+								String nextArtUrlOfLastInList = artAutDataToWrite.get(artAutDataToWrite.size() - 1)
+								.getNextArtUrl();
+								ArtAutTable.updatePreviousArt(getHelper(), topArtAut.getId(), nextArtUrlOfLastInList);
+								//set new TOP_ART for first of given from web
+								artAutDataToWrite.get(0).isTop(true);
+								//FINALLY write new entries to ArtAutTable
+								ArtAutTable.write(getHelper(), artAutDataToWrite);
+							}
+							//break loop on matching
+							break;
+						}
+						else
+						{
+							//check if it's last iteration
+							if (i == dataFromWeb.size() - 1)
+							{
+								Log.d(categoryToLoad,
+								"no matches, so write new artAut entries to db and update TOP art");
+								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
+								//set TRUE to first of given list
+								List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
+								this.getHelper(), dataFromWeb, authorId);
+								//update isTop to null for old entry
+								ArtAutTable.updateIsTop(getHelper(), topArtAut.getId(), null);
+								//set new TOP_ART for first of given from web
+								artAutDataToWrite.get(0).isTop(true);
+								//FINALLY write new entries to ArtAutTable
+								ArtAutTable.write(getHelper(), artAutDataToWrite);
+							}
+						}
+					}
+				}
+				else
+				{
+					//there are no arts of given category in ArtAutTable, so just write them!
+					//I mean write all arts from someResult List<ArtInfo>, that we gained from web
+					List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(this.getHelper(),
+					dataFromWeb, authorId);
+					//set IS_TOP to true for first in list
+					artAutDataToWrite.get(0).isTop(true);
+					//FINALLY write new entries with new Arts to ArtAutTable
+					ArtAutTable.write(getHelper(), artAutDataToWrite);
+				}
+			}//this is author
 		}//pageToLoad=1
 		else
 		{
 			//from bottom
 			if (Category.isCategory(this.getHelper(), categoryToLoad))
 			{
-				//XXX TODO if someResult<30, we can write that we have first art!!!
 				//this.isCategory, so...
 				//here we can have some variants:
 				//1) we load as we have no next arts

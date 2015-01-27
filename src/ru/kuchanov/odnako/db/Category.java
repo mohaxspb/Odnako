@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -370,4 +371,18 @@ public class Category
 		return arrStr1;
 	}
 
+	public static void setInitialArtsUrl(DataBaseHelper h, int categoryId, String initialArtsUrl)
+	{
+		UpdateBuilder<Category, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoCategory().updateBuilder();
+			updateBuilder.where().eq(Category.ID_FIELD_NAME, categoryId);
+			updateBuilder.updateColumnValue(Category.FIRST_ARTICLE_URL_FIELD_NAME, initialArtsUrl);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

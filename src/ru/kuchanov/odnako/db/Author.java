@@ -11,6 +11,7 @@ import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -297,6 +298,21 @@ public class Author
 		String[] arrStr1 = { "id", "blog_url", "name", "description", "who", "avatar", "avatarBig", "refreshed",
 				"lastArticleDate", "firstArticleURL" };
 		return arrStr1;
+	}
+	
+	public static void setInitialArtsUrl(DataBaseHelper h, int authorId, String initialArtsUrl)
+	{
+		UpdateBuilder<Author, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoAuthor().updateBuilder();
+			updateBuilder.where().eq(Author.ID_FIELD_NAME, authorId);
+			updateBuilder.updateColumnValue(Author.FIRST_ARTICLE_URL_FIELD_NAME, initialArtsUrl);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }
