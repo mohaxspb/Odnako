@@ -137,10 +137,12 @@ public class ArtAutTable
 		this.nextArtUrl = nextArtUrl;
 	}
 
+	/**
+	 * 
+	 * @return true if this is newest art in category and null otherwise
+	 */
 	public boolean isTop()
 	{
-		//TODO check here if objects category has initialArtsUrl, match it to obj's art's url
-		//and on match, update it, and only then return value
 		return isTop;
 	}
 

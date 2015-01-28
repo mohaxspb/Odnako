@@ -99,11 +99,6 @@
         </activity>
 
         <service
-            android:name="ru.kuchanov.odnako.download.GetInfoService"
-            android:enabled="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/downloads" />
-        <service
             android:name="ru.kuchanov.odnako.db.ServiceDB"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"

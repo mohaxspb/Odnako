@@ -16,62 +16,59 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
 {
-	/////test CallBack
+	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName();
+
 	AllArtsInfoCallback callback;
-	/////////
-	
+
 	String link;
-	
+
 	String category;
 	int page;
 
 	ActionBarActivity act;
 	Context ctx;
 
-	//	public ParsePageForAllArtsInfo(String category, int page, ActionBarActivity act)
 	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback)
 	{
-		this.callback=callback;
-		
+		this.callback = callback;
+
 		this.category = category;
 		this.page = page;
 
 		this.ctx = ctx;
 	}
-	
+
 	public void setLink(String link)
 	{
-		this.link=link;
+		this.link = link;
 	}
 
 	protected ArrayList<ArtInfo> doInBackground(Void... arg)
 	{
-//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
+		//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		ArrayList<ArtInfo> output = null;
 		String link;
-		if(this.category.startsWith("http://"))
+		if (this.category.startsWith("http://"))
 		{
 			link = category + "/page-" + String.valueOf(this.page) + "/";
 		}
 		else
 		{
-		link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
+			link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
 		}
-//		link="http://kuchanov.ru/odnako/blogs1.html";
-		if(this.link!=null)
+		if (this.link != null)
 		{
-			link=this.link;
+			link = this.link;
 			Log.d(category, link);
 		}
-		
+
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(new URL(link));
-			if(hh.isAuthor())
+			if (hh.isAuthor())
 			{
 				output = hh.getAllArtsInfoFromAUTHORPage();
 			}
@@ -79,29 +76,27 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			{
 				output = hh.getAllArtsInfoFromPage();
 			}
-			
-
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
 		return output;
 	}
 
 	protected void onPostExecute(ArrayList<ArtInfo> output)
 	{
-//		System.out.println("ParseBlogsPageNew: onPostExecute");
+		//Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
 		//check internet
 		if (output != null)
 		{
-			callback.doSomething(output, this.category, this.page);
+			callback.sendDownloadedData(output, this.category, this.page);
 		}
 		//NO internet
 		else
 		{
-			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
+			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.category, this.page);
+			Log.e(LOG, "Ошибка соединения \n Проверьте соединение с интернетом");
+//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
 		}
 	}// Событие по окончанию парсинга
-
 }

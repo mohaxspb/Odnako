@@ -187,7 +187,9 @@ public class HtmlHelper
 
 			allArtsInfo.add(new ArtInfo(info));
 		}
-
+		//TODO Check here situation when we parse last page of category/ author and get 30 arts
+		//if so we can't setInitial arts URL in DBActions, so we can get access to DB here
+		//and do it here
 		return allArtsInfo;
 	}
 
@@ -298,7 +300,9 @@ public class HtmlHelper
 
 			allArtsInfo.add(new ArtInfo(info));
 		}
+		//TODO Check here situation when we parse last page of category/ author and get 30 arts
+		//if so we can't setInitial arts URL in DBActions, so we can get access to DB here
+		//and do it here
 		return allArtsInfo;
 	}
-
 }

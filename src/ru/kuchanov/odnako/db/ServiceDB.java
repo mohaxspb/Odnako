@@ -78,31 +78,31 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 				switch (DBRezult)
 				{
-					case DBActions.DB_ANSWER_NEVER_REFRESHED:
+					case DBActions.Msg.DB_ANSWER_NEVER_REFRESHED:
 						//was never refreshed, so start to refresh
 						//so start download category with 1-st page
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
-					case DBActions.DB_ANSWER_REFRESH_BY_PERIOD:
+					case DBActions.Msg.DB_ANSWER_REFRESH_BY_PERIOD:
 						//was refreshed more than max period, so start to refresh
 						//so start download category with 1-st page
 						//but firstly we must show old articles
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
 
-					case DBActions.DB_ANSWER_NO_ENTRY_OF_ARTS:
+					case DBActions.Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
 						//no arts in DB (why?)
 						//we get it if there is no need to refresh by period, so we have one successful load in past...
 						//but no art's in db... that's realy strange! =)
 						//so start download from web
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
-					case DBActions.DB_ANSWER_UNKNOWN_CATEGORY:
+					case DBActions.Msg.DB_ANSWER_UNKNOWN_CATEGORY:
 					//TODO here we must create new entry in Category (or Author) table
 					//and start download arts of this category
 
 					break;
-					case DBActions.DB_ANSWER_INFO_SENDED_TO_FRAG:
+					case DBActions.Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 					//here we have nothing to do... Cause there is no need to load somthing from web,
 					//and arts have been already sended to frag
 					break;
@@ -120,31 +120,31 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			switch (dBRezult)
 			{
 				case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
-					//all is done, we can go to drink some vodka, Ivan! =)
-					break;
+				//all is done, we can go to drink some vodka, Ivan! =)
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN:
-					//initial art is shown, do nothing
-					break;
+				//initial art is shown, do nothing
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
-					//arts already sended to frag with initial art, do nothing
-					break;
+				//arts already sended to frag with initial art, do nothing
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
 					//so load from web
 					this.startDownLoad(catToLoad, pageToLoad);
-					break;
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL:
 					//so load from web
 					this.startDownLoad(catToLoad, pageToLoad);
-					break;
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP:
-					//initial art is shown (less then 30 in category at all), do nothing
-					break;
+				//initial art is shown (less then 30 in category at all), do nothing
+				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL:
 					//no arts except already shown, so load them from web
 					this.startDownLoad(catToLoad, pageToLoad);
-					break;
+				break;
 			}
-			
+
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -157,8 +157,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		parse.execute();
 	}
 
-	// Send intent with ArtInfo to recivers
-	private void sendMessage(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
+	//	// Send intent with ArtInfo to recivers
+	//	private void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
+	//	{
+	//		
+	//	}
+
+	@Override
+	public void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
 	{
 		Intent intent = new Intent(categoryToLoad);
 		Bundle b = new Bundle();
@@ -166,7 +172,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		{
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 			//before sending message to listener (frag) we must write gained info to DB
-			new DBActions(this, this.getHelper()).writeArtsToDB(someResult, categoryToLoad, pageToLoad);
+			String[] resultMessage;
+			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(someResult, categoryToLoad, pageToLoad);
+			b.putStringArray(Msg.MSG, resultMessage);
 		}
 		else
 		{
@@ -185,14 +193,26 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		{
 			//we don't need to update refreshed Date, cause we do it only when loading from top
 		}
-
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 
 	@Override
-	public void doSomething(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
+	public void onError(String e, String categoryToLoad, int pageToLoad)
 	{
-		this.sendMessage(someResult, categoryToLoad, pageToLoad);
+		Intent intent = new Intent(categoryToLoad);
+		
+		Bundle b = new Bundle();
+		String[] resultMessage = new String[2];
+		resultMessage[0] = Msg.ERROR;
+		resultMessage[1] = e;
+		b.putStringArray(Msg.MSG, resultMessage);
+		if(pageToLoad!=1)
+		{
+			b.putBoolean(Msg.FROM_BOTTOM, true);
+		}
+		intent.putExtras(b);
+
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 
 	public IBinder onBind(Intent intent)

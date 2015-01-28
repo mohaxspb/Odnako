@@ -21,21 +21,14 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 /**
  * Class with actions with DB, such as writing arts, sending it to listener and
  * so on
  */
 public class DBActions
 {
-	//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
-
 	final private static String LOG_TAG = DBActions.class.getSimpleName();
-
-	final public static String DB_ANSWER_NEVER_REFRESHED = "never refreshed";
-	final public static String DB_ANSWER_REFRESH_BY_PERIOD = "refresh by period";
-	final public static String DB_ANSWER_INFO_SENDED_TO_FRAG = "we have already send info from DB to frag";
-	final public static String DB_ANSWER_NO_ENTRY_OF_ARTS = "no_entry_in_db";
-	final public static String DB_ANSWER_UNKNOWN_CATEGORY = "no entries in Category and Author";
 
 	private DataBaseHelper dataBaseHelper;
 	private Context ctx;
@@ -76,7 +69,7 @@ public class DBActions
 			if (lastRefreshedMills == 0)
 			{
 				//was never refreshed, so start to refresh
-				return DB_ANSWER_NEVER_REFRESHED;
+				return Msg.DB_ANSWER_NEVER_REFRESHED;
 			}
 			else
 			{
@@ -91,7 +84,7 @@ public class DBActions
 				int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
 				if (periodFromRefreshedInMinutes > checkPeriod)
 				{
-					return DB_ANSWER_REFRESH_BY_PERIOD;
+					return Msg.DB_ANSWER_REFRESH_BY_PERIOD;
 				}
 				else
 				{
@@ -110,15 +103,17 @@ public class DBActions
 				//send directly, cause it's from DB and we do not need to do something with this data
 				Intent intent = new Intent(categoryToLoad);
 				intent.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
-
+				intent.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
+				intent.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
+				
 				LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
-				return DB_ANSWER_INFO_SENDED_TO_FRAG;
+				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
 			}
 			else
 			{
 				//there are no arts of given category in DB, so start to load it
-				return DB_ANSWER_NO_ENTRY_OF_ARTS;
+				return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
 			}
 		}
 		else
@@ -133,7 +128,7 @@ public class DBActions
 				if (lastRefreshedMills == 0)
 				{
 					//was never refreshed, so start to refresh
-					return DB_ANSWER_NEVER_REFRESHED;
+					return Msg.DB_ANSWER_NEVER_REFRESHED;
 				}
 				else
 				{
@@ -148,7 +143,7 @@ public class DBActions
 					int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
 					if (periodFromRefreshedInMinutes > checkPeriod)
 					{
-						return DB_ANSWER_REFRESH_BY_PERIOD;
+						return Msg.DB_ANSWER_REFRESH_BY_PERIOD;
 					}
 					else
 					{
@@ -168,21 +163,23 @@ public class DBActions
 					//send directly, cause it's from DB and we do not need to do something with this data
 					Intent intent = new Intent(categoryToLoad);
 					intent.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
-
+					intent.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
+					intent.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
+					
 					LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
-					return DB_ANSWER_INFO_SENDED_TO_FRAG;
+					return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
 				}
 				else
 				{
 					//there are no arts of given category in DB, so start to load it
-					return DB_ANSWER_NO_ENTRY_OF_ARTS;
+					return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
 				}
 			}
 			else
 			{
 				Log.e(LOG_TAG, "It isn't category and aut=null, so it's unknown category");
-				return DB_ANSWER_UNKNOWN_CATEGORY;
+				return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
 			}
 		}
 	}
@@ -215,15 +212,28 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
-				//TODO check if there is no error and try to change by Category.getFirstArtsURL
-				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
+				String initialCatArtUrl = Category.getFirstArticleURLById(getHelper(), categoryId);
+				if (initialCatArtUrl != null)
 				{
-					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+					int lastShownArtsId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getArticleId();
+					String lastShownArtsUrl = Article.getArticleUrlById(getHelper(), lastShownArtsId);
+
+					if (initialCatArtUrl.equals(lastShownArtsUrl))
+					{
+						//if matched we do not need to load/show more because we've already show initial art
+						return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+					}
+					else
+					{
+						//load from web
+						Log.d(LOG_TAG, "No arts at all and no match to initial with already shown, so load from web");
+						return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
+					}
 				}
 				else
 				{
 					//load from web
-					Log.d(LOG_TAG, "No arts at all, load from web");
+					Log.d(LOG_TAG, "No arts at all and no initial art, so load from web");
 					return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
 				}
 			}
@@ -239,6 +249,7 @@ public class DBActions
 					//send directly, cause it's from DB and we do not need to do something with this data
 					Intent intentWithData = new Intent(categoryToLoad);
 					intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
+					intentWithData.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
 
 					LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
@@ -305,15 +316,28 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
-				//TODO check if there is no error and try to change by Category.getFirstArtsURL
-				if (allArtsFromFirst.get(allArtsFromFirst.size() - 1).isTop() == false)
+				String initialAutArtUrl = Category.getFirstArticleURLById(getHelper(), authorId);
+				if (initialAutArtUrl != null)
 				{
-					return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+					int lastShownArtsId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getArticleId();
+					String lastShownArtsUrl = Article.getArticleUrlById(getHelper(), lastShownArtsId);
+
+					if (initialAutArtUrl.equals(lastShownArtsUrl))
+					{
+						//if matched we do not need to load/show more because we've already show initial art
+						return Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN;
+					}
+					else
+					{
+						//load from web
+						Log.d(LOG_TAG, "No arts at all and no match to initial with already shown, so load from web");
+						return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
+					}
 				}
 				else
 				{
 					//load from web
-					Log.d(LOG_TAG, "No arts at all, load from web");
+					Log.d(LOG_TAG, "No arts at all and no initial art, so load from web");
 					return Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL;
 				}
 			}
@@ -329,6 +353,7 @@ public class DBActions
 					Intent intentWithData = new Intent(categoryToLoad);
 					intentWithData.putParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO, data);
 					LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(intentWithData);
+					intentWithData.putExtra(Msg.MSG, new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null});
 
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
 				}
@@ -372,25 +397,38 @@ public class DBActions
 		}//this is author
 	}//askDBFromBottom
 
-	public void writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
+	/**
+	 * 
+	 * @param dataFromWeb downloaded arts to write to DB
+	 * @param categoryToLoad site category from witch we download data
+	 * @param pageToLoad page of site category, from witch we download each 30 arts
+	 * 
+	 * @return some process result message, i.e. quont of new arts
+	 */
+	public String[] writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
+		String[] resultMessage=new String[2];
+		resultMessage[0]=Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE;
 		//here we'll write gained arts to Article table
 		Article.writeArtInfoToArticleTable(getHelper(), dataFromWeb);
 
 		//here if we recive less then 30 arts (const quont of arts on page)
 		//we KNOW that last of them is initial art in category (author)
 		//so WRITE it to DB!
-		if (Category.isCategory(this.getHelper(), categoryToLoad))
+		if(dataFromWeb.size()<30)
 		{
-			int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
-			String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
-			Category.setInitialArtsUrl(this.getHelper(), categoryId, initialArtsUrl);
-		}
-		else
-		{
-			int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
-			String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
-			Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
+			if (Category.isCategory(this.getHelper(), categoryToLoad))
+			{
+				int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+				String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
+				Category.setInitialArtsUrl(this.getHelper(), categoryId, initialArtsUrl);
+			}
+			else
+			{
+				int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
+				String initialArtsUrl = dataFromWeb.get(dataFromWeb.size() - 1).url;
+				Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
+			}
 		}
 
 		//and fill ArtCatTable with entries of arts
@@ -430,23 +468,25 @@ public class DBActions
 								//and last (publishing on site lag) and if so delete artCat in DB and replace them
 								//with loaded from web and update articles order
 								//need to think abouts logic of all this shit)
-								Intent intent = new Intent(categoryToLoad + "msg");
-								intent.putExtra("msg", Msg.NO_NEW);
-								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//								Intent intent = new Intent(categoryToLoad + "msg");
+//								intent.putExtra("msg", Msg.NO_NEW);
+//								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+								resultMessage[0]=Msg.NO_NEW;
 							}
 							else
 							{
 								//if not - Toast how many new arts gained
 								Log.d(categoryToLoad, "Обнаружено " + i + " новых статей");
-								Intent intent = new Intent(categoryToLoad + "msg");
-								intent.putExtra("msg", Msg.NEW_QUONT);
-								intent.putExtra(Msg.QUONT, i);
-								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//								Intent intent = new Intent(categoryToLoad + "msg");
+//								intent.putExtra("msg", Msg.NEW_QUONT);
+//								intent.putExtra(Msg.QUONT, i);
+//								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
 								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 								//and set isTop to TRUE to first of loaded list
+								//We must push not whole list, but only part of it!
 								List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
-								this.getHelper(), dataFromWeb, categoryId);
+								this.getHelper(), dataFromWeb.subList(0, i), categoryId);
 								//update isTop to null for old entry
 								ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 								//update previous url for old TOP_ART
@@ -457,6 +497,9 @@ public class DBActions
 								artCatDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtCatTable
 								ArtCatTable.write(getHelper(), artCatDataToWrite);
+								
+								resultMessage[0]=Msg.NEW_QUONT;
+								resultMessage[1]=Integer.toString(i);
 							}
 							//break loop on matching
 							break;
@@ -524,23 +567,24 @@ public class DBActions
 								//and last (publishing on site lag) and if so delete artAut in DB and replace them
 								//with loaded from web and update articles order
 								//need to think abouts logic of all this shit)
-								Intent intent = new Intent(categoryToLoad + "msg");
-								intent.putExtra("msg", Msg.NO_NEW);
-								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//								Intent intent = new Intent(categoryToLoad + "msg");
+//								intent.putExtra("msg", Msg.NO_NEW);
+//								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+								resultMessage[0]=Msg.NO_NEW;
 							}
 							else
 							{
 								//if not - Toast how many new arts gained
 								Log.d(categoryToLoad, "Обнаружено " + i + " новых статей");
-								Intent intent = new Intent(categoryToLoad + "msg");
-								intent.putExtra("msg", Msg.NEW_QUONT);
-								intent.putExtra(Msg.QUONT, i);
-								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+//								Intent intent = new Intent(categoryToLoad + "msg");
+//								intent.putExtra("msg", Msg.NEW_QUONT);
+//								intent.putExtra(Msg.QUONT, i);
+//								LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
 								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 								//and set isTop to TRUE to first of loaded list
 								List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
-								this.getHelper(), dataFromWeb, authorId);
+								this.getHelper(), dataFromWeb.subList(0, i), authorId);
 								//update isTop to null for old entry
 								ArtAutTable.updateIsTop(getHelper(), topArtAut.getId(), null);
 								//update previous url for old TOP_ART
@@ -551,6 +595,8 @@ public class DBActions
 								artAutDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtAutTable
 								ArtAutTable.write(getHelper(), artAutDataToWrite);
+								resultMessage[0]=Msg.NEW_QUONT;
+								resultMessage[1]=Integer.toString(i);
 							}
 							//break loop on matching
 							break;
@@ -604,7 +650,7 @@ public class DBActions
 				List<ArtCatTable> allArtCatList = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad - 1);
 				lastArtCat = allArtCatList.get(allArtCatList.size() - 1);
 				//TODO check here situation, when publishing new art on site during our request
-				//so we can recive first art in someResult same as last in DB
+				//so we can receive first art in someResult same as last in DB
 				//so we'll have to update lastInDBArt by real next.
 				ArtCatTable.updateNextArt(getHelper(), lastArtCat.getId(), dataFromWeb.get(0).url);
 				//then we must match each art with all artCat, that have no previousArtUrl
@@ -673,6 +719,7 @@ public class DBActions
 				//TODO this.isAuthor, so...
 			}
 		}
+		return resultMessage;
 	}
 
 	//write refreshed date to entry of given category
@@ -709,19 +756,30 @@ public class DBActions
 
 	public class Msg
 	{
+		public static final String DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE = "all right";
+		
 		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL = "we have LESS than 30, and have match to initial";
 		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL = "we have LESS than 30, and have NO match to initial";
 		public static final String DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN = "initial art is already shown, so we must do nothing";
 		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL = "we have LESS than 30, but no initial art";
 		public static final String DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG = "we have already send bottom info from DB to frag";
 		public static final String DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL = "no arts at all";
+		public final static String DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP = "less then 30 from top";
+		
+		final public static String DB_ANSWER_NEVER_REFRESHED = "never refreshed";
+		final public static String DB_ANSWER_REFRESH_BY_PERIOD = "refresh by period";
+		final public static String DB_ANSWER_INFO_SENDED_TO_FRAG = "we have already send info from DB to frag";
+		final public static String DB_ANSWER_NO_ENTRY_OF_ARTS = "no_entry_in_db";
+		final public static String DB_ANSWER_UNKNOWN_CATEGORY = "no entries in Category and Author";
 
 		public final static String MSG = "msg";
+		
+		public static final String ERROR = "error";
 
 		public final static String NO_NEW = "no new";
 		public final static String QUONT = "quont";
 		public final static String NEW_QUONT = "new quont";
 
-		public final static String DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP = "less then 30 from top";
+		public static final String FROM_BOTTOM = "from bottom";
 	}
 }
