@@ -13,7 +13,6 @@ import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.db.DBActions;
-import ru.kuchanov.odnako.db.DBActions.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
@@ -158,9 +157,10 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "artsDataReceiver onReceive called");
+			Log.i(LOG_TAG+categoryToLoad, "artsDataReceiver onReceive called");
 			//get result message
 			String[] msg = intent.getStringArrayExtra(DBActions.Msg.MSG);
+			int page = intent.getIntExtra("pageToLoad", 1);
 			ArrayList<ArtInfo> newAllArtsInfo;
 			switch (msg[0])
 			{
@@ -170,7 +170,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 					if (newAllArtsInfo != null)
 					{
-						if (pageToLoad == 1)
+						if (page == 1)
 						{
 							allArtsInfo.clear();
 						}
@@ -185,13 +185,13 @@ public class FragmentArtsRecyclerList extends Fragment
 					}
 				break;
 				case (DBActions.Msg.NEW_QUONT):
+					Log.d(LOG_TAG+"/"+categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
-
 					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
 					if (newAllArtsInfo != null)
 					{
-						if (pageToLoad == 1)
+						if (page == 1)
 						{
 							allArtsInfo.clear();
 						}
@@ -211,7 +211,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 					if (newAllArtsInfo != null)
 					{
-						if (pageToLoad == 1)
+						if (page == 1)
 						{
 							allArtsInfo.clear();
 						}
@@ -228,14 +228,14 @@ public class FragmentArtsRecyclerList extends Fragment
 				case (DBActions.Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
-					if (intent.getBooleanExtra(Msg.FROM_BOTTOM, false))
+					if (page != 1)
 					{
 						pageToLoad--;
 						setOnScrollListener();
 					}
 				break;
 			}
-			
+
 			setOnScrollListener();
 
 			if (swipeRef.isRefreshing())

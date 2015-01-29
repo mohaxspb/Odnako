@@ -164,26 +164,20 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	//	}
 
 	@Override
-	public void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
+	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		Intent intent = new Intent(categoryToLoad);
-		Bundle b = new Bundle();
-		if (someResult.size() != 0)
+		String[] resultMessage;
+		if (dataToSend.size() != 0)
 		{
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
 			//before sending message to listener (frag) we must write gained info to DB
-			String[] resultMessage;
-			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(someResult, categoryToLoad, pageToLoad);
-			b.putStringArray(Msg.MSG, resultMessage);
+			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(dataToSend, categoryToLoad, pageToLoad);
 		}
 		else
 		{
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
-			someResult.add(new ArtInfo(artInfoArr));
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, someResult);
+			dataToSend.add(new ArtInfo(artInfoArr));
+			resultMessage = new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null};
 		}
-		intent.putExtras(b);
-
 		//now update REFRESHED field of Category or Author entry in table if we load from top
 		if (pageToLoad == 1)
 		{
@@ -193,26 +187,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		{
 			//we don't need to update refreshed Date, cause we do it only when loading from top
 		}
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
 	@Override
 	public void onError(String e, String categoryToLoad, int pageToLoad)
 	{
-		Intent intent = new Intent(categoryToLoad);
-		
-		Bundle b = new Bundle();
-		String[] resultMessage = new String[2];
-		resultMessage[0] = Msg.ERROR;
-		resultMessage[1] = e;
-		b.putStringArray(Msg.MSG, resultMessage);
-		if(pageToLoad!=1)
-		{
-			b.putBoolean(Msg.FROM_BOTTOM, true);
-		}
-		intent.putExtras(b);
-
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		String[] resultMessage = new String[]{Msg.ERROR, e};
+		ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 	}
 
 	public IBinder onBind(Intent intent)
@@ -241,6 +223,20 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			OpenHelperManager.releaseHelper();
 			dataBaseHelper = null;
 		}
+	}
+
+	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
+	String categoryToLoad, int pageToLoad)
+	{
+		Intent intent = new Intent(categoryToLoad);
+
+		Bundle b = new Bundle();
+		b.putStringArray(Msg.MSG, resultMessage);
+		b.putInt("pageToLoad", pageToLoad);
+		b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, dataToSend);
+		intent.putExtras(b);
+
+		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 	}
 }
 

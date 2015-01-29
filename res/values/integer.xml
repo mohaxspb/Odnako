@@ -4,6 +4,6 @@
     <integer name="width">75</integer>
     <integer name="heigth">75</integer>
     <integer name="checkPeriod">120</integer>
-    <integer name="db_version">26</integer>
+    <integer name="db_version">28</integer>
 
 </resources>

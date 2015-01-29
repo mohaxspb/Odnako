@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.db.DBActions;
 import ru.kuchanov.odnako.fragments.FragArtUPD;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import android.content.BroadcastReceiver;
@@ -22,10 +23,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 {
-	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName();
+	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName()+"/";
 
 	ArrayList<ArtInfo> allArtsInfo;
 
@@ -50,28 +52,87 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG_TAG, "artsDataReceiver onReceive called");
+			Log.i(LOG_TAG+category, "artsDataReceiver onReceive called");
+			
+			String[] msg = intent.getStringArrayExtra(DBActions.Msg.MSG);
+			int page = intent.getIntExtra("pageToLoad", 1);
 			ArrayList<ArtInfo> newAllArtsInfo;
-			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+			
+			switch (msg[0])
+			{
+				case (DBActions.Msg.NO_NEW):
+					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
-			//TODO switch by pageToLoad and add or clear list
-			if (newAllArtsInfo != null)
-			{
-				if (allArtsInfo != null)
-				{
-					allArtsInfo.clear();
-				}
-				else
-				{
-					allArtsInfo = new ArrayList<ArtInfo>();
-					allArtsInfo.clear();
-				}
-				allArtsInfo.addAll(newAllArtsInfo);
-				notifyDataSetChanged();
-			}
-			else
-			{
-				System.out.println("ArrayList<ArtInfo> someResult=NNULL!!!");
+					if (newAllArtsInfo != null)
+					{
+						if (page == 1)
+						{
+							allArtsInfo.clear();
+						}
+						allArtsInfo.addAll(newAllArtsInfo);
+						notifyDataSetChanged();
+
+						//TODO think how realise loading from bootom in ViewPager
+						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+					}
+					else
+					{
+						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+					}
+				break;
+				case (DBActions.Msg.NEW_QUONT):
+					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
+
+					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+
+					if (newAllArtsInfo != null)
+					{
+						if (page == 1)
+						{
+							allArtsInfo.clear();
+						}
+						allArtsInfo.addAll(newAllArtsInfo);
+						notifyDataSetChanged();
+
+						//TODO think how realise loading from bootom in ViewPager
+						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+					}
+					else
+					{
+						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+					}
+				break;
+				case (DBActions.Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
+
+					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+
+					if (newAllArtsInfo != null)
+					{
+						if (page == 1)
+						{
+							allArtsInfo.clear();
+						}
+						allArtsInfo.addAll(newAllArtsInfo);
+						notifyDataSetChanged();
+
+						//TODO think how realise loading from bootom in ViewPager
+						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+					}
+					else
+					{
+						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+					}
+				break;
+				case (DBActions.Msg.ERROR):
+					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
+					//check if there was error while loading from bottom, if so, decrement pageToLoad
+					if (page!=1)
+					{
+						//TODO think how realise loading from bootom in ViewPager
+						page--;
+					}
+				break;
 			}
 
 		}
@@ -121,7 +182,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 	{
 		if (object instanceof FragArtUPD)
 		{
-			if(((Fragment) object).isAdded())
+			if (((Fragment) object).isAdded())
 			{
 				((FragArtUPD) object).update(this.allArtsInfo);
 			}
