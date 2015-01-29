@@ -490,13 +490,17 @@ public class DBActions
 								//update isTop to null for old entry
 								ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
 								//update previous url for old TOP_ART
-								String nextArtUrlOfLastInList = artCatDataToWrite.get(artCatDataToWrite.size() - 1)
-								.getNextArtUrl();
-								ArtCatTable.updatePreviousArt(getHelper(), topArtCat.getId(), nextArtUrlOfLastInList);
+//								String nextArtUrlOfLastInList = artCatDataToWrite.get(artCatDataToWrite.size() - 1)
+//								.getNextArtUrl();
+								int prevOldTopArtsId=artCatDataToWrite.get(artCatDataToWrite.size()-1).getArticleId();
+								String prevArtUrlOfOldTopArt=Article.getArticleUrlById(getHelper(), prevOldTopArtsId);
+								ArtCatTable.updatePreviousArt(getHelper(), topArtCat.getId(), prevArtUrlOfOldTopArt);
 								//set new TOP_ART for first of given from web
 								artCatDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtCatTable
 								ArtCatTable.write(getHelper(), artCatDataToWrite);
+								
+								
 								
 								resultMessage[0]=Msg.NEW_QUONT;
 								resultMessage[1]=Integer.toString(i);
@@ -588,9 +592,12 @@ public class DBActions
 								//update isTop to null for old entry
 								ArtAutTable.updateIsTop(getHelper(), topArtAut.getId(), null);
 								//update previous url for old TOP_ART
-								String nextArtUrlOfLastInList = artAutDataToWrite.get(artAutDataToWrite.size() - 1)
-								.getNextArtUrl();
-								ArtAutTable.updatePreviousArt(getHelper(), topArtAut.getId(), nextArtUrlOfLastInList);
+//								String nextArtUrlOfLastInList = artAutDataToWrite.get(artAutDataToWrite.size() - 1)
+//								.getNextArtUrl();
+//								ArtAutTable.updatePreviousArt(getHelper(), topArtAut.getId(), nextArtUrlOfLastInList);
+								int prevOldTopArtsId=artAutDataToWrite.get(artAutDataToWrite.size()-1).getArticleId();
+								String prevArtUrlOfOldTopArt=Article.getArticleUrlById(getHelper(), prevOldTopArtsId);
+								ArtCatTable.updatePreviousArt(getHelper(), topArtAut.getId(), prevArtUrlOfOldTopArt);
 								//set new TOP_ART for first of given from web
 								artAutDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtAutTable
