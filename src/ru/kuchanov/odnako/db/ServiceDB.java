@@ -157,12 +157,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		parse.execute();
 	}
 
-	//	// Send intent with ArtInfo to recivers
-	//	private void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad)
-	//	{
-	//		
-	//	}
-
 	@Override
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{

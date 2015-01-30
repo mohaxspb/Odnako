@@ -95,7 +95,7 @@ public class DBActions
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
 				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
-				String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+				String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
@@ -147,7 +147,7 @@ public class DBActions
 					//so there is some arts in DB by category, that we can send to frag and show
 					List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
 					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
-					String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 					return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
@@ -226,7 +226,7 @@ public class DBActions
 					//if we have 30, so we pass 30 to fragment
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 					ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
-					String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
 				}
@@ -251,9 +251,9 @@ public class DBActions
 						{
 							//so it is real end of all arts in category and we can send arts to frag
 							ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
-							String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-							
+
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
 						}
 						else
@@ -324,7 +324,7 @@ public class DBActions
 					//if we have 30, so we pass 30 to fragment
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
-					String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
@@ -350,15 +350,15 @@ public class DBActions
 						{
 							//so it is real end of all arts in Author and we can send arts to frag
 							ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
-							String[] resultMessage=new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-							
+
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
 						}
 						else
 						{
 							//else we must load arts from web
-//Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
+							//Log.d(LOG_TAG, "we have LESS than 30, and have NO match to initial. So load from web");
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL;
 						}//check matching to initial
 					}//we have initial art
@@ -380,8 +380,8 @@ public class DBActions
 	 */
 	public String[] writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
-		String[] resultMessage = new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null};
-//		resultMessage[0] = Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE;
+		String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+		//		resultMessage[0] = Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE;
 		//here we'll write gained arts to Article table
 		Article.writeArtInfoToArticleTable(getHelper(), dataFromWeb);
 
@@ -436,12 +436,66 @@ public class DBActions
 							//check if there is no new arts
 							if (i == 0)
 							{
-								////new=0 =>do noting
-								//TODO here we can check if there were new art between 1st
+								//here we can check if there were new art between 1st
 								//and last (publishing on site lag) and if so delete artCat in DB and replace them
 								//with loaded from web and update articles order
-								//need to think abouts logic of all this shit)
-								resultMessage[0] = Msg.NO_NEW;
+								//so...
+								//we can detect changes by matching last arts URL of first 30 arts from top
+								//and, of course their quont must be equal (in case of <30 arts at all
+								List<ArtCatTable> first30FromTop = ArtCatTable.getListFromTop(getHelper(), categoryId,
+								pageToLoad);
+								String lastInFirst30Url = Article.getArticleUrlById(getHelper(),
+								first30FromTop.get(first30FromTop.size() - 1).getArticleId());
+								if (dataFromWeb.size() == first30FromTop.size() &&
+								dataFromWeb.get(dataFromWeb.size() - 1).url.equals(lastInFirst30Url))
+								{
+									//if so lists of loaded from web and stored in DB equals
+									//do nothing, send result as NO_NEW
+									resultMessage[0] = Msg.NO_NEW;
+								}
+								else
+								{
+									//TODO we have some changes, so we must calculate quont of arts to delete
+									//and change them to new
+									//we'll delete from top to def quont on page - new qount
+									//write gained, set nextArt of it's last to def quont on page - new qount URL
+									//and update def quont on page - new qount URL by last of gained
+									//SO CALCULATE QUONT OF NEW BY MATCHING ALL TO ALL
+									int newQuont = 0;
+									for (int u = 0; u < dataFromWeb.size(); u++)
+									{
+										String loadedArtsURL = dataFromWeb.get(u).url;
+										for (int y = 0; y < first30FromTop.size(); y++)
+										{
+											int artCatArtsID = first30FromTop.get(y).getArticleId();
+											String DBArtsURL = Article.getArticleUrlById(getHelper(), artCatArtsID);
+											if (loadedArtsURL.equals(DBArtsURL))
+											{
+												//matched, so everithing is OK, do noting
+											}
+											else
+											{
+												//check if it's last iteration
+												if (y == first30FromTop.size() - 1)
+												{
+													//it's last iteration and we have no match
+													//so it's really new art!
+													//so increment newQuont value
+													newQuont++;
+												}
+											}
+										}
+									}//calculating newQount
+									//THEN delete ArtCatTable rows
+									ArtCatTable.delete(getHelper(), first30FromTop.subList(0, first30FromTop.size()-newQuont));
+									//create ArtCat list from ArtInfo
+									List<ArtCatTable> dataToWrite=ArtCatTable.getArtCatListFromArtInfoList(dataBaseHelper, dataFromWeb, categoryId);
+									//set nextArt of it's last to def quont on page - new qount URL
+									dataToWrite.get(dataToWrite.size()-1).setNextArtUrl(nextArtUrl)
+									//and update def quont on page - new qount URL by last of gained
+									
+									ArtCatTable.write(getHelper(), dataToWrite);
+								}
 							}
 							else
 							{
@@ -460,8 +514,8 @@ public class DBActions
 								//set new TOP_ART for first of given from web
 								artCatDataToWrite.get(0).isTop(true);
 								//setNextArtsURL for last in new arts list, cause we can't do it in ArtCat method
-								String nextArtUrl=Article.getArticleUrlById(getHelper(), topArtCat.getArticleId());
-								artCatDataToWrite.get(artCatDataToWrite.size()-1).setNextArtUrl(nextArtUrl);
+								String nextArtUrl = Article.getArticleUrlById(getHelper(), topArtCat.getArticleId());
+								artCatDataToWrite.get(artCatDataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//FINALLY write new entries to ArtCatTable
 								ArtCatTable.write(getHelper(), artCatDataToWrite);
 
@@ -552,8 +606,8 @@ public class DBActions
 								//set new TOP_ART for first of given from web
 								artAutDataToWrite.get(0).isTop(true);
 								//setNextArtsURL for last in new arts list, cause we can't do it in ArtCat method
-								String nextArtUrl=Article.getArticleUrlById(getHelper(), topArtAut.getArticleId());
-								artAutDataToWrite.get(artAutDataToWrite.size()-1).setNextArtUrl(nextArtUrl);
+								String nextArtUrl = Article.getArticleUrlById(getHelper(), topArtAut.getArticleId());
+								artAutDataToWrite.get(artAutDataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//FINALLY write new entries to ArtAutTable
 								ArtAutTable.write(getHelper(), artAutDataToWrite);
 								resultMessage[0] = Msg.NEW_QUONT;
@@ -641,8 +695,9 @@ public class DBActions
 								String prevArtUrlToUpdate = dataFromWeb.get(i).url;
 								ArtCatTable.updatePreviousArt(getHelper(), id, prevArtUrlToUpdate);
 								//setNextArtsURL for last in new arts list, cause we can't do it in ArtCat method
-								String nextArtUrl=Article.getArticleUrlById(getHelper(), withoutPrev.get(u).getArticleId());
-								dataToWrite.get(dataToWrite.size()-1).setNextArtUrl(nextArtUrl);
+								String nextArtUrl = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
+								.getArticleId());
+								dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//write new entries with new Arts to ArtCatTable
 								ArtCatTable.write(getHelper(), dataToWrite);
 							}
@@ -743,7 +798,5 @@ public class DBActions
 		public final static String NO_NEW = "no new";
 		public final static String QUONT = "quont";
 		public final static String NEW_QUONT = "new quont";
-
-//		public static final String FROM_BOTTOM = "from bottom";
 	}
 }

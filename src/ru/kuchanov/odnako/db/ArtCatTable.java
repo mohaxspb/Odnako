@@ -16,7 +16,9 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -160,10 +162,10 @@ public class ArtCatTable
 	//static methods for querying
 
 	/**
-	 * Searches trough ArtCatTable for entry with given categoryId and TRUE isTop value
-	 * so, on success we return true (there are arts of category in DB)
-	 * and false on fail (there are NO arts of category in DB)
-	 *  
+	 * Searches trough ArtCatTable for entry with given categoryId and TRUE
+	 * isTop value so, on success we return true (there are arts of category in
+	 * DB) and false on fail (there are NO arts of category in DB)
+	 * 
 	 * @param h
 	 * @param categoryId
 	 * @return
@@ -425,13 +427,13 @@ public class ArtCatTable
 
 		return allRowsWithoutPrevArt;
 	}
-	
+
 	/**
 	 * this is used to create ArtInfo objects from given ArtCatTable objects
 	 * 
 	 * @param h
 	 * @param dBObjects
-	 * @return 
+	 * @return
 	 */
 	public static ArrayList<ArtInfo> getArtInfoListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
 	{
@@ -444,7 +446,7 @@ public class ArtCatTable
 		}
 		return data;
 	}
-	
+
 	/**
 	 * 
 	 * @param artToWrite
@@ -452,7 +454,8 @@ public class ArtCatTable
 	 * @param categoryId
 	 * @return list of ArtCatTable made from ArtInfo list
 	 */
-	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite, int categoryId)
+	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+	int categoryId)
 	{
 		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
 		for (int u = 0; u < artToWrite.size(); u++)
@@ -480,6 +483,33 @@ public class ArtCatTable
 			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 		}
 		return artCatTableList;
+	}
+
+	/**
+	 * Get's ids of given list and delete by them;
+	 * 
+	 * @param h
+	 * @param rowsToDelete
+	 */
+	public static void delete(DataBaseHelper h, List<ArtCatTable> rowsToDelete)
+	{
+		try
+		{
+			DeleteBuilder<ArtCatTable, Integer> dB = h.getDaoArtCatTable().deleteBuilder();
+			Where<ArtCatTable, Integer> where = dB.where();
+			for (int i = 0; i < rowsToDelete.size(); i++)
+			{
+				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
+				if (i != rowsToDelete.size() - 1)
+				{
+					where.and();
+				}
+			}
+			dB.delete();
+		} catch (SQLException e)
+		{
+			Log.e(LOG, "error while deleting");
+		}
 	}
 
 	public String[] getAsStringArray()
