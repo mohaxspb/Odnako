@@ -455,7 +455,7 @@ public class DBActions
 								}
 								else
 								{
-									//TODO we have some changes, so we must calculate quont of arts to delete
+									//we have some changes, so we must calculate quont of arts to delete
 									//and change them to new
 									//we'll delete from top to def quont on page - new qount
 									//write gained, set nextArt of it's last to def quont on page - new qount URL
@@ -486,15 +486,29 @@ public class DBActions
 											}
 										}
 									}//calculating newQount
+									//before deleting, that may cause changing of list we get nextArtUrl for new rows
+									String nextArtUrl = Article.getArticleUrlById(getHelper(),
+									first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
+									//also before deleting get id of new firstArtOfNextPage to update
+									//it's prevArtsUrl
+									int firstArtOfNextPageId = first30FromTop.get(first30FromTop.size() - newQuont - 1)
+									.getId();
 									//THEN delete ArtCatTable rows
-									ArtCatTable.delete(getHelper(), first30FromTop.subList(0, first30FromTop.size()-newQuont));
+									ArtCatTable.delete(getHelper(),
+									first30FromTop.subList(0, first30FromTop.size() - newQuont));
 									//create ArtCat list from ArtInfo
-									List<ArtCatTable> dataToWrite=ArtCatTable.getArtCatListFromArtInfoList(dataBaseHelper, dataFromWeb, categoryId);
+									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+									getHelper(), dataFromWeb, categoryId);
 									//set nextArt of it's last to def quont on page - new qount URL
-									dataToWrite.get(dataToWrite.size()-1).setNextArtUrl(nextArtUrl)
-									//and update def quont on page - new qount URL by last of gained
-									
+									dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
+									//and update def quont on page - new qount prev URL by last of gained
+									ArtCatTable.updatePreviousArt(getHelper(), firstArtOfNextPageId,
+									dataFromWeb.get(dataFromWeb.size() - 1).url);
+									//Finally write new rows!
 									ArtCatTable.write(getHelper(), dataToWrite);
+									
+									resultMessage[0] = Msg.NEW_QUONT;
+									resultMessage[1] = Integer.toString(i);
 								}
 							}
 							else
@@ -583,11 +597,80 @@ public class DBActions
 							//check if there is no new arts
 							if (i == 0)
 							{
-								//TODO here we can check if there were new art between 1st
+								//here we can check if there were new art between 1st
 								//and last (publishing on site lag) and if so delete artAut in DB and replace them
 								//with loaded from web and update articles order
-								//need to think abouts logic of all this shit)
-								resultMessage[0] = Msg.NO_NEW;
+								//so...
+								//we can detect changes by matching last arts URL of first 30 arts from top
+								//and, of course their quont must be equal (in case of <30 arts at all
+								List<ArtAutTable> first30FromTop = ArtAutTable.getListFromTop(getHelper(), authorId,
+								pageToLoad);
+								String lastInFirst30Url = Article.getArticleUrlById(getHelper(),
+								first30FromTop.get(first30FromTop.size() - 1).getArticleId());
+								if (dataFromWeb.size() == first30FromTop.size() &&
+								dataFromWeb.get(dataFromWeb.size() - 1).url.equals(lastInFirst30Url))
+								{
+									//if so lists of loaded from web and stored in DB equals
+									//do nothing, send result as NO_NEW
+									resultMessage[0] = Msg.NO_NEW;
+								}
+								else
+								{
+									//we have some changes, so we must calculate quont of arts to delete
+									//and change them to new
+									//we'll delete from top to def quont on page - new qount
+									//write gained, set nextArt of it's last to def quont on page - new qount URL
+									//and update def quont on page - new qount URL by last of gained
+									//SO CALCULATE QUONT OF NEW BY MATCHING ALL TO ALL
+									int newQuont = 0;
+									for (int u = 0; u < dataFromWeb.size(); u++)
+									{
+										String loadedArtsURL = dataFromWeb.get(u).url;
+										for (int y = 0; y < first30FromTop.size(); y++)
+										{
+											int artAutArtsID = first30FromTop.get(y).getArticleId();
+											String DBArtsURL = Article.getArticleUrlById(getHelper(), artAutArtsID);
+											if (loadedArtsURL.equals(DBArtsURL))
+											{
+												//matched, so everithing is OK, do noting
+											}
+											else
+											{
+												//check if it's last iteration
+												if (y == first30FromTop.size() - 1)
+												{
+													//it's last iteration and we have no match
+													//so it's really new art!
+													//so increment newQuont value
+													newQuont++;
+												}
+											}
+										}
+									}//calculating newQount
+									//before deleting, that may cause changing of list we get nextArtUrl for new rows
+									String nextArtUrl = Article.getArticleUrlById(getHelper(),
+									first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
+									//also before deleting get id of new firstArtOfNextPage to update
+									//it's prevArtsUrl
+									int firstArtOfNextPageId = first30FromTop.get(first30FromTop.size() - newQuont - 1)
+									.getId();
+									//THEN delete ArtAutTable rows
+									ArtAutTable.delete(getHelper(),
+									first30FromTop.subList(0, first30FromTop.size() - newQuont));
+									//create ArtAut list from ArtInfo
+									List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
+									getHelper(), dataFromWeb, authorId);
+									//set nextArt of it's last to def quont on page - new qount URL
+									dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
+									//and update def quont on page - new qount prev URL by last of gained
+									ArtAutTable.updatePreviousArt(getHelper(), firstArtOfNextPageId,
+									dataFromWeb.get(dataFromWeb.size() - 1).url);
+									//Finally write new rows!
+									ArtAutTable.write(getHelper(), dataToWrite);
+									
+									resultMessage[0] = Msg.NEW_QUONT;
+									resultMessage[1] = Integer.toString(i);
+								}
 							}
 							else
 							{

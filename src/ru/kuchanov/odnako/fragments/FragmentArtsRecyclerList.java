@@ -104,10 +104,6 @@ public class FragmentArtsRecyclerList extends Fragment
 		//reciver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
-
-		//		//reciver for messages from dbService
-		//		LocalBroadcastManager.getInstance(this.act).registerReceiver(dbAnswer,
-		//		new IntentFilter(this.getCategoryToLoad() + "msg"));
 	}
 
 	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
@@ -132,25 +128,6 @@ public class FragmentArtsRecyclerList extends Fragment
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
-
-	//	private BroadcastReceiver dbAnswer = new BroadcastReceiver()
-	//	{
-	//		@Override
-	//		public void onReceive(Context context, Intent intent)
-	//		{
-	//			String msg = intent.getStringExtra(DBActions.Msg.MSG);
-	//			switch (msg)
-	//			{
-	//				case (DBActions.Msg.NO_NEW):
-	//					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
-	//				break;
-	//				case (DBActions.Msg.NEW_QUONT):
-	//					int quont = intent.getIntExtra(DBActions.Msg.QUONT, 0);
-	//					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
-	//				break;
-	//			}
-	//		}
-	//	};
 
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
@@ -254,7 +231,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//		Log.d(LOG_TAG, "onCreateView");
+		//Log.d(LOG_TAG, "onCreateView");
 		View v;
 		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
@@ -308,9 +285,6 @@ public class FragmentArtsRecyclerList extends Fragment
 
 			this.artsListAdapter.notifyDataSetChanged();
 		}
-
-		///////
-
 		//set onScrollListener
 		setOnScrollListener();
 
@@ -445,11 +419,6 @@ public class FragmentArtsRecyclerList extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
 			fragSelectedReceiver = null;
 		}
-		//		if (dbAnswer != null)
-		//		{
-		//			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
-		//			dbAnswer = null;
-		//		}
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}

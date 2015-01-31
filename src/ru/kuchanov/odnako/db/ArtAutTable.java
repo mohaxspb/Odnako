@@ -16,7 +16,9 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -428,6 +430,33 @@ public class ArtAutTable
 			{
 				Log.e(LOG, "error while inserting ArtCatTable entry");
 			}
+		}
+	}
+	
+	/**
+	 * Get's ids of given list and delete by them;
+	 * 
+	 * @param h
+	 * @param rowsToDelete
+	 */
+	public static void delete(DataBaseHelper h, List<ArtAutTable> rowsToDelete)
+	{
+		try
+		{
+			DeleteBuilder<ArtAutTable, Integer> dB = h.getDaoArtAutTable().deleteBuilder();
+			Where<ArtAutTable, Integer> where = dB.where();
+			for (int i = 0; i < rowsToDelete.size(); i++)
+			{
+				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
+				if (i != rowsToDelete.size() - 1)
+				{
+					where.and();
+				}
+			}
+			dB.delete();
+		} catch (SQLException e)
+		{
+			Log.e(LOG, "error while deleting");
 		}
 	}
 
