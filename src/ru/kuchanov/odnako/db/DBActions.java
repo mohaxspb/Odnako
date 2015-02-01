@@ -380,8 +380,6 @@ public class DBActions
 	 */
 	public String[] writeArtsToDB(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
-		String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
-		//		resultMessage[0] = Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE;
 		//here we'll write gained arts to Article table
 		Article.writeArtInfoToArticleTable(getHelper(), dataFromWeb);
 
@@ -409,7 +407,7 @@ public class DBActions
 		if (pageToLoad == 1)
 		{
 			//from top
-			/////check if there are arts of given category
+			//check if there are arts of given category
 			//switch by Category or Author				
 			if (Category.isCategory(this.getHelper(), categoryToLoad))
 			{
@@ -451,7 +449,7 @@ public class DBActions
 								{
 									//if so lists of loaded from web and stored in DB equals
 									//do nothing, send result as NO_NEW
-									resultMessage[0] = Msg.NO_NEW;
+									return new String[] { Msg.NO_NEW, null };
 								}
 								else
 								{
@@ -486,7 +484,7 @@ public class DBActions
 											}
 										}
 									}//calculating newQount
-									//before deleting, that may cause changing of list we get nextArtUrl for new rows
+										//before deleting, that may cause changing of list we get nextArtUrl for new rows
 									String nextArtUrl = Article.getArticleUrlById(getHelper(),
 									first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
 									//also before deleting get id of new firstArtOfNextPage to update
@@ -506,13 +504,13 @@ public class DBActions
 									dataFromWeb.get(dataFromWeb.size() - 1).url);
 									//Finally write new rows!
 									ArtCatTable.write(getHelper(), dataToWrite);
-									
-									resultMessage[0] = Msg.NEW_QUONT;
-									resultMessage[1] = Integer.toString(i);
+
+									return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 								}
 							}
 							else
 							{
+								//TODO here we can also check publishing lag, but fuck it now!
 								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 								//and set isTop to TRUE to first of loaded list
 								//We must push not whole list, but only part of it!
@@ -533,20 +531,15 @@ public class DBActions
 								//FINALLY write new entries to ArtCatTable
 								ArtCatTable.write(getHelper(), artCatDataToWrite);
 
-								resultMessage[0] = Msg.NEW_QUONT;
-								resultMessage[1] = Integer.toString(i);
+								return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 							}
-							//break loop on matching
-							break;
 						}
 						else
 						{
 							//check if it's last iteration
 							if (i == dataFromWeb.size() - 1)
 							{
-								Log.d(categoryToLoad,
-								"no matches, so write new artCat entries to db and update TOP art");
-								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
+								//new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
 								//set TRUE to first of given list
 								List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
 								this.getHelper(), dataFromWeb, categoryId);
@@ -556,6 +549,7 @@ public class DBActions
 								artCatDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtCatTable
 								ArtCatTable.write(getHelper(), artCatDataToWrite);
+								return new String[]{Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, null};
 							}
 						}
 					}
@@ -570,6 +564,7 @@ public class DBActions
 					artCatDataToWrite.get(0).isTop(true);
 					//FINALLY write new entries with new Arts to ArtCatTable
 					ArtCatTable.write(getHelper(), artCatDataToWrite);
+					return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 				}
 			}
 			else
@@ -612,7 +607,7 @@ public class DBActions
 								{
 									//if so lists of loaded from web and stored in DB equals
 									//do nothing, send result as NO_NEW
-									resultMessage[0] = Msg.NO_NEW;
+									return new String[] { Msg.NO_NEW, null };
 								}
 								else
 								{
@@ -647,7 +642,7 @@ public class DBActions
 											}
 										}
 									}//calculating newQount
-									//before deleting, that may cause changing of list we get nextArtUrl for new rows
+										//before deleting, that may cause changing of list we get nextArtUrl for new rows
 									String nextArtUrl = Article.getArticleUrlById(getHelper(),
 									first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
 									//also before deleting get id of new firstArtOfNextPage to update
@@ -667,15 +662,14 @@ public class DBActions
 									dataFromWeb.get(dataFromWeb.size() - 1).url);
 									//Finally write new rows!
 									ArtAutTable.write(getHelper(), dataToWrite);
-									
-									resultMessage[0] = Msg.NEW_QUONT;
-									resultMessage[1] = Integer.toString(i);
+
+									return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 								}
 							}
 							else
 							{
-								//Log.d(categoryToLoad, "Обнаружено " + i + " новых статей");
-								////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
+								//TODO here we can also check publishing lag, but fuck it now!
+								//new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 								//and set isTop to TRUE to first of loaded list
 								List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
 								this.getHelper(), dataFromWeb.subList(0, i), authorId);
@@ -693,20 +687,16 @@ public class DBActions
 								artAutDataToWrite.get(artAutDataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//FINALLY write new entries to ArtAutTable
 								ArtAutTable.write(getHelper(), artAutDataToWrite);
-								resultMessage[0] = Msg.NEW_QUONT;
-								resultMessage[1] = Integer.toString(i);
+								
+								return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 							}
-							//break loop on matching
-							break;
 						}
 						else
 						{
 							//check if it's last iteration
 							if (i == dataFromWeb.size() - 1)
 							{
-								Log.d(categoryToLoad,
-								"no matches, so write new artAut entries to db and update TOP art");
-								////new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
+								//new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
 								//set TRUE to first of given list
 								List<ArtAutTable> artAutDataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
 								this.getHelper(), dataFromWeb, authorId);
@@ -716,6 +706,7 @@ public class DBActions
 								artAutDataToWrite.get(0).isTop(true);
 								//FINALLY write new entries to ArtAutTable
 								ArtAutTable.write(getHelper(), artAutDataToWrite);
+								return new String[]{Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, null};
 							}
 						}
 					}
@@ -730,6 +721,7 @@ public class DBActions
 					artAutDataToWrite.get(0).isTop(true);
 					//FINALLY write new entries with new Arts to ArtAutTable
 					ArtAutTable.write(getHelper(), artAutDataToWrite);
+					return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
 				}
 			}//this is author
 		}//pageToLoad=1
@@ -821,7 +813,6 @@ public class DBActions
 				//TODO this.isAuthor, so...
 			}
 		}
-		return resultMessage;
 	}
 
 	//write refreshed date to entry of given category
@@ -858,6 +849,8 @@ public class DBActions
 
 	public class Msg
 	{
+		public static final String DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES = "load from top with no matches to previous arts";
+
 		public static final String DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE = "all right";
 
 		public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL = "we have LESS than 30, and have match to initial";

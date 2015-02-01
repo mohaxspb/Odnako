@@ -134,73 +134,30 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG_TAG+categoryToLoad, "artsDataReceiver onReceive called");
+			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
 			//get result message
 			String[] msg = intent.getStringArrayExtra(DBActions.Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-			ArrayList<ArtInfo> newAllArtsInfo;
+
 			switch (msg[0])
 			{
 				case (DBActions.Msg.NO_NEW):
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						artsListAdapter.notifyDataSetChanged();
-
-						((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
 				break;
 				case (DBActions.Msg.NEW_QUONT):
-					Log.d(LOG_TAG+"/"+categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						artsListAdapter.notifyDataSetChanged();
-
-						((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
+				break;
+				case (DBActions.Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
 				break;
 				case (DBActions.Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
-
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						artsListAdapter.notifyDataSetChanged();
-
-						((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
 				break;
 				case (DBActions.Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
@@ -211,6 +168,9 @@ public class FragmentArtsRecyclerList extends Fragment
 						setOnScrollListener();
 					}
 				break;
+				default:
+					Log.e(LOG_TAG, "непредвиденный ответ базы данных");
+					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
 			}
 
 			setOnScrollListener();
@@ -227,6 +187,28 @@ public class FragmentArtsRecyclerList extends Fragment
 			}
 		}
 	};
+
+	private void updateAdapter(Intent intent, int page)
+	{
+		ArrayList<ArtInfo> newAllArtsInfo;
+		newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+
+		if (newAllArtsInfo != null)
+		{
+			if (page == 1)
+			{
+				allArtsInfo.clear();
+			}
+			allArtsInfo.addAll(newAllArtsInfo);
+			artsListAdapter.notifyDataSetChanged();
+
+			((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+		}
+		else
+		{
+			System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
