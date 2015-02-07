@@ -9,7 +9,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.activities.ActivityBase;
-import ru.kuchanov.odnako.db.DBActions;
+import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.fragments.FragArtUPD;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import android.content.BroadcastReceiver;
@@ -54,13 +54,13 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 		{
 			Log.i(LOG_TAG+category, "artsDataReceiver onReceive called");
 			
-			String[] msg = intent.getStringArrayExtra(DBActions.Msg.MSG);
+			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
 			ArrayList<ArtInfo> newAllArtsInfo;
 			
 			switch (msg[0])
 			{
-				case (DBActions.Msg.NO_NEW):
+				case (Msg.NO_NEW):
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
@@ -81,7 +81,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
 					}
 				break;
-				case (DBActions.Msg.NEW_QUONT):
+				case (Msg.NEW_QUONT):
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
 
 					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
@@ -103,7 +103,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
 					}
 				break;
-				case (DBActions.Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
+				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
 
 					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
@@ -124,7 +124,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
 					}
 				break;
-				case (DBActions.Msg.ERROR):
+				case (Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
 					if (page!=1)

@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.db.DBActions.Msg;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -78,31 +77,31 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 				switch (DBRezult)
 				{
-					case DBActions.Msg.DB_ANSWER_NEVER_REFRESHED:
+					case Msg.DB_ANSWER_NEVER_REFRESHED:
 						//was never refreshed, so start to refresh
 						//so start download category with 1-st page
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
-					case DBActions.Msg.DB_ANSWER_REFRESH_BY_PERIOD:
+					case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
 						//was refreshed more than max period, so start to refresh
 						//so start download category with 1-st page
 						//but firstly we must show old articles
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
 
-					case DBActions.Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
+					case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
 						//no arts in DB (why?)
 						//we get it if there is no need to refresh by period, so we have one successful load in past...
 						//but no art's in db... that's realy strange! =)
 						//so start download from web
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
-					case DBActions.Msg.DB_ANSWER_UNKNOWN_CATEGORY:
+					case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
 					//TODO here we must create new entry in Category (or Author) table
 					//and start download arts of this category
 
 					break;
-					case DBActions.Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+					case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 					//here we have nothing to do... Cause there is no need to load somthing from web,
 					//and arts have been already sended to frag
 					break;
@@ -160,26 +159,71 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
+		//		String[] resultMessage;
+		//		if (dataToSend.size() != 0)
+		//		{
+		//			//before sending message to listener (frag) we must write gained info to DB
+		//			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(dataToSend, categoryToLoad, pageToLoad);
+		//		}
+		//		else
+		//		{
+		//			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
+		//			dataToSend.add(new ArtInfo(artInfoArr));
+		//			resultMessage = new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null};
+		//		}
+		//		//now update REFRESHED field of Category or Author entry in table if we load from top
+		//		if (pageToLoad == 1)
+		//		{
+		//			new DBActions(this, this.getHelper()).updateRefreshedDate(categoryToLoad);
+		//		}
+		//		else
+		//		{
+		//			//we don't need to update refreshed Date, cause we do it only when loading from top
+		//		}
+		//		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 		String[] resultMessage;
-		if (dataToSend.size() != 0)
-		{
-			//before sending message to listener (frag) we must write gained info to DB
-			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(dataToSend, categoryToLoad, pageToLoad);
-		}
-		else
+		if (dataToSend.size() == 0)
 		{
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
 			dataToSend.add(new ArtInfo(artInfoArr));
-			resultMessage = new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null};
+			resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+		}
+		else
+		{
+			//here we'll write gained arts to Article table
+			Article.writeArtInfoToArticleTable(getHelper(), dataToSend);
+
+			//here if we recive less then 30 arts (const quont of arts on page)
+			//we KNOW that last of them is initial art in category (author)
+			//so WRITE it to DB!
+			if (dataToSend.size() < 30)
+			{
+				if (Category.isCategory(this.getHelper(), categoryToLoad))
+				{
+					int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
+					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).url;
+					Category.setInitialArtsUrl(this.getHelper(), categoryId, initialArtsUrl);
+				}
+				else
+				{
+					int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
+					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).url;
+					Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
+				}
+			}
 		}
 		//now update REFRESHED field of Category or Author entry in table if we load from top
+		//and write downloaded arts to ArtCatTable
 		if (pageToLoad == 1)
 		{
 			new DBActions(this, this.getHelper()).updateRefreshedDate(categoryToLoad);
+			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromTop(dataToSend, categoryToLoad);
 		}
 		else
 		{
 			//we don't need to update refreshed Date, cause we do it only when loading from top
+			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend, categoryToLoad,
+			pageToLoad);
 		}
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
@@ -187,7 +231,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void onError(String e, String categoryToLoad, int pageToLoad)
 	{
-		String[] resultMessage = new String[]{Msg.ERROR, e};
+		String[] resultMessage = new String[] { Msg.ERROR, e };
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 	}
 

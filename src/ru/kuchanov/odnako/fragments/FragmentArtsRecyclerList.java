@@ -12,7 +12,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
-import ru.kuchanov.odnako.db.DBActions;
+import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
@@ -128,6 +128,8 @@ public class FragmentArtsRecyclerList extends Fragment
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
+	
+	
 
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
@@ -136,30 +138,39 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
 			//get result message
-			String[] msg = intent.getStringArrayExtra(DBActions.Msg.MSG);
+			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
+			
+			if(msg[0]==null)
+			{
+				Log.e(LOG_TAG + categoryToLoad, "msg[0]==null: "+String.valueOf(msg[0]==null));
+			}
 
 			switch (msg[0])
 			{
-				case (DBActions.Msg.NO_NEW):
+				case (Msg.NO_NEW):
 					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
-				case (DBActions.Msg.NEW_QUONT):
+				case (Msg.NEW_QUONT):
 					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
-				case (DBActions.Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
-				case (DBActions.Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
+				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
 					updateAdapter(intent, page);
 				break;
-				case (DBActions.Msg.ERROR):
+				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
+//					Log.d(LOG_TAG + "/" + categoryToLoad, msg[1]);
+					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
+					break;
+				case (Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
 					if (page != 1)
