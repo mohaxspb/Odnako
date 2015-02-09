@@ -6,13 +6,18 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+/**
+ * Class for DB answers on requests. I.e. answers for searching for new arts, writing them and so on
+ */
 public class Msg
 {
-	public static final String DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION = "we catch it, so start load from top!";
-
+	public static final String DB_ANSWER_NO_ARTS_IN_CATEGORY = "we cant find any arts in category";
+	
 	public static final String DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES = "load from top with no matches to previous arts";
 
-	public static final String DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE = "all right";
+	public static final String DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT = "all right";
+	
+	public static final String DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION = "we catch it, so start load from top!";
 
 	public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL = "we have LESS than 30, and have match to initial";
 	public static final String DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL = "we have LESS than 30, and have NO match to initial";

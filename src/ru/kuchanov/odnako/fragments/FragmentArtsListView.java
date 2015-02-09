@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
@@ -42,6 +43,9 @@ import android.widget.Toast;
 public class FragmentArtsListView extends Fragment
 {
 	private static final String LOG_TAG = FragmentArtsListView.class.getSimpleName();
+	
+	int pageToLoad = 1;
+	
 	private ListView artsList;
 	private ArtsListVIEWAdapter artsListAdapter;
 
@@ -78,7 +82,7 @@ public class FragmentArtsListView extends Fragment
 		if (savedInstanceState != null)
 		{
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
-			//			this.restoreState(savedInstanceState);
+			this.pageToLoad = savedInstanceState.getInt("pageToLoad");
 
 			this.position = savedInstanceState.getInt("position");
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
@@ -87,8 +91,8 @@ public class FragmentArtsListView extends Fragment
 		// Register to receive messages.
 		// We are registering an observer (mMessageReceiver) to receive Intents
 		// with actions named "custom-event-name".
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDATAReceiver,
-		new IntentFilter(this.getCategoryToLoad()));
+//		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDATAReceiver,
+//		new IntentFilter(this.getCategoryToLoad()));
 
 		//reciver for scrolling and highligting selected position
 		//only if there is twoPane MODE and there is allAuthors list currently selected
@@ -102,10 +106,13 @@ public class FragmentArtsListView extends Fragment
 		//reciver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
+		
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
+		new IntentFilter(this.getCategoryToLoad()));
 
 		//reciver for messages from dbService
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(dbAnswer,
-		new IntentFilter(this.getCategoryToLoad() + "msg"));
+//		LocalBroadcastManager.getInstance(this.act).registerReceiver(dbAnswer,
+//		new IntentFilter(this.getCategoryToLoad() + "msg"));
 	}
 
 	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
@@ -130,60 +137,133 @@ public class FragmentArtsListView extends Fragment
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
-
-	private BroadcastReceiver dbAnswer = new BroadcastReceiver()
+	
+	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			String msg = intent.getStringExtra("msg");
-			switch (msg)
+			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
+			//get result message
+			String[] msg = intent.getStringArrayExtra(Msg.MSG);
+			int page = intent.getIntExtra("pageToLoad", 1);
+
+			if (msg[0] == null)
+			{
+				Log.e(LOG_TAG + categoryToLoad, "msg[0]==null: " + String.valueOf(msg[0] == null));
+			}
+
+			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
 				break;
 				case (Msg.NEW_QUONT):
-					int quont = intent.getIntExtra(Msg.QUONT, 0);
-					Toast.makeText(act, "Обнаружено " + quont + " новых статей", Toast.LENGTH_SHORT).show();
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
 				break;
+				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
+				break;
+				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
+					updateAdapter(intent, page);
+				break;
+				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
+					//we catch publishing lag from bottom, so we'll toast unsinked status
+					//and start download from top (pageToLoad=1)
+					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
+					pageToLoad = 1;
+					getAllArtsInfo(true);
+				break;
+				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
+					Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
+				break;
+				case (Msg.ERROR):
+					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
+					//check if there was error while loading from bottom, if so, decrement pageToLoad
+					if (page != 1)
+					{
+						pageToLoad--;
+						//setOnScrollListener();
+					}
+				break;
+				default:
+					Log.e(LOG_TAG, "непредвиденный ответ базы данных");
+					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
 			}
-		}
-	};
 
-	// Our handler for received Intents. This will be called whenever an Intent
-	// with an action named "custom-event-name" is broadcasted.
-	private BroadcastReceiver artsDATAReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			Log.i(categoryToLoad, "artsDATAReceiver onReceive called");
-			ArrayList<ArtInfo> newAllArtsInfo;
-			newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-			if (newAllArtsInfo != null)
-			{
-				allArtsInfo.clear();
-				allArtsInfo.addAll(newAllArtsInfo);
-				Log.i(categoryToLoad, "categoryToLoad artsInfo.size() " + categoryToLoad + ": " + allArtsInfo.size());
-
-				//				((ActivityMain) act).updateAllCatArtsInfo(categoryToLoad, newAllArtsInfo);
-
-				//				artsListAdapter.updateData(allArtsInfo);
-				artsListAdapter.notifyDataSetChanged();
-			}
-			else
-			{
-				Log.i(categoryToLoad, "ArrayList<ArtInfo> someResult=NULL!!!");
-			}
+			setOnScrollListener();
 
 			if (swipeRef.isRefreshing())
 			{
+				TypedValue typed_value = new TypedValue();
+				getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize,
+				typed_value, true);
+				swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+
+				swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
 				swipeRef.setRefreshing(false);
 			}
-
 		}
 	};
+	
+	private void updateAdapter(Intent intent, int page)
+	{
+		ArrayList<ArtInfo> newAllArtsInfo;
+		newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+
+		if (newAllArtsInfo != null)
+		{
+			if (page == 1)
+			{
+				allArtsInfo.clear();
+			}
+			allArtsInfo.addAll(newAllArtsInfo);
+			artsListAdapter.notifyDataSetChanged();
+
+			((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+		}
+		else
+		{
+			System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+		}
+	}
+	
+	private void setOnScrollListener()
+	{
+		//TODO
+//		if (android.os.Build.VERSION.SDK_INT >= 11)
+//		{
+//			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad)
+//			{
+//				public void onLoadMore()
+//				{
+//					pageToLoad++;
+//					getAllArtsInfo(true);
+//					Log.e(LOG_TAG, "Start loading page " + pageToLoad + " from bottom!");
+//				}
+//			});
+//		}
+//		else if (this.pref.getBoolean("animate_lists", false) == true)
+//		{
+//			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerPreHONEYCOMB(act));
+//		}
+//		else
+//		{
+//			SwipeRefreshLayout STR = (SwipeRefreshLayout) this.artsList.getParent();
+//			STR.setPadding(0, 0, 0, 0);
+//			LayoutParams lp = (LayoutParams) STR.getLayoutParams();
+//			lp.setMargins(0, 50, 0, 0);
+//			STR.setLayoutParams(lp);
+//		}
+	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -304,11 +384,12 @@ public class FragmentArtsListView extends Fragment
 
 		//category saving
 		outState.putString("categoryToLoad", categoryToLoad);
+		
+		outState.putInt("pageToLoad", this.pageToLoad);
 
 		//save topImg and toolbar prop's
 
 		outState.putInt("position", this.position);
-		//		ArtInfo.writeAllArtsInfoToBundle(outState, allArtsInfo, curArtInfo);
 		outState.putParcelable(ArtInfo.KEY_CURENT_ART, this.curArtInfo);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, this.allArtsInfo);
 	}
@@ -380,22 +461,22 @@ public class FragmentArtsListView extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
 			artSelectedReceiver = null;
 		}
-		if (artsDATAReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDATAReceiver);
-			artsDATAReceiver = null;
-		}
+//		if (artsDATAReceiver != null)
+//		{
+//			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDATAReceiver);
+//			artsDATAReceiver = null;
+//		}
 		if (fragSelectedReceiver != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
 			fragSelectedReceiver = null;
 		}
 
-		if (dbAnswer != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
-			dbAnswer = null;
-		}
+//		if (dbAnswer != null)
+//		{
+//			LocalBroadcastManager.getInstance(act).unregisterReceiver(dbAnswer);
+//			dbAnswer = null;
+//		}
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}

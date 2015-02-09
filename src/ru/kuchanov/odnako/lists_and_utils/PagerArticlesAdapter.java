@@ -103,7 +103,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
 					}
 				break;
-				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
+				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
 
 					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 

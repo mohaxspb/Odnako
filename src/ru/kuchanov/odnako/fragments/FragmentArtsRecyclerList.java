@@ -128,8 +128,6 @@ public class FragmentArtsRecyclerList extends Fragment
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
-	
-	
 
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
@@ -140,10 +138,10 @@ public class FragmentArtsRecyclerList extends Fragment
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-			
-			if(msg[0]==null)
+
+			if (msg[0] == null)
 			{
-				Log.e(LOG_TAG + categoryToLoad, "msg[0]==null: "+String.valueOf(msg[0]==null));
+				Log.e(LOG_TAG + categoryToLoad, "msg[0]==null: " + String.valueOf(msg[0] == null));
 			}
 
 			switch (msg[0])
@@ -163,20 +161,27 @@ public class FragmentArtsRecyclerList extends Fragment
 					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
-				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE):
+				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
-//					Log.d(LOG_TAG + "/" + categoryToLoad, msg[1]);
+					//we catch publishing lag from bottom, so we'll toast unsinked status
+					//and start download from top (pageToLoad=1)
 					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
-					break;
+					pageToLoad = 1;
+					getAllArtsInfo(true);
+				break;
+				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
+					Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
+				break;
 				case (Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
 					if (page != 1)
 					{
 						pageToLoad--;
-						setOnScrollListener();
+						//setOnScrollListener();
 					}
 				break;
 				default:

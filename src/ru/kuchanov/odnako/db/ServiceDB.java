@@ -29,7 +29,7 @@ import android.util.Log;
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
-	final private static String LOG_TAG = ServiceDB.class.getSimpleName();
+	final private static String LOG_TAG = ServiceDB.class.getSimpleName()+"/";
 
 	private DataBaseHelper dataBaseHelper;
 
@@ -73,7 +73,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				Log.d(LOG_TAG, DBRezult);
+				Log.d(LOG_TAG+catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -186,7 +186,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		{
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
 			dataToSend.add(new ArtInfo(artInfoArr));
-			resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null };
+			resultMessage = new String[] { Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY, null };
 		}
 		else
 		{
@@ -211,20 +211,22 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
 				}
 			}
+			
+			//now update REFRESHED field of Category or Author entry in table if we load from top
+			//and write downloaded arts to ArtCatTable
+			if (pageToLoad == 1)
+			{
+				new DBActions(this, this.getHelper()).updateRefreshedDate(categoryToLoad);
+				resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromTop(dataToSend, categoryToLoad);
+			}
+			else
+			{
+				//we don't need to update refreshed Date, cause we do it only when loading from top
+				resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend, categoryToLoad,
+				pageToLoad);
+			}
 		}
-		//now update REFRESHED field of Category or Author entry in table if we load from top
-		//and write downloaded arts to ArtCatTable
-		if (pageToLoad == 1)
-		{
-			new DBActions(this, this.getHelper()).updateRefreshedDate(categoryToLoad);
-			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromTop(dataToSend, categoryToLoad);
-		}
-		else
-		{
-			//we don't need to update refreshed Date, cause we do it only when loading from top
-			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend, categoryToLoad,
-			pageToLoad);
-		}
+		
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 

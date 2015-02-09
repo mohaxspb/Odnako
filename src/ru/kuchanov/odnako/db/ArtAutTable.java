@@ -418,6 +418,27 @@ public class ArtAutTable
 		}
 		return artAutTableList;
 	}
+	
+	/**
+	 * 
+	 * @param h
+	 * @param authorId
+	 * @return
+	 */
+	public static List<ArtAutTable> getAllRowsWithoutPrevArt(DataBaseHelper h, int authorId)
+	{
+		List<ArtAutTable> allRowsWithoutPrevArt = null;
+
+		try
+		{
+			h.getDaoArtAutTable().queryForEq(ArtAutTable.PREVIOUS_ART_URL_FIELD_NAME, null);
+		} catch (SQLException e)
+		{
+			//			e.printStackTrace();
+		}
+
+		return allRowsWithoutPrevArt;
+	}
 
 	public static void write(DataBaseHelper h, List<ArtAutTable> dataToWrite)
 	{
