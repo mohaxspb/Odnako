@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
-import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -38,7 +37,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 /**
@@ -291,30 +289,15 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void setOnScrollListener()
 	{
-		if (android.os.Build.VERSION.SDK_INT >= 11)
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad)
 		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad)
+			public void onLoadMore()
 			{
-				public void onLoadMore()
-				{
-					pageToLoad++;
-					getAllArtsInfo(true);
-					Log.e(LOG_TAG, "Start loading page " + pageToLoad + " from bottom!");
-				}
-			});
-		}
-		else if (this.pref.getBoolean("animate_lists", false) == true)
-		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerPreHONEYCOMB(act));
-		}
-		else
-		{
-			SwipeRefreshLayout STR = (SwipeRefreshLayout) this.artsList.getParent();
-			STR.setPadding(0, 0, 0, 0);
-			LayoutParams lp = (LayoutParams) STR.getLayoutParams();
-			lp.setMargins(0, 50, 0, 0);
-			STR.setLayoutParams(lp);
-		}
+				pageToLoad++;
+				getAllArtsInfo(true);
+				Log.e(LOG_TAG, "Start loading page " + pageToLoad + " from bottom!");
+			}
+		});
 	}
 
 	private void getAllArtsInfo(boolean startDownload)

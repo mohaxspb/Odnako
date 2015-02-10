@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.fragments;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
-import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerPreHONEYCOMB;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import android.content.BroadcastReceiver;
@@ -21,7 +20,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +27,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
 
 public class FragmentAllAuthorsList extends Fragment
 {
@@ -111,22 +108,7 @@ public class FragmentAllAuthorsList extends Fragment
 		///////
 
 		//set onScrollListener
-		if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad));
-		}
-		else if (this.pref.getBoolean("animate_lists", false) == true)
-		{
-			this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerPreHONEYCOMB(act));
-		}
-		else
-		{
-			SwipeRefreshLayout STR = (SwipeRefreshLayout) this.artsList.getParent();
-			STR.setPadding(0, 0, 0, 0);
-			LayoutParams lp = (LayoutParams) STR.getLayoutParams();
-			lp.setMargins(0, 50, 0, 0);
-			STR.setLayoutParams(lp);
-		}
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad));
 
 		return v;
 	}
