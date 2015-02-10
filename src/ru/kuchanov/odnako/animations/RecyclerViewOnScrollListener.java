@@ -19,32 +19,33 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 {
 	static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
 
-	ActionBarActivity act;
+	private ActionBarActivity act;
 
 	//	FragmentArtsRecyclerList frag;
-	String categoryToLoad;
+	private String categoryToLoad;
 
-	int initialDistance = -100000;
-	int curentDistance = -1;
+	private int initialDistance = -100000;
+	private int curentDistance = -1;
 
-	LinearLayoutManager manager;
-	Toolbar toolbar;
-	ImageView topImg;
+	private LinearLayoutManager manager;
+	private Toolbar toolbar;
+	private ImageView topImg;
 
 	private boolean loading = true; // True if we are still waiting for the last set of data to load.
 	private int previousTotal = 0; // The total number of items in the dataset after the last load
 	// The minimum amount of items to have below your current scroll position before loading more.
 	private int visibleThreshold = 5;
-	int firstVisibleItem, visibleItemCount, totalItemCount;
+	private int firstVisibleItem, visibleItemCount, totalItemCount;
 
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad, ImageView topImg)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		topImg = (ImageView) act.findViewById(R.id.top_img);
+		//		topImg = (ImageView) act.findViewById(R.id.top_img);
+		this.topImg = topImg;
 
 		this.categoryToLoad = categoryToLoad;
 	}
@@ -53,7 +54,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	{
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		topImg = (ImageView) act.findViewById(R.id.top_img);
+		//		topImg = (ImageView) act.findViewById(R.id.top_img);
 
 		switch (newState)
 		{
@@ -120,7 +121,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 		{
 			// End has been reached
 			//check if totaItemCount -1 (cause of header) a multiple of 30
-			if((totalItemCount-1)%30==0)
+			if ((totalItemCount - 1) % 30 == 0)
 			{
 				// TODO if so we can load more from bottom
 				//CHECK here situation when total quont of arts on are multiple of 30
@@ -251,7 +252,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 					toolbar.getBackground().setAlpha(255);
 				}
 			}
-
 		}
 	}
 

@@ -8,9 +8,6 @@ package ru.kuchanov.odnako.activities;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -19,7 +16,6 @@ import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,7 +26,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 public class ActivityMain extends ActivityBase
 {
@@ -45,8 +40,8 @@ public class ActivityMain extends ActivityBase
 	PagerAdapter artsListPagerAdapter;
 
 	//art's list top image and it's gradient cover
-	ImageView topImgCover;
-	ImageView topImg;
+	//	ImageView topImgCover;
+	//	ImageView topImg;
 
 	Toolbar toolbarMain;
 
@@ -111,7 +106,6 @@ public class ActivityMain extends ActivityBase
 		//		}
 		if (savedInstanceState != null)
 		{
-			//			this.restoreState(savedInstanceState);
 			this.curArtPosition = savedInstanceState.getInt("position");
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
@@ -166,8 +160,8 @@ public class ActivityMain extends ActivityBase
 		/////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
-		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
-		this.topImg = (ImageView) this.findViewById(R.id.top_img);
+//XXX		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
+//		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		if (this.twoPane)
 		{
@@ -215,11 +209,8 @@ public class ActivityMain extends ActivityBase
 							public void onPageSelected(int position)
 							{
 								//move topImg and toolBar while scrolling left list
-								if (android.os.Build.VERSION.SDK_INT >= 11)
-								{
-									toolbar.setY(0 - toolbar.getHeight());
-									topImg.setY(0 - topImg.getHeight());
-								}
+								toolbar.setY(0 - toolbar.getHeight());
+//	XXX							topImg.setY(0 - topImg.getHeight());
 								System.out.println("onPageSelected in articlePager; position: " + position);
 								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
@@ -248,11 +239,8 @@ public class ActivityMain extends ActivityBase
 							public void onPageSelected(int position)
 							{
 								//move topImg and toolBar while scrolling left list
-								if (android.os.Build.VERSION.SDK_INT >= 11)
-								{
-									toolbar.setY(0 - toolbar.getHeight());
-									topImg.setY(0 - topImg.getHeight());
-								}
+								toolbar.setY(0 - toolbar.getHeight());
+//	XXX							topImg.setY(0 - topImg.getHeight());
 								System.out.println("onPageSelected in articlePager; position: " + position);
 								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
@@ -300,14 +288,14 @@ public class ActivityMain extends ActivityBase
 		}
 		//setTopImageCover
 
-		if (this.pref.getString("theme", "dark").equals("dark"))
-		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
-		}
-		else
-		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
-		}
+//	XXX	if (this.pref.getString("theme", "dark").equals("dark"))
+//		{
+//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+//		}
+//		else
+//		{
+//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+//		}
 		////////////////
 
 		//adMob
@@ -328,55 +316,48 @@ public class ActivityMain extends ActivityBase
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
-		//save curent category position
-		//		setCurentCategoryPosition(position);
-
-		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
+//		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
 
 		String title = CatData.getAllCategoriesMenuNames(act)[position];
 		setTitle(title);
 
 		//change topImg
-		if (position >= firstCategoryChildrenQuontity)
-		{
-			String defPackage = act.getPackageName();
-			String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
-			String fullResName = catImgsFilesNames[position - firstCategoryChildrenQuontity];
-			String resName = fullResName.substring(0, fullResName.length() - 4);
-			int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-			ImageLoader imgLoader = UniversalImageLoader.get(act);
-			imgLoader.displayImage("drawable://" + resId, topImg,
-			UniversalImageLoader.getTransparentBackgroundOptions());
-			//			topImg.setImageResource(resId);
-		}
+//	XXX	if (position >= firstCategoryChildrenQuontity)
+//		{
+//			String defPackage = act.getPackageName();
+//			String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+//			String fullResName = catImgsFilesNames[position - firstCategoryChildrenQuontity];
+//			String resName = fullResName.substring(0, fullResName.length() - 4);
+//			int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
+//			ImageLoader imgLoader = UniversalImageLoader.get(act);
+//			imgLoader.displayImage("drawable://" + resId, topImg,
+//			UniversalImageLoader.getTransparentBackgroundOptions());
+//			//			topImg.setImageResource(resId);
+//		}
 
 		//show toolbar when switch category to show it's title
 		//restore and set topImg position
-		if (android.os.Build.VERSION.SDK_INT >= 11)
+		String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+		String curCatLink = allMenuCatsLinks[position];
+		int toolbarY = allCatToolbarTopImgYCoord.get(curCatLink)[0];
+//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
+		int initialDistance = allCatToolbarTopImgYCoord.get(curCatLink)[2];
+		int currentDistance = allCatToolbarTopImgYCoord.get(curCatLink)[3];
+//	XXX	topImg.setY(topImgY);
+
+		if (toolbarY < 0)
 		{
-			//restore and set topImg position
-			String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-			String curCatLink = allMenuCatsLinks[position];
-			int toolbarY = allCatToolbarTopImgYCoord.get(curCatLink)[0];
-			int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
-			int initialDistance = allCatToolbarTopImgYCoord.get(curCatLink)[2];
-			int currentDistance = allCatToolbarTopImgYCoord.get(curCatLink)[3];
-			topImg.setY(topImgY);
+			toolbar.getBackground().setAlpha(255);
+			toolbar.setY(0);
+		}
+		else
+		{
+			toolbar.setY(0);
 
-			if (toolbarY < 0)
-			{
-				toolbar.getBackground().setAlpha(255);
-				toolbar.setY(0);
-			}
-			else
-			{
-				toolbar.setY(0);
-
-				float percent = (float) currentDistance / (float) initialDistance;
-				float gradient = 1f - percent;
-				int newAlpha = (int) (255 * gradient);
-				toolbar.getBackground().setAlpha(newAlpha);
-			}
+			float percent = (float) currentDistance / (float) initialDistance;
+			float gradient = 1f - percent;
+			int newAlpha = (int) (255 * gradient);
+			toolbar.getBackground().setAlpha(newAlpha);
 		}
 	}
 

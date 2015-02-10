@@ -8,6 +8,8 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
@@ -15,6 +17,7 @@ import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +40,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -45,21 +49,28 @@ import android.widget.Toast;
  */
 public class FragmentArtsRecyclerList extends Fragment
 {
-	static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
+	private static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
 
-	int pageToLoad = 1;
+	private int pageToLoad = 1;
 
-	SwipeRefreshLayout swipeRef;
+	private SwipeRefreshLayout swipeRef;
+
+	//art's list top image and it's gradient cover
+	private ImageView topImgCover;
+	private ImageView topImg;
+
+	private float topImgCoord;
 
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
 
-	ActionBarActivity act;
-	SharedPreferences pref;
+	private ActionBarActivity act;
+	private SharedPreferences pref;
 
 	private String categoryToLoad;
-	ArrayList<ArtInfo> allArtsInfo;
-	ArtInfo curArtInfo;
+	private ArrayList<ArtInfo> allArtsInfo;
+	//TODO check if we need it
+//	private ArtInfo curArtInfo;
 	private int position = 0;
 
 	@Override
@@ -84,10 +95,12 @@ public class FragmentArtsRecyclerList extends Fragment
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
+			this.topImgCoord = savedInstanceState.getFloat("topImgYCoord");
+
 			this.pageToLoad = savedInstanceState.getInt("pageToLoad");
 
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
-			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
+//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
 		}
@@ -123,6 +136,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
+			topImg.setY(0 - topImg.getHeight());
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
@@ -145,7 +159,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
-					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG_TAG + "/" + categoryToLoad, "Новых статей не обнаружено!");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
@@ -228,8 +242,38 @@ public class FragmentArtsRecyclerList extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		//Log.d(LOG_TAG, "onCreateView");
-		View v;
-		v = inflater.inflate(R.layout.fragment_arts_list, container, false);
+		View v = inflater.inflate(R.layout.fragment_arts_list, container, false);
+
+		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
+		this.topImg = (ImageView) v.findViewById(R.id.top_img);
+
+		String defPackage = act.getPackageName();
+		String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+		String[] categoriesUrls = act.getResources().getStringArray(R.array.categories_links);
+
+		for (int i = 0; i < categoriesUrls.length; i++)
+		{
+			if (this.categoryToLoad.equals(categoriesUrls[i]))
+			{
+				String fullResName = catImgsFilesNames[i];
+				String resName = fullResName.substring(0, fullResName.length() - 4);
+				int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
+				ImageLoader imgLoader = UniversalImageLoader.get(act);
+				imgLoader.displayImage("drawable://" + resId, topImg,
+				UniversalImageLoader.getTransparentBackgroundOptions());
+				break;
+			}
+		}
+		this.topImg.setY(topImgCoord);
+
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+		}
+		else
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+		}
 
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
 		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
@@ -289,13 +333,13 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void setOnScrollListener()
 	{
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad)
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg)
 		{
 			public void onLoadMore()
 			{
 				pageToLoad++;
 				getAllArtsInfo(true);
-				Log.e(LOG_TAG, "Start loading page " + pageToLoad + " from bottom!");
+				Log.e(LOG_TAG + categoryToLoad, "Start loading page " + pageToLoad + " from bottom!");
 			}
 		});
 	}
@@ -344,8 +388,10 @@ public class FragmentArtsRecyclerList extends Fragment
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
+		//Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
 		super.onSaveInstanceState(outState);
+
+		outState.putFloat("topImgYCoord", this.topImg.getY());
 
 		//category saving
 		outState.putString("categoryToLoad", categoryToLoad);
@@ -354,13 +400,12 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		outState.putInt("position", this.position);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
-		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
-		//		Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState finished");
+//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
 	}
 
 	public void setActivatedPosition(int position)
 	{
-		//		System.out.println("setActivatedPosition(int position: " + position);
+		//System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
 		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));

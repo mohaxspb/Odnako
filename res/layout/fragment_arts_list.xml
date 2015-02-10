@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/top_img"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/img"
+        android:scaleType="fitXY"
+        android:src="@drawable/odnako" />
+
+    <ImageView
+        android:id="@+id/top_img_cover"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/img"
+        android:scaleType="fitXY" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@android:color/transparent"
         tools:context="ru.kuchanov.odnako.activities.ActivityMain" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/arts_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:divider="@null"
             android:dividerHeight="0dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+</FrameLayout>
