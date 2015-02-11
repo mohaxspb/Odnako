@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.fragments.FragmentArtsListView;
+import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +35,13 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		FragmentArtsListView frag=new FragmentArtsListView();
+//		FragmentArtsListView frag=new FragmentArtsListView();
+//		Bundle b = new Bundle();
+//		b.putString("categoryToLoad", allAuthorsInfo.get(position).blogLink);
+//		b.putInt("pageToLoad", 1);
+//		frag.setArguments(b);
+//		return frag;
+		FragmentArtsRecyclerList frag=new FragmentArtsRecyclerList();
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", allAuthorsInfo.get(position).blogLink);
 		b.putInt("pageToLoad", 1);

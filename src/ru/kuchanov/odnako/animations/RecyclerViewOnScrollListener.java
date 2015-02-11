@@ -40,10 +40,11 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad, ImageView topImg)
+	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad, ImageView topImg, int toolbarId)
 	{
 		this.act = act;
-		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+//		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+		toolbar = (Toolbar) act.findViewById(toolbarId);
 		//		topImg = (ImageView) act.findViewById(R.id.top_img);
 		this.topImg = topImg;
 
@@ -53,7 +54,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
 	{
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+//		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		//		topImg = (ImageView) act.findViewById(R.id.top_img);
 
 		switch (newState)

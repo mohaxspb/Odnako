@@ -182,8 +182,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public void onPageSelected(int position)
 			{
-				//				Log.d(LOG_TAG, "select artsListPager position= " + position);
-
+				//Log.d(LOG_TAG, "select artsListPager position= " + position);
 				//this will set current pos, and adapters group/child pos
 				setCurentCategoryPosition(position);
 
@@ -277,14 +276,17 @@ public class ActivityMain extends ActivityBase
 
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
-		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
+//		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
+//		{
+//			toolbar.getBackground().setAlpha(0);
+//		}
+//		else if (this.pref.getBoolean("animate_lists", false))
+//		{
+//			toolbar.getBackground().setAlpha(255);
+//		}
+		if (this.twoPane == false)
 		{
 			toolbar.getBackground().setAlpha(0);
-		}
-		else if (this.pref.getBoolean("animate_lists", false))
-		{
-			toolbar.getBackground().setAlpha(255);
-
 		}
 		//setTopImageCover
 

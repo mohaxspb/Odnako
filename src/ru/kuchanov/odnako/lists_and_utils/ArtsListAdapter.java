@@ -56,6 +56,7 @@ implements Filterable
 	SharedPreferences pref;
 
 	boolean twoPane;
+	boolean isInLeftPager;
 
 	FragmentArtsRecyclerList artsListFrag;
 
@@ -69,6 +70,7 @@ implements Filterable
 		this.artsListView = artsListView;
 
 		this.artsListFrag = artsListFrag;
+		this.isInLeftPager=this.artsListFrag.isInLeftPager();
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
@@ -206,7 +208,7 @@ implements Filterable
 
 					//light checked item in listView
 					ViewGroup vg = (ViewGroup) holderMain.card.getParent();
-					if (this.twoPane)
+					if (this.twoPane && isInLeftPager)
 					{
 
 						if (artsListFrag.getMyActivatedPosition() == positionInAllArtsInfo)

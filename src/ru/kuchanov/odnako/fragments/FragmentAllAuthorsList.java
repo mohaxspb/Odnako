@@ -27,32 +27,42 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 public class FragmentAllAuthorsList extends Fragment
 {
+	private ImageView topImg;
+	private ImageView topImgCover;
+	private float topImgCoord;
+	
+	private SharedPreferences pref;
+	
 	private RecyclerView artsList;
-	AllAuthorsListAdapter adapter;
+	private AllAuthorsListAdapter adapter;
 
-	String categoryToLoad = "odnako.org/authors";
+	private String categoryToLoad = "odnako.org/authors";
 
-	ActionBarActivity act;
-	SharedPreferences pref;
+	private ActionBarActivity act;
 
 	private int position = 0;
+
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//				System.out.println("ArticlesListFragment onCreate");
+		//System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActivityMain) this.getActivity();
+		
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
 		{
 			this.position = savedInstanceState.getInt("position");
+			this.topImgCoord = savedInstanceState.getFloat("topImgYCoord");
 		}
 		// Register to receive messages.
 
@@ -91,11 +101,21 @@ public class FragmentAllAuthorsList extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//		System.out.println("ArticlesListFragment onCreateView");
-		//inflate root view
-		View v;
-
-		v = inflater.inflate(R.layout.fragment_all_authors_list, container, false);
+		//System.out.println("ArticlesListFragment onCreateView");
+		View v = inflater.inflate(R.layout.fragment_all_authors_list, container, false);
+		
+		this.topImg=(ImageView) v.findViewById(R.id.top_img);
+		
+		this.topImg.setY(topImgCoord);
+		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+		}
+		else
+		{
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+		}
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 
@@ -105,10 +125,8 @@ public class FragmentAllAuthorsList extends Fragment
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
-		///////
-
 		//set onScrollListener
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad));
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad, this.topImg));
 
 		return v;
 	}
@@ -125,6 +143,8 @@ public class FragmentAllAuthorsList extends Fragment
 	{
 		//		System.out.println("ArticlesListFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
+		
+		outState.putFloat("topImgYCoord", this.topImg.getY());
 
 		//category saving
 		outState.putString("categoryToLoad", categoryToLoad);

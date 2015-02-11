@@ -31,11 +31,11 @@ public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListenerALLAUTHORS(ActionBarActivity act, String categoryToLoad)
+	public RecyclerViewOnScrollListenerALLAUTHORS(ActionBarActivity act, String categoryToLoad, ImageView topImg)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		topImg = (ImageView) act.findViewById(R.id.top_img);
+		this.topImg = topImg;
 
 		this.categoryToLoad = categoryToLoad;
 	}
@@ -44,7 +44,7 @@ public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
 	{
 		manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		topImg = (ImageView) act.findViewById(R.id.top_img);
+//		topImg = (ImageView) act.findViewById(R.id.top_img);
 
 		switch (newState)
 		{

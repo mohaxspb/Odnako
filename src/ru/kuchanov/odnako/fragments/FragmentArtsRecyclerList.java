@@ -61,6 +61,9 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private float topImgCoord;
 
+	private int toolbarId = R.id.toolbar;
+	private boolean isInLeftPager=true;
+
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
 
@@ -70,7 +73,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	private String categoryToLoad;
 	private ArrayList<ArtInfo> allArtsInfo;
 	//TODO check if we need it
-//	private ArtInfo curArtInfo;
+	//	private ArtInfo curArtInfo;
 	private int position = 0;
 
 	@Override
@@ -100,7 +103,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			this.pageToLoad = savedInstanceState.getInt("pageToLoad");
 
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
-//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
+			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
 		}
@@ -244,6 +247,24 @@ public class FragmentArtsRecyclerList extends Fragment
 		//Log.d(LOG_TAG, "onCreateView");
 		View v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
+		//find cur frag's toolbar
+		if (container.getId() == R.id.article_comments_container)
+		{
+			this.toolbarId = R.id.toolbar_right;
+			//unregister from articles selected events to not highlight items
+			if (artSelectedReceiver != null)
+			{
+				LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
+				artSelectedReceiver = null;
+			}
+			this.setInLeftPager(false);
+		}
+		else if (container.getId() == R.id.arts_list_container)
+		{
+			this.toolbarId = R.id.toolbar;
+			this.setInLeftPager(true);
+		}
+
 		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
 		this.topImg = (ImageView) v.findViewById(R.id.top_img);
 
@@ -333,7 +354,9 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void setOnScrollListener()
 	{
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg)
+
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
+		this.toolbarId)
 		{
 			public void onLoadMore()
 			{
@@ -400,7 +423,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		outState.putInt("position", this.position);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
-//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
+		//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
 	}
 
 	public void setActivatedPosition(int position)
@@ -447,5 +470,15 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();
+	}
+
+	public boolean isInLeftPager()
+	{
+		return isInLeftPager;
+	}
+
+	public void setInLeftPager(boolean isInLeftPager)
+	{
+		this.isInLeftPager = isInLeftPager;
 	}
 }
