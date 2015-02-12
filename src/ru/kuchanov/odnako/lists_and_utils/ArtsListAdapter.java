@@ -3,7 +3,11 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
@@ -13,6 +17,7 @@ import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -196,7 +201,7 @@ implements Filterable
 					//				final ArtInfo p = this.getArtInfoByPosition(position);
 					final int positionInAllArtsInfo = ArtsListAdapter.getPositionInAllArtsInfo(position);
 
-					ArticleHolder holderMain = (ArticleHolder) holder;
+					final ArticleHolder holderMain = (ArticleHolder) holder;
 
 					//variables for scaling text and icons and images from settings
 					String scaleFactorString = pref.getString("scale", "1");
@@ -226,7 +231,6 @@ implements Filterable
 					}
 
 					////////
-
 					// ART_IMG
 					if (!p.img_art.equals("empty") && !p.img_art.contains("/75_75/"))
 					{
@@ -234,15 +238,60 @@ implements Filterable
 						params.height = (int) DipToPx.convert(120, act);
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
+//						if (this.pref.getString("theme", "dark").equals("dark"))
+//						{
+//							imageLoader.displayImage(HDimgURL, holderMain.art_img,
+//							UniversalImageLoader.getDarkOptions());
+//						}
+//						else
+//						{
+//							imageLoader.displayImage(HDimgURL, holderMain.art_img);
+//						}
+						final DisplayImageOptions options;
 						if (this.pref.getString("theme", "dark").equals("dark"))
 						{
-							imageLoader.displayImage(HDimgURL, holderMain.art_img,
-							UniversalImageLoader.getDarkOptions());
+							options=UniversalImageLoader.getDarkOptions();
 						}
 						else
 						{
-							imageLoader.displayImage(HDimgURL, holderMain.art_img);
+							options=UniversalImageLoader.getLightOptions();
 						}
+						imageLoader.displayImage(HDimgURL, holderMain.art_img, options,
+						new ImageLoadingListener()
+						{
+							@Override
+							public void onLoadingStarted(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingCancelled(String imageUri, View view)
+							{
+								//							        ...
+							}
+
+							@Override
+							public void onLoadingFailed(String imageUri, View arg1, FailReason arg2)
+							{
+								String newURL = imageUri.replace("/450_240/", "/120_72/");
+								imageLoader.displayImage(newURL, holderMain.art_img,
+								options);
+							}
+						}, new ImageLoadingProgressListener()
+						{
+							@Override
+							public void onProgressUpdate(String imageUri, View view, int current, int total)
+							{
+								//							        ...
+							}
+						});
 					}
 					else
 					{
@@ -342,15 +391,20 @@ implements Filterable
 						params.height = pixels;
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
+						
+						DisplayImageOptions options;
 						if (this.pref.getString("theme", "dark").equals("dark"))
 						{
-							imageLoader.displayImage(p.img_art, holderMain.author_img,
-							UniversalImageLoader.getDarkOptions());
+							options=UniversalImageLoader.getDarkOptions();
+//							imageLoader.displayImage(p.img_art, holderMain.author_img,
+//							UniversalImageLoader.getDarkOptions());
 						}
 						else
 						{
-							imageLoader.displayImage(p.img_art, holderMain.author_img);
+							options=UniversalImageLoader.getLightOptions();
+//							imageLoader.displayImage(p.img_art, holderMain.author_img);
 						}
+						this.imageLoader.displayImage(p.img_art, holderMain.author_img, options);
 					}
 					else
 					{

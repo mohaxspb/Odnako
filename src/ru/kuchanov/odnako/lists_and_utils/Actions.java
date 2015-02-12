@@ -13,7 +13,10 @@ import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,8 +34,23 @@ public class Actions
 	private static String LOG = Actions.class.getSimpleName() + "/";
 
 	//	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
+	/**
+	 * We can have such situations:
+	 * <ul>
+	 * <li>on ActivityMain
+	 * 		<ul>
+	 * 		<li>twoPane</li>
+	 * 		</ul>
+	 * </ul>
+	 * 
+	 * @param authorBlogUrl
+	 *            to show list or position in list and pager
+	 * @param act
+	 *            for switching action depend on activity
+	 */
 	public static void showAllAuthorsArticles(String authorBlogUrl, ActionBarActivity act)
 	{
+		authorBlogUrl=Author.getURLwithoutSlashAtTheEnd(authorBlogUrl);
 		if (!authorBlogUrl.equals("empty") && !authorBlogUrl.equals(""))
 		{
 			Log.d(LOG, "show all AuthorsArticles!");
@@ -53,16 +71,16 @@ public class Actions
 						Intent intentToAllAutFrag = new Intent(
 						allMenuCategories[mainActivity.getCurentCategoryPosition()] + "art_position");
 						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
-						
+
 						//switch to frag in right pager
-						ViewPager rightPager=(ViewPager) mainActivity.findViewById(R.id.article_comments_container);
-						PagerAuthorsListsAdapter adapter=(PagerAuthorsListsAdapter) rightPager.getAdapter();
-						int position=0;
-						for(int i=0; i<adapter.getAllAuthorsList().size(); i++)
+						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.article_comments_container);
+						PagerAuthorsListsAdapter adapter = (PagerAuthorsListsAdapter) rightPager.getAdapter();
+						int position = 0;
+						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
 						{
-							if(authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).blogLink))
+							if (authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).blogLink))
 							{
-								position=i;
+								position = i;
 								break;
 							}
 						}
@@ -70,7 +88,34 @@ public class Actions
 					}
 					else
 					{
-						
+						//else we must show authors list.
+						//TODO we can switch here if we have him in autList or not
+						//if so we can show arts list in allAuthor frag or not
+						ViewPager leftPager=(ViewPager) act.findViewById(R.id.arts_list_container);
+						PagerAuthorsListsAdapter pagerAllAut=new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+						boolean weFindIt=false;
+						int position = 0;
+						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
+						{
+							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
+							{
+								weFindIt=true;
+								position = i;
+								break;
+							}
+						}
+						if(weFindIt)
+						{
+							leftPager.setAdapter(pagerAllAut);
+							ViewPager.SimpleOnPageChangeListener listener=new PagerListenerAllAuthors(mainActivity);
+							leftPager.setOnPageChangeListener(listener);
+							leftPager.setCurrentItem(position);
+							
+						}
+						else
+						{
+							leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act, authorBlogUrl));
+						}
 					}
 				}
 			}

@@ -19,12 +19,12 @@ import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -129,19 +129,10 @@ public class ActivityBase extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	@SuppressLint("NewApi")
 	protected void myRecreate()
 	{
 		Log.i(LOG_TAG, "myRecreate called");
-		if (android.os.Build.VERSION.SDK_INT >= 11)
-		{
-			super.recreate();
-		}
-		else
-		{
-			finish();
-			startActivity(getIntent());
-		}
+		super.recreate();
 	}
 
 	//set Navigatin drawer
@@ -212,7 +203,7 @@ public class ActivityBase extends ActionBarActivity
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
-		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
 		//setHeader BEFORE setting adapter
 		this.addHeaderForDrawer();
 		////
@@ -290,7 +281,7 @@ public class ActivityBase extends ActionBarActivity
 		this.curArtPosition = state.getInt("position");
 		this.curAllArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
-		Log.e(LOG_TAG+"/restoreState", "getCurentCategoryPosition(): "+getCurentCategoryPosition());
+		Log.e(LOG_TAG + "/restoreState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
 		this.restoreAllCatArtsInfo(state);
 	}
 
@@ -369,24 +360,64 @@ public class ActivityBase extends ActionBarActivity
 	{
 		if (this.act.getClass().getSimpleName().equals("ActivityMain"))
 		{
-			if (this.backPressedQ == 1)
+			//			if (this.backPressedQ == 1)
+			//			{
+			//				this.backPressedQ = 0;
+			//				super.onBackPressed();
+			//				this.finish();
+			//			}
+			//			else
+			//			{
+			//				if (mDrawerLayout.isDrawerOpen(Gravity.START))
+			//				{
+			//					this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			//				}
+			//				else
+			//				{
+			//					this.backPressedQ++;
+			//					Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+			//				}
+			//			}
+			if (mDrawerLayout.isDrawerOpen(Gravity.START))
 			{
-				this.backPressedQ = 0;
-				super.onBackPressed();
-				this.finish();
+				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
 			}
 			else
 			{
-				if (mDrawerLayout.isDrawerOpen(Gravity.START))
+				//check if we have only one page in Left ViewPager
+				//if so - we must show initial state of app
+				//else - check if it's second time of pressing back
+				ViewPager leftPager = (ViewPager) this.act.findViewById(R.id.arts_list_container);
+				if (leftPager.getAdapter().getCount() == 1)
 				{
-					this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+					//if so - we must show initial state of app
+					//test do it simply by recreating
+//					this.act.getIntent().getExtras().clear();
+					
+//					intent.pu
+					
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					this.act.finish();
+					Intent intent = new Intent(this.act, ActivityMain.class);
+					this.act.startActivity(intent);
 				}
 				else
 				{
-					this.backPressedQ++;
-					Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+					//else - check if it's second time of pressing back
+					if (this.backPressedQ == 1)
+					{
+						this.backPressedQ = 0;
+						super.onBackPressed();
+						this.finish();
+					}
+					else
+					{
+						this.backPressedQ++;
+						Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
+
 			//Обнуление счётчика через 5 секунд
 			final Handler handler = new Handler();
 			handler.postDelayed(new Runnable()
@@ -412,4 +443,12 @@ public class ActivityBase extends ActionBarActivity
 			}
 		}
 	}
+	
+//	@Override
+//	public void setTitle(CharSequence title)
+//	{
+//		Log.e(LOG_TAG, "setTitleCalled!");
+//		Log.e(LOG_TAG, "title: "+title);
+//		this.toolbar.setTitle(title);
+//	}
 }

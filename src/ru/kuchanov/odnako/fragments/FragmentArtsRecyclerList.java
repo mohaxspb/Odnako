@@ -153,6 +153,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
+			
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
@@ -212,7 +213,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			if (swipeRef.isRefreshing())
 			{
 				TypedValue typed_value = new TypedValue();
-				getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize,
+				act.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize,
 				typed_value, true);
 				swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
 
@@ -494,23 +495,27 @@ public class FragmentArtsRecyclerList extends Fragment
 	
 	private void setTitleToRightToolbar()
 	{
-		Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
-		String title="";
-		String[] allAutNames=CatData.getAllAuthorsNames(act);
-		String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
-		String[] allCatNames=CatData.getAllTagsNames(act);
-		String[] allCatUrls=CatData.getAllTagsLinks(act);
-		String[] names=CatData.concatArrays(allCatNames, allAutNames);
-		String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
-		for(int i=0; i<urls.length; i++)
+		if(toolbarId==R.id.toolbar_right)
 		{
-			if(this.categoryToLoad.equals(urls[i]))
+			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
+			String title="";
+			String[] allAutNames=CatData.getAllAuthorsNames(act);
+			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
+			String[] allCatNames=CatData.getAllTagsNames(act);
+			String[] allCatUrls=CatData.getAllTagsLinks(act);
+			String[] names=CatData.concatArrays(allCatNames, allAutNames);
+			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
+			for(int i=0; i<urls.length; i++)
 			{
-				title=names[i];
-				break;
+				if(this.categoryToLoad.equals(urls[i]))
+				{
+					title=names[i];
+					break;
+				}
 			}
+			toolbarRight.setTitle(title);
 		}
-		toolbarRight.setTitle(title);
+		
 	}
 
 	public boolean isInLeftPager()

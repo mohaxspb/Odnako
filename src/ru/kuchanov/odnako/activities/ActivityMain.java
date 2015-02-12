@@ -18,6 +18,8 @@ import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.utils.DipToPx;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -160,9 +162,9 @@ public class ActivityMain extends ActivityBase
 		/////////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
-		this.toolbarRight=(Toolbar) this.findViewById(R.id.toolbar_right);
-//XXX		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
-//		this.topImg = (ImageView) this.findViewById(R.id.top_img);
+		this.toolbarRight = (Toolbar) this.findViewById(R.id.toolbar_right);
+		//XXX		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
+		//		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		if (this.twoPane)
 		{
@@ -178,101 +180,104 @@ public class ActivityMain extends ActivityBase
 		this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 		this.artsListPager.setAdapter(artsListPagerAdapter);
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-		this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-		{
-			@Override
-			public void onPageSelected(int position)
-			{
-				//Log.d(LOG_TAG, "select artsListPager position= " + position);
-				//this will set current pos, and adapters group/child pos
-				setCurentCategoryPosition(position);
-
-				setTitleDrawerItemToolbarTopImgETC(position);
-
-				//sending intent to listfrag to notify it's adapter to fix issue
-				//when there is only 1-st art is shown and other can be shown only from articlesPager
-				//when switching articles
-				String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-				Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition] + "_notify_that_selected");
-				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-				if (twoPane)
-				{
-					if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
-					{
-						toolbarRight.setTitle("");
-						
-						pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
-						.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-						artCommsPager.setAdapter(pagerAdapter);
-						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-						artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-						{
-							@Override
-							public void onPageSelected(int position)
-							{
-								//move topImg and toolBar while scrolling left list
-								toolbar.setY(0 - toolbar.getHeight());
-								toolbarRight.setTitle("");
-//	XXX							topImg.setY(0 - topImg.getHeight());
-								System.out.println("onPageSelected in articlePager; position: " + position);
-								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
-
-								Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
-								+ "art_position");
-								Bundle b = new Bundle();
-								b.putInt("position", position);
-								intentToListFrag.putExtras(b);
-
-								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-							}
-						});
-						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-						artCommsPager.setCurrentItem(curPos, true);
-					}
-					else if (currentCategoryPosition == 3)
-					{
-						//show all authors adapters
-						pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
-						artCommsPager.setAdapter(pagerAdapter);
-						artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-						artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-						{
-							@Override
-							public void onPageSelected(int position)
-							{
-								//move topImg and toolBar while scrolling left list
-								toolbar.setY(0 - toolbar.getHeight());
-								toolbarRight.getBackground().setAlpha(0);
-								
-//	XXX							topImg.setY(0 - topImg.getHeight());
-								System.out.println("onPageSelected in articlePager; position: " + position);
-								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-								allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
-
-								Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
-								+ "art_position");
-								Bundle b = new Bundle();
-								b.putInt("position", position);
-								intentToListFrag.putExtras(b);
-
-								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-								//send message to change right toolbar title
-								ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
-								Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink + "_notify_that_selected");
-								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
-							}
-						});
-						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-						artCommsPager.setCurrentItem(curPos, true);
-					}
-					else if (currentCategoryPosition == 13)
-					{
-						//TODO show all categories adapters
-					}
-				}
-			}
-		});
+		ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager, pagerAdapter,
+		artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
+		this.artsListPager.setOnPageChangeListener(menuListener);
+//				this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+//				{
+//					@Override
+//					public void onPageSelected(int position)
+//					{
+//						//Log.d(LOG_TAG, "select artsListPager position= " + position);
+//						//this will set current pos, and adapters group/child pos
+//						setCurentCategoryPosition(position);
+//		
+//						setTitleDrawerItemToolbarTopImgETC(position);
+//		
+//						//sending intent to listfrag to notify it's adapter to fix issue
+//						//when there is only 1-st art is shown and other can be shown only from articlesPager
+//						//when switching articles
+//						String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+//						Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition] + "_notify_that_selected");
+//						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+//						if (twoPane)
+//						{
+//							if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
+//							{
+//								toolbarRight.setTitle("");
+//								
+//								pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
+//								.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
+//								artCommsPager.setAdapter(pagerAdapter);
+//								artCommsPager.setPageTransformer(true, new RotationPageTransformer());
+//								artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+//								{
+//									@Override
+//									public void onPageSelected(int position)
+//									{
+//										//move topImg and toolBar while scrolling left list
+//										toolbar.setY(0 - toolbar.getHeight());
+//										toolbarRight.setTitle("");
+//		//	XXX							topImg.setY(0 - topImg.getHeight());
+//										System.out.println("onPageSelected in articlePager; position: " + position);
+//										String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+//										allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
+//		
+//										Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
+//										+ "art_position");
+//										Bundle b = new Bundle();
+//										b.putInt("position", position);
+//										intentToListFrag.putExtras(b);
+//		
+//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+//									}
+//								});
+//								int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
+//								artCommsPager.setCurrentItem(curPos, true);
+//							}
+//							else if (currentCategoryPosition == 3)
+//							{
+//								//show all authors adapters
+//								pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+//								artCommsPager.setAdapter(pagerAdapter);
+//								artCommsPager.setPageTransformer(true, new RotationPageTransformer());
+//								artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+//								{
+//									@Override
+//									public void onPageSelected(int position)
+//									{
+//										//move topImg and toolBar while scrolling left list
+//										toolbar.setY(0 - toolbar.getHeight());
+//										toolbarRight.getBackground().setAlpha(0);
+//										
+//		//	XXX							topImg.setY(0 - topImg.getHeight());
+//										System.out.println("onPageSelected in articlePager; position: " + position);
+//										String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+//										allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
+//		
+//										Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
+//										+ "art_position");
+//										Bundle b = new Bundle();
+//										b.putInt("position", position);
+//										intentToListFrag.putExtras(b);
+//		
+//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+//										//send message to change right toolbar title
+//										ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
+//										Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink + "_notify_that_selected");
+//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
+//									}
+//								});
+//								int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
+//								artCommsPager.setCurrentItem(curPos, true);
+//							}
+//							else if (currentCategoryPosition == 13)
+//							{
+//								//TODO show all categories adapters
+//							}
+//						}
+//					}
+//				});
 		if (pagerAdapter == null)
 		{
 			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
@@ -286,14 +291,14 @@ public class ActivityMain extends ActivityBase
 
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
-//		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
-//		{
-//			toolbar.getBackground().setAlpha(0);
-//		}
-//		else if (this.pref.getBoolean("animate_lists", false))
-//		{
-//			toolbar.getBackground().setAlpha(255);
-//		}
+		//		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
+		//		{
+		//			toolbar.getBackground().setAlpha(0);
+		//		}
+		//		else if (this.pref.getBoolean("animate_lists", false))
+		//		{
+		//			toolbar.getBackground().setAlpha(255);
+		//		}
 		if (this.twoPane == false)
 		{
 			toolbar.getBackground().setAlpha(0);
@@ -301,14 +306,14 @@ public class ActivityMain extends ActivityBase
 		toolbarRight.getBackground().setAlpha(0);
 		//setTopImageCover
 
-//	XXX	if (this.pref.getString("theme", "dark").equals("dark"))
-//		{
-//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
-//		}
-//		else
-//		{
-//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
-//		}
+		//	XXX	if (this.pref.getString("theme", "dark").equals("dark"))
+		//		{
+		//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+		//		}
+		//		else
+		//		{
+		//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+		//		}
 		////////////////
 
 		//adMob
@@ -319,6 +324,7 @@ public class ActivityMain extends ActivityBase
 	private void restoreAllCatListsSelectedArtPosition(Bundle b)
 	{
 		this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
+		//TODO loop through keys, not from res arr
 		String[] catLinks = CatData.getAllCategoriesMenuLinks(act);
 		for (int i = 0; i < catLinks.length; i++)
 		{
@@ -327,52 +333,64 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	private void setTitleDrawerItemToolbarTopImgETC(int position)
-	{
-//		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
-
-		String title = CatData.getAllCategoriesMenuNames(act)[position];
-		setTitle(title);
-
-		//change topImg
-//	XXX	if (position >= firstCategoryChildrenQuontity)
-//		{
-//			String defPackage = act.getPackageName();
-//			String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
-//			String fullResName = catImgsFilesNames[position - firstCategoryChildrenQuontity];
-//			String resName = fullResName.substring(0, fullResName.length() - 4);
-//			int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-//			ImageLoader imgLoader = UniversalImageLoader.get(act);
-//			imgLoader.displayImage("drawable://" + resId, topImg,
-//			UniversalImageLoader.getTransparentBackgroundOptions());
-//			//			topImg.setImageResource(resId);
-//		}
-
-		//show toolbar when switch category to show it's title
-		//restore and set topImg position
-		String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-		String curCatLink = allMenuCatsLinks[position];
-		int toolbarY = allCatToolbarTopImgYCoord.get(curCatLink)[0];
-//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
-		int initialDistance = allCatToolbarTopImgYCoord.get(curCatLink)[2];
-		int currentDistance = allCatToolbarTopImgYCoord.get(curCatLink)[3];
-//	XXX	topImg.setY(topImgY);
-
-		if (toolbarY < 0)
+		private void setTitleDrawerItemToolbarTopImgETC(int position)
 		{
-			toolbar.getBackground().setAlpha(255);
-			toolbar.setY(0);
+	//		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
+	
+			//find name of category in all (really all) categories
+//			String[] allAutAndTagsUrls=CatData.concatArrays(CatData.getAllAuthorsBlogsURLs(act), CatData.getAllTagsLinks(act));
+//			String[] allAutAndTagsNames=CatData.concatArrays(CatData.getAllAuthorsNames(act), CatData.getAllTagsNames(act));
+//			String[] reallyAllCatsUrls=CatData.concatArrays(CatData.getAllCategoriesMenuLinks(act), allAutAndTagsUrls);
+//			String[] reallyAllCatsNames=CatData.concatArrays(CatData.getAllCategoriesMenuNames(act), allAutAndTagsNames);
+//			String title="";
+//			for(int i=0; i<reallyAllCatsUrls.length; i++)
+//			{
+//				if()
+//				title = CatData.getAllCategoriesMenuNames(act)[position];
+//			}
+			String title = CatData.getAllCategoriesMenuNames(act)[position];
+//			setTitle(title);
+			this.getSupportActionBar().setTitle(title);
+	
+			//change topImg
+	//	XXX	if (position >= firstCategoryChildrenQuontity)
+	//		{
+	//			String defPackage = act.getPackageName();
+	//			String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+	//			String fullResName = catImgsFilesNames[position - firstCategoryChildrenQuontity];
+	//			String resName = fullResName.substring(0, fullResName.length() - 4);
+	//			int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
+	//			ImageLoader imgLoader = UniversalImageLoader.get(act);
+	//			imgLoader.displayImage("drawable://" + resId, topImg,
+	//			UniversalImageLoader.getTransparentBackgroundOptions());
+	//			//			topImg.setImageResource(resId);
+	//		}
+	
+			//show toolbar when switch category to show it's title
+			//restore and set topImg position
+			String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+			String curCatLink = allMenuCatsLinks[position];
+			int toolbarY = allCatToolbarTopImgYCoord.get(curCatLink)[0];
+	//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
+			int initialDistance = allCatToolbarTopImgYCoord.get(curCatLink)[2];
+			int currentDistance = allCatToolbarTopImgYCoord.get(curCatLink)[3];
+	//	XXX	topImg.setY(topImgY);
+	
+			if (toolbarY < 0)
+			{
+				toolbar.getBackground().setAlpha(255);
+				toolbar.setY(0);
+			}
+			else
+			{
+				toolbar.setY(0);
+	
+				float percent = (float) currentDistance / (float) initialDistance;
+				float gradient = 1f - percent;
+				int newAlpha = (int) (255 * gradient);
+				toolbar.getBackground().setAlpha(newAlpha);
+			}
 		}
-		else
-		{
-			toolbar.setY(0);
-
-			float percent = (float) currentDistance / (float) initialDistance;
-			float gradient = 1f - percent;
-			int newAlpha = (int) (255 * gradient);
-			toolbar.getBackground().setAlpha(newAlpha);
-		}
-	}
 
 	private void restoreAllCatToolbartopImgYCoord(Bundle savedInstanceState)
 	{
@@ -411,6 +429,11 @@ public class ActivityMain extends ActivityBase
 			b.putInt("allCatListsSelectedArtPosition_" + String.valueOf(i),
 			allCatListsSelectedArtPosition.get(allLinks[i]));
 		}
+	}
+
+	public HashMap<String, Integer> getAllCatListsSelectedArtPosition()
+	{
+		return allCatListsSelectedArtPosition;
 	}
 
 	public int getCurentPositionByGroupChildPosition(int group, int child)
@@ -570,4 +593,12 @@ public class ActivityMain extends ActivityBase
 			+ " groupChildPosition=null");
 		}
 	}
+	
+//	@Override
+//	public void setTitle(CharSequence title)
+//	{
+//		Log.e(LOG_TAG, "setTitleCalled!");
+//		Log.e(LOG_TAG, "title: "+title);
+//		this.getSupportActionBar().setTitle(title);
+//	}
 }
