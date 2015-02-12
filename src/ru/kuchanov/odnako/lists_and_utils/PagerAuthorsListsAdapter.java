@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-import ru.kuchanov.odnako.fragments.FragmentArtsListView;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
 import android.os.Bundle;
@@ -31,6 +30,23 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 		this.act = act;
 		this.allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
 	}
+	
+	/**
+	 * updates allAluthors list by giveb and notify about changes
+	 * @param allAuthorsInfo
+	 */
+	public void updateData(ArrayList<AuthorInfo> allAuthorsInfo)
+	{
+		this.allAuthorsInfo.clear();
+		this.allAuthorsInfo.addAll(allAuthorsInfo);
+		this.notifyDataSetChanged();
+	}
+	
+	public ArrayList<AuthorInfo> getAllAuthorsList()
+	{
+		return allAuthorsInfo;
+	}
+	
 
 	@Override
 	public Fragment getItem(int position)

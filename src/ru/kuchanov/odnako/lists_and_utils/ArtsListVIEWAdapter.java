@@ -474,7 +474,7 @@ implements Filterable
 					@Override
 					public void onClick(View v)
 					{
-						Actions.showAllAuthorsArticles(p, act);
+						Actions.showAllAuthorsArticles(p.authorBlogUrl, act);
 					}
 				});
 				//end of name of author

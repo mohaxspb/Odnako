@@ -283,7 +283,7 @@ public class CommentsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				Actions.showAllAuthorsArticles(curArtInfo, act);
+				Actions.showAllAuthorsArticles(curArtInfo.authorBlogUrl, act);
 			}
 		});
 		//end of name of author

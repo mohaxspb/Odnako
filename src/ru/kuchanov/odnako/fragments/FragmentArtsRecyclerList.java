@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +35,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -127,6 +129,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			Log.i(categoryToLoad, "fragSelectedReceiver onReceive called");
 			artsListAdapter.notifyDataSetChanged();
+			setTitleToRightToolbar();
 		}
 	};
 
@@ -258,6 +261,23 @@ public class FragmentArtsRecyclerList extends Fragment
 				artSelectedReceiver = null;
 			}
 			this.setInLeftPager(false);
+//			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
+//			String title="";
+//			String[] allAutNames=CatData.getAllAuthorsNames(act);
+//			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
+//			String[] allCatNames=CatData.getAllTagsNames(act);
+//			String[] allCatUrls=CatData.getAllTagsLinks(act);
+//			String[] names=CatData.concatArrays(allCatNames, allAutNames);
+//			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
+//			for(int i=0; i<urls.length; i++)
+//			{
+//				if(this.categoryToLoad.equals(urls[i]))
+//				{
+//					title=names[i];
+//					break;
+//				}
+//			}
+//			toolbarRight.setTitle(title);
 		}
 		else if (container.getId() == R.id.arts_list_container)
 		{
@@ -470,6 +490,27 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();
+	}
+	
+	private void setTitleToRightToolbar()
+	{
+		Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
+		String title="";
+		String[] allAutNames=CatData.getAllAuthorsNames(act);
+		String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
+		String[] allCatNames=CatData.getAllTagsNames(act);
+		String[] allCatUrls=CatData.getAllTagsLinks(act);
+		String[] names=CatData.concatArrays(allCatNames, allAutNames);
+		String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
+		for(int i=0; i<urls.length; i++)
+		{
+			if(this.categoryToLoad.equals(urls[i]))
+			{
+				title=names[i];
+				break;
+			}
+		}
+		toolbarRight.setTitle(title);
 	}
 
 	public boolean isInLeftPager()

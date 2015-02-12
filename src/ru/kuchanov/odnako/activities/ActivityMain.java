@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo;
+import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.*;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
@@ -43,7 +45,7 @@ public class ActivityMain extends ActivityBase
 	//	ImageView topImgCover;
 	//	ImageView topImg;
 
-	Toolbar toolbarMain;
+	Toolbar toolbarRight;
 
 	//curent displayed info
 	//AllArtsList Arrays for author's and categories links
@@ -156,10 +158,9 @@ public class ActivityMain extends ActivityBase
 			this.setContentView(R.layout.activity_main);
 		}
 		/////////////
-		/////////
-		/////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
+		this.toolbarRight=(Toolbar) this.findViewById(R.id.toolbar_right);
 //XXX		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
 //		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
@@ -188,7 +189,7 @@ public class ActivityMain extends ActivityBase
 
 				setTitleDrawerItemToolbarTopImgETC(position);
 
-				//test sending intent to listfrag to notify it's adapter to fix issue
+				//sending intent to listfrag to notify it's adapter to fix issue
 				//when there is only 1-st art is shown and other can be shown only from articlesPager
 				//when switching articles
 				String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
@@ -198,6 +199,8 @@ public class ActivityMain extends ActivityBase
 				{
 					if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 					{
+						toolbarRight.setTitle("");
+						
 						pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
 						.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
 						artCommsPager.setAdapter(pagerAdapter);
@@ -209,6 +212,7 @@ public class ActivityMain extends ActivityBase
 							{
 								//move topImg and toolBar while scrolling left list
 								toolbar.setY(0 - toolbar.getHeight());
+								toolbarRight.setTitle("");
 //	XXX							topImg.setY(0 - topImg.getHeight());
 								System.out.println("onPageSelected in articlePager; position: " + position);
 								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
@@ -239,6 +243,8 @@ public class ActivityMain extends ActivityBase
 							{
 								//move topImg and toolBar while scrolling left list
 								toolbar.setY(0 - toolbar.getHeight());
+								toolbarRight.getBackground().setAlpha(0);
+								
 //	XXX							topImg.setY(0 - topImg.getHeight());
 								System.out.println("onPageSelected in articlePager; position: " + position);
 								String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
@@ -251,6 +257,10 @@ public class ActivityMain extends ActivityBase
 								intentToListFrag.putExtras(b);
 
 								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+								//send message to change right toolbar title
+								ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
+								Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink + "_notify_that_selected");
+								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
 							}
 						});
 						int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
@@ -288,6 +298,7 @@ public class ActivityMain extends ActivityBase
 		{
 			toolbar.getBackground().setAlpha(0);
 		}
+		toolbarRight.getBackground().setAlpha(0);
 		//setTopImageCover
 
 //	XXX	if (this.pref.getString("theme", "dark").equals("dark"))

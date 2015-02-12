@@ -174,8 +174,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				{
 					public void onClick(View v)
 					{
-						Actions.showAllAuthorsArticles(new ArtInfo(new String[] { "", "", "", p.blogLink, p.name }),
-						act);
+						Actions.showAllAuthorsArticles(p.blogLink, act);
 					}
 				});
 

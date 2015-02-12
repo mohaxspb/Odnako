@@ -54,14 +54,14 @@ public class AllAuthorsInfo
 		numOfAuthors = this.allNames.length;
 	}
 
-	class AuthorInfo
+	public class AuthorInfo
 	{
-		String name;
-		String blogLink;
-		String avaImg;
-		String avaImgBig;
-		String description;
-		String who;
+		public String name;
+		public String blogLink;
+		public String avaImg;
+		public String avaImgBig;
+		public String description;
+		public String who;
 
 		AuthorInfo(String name, String blogLink, String avaImg, String avaImgBig, String description, String who)
 		{

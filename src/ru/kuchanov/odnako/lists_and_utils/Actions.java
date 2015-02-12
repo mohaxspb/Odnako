@@ -12,37 +12,76 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Actions
 {
+	private static String LOG = Actions.class.getSimpleName() + "/";
 
-	/**
-	 * 
-	 */
-	public Actions()
+	//	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
+	public static void showAllAuthorsArticles(String authorBlogUrl, ActionBarActivity act)
 	{
-		// TODO Auto-generated constructor stub
-	}
-
-	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
-	{
-		if (!p.authorBlogUrl.equals("empty") && !p.authorBlogUrl.equals(""))
+		if (!authorBlogUrl.equals("empty") && !authorBlogUrl.equals(""))
 		{
-			Toast.makeText(act, "show all AuthorsArticles!", Toast.LENGTH_SHORT).show();
+			Log.d(LOG, "show all AuthorsArticles!");
+
+			//check if it's large screen
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+			boolean twoPane = pref.getBoolean("twoPane", false);
+			if (twoPane)
+			{
+				if (act.getClass().getSimpleName().equals("ActivityMain"))
+				{
+					ActivityMain mainActivity = (ActivityMain) act;
+					//check if we show allAuthors frag
+					if (mainActivity.getCurentCategoryPosition() == 3)
+					{
+						//if so send message to switch items
+						String[] allMenuCategories = CatData.getAllCategoriesMenuLinks(act);
+						Intent intentToAllAutFrag = new Intent(
+						allMenuCategories[mainActivity.getCurentCategoryPosition()] + "art_position");
+						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
+						
+						//switch to frag in right pager
+						ViewPager rightPager=(ViewPager) mainActivity.findViewById(R.id.article_comments_container);
+						PagerAuthorsListsAdapter adapter=(PagerAuthorsListsAdapter) rightPager.getAdapter();
+						int position=0;
+						for(int i=0; i<adapter.getAllAuthorsList().size(); i++)
+						{
+							if(authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).blogLink))
+							{
+								position=i;
+								break;
+							}
+						}
+						rightPager.setCurrentItem(position, true);
+					}
+					else
+					{
+						
+					}
+				}
+			}
+			else
+			{
+
+			}
 		}
 		else
 		{
-			System.out.println("p.authorBlogUrl.equals('empty') (|| ''): WTF?!");
+			System.out.println("p.authorBlogUrl.equals('empty' || ''): WTF?!");
 		}
 	}
 
@@ -117,12 +156,12 @@ public class Actions
 			//			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
 			//			.findFragmentById(R.id.arts_list_container);
 			//			artsListFrag.setActivatedPosition(position);
-//			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
-//			ArtsListsPagerAdapter artsListPagerAdapter = (ArtsListsPagerAdapter) artsListPager.getAdapter();
-//			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
-//			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
-//			.getRegisteredFragment(curentCategoryPosition);
-//			curArtsListFrag.setActivatedPosition(position);
+			//			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+			//			ArtsListsPagerAdapter artsListPagerAdapter = (ArtsListsPagerAdapter) artsListPager.getAdapter();
+			//			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
+			//			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
+			//			.getRegisteredFragment(curentCategoryPosition);
+			//			curArtsListFrag.setActivatedPosition(position);
 			///////////
 			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
 			if (pager.getAdapter().getClass().getSimpleName().equals(PagerArticlesAdapter.class.getSimpleName()))
@@ -134,9 +173,9 @@ public class Actions
 			{
 				//				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
 				//				((ActivityMain) act).getAllArtsInfo(), act);
-//				PagerAdapter pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
-//				act);
-//				pager.setAdapter(pagerAdapter);
+				//				PagerAdapter pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
+				//				act);
+				//				pager.setAdapter(pagerAdapter);
 				pager.setCurrentItem(position, true);
 			}
 

@@ -457,7 +457,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				@Override
 				public void onClick(View v)
 				{
-					Actions.showAllAuthorsArticles(curArtInfo, act);
+					Actions.showAllAuthorsArticles(curArtInfo.authorBlogUrl, act);
 				}
 			});
 		}
