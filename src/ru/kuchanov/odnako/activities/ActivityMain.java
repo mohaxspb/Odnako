@@ -10,30 +10,39 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo;
-import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.*;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
-import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
+import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase
 {
 	final private static String LOG_TAG = ActivityMain.class.getSimpleName();
+
+	public final static int PAGER_TYPE_MENU = 0;
+	public final static int PAGER_TYPE_AUTHORS = 1;
+	public final static int PAGER_TYPE_CATEGORIES = 2;
+	public final static int PAGER_TYPE_SINGLE = 3;
+	private final static String PAGER_TYPE_KEY = "pager type key";
+	public int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
 	ViewPager artCommsPager;
@@ -78,7 +87,7 @@ public class ActivityMain extends ActivityBase
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//		System.out.println("ActivityMain onCreate");
+		//System.out.println("ActivityMain onCreate");
 		this.act = this;
 
 		//get default settings to get all settings later
@@ -101,18 +110,12 @@ public class ActivityMain extends ActivityBase
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 		/////
-
-		//		Bundle stateFromIntent = this.getIntent().getExtras();
-		//		if (stateFromIntent != null)
-		//		{
-		//			this.restoreState(stateFromIntent);
-		//			this.restoreGroupChildPosition(stateFromIntent);
-		//		}
 		if (savedInstanceState != null)
 		{
 			this.curArtPosition = savedInstanceState.getInt("position");
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
+			this.pagerType = savedInstanceState.getInt(PAGER_TYPE_KEY);
 			this.restoreAllCatArtsInfo(savedInstanceState);
 
 			this.restoreGroupChildPosition(savedInstanceState);
@@ -163,8 +166,6 @@ public class ActivityMain extends ActivityBase
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
 		this.toolbarRight = (Toolbar) this.findViewById(R.id.toolbar_right);
-		//XXX		this.topImgCover = (ImageView) this.findViewById(R.id.top_img_cover);
-		//		this.topImg = (ImageView) this.findViewById(R.id.top_img);
 		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
 		if (this.twoPane)
 		{
@@ -177,107 +178,27 @@ public class ActivityMain extends ActivityBase
 		//End of setNavDraw
 
 		//set arts lists viewPager
-		this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
-		this.artsListPager.setAdapter(artsListPagerAdapter);
+		Log.e(LOG_TAG, "pagerType: "+this.pagerType);
+		switch (this.pagerType)
+		{
+			case PAGER_TYPE_MENU:
+				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+				this.artsListPager.setAdapter(artsListPagerAdapter);
+				
+				ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
+				pagerAdapter,
+				artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
+				this.artsListPager.setOnPageChangeListener(menuListener);
+				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+			break;
+			case PAGER_TYPE_AUTHORS:
+				this.artsListPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+				this.artsListPager.setAdapter(artsListPagerAdapter);
+				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this));
+			break;
+		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-		ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager, pagerAdapter,
-		artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
-		this.artsListPager.setOnPageChangeListener(menuListener);
-//				this.artsListPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-//				{
-//					@Override
-//					public void onPageSelected(int position)
-//					{
-//						//Log.d(LOG_TAG, "select artsListPager position= " + position);
-//						//this will set current pos, and adapters group/child pos
-//						setCurentCategoryPosition(position);
-//		
-//						setTitleDrawerItemToolbarTopImgETC(position);
-//		
-//						//sending intent to listfrag to notify it's adapter to fix issue
-//						//when there is only 1-st art is shown and other can be shown only from articlesPager
-//						//when switching articles
-//						String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-//						Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition] + "_notify_that_selected");
-//						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-//						if (twoPane)
-//						{
-//							if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
-//							{
-//								toolbarRight.setTitle("");
-//								
-//								pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
-//								.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-//								artCommsPager.setAdapter(pagerAdapter);
-//								artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-//								artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-//								{
-//									@Override
-//									public void onPageSelected(int position)
-//									{
-//										//move topImg and toolBar while scrolling left list
-//										toolbar.setY(0 - toolbar.getHeight());
-//										toolbarRight.setTitle("");
-//		//	XXX							topImg.setY(0 - topImg.getHeight());
-//										System.out.println("onPageSelected in articlePager; position: " + position);
-//										String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-//										allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
-//		
-//										Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
-//										+ "art_position");
-//										Bundle b = new Bundle();
-//										b.putInt("position", position);
-//										intentToListFrag.putExtras(b);
-//		
-//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-//									}
-//								});
-//								int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-//								artCommsPager.setCurrentItem(curPos, true);
-//							}
-//							else if (currentCategoryPosition == 3)
-//							{
-//								//show all authors adapters
-//								pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
-//								artCommsPager.setAdapter(pagerAdapter);
-//								artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-//								artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-//								{
-//									@Override
-//									public void onPageSelected(int position)
-//									{
-//										//move topImg and toolBar while scrolling left list
-//										toolbar.setY(0 - toolbar.getHeight());
-//										toolbarRight.getBackground().setAlpha(0);
-//										
-//		//	XXX							topImg.setY(0 - topImg.getHeight());
-//										System.out.println("onPageSelected in articlePager; position: " + position);
-//										String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-//										allCatListsSelectedArtPosition.put(allCatsLinks[currentCategoryPosition], position);
-//		
-//										Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
-//										+ "art_position");
-//										Bundle b = new Bundle();
-//										b.putInt("position", position);
-//										intentToListFrag.putExtras(b);
-//		
-//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-//										//send message to change right toolbar title
-//										ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
-//										Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink + "_notify_that_selected");
-//										LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
-//									}
-//								});
-//								int curPos = allCatListsSelectedArtPosition.get(allCatsLinks[currentCategoryPosition]);
-//								artCommsPager.setCurrentItem(curPos, true);
-//							}
-//							else if (currentCategoryPosition == 13)
-//							{
-//								//TODO show all categories adapters
-//							}
-//						}
-//					}
-//				});
+
 		if (pagerAdapter == null)
 		{
 			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
@@ -304,17 +225,6 @@ public class ActivityMain extends ActivityBase
 			toolbar.getBackground().setAlpha(0);
 		}
 		toolbarRight.getBackground().setAlpha(0);
-		//setTopImageCover
-
-		//	XXX	if (this.pref.getString("theme", "dark").equals("dark"))
-		//		{
-		//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
-		//		}
-		//		else
-		//		{
-		//			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
-		//		}
-		////////////////
 
 		//adMob
 		this.AddAds();
@@ -332,65 +242,6 @@ public class ActivityMain extends ActivityBase
 			b.getInt("allCatListsSelectedArtPosition_" + String.valueOf(i)));
 		}
 	}
-
-		private void setTitleDrawerItemToolbarTopImgETC(int position)
-		{
-	//		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
-	
-			//find name of category in all (really all) categories
-//			String[] allAutAndTagsUrls=CatData.concatArrays(CatData.getAllAuthorsBlogsURLs(act), CatData.getAllTagsLinks(act));
-//			String[] allAutAndTagsNames=CatData.concatArrays(CatData.getAllAuthorsNames(act), CatData.getAllTagsNames(act));
-//			String[] reallyAllCatsUrls=CatData.concatArrays(CatData.getAllCategoriesMenuLinks(act), allAutAndTagsUrls);
-//			String[] reallyAllCatsNames=CatData.concatArrays(CatData.getAllCategoriesMenuNames(act), allAutAndTagsNames);
-//			String title="";
-//			for(int i=0; i<reallyAllCatsUrls.length; i++)
-//			{
-//				if()
-//				title = CatData.getAllCategoriesMenuNames(act)[position];
-//			}
-			String title = CatData.getAllCategoriesMenuNames(act)[position];
-//			setTitle(title);
-			this.getSupportActionBar().setTitle(title);
-	
-			//change topImg
-	//	XXX	if (position >= firstCategoryChildrenQuontity)
-	//		{
-	//			String defPackage = act.getPackageName();
-	//			String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
-	//			String fullResName = catImgsFilesNames[position - firstCategoryChildrenQuontity];
-	//			String resName = fullResName.substring(0, fullResName.length() - 4);
-	//			int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-	//			ImageLoader imgLoader = UniversalImageLoader.get(act);
-	//			imgLoader.displayImage("drawable://" + resId, topImg,
-	//			UniversalImageLoader.getTransparentBackgroundOptions());
-	//			//			topImg.setImageResource(resId);
-	//		}
-	
-			//show toolbar when switch category to show it's title
-			//restore and set topImg position
-			String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-			String curCatLink = allMenuCatsLinks[position];
-			int toolbarY = allCatToolbarTopImgYCoord.get(curCatLink)[0];
-	//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
-			int initialDistance = allCatToolbarTopImgYCoord.get(curCatLink)[2];
-			int currentDistance = allCatToolbarTopImgYCoord.get(curCatLink)[3];
-	//	XXX	topImg.setY(topImgY);
-	
-			if (toolbarY < 0)
-			{
-				toolbar.getBackground().setAlpha(255);
-				toolbar.setY(0);
-			}
-			else
-			{
-				toolbar.setY(0);
-	
-				float percent = (float) currentDistance / (float) initialDistance;
-				float gradient = 1f - percent;
-				int newAlpha = (int) (255 * gradient);
-				toolbar.getBackground().setAlpha(newAlpha);
-			}
-		}
 
 	private void restoreAllCatToolbartopImgYCoord(Bundle savedInstanceState)
 	{
@@ -468,6 +319,8 @@ public class ActivityMain extends ActivityBase
 
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
 
+		outState.putInt(PAGER_TYPE_KEY, pagerType);
+
 		//save toolbar and topImg Y coord
 		saveAllCatToolbartopImgYCoord(outState);
 
@@ -512,6 +365,13 @@ public class ActivityMain extends ActivityBase
 				return super.onOptionsItemSelected(item);
 			case R.id.theme:
 				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
+//				Resources.Theme themes = act.getTheme();
+//				TypedValue storedValueInTheme = new TypedValue();
+//				if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
+//				{
+//					ligthThemeMenuItem.getActionView().setBackgroundColor(storedValueInTheme.data);
+//				}
+				
 				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
 				String curTheme = pref.getString("theme", "dark");
 				System.out.println(curTheme);
@@ -593,12 +453,65 @@ public class ActivityMain extends ActivityBase
 			+ " groupChildPosition=null");
 		}
 	}
-	
-//	@Override
-//	public void setTitle(CharSequence title)
-//	{
-//		Log.e(LOG_TAG, "setTitleCalled!");
-//		Log.e(LOG_TAG, "title: "+title);
-//		this.getSupportActionBar().setTitle(title);
-//	}
+
+	@Override
+	public void onBackPressed()
+	{
+
+		if (mDrawerLayout.isDrawerOpen(Gravity.START))
+		{
+			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+		}
+		else
+		{
+			//check left pagerType
+			//if so - we must show initial state of app
+			//else - check if it's second time of pressing back
+			switch (this.pagerType)
+			{
+
+				case PAGER_TYPE_MENU:
+					//else - check if it's second time of pressing back
+					if (this.backPressedQ == 1)
+					{
+						this.backPressedQ = 0;
+						super.onBackPressed();
+						this.finish();
+					}
+					else
+					{
+						this.backPressedQ++;
+						Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+					}
+				break;
+				case PAGER_TYPE_AUTHORS:
+					//reset pagerType to MENU
+					this.pagerType=PAGER_TYPE_MENU;
+					
+					this.setCurentCategoryPosition(11);
+					this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+					this.artsListPager.setAdapter(artsListPagerAdapter);
+					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+					ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
+					pagerAdapter,
+					artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
+					this.artsListPager.setOnPageChangeListener(menuListener);
+					this.artsListPager.setCurrentItem(currentCategoryPosition, true);
+				break;
+			}
+		}
+
+		//Обнуление счётчика через 5 секунд
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// Do something after 5s = 5000ms
+				backPressedQ = 0;
+				//checkNew();
+			}
+		}, 5000);
+	}
 }

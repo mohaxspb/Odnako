@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 {
-	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName()+"/";
+	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName() + "/";
 
 	ArrayList<ArtInfo> allArtsInfo;
 
@@ -38,7 +38,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 	public PagerArticlesAdapter(FragmentManager fm, String category, ActionBarActivity act)
 	{
 		super(fm);
-		System.out.println("ArticlesPagerAdapter called");
+		Log.i(LOG_TAG + category, "ArticlesPagerAdapter CONSTRUCTOR called");
 		this.category = category;
 		this.act = act;
 
@@ -52,12 +52,12 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG_TAG+category, "artsDataReceiver onReceive called");
-			
+			Log.i(LOG_TAG + category, "artsDataReceiver onReceive called");
+
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
 			ArrayList<ArtInfo> newAllArtsInfo;
-			
+
 			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
@@ -127,7 +127,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 				case (Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
-					if (page!=1)
+					if (page != 1)
 					{
 						//TODO think how realise loading from bootom in ViewPager
 						page--;

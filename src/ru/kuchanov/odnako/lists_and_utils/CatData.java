@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Author;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 
@@ -206,6 +207,11 @@ public class CatData
 	public static String[] getAllAuthorsBlogsURLs(Context act)
 	{
 		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_authors_urls);
+		//remove existing '/' at the end
+		for(int i=0; i<categoriesLinks.length; i++)
+		{
+			categoriesLinks[i]=Author.getURLwithoutSlashAtTheEnd(categoriesLinks[i]);
+		}
 		return categoriesLinks;
 	}
 	

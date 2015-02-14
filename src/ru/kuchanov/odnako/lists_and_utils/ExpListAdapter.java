@@ -178,6 +178,14 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			view = convertView;
 			holderMain = (MyHolder) convertView.getTag();
 		}
+		//test changing background of whole listView
+		Resources.Theme themes1 = act.getTheme();
+		TypedValue storedValueInTheme1 = new TypedValue();
+		if (themes1.resolveAttribute(R.attr.colorPrimary, storedValueInTheme1, true))
+		{
+			parent.setBackgroundColor(storedValueInTheme1.data);
+		}
+		
 		///light checked item
 		if (this.act instanceof ActivityDownloads && groupPosition == 2)
 		{
@@ -190,7 +198,12 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		}
 		else
 		{
-			view.setBackgroundColor(Color.TRANSPARENT);
+			Resources.Theme themes = act.getTheme();
+			TypedValue storedValueInTheme = new TypedValue();
+			if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
+			{
+				view.setBackgroundColor(storedValueInTheme.data);
+			}
 		}
 		///////
 
@@ -302,12 +315,24 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			}
 			else
 			{
-				view.setBackgroundColor(Color.TRANSPARENT);
+				Resources.Theme themes = act.getTheme();
+				TypedValue storedValueInTheme = new TypedValue();
+				if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
+				{
+					view.setBackgroundColor(storedValueInTheme.data);
+				}
+//				view.setBackgroundColor(Color.TRANSPARENT);
 			}
 		}
 		else
 		{
-			view.setBackgroundColor(Color.TRANSPARENT);
+			Resources.Theme themes = act.getTheme();
+			TypedValue storedValueInTheme = new TypedValue();
+			if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
+			{
+				view.setBackgroundColor(storedValueInTheme.data);
+			}
+//			view.setBackgroundColor(Color.TRANSPARENT);
 		}
 
 		//test

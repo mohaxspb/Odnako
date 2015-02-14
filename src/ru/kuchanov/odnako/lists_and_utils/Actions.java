@@ -110,11 +110,12 @@ public class Actions
 							ViewPager.SimpleOnPageChangeListener listener=new PagerListenerAllAuthors(mainActivity);
 							leftPager.setOnPageChangeListener(listener);
 							leftPager.setCurrentItem(position);
-							
+							mainActivity.pagerType=ActivityMain.PAGER_TYPE_AUTHORS;
 						}
 						else
 						{
 							leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act, authorBlogUrl));
+							mainActivity.pagerType=ActivityMain.PAGER_TYPE_SINGLE;
 						}
 					}
 				}

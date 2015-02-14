@@ -81,12 +81,13 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 		if (twoPane)
 		{
-			if (this.act.getCurentCategoryPosition() != 3 && this.act.getCurentCategoryPosition() != 13)
+			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 			{
 				toolbarRight.setTitle("");
-
-				pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), CatData
-				.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
+				
+				String categoryForRightPager=CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
+				Log.e(LOG_TAG, "categoryForRightPager: "+categoryForRightPager);
+				pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), categoryForRightPager, act);
 				artCommsPager.setAdapter(pagerAdapter);
 				artCommsPager.setPageTransformer(true, new RotationPageTransformer());
 				artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -97,7 +98,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 						//move topImg and toolBar while scrolling left list
 						toolbar.setY(0 - toolbar.getHeight());
 						toolbarRight.setTitle("");
-						//XXX							topImg.setY(0 - topImg.getHeight());
 						System.out.println("onPageSelected in articlePager; position: " + position);
 						String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 						act.getAllCatListsSelectedArtPosition().put(allCatsLinks[currentCategoryPosition], position);

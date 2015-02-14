@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -77,7 +76,7 @@ public class ActivityBase extends ActionBarActivity
 	protected int curArtPosition = 0;
 	protected ArrayList<ArtInfo> curAllArtsInfo = null;
 
-	private int backPressedQ;
+	protected int backPressedQ;
 
 	protected void AddAds()
 	{
@@ -300,30 +299,15 @@ public class ActivityBase extends ActionBarActivity
 		return currentCategoryPosition;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void restoreAllCatArtsInfo(Bundle b)
 	{
-		this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
-
-		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-
-		for (int i = 0; i < allCatLinks.length; i++)
-		{
-			ArrayList<ArtInfo> data = null;
-			String category = allCatLinks[i];
-			data = b.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO + category);
-			this.allCatArtsInfo.put(allCatLinks[i], data);
-		}
+		this.allCatArtsInfo=(HashMap<String, ArrayList<ArtInfo>>) b.getSerializable("all_cats_art_info");
 	}
 
 	protected void saveAllCatArtsInfo(Bundle b)
 	{
-		String[] allCatLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < allCatLinks.length; i++)
-		{
-			String category = allCatLinks[i];
-			ArrayList<ArtInfo> data = this.allCatArtsInfo.get(category);
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO + category, data);
-		}
+		b.putSerializable("all_cats_art_info", this.allCatArtsInfo);
 	}
 
 	public void setCurentCategoryPosition(int curentCategoryPosition)
@@ -443,12 +427,4 @@ public class ActivityBase extends ActionBarActivity
 			}
 		}
 	}
-	
-//	@Override
-//	public void setTitle(CharSequence title)
-//	{
-//		Log.e(LOG_TAG, "setTitleCalled!");
-//		Log.e(LOG_TAG, "title: "+title);
-//		this.toolbar.setTitle(title);
-//	}
 }
