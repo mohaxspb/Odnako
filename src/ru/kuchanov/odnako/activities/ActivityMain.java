@@ -19,7 +19,6 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -27,7 +26,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -231,56 +229,29 @@ public class ActivityMain extends ActivityBase
 		//end of adMob
 	}
 
+	private void saveAllCatListsSelectedArtPosition(Bundle b)
+	{
+		b.putSerializable("allCatListsSelectedArtPosition", allCatListsSelectedArtPosition);
+	}
+	
+	@SuppressWarnings("unchecked")
 	private void restoreAllCatListsSelectedArtPosition(Bundle b)
 	{
-		this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
-		//TODO loop through keys, not from res arr
-		String[] catLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < catLinks.length; i++)
-		{
-			this.allCatListsSelectedArtPosition.put(catLinks[i],
-			b.getInt("allCatListsSelectedArtPosition_" + String.valueOf(i)));
-		}
+		this.allCatListsSelectedArtPosition=(HashMap<String, Integer>) b.getSerializable("allCatListsSelectedArtPosition");
 	}
 
+	@SuppressWarnings("unchecked")
 	private void restoreAllCatToolbartopImgYCoord(Bundle savedInstanceState)
 	{
-		this.setAllCatToolbarTopImgYCoord(null);
-		if (savedInstanceState.containsKey("allCatToolbarTopImgYCoord_0"))
-		{
-			setAllCatToolbarTopImgYCoord(new HashMap<String, int[]>());
-			String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-			for (int i = 0; i < allCategoriesMenuLinks.length; i++)
-			{
-				getAllCatToolbarTopImgYCoord().put(allCategoriesMenuLinks[i],
-				savedInstanceState.getIntArray("allCatToolbarTopImgYCoord_" + String.valueOf(i)));
-			}
-		}
-		else
-		{
-			System.out.println("allCatToolbarTopImgYCoord=null from saved state. WTF?!");
-		}
+		this.allCatToolbarTopImgYCoord=(HashMap<String, int[]>) savedInstanceState.getSerializable("allCatToolbarTopImgYCoord");
 	}
 
 	private void saveAllCatToolbartopImgYCoord(Bundle savedInstanceState)
 	{
-		String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < allCategoriesMenuLinks.length; i++)
-		{
-			savedInstanceState.putIntArray("allCatToolbarTopImgYCoord_" + String.valueOf(i),
-			getAllCatToolbarTopImgYCoord().get(allCategoriesMenuLinks[i]));
-		}
+		savedInstanceState.putSerializable("allCatToolbarTopImgYCoord", allCatToolbarTopImgYCoord);
 	}
 
-	private void saveAllCatListsSelectedArtPosition(Bundle b)
-	{
-		String[] allLinks = CatData.getAllCategoriesMenuLinks(act);
-		for (int i = 0; i < allLinks.length; i++)
-		{
-			b.putInt("allCatListsSelectedArtPosition_" + String.valueOf(i),
-			allCatListsSelectedArtPosition.get(allLinks[i]));
-		}
-	}
+	
 
 	public HashMap<String, Integer> getAllCatListsSelectedArtPosition()
 	{
@@ -349,6 +320,15 @@ public class ActivityMain extends ActivityBase
 		}
 		switch (item.getItemId())
 		{
+			case R.id.action_settings_all:
+				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
+				String curTheme = pref.getString("theme", "dark");
+				if (curTheme.equals("dark"))
+				{
+					themeMenuItem.setChecked(true);
+				}
+				Log.e(LOG_TAG, String.valueOf(themeMenuItem.isChecked()));
+				return true;
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
@@ -363,34 +343,18 @@ public class ActivityMain extends ActivityBase
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
-			case R.id.theme:
-				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
-//				Resources.Theme themes = act.getTheme();
-//				TypedValue storedValueInTheme = new TypedValue();
-//				if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
-//				{
-//					ligthThemeMenuItem.getActionView().setBackgroundColor(storedValueInTheme.data);
-//				}
-				
-				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
-				String curTheme = pref.getString("theme", "dark");
-				System.out.println(curTheme);
-				if (!curTheme.equals("dark"))
+			case R.id.theme_dark:
+				String theme = pref.getString("theme", "dark");
+				if (theme.equals("dark"))
 				{
-					ligthThemeMenuItem.setChecked(true);
+					this.pref.edit().putString("theme", "light").commit();
 				}
 				else
 				{
-					darkThemeMenuItem.setChecked(true);
+					this.pref.edit().putString("theme", "dark").commit();
 				}
-				return true;
-			case R.id.theme_ligth:
-				this.pref.edit().putString("theme", "ligth").commit();
-				this.myRecreate();
-				return true;
-			case R.id.theme_dark:
-				this.pref.edit().putString("theme", "dark").commit();
-				this.myRecreate();
+				
+				this.recreate();
 				return super.onOptionsItemSelected(item);
 			default:
 				return super.onOptionsItemSelected(item);

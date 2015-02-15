@@ -16,28 +16,15 @@
                 app:showAsAction="always">
             </item>
 
-            <group android:menuCategory="container" >
+            <group
+                android:id="@+id/theme"
+                android:checkableBehavior="single" >
                 <item
-                    android:id="@+id/theme"
+                    android:id="@+id/theme_dark"
                     android:icon="?themeIcon"
-                    android:orderInCategory="110"
-                    android:title="@string/theme"
-                    app:showAsAction="always">
-                    <menu android:menuCategory="container" >
-                        <group android:checkableBehavior="single" >
-                            <item
-                                android:id="@+id/theme_ligth"
-                                android:orderInCategory="110"
-                                android:title="@string/ligth"
-                                app:showAsAction="never"/>
-                            <item
-                                android:id="@+id/theme_dark"
-                                android:orderInCategory="120"
-                                android:title="@string/dark"
-                                app:showAsAction="never"/>
-                        </group>
-                    </menu>
-                </item>
+                    android:orderInCategory="220"
+                    android:title="@string/night_mode"
+                    app:showAsAction="always"/>
             </group>
         </menu>
     </item>

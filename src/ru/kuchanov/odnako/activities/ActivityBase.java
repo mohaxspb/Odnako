@@ -128,12 +128,6 @@ public class ActivityBase extends ActionBarActivity
 		super.onDestroy();
 	}
 
-	protected void myRecreate()
-	{
-		Log.i(LOG_TAG, "myRecreate called");
-		super.recreate();
-	}
-
 	//set Navigatin drawer
 	protected void setNavDrawer()
 	{

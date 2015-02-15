@@ -91,11 +91,15 @@ public class FragmentArtsRecyclerList extends Fragment
 		if (fromArgs != null)
 		{
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
+			this.position=fromArgs.getInt("position", 0);
 		}
 		else
 		{
 			System.out.println("empty fromArgs!");
 		}
+		
+		//try getting position from Activities hashMap by category
+//		this.position=(ActivityMain)act.g
 
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)

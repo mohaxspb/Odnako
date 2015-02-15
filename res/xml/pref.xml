@@ -31,7 +31,7 @@
         <!-- Выбор темы -->
 
         <ListPreference
-            android:defaultValue="ligth"
+            android:defaultValue="light"
             android:entries="@array/theme"
             android:entryValues="@array/theme_values"
             android:key="theme"

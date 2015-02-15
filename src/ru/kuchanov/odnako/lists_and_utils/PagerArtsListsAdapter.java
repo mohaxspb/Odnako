@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,8 +35,12 @@ public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
 		{
 			FragmentArtsRecyclerList artsListFrag = new FragmentArtsRecyclerList();
 			Bundle b = new Bundle();
-			b.putString("categoryToLoad", CatData.getAllCategoriesMenuLinks(act)[position]);
+			String categoryToLoad=CatData.getAllCategoriesMenuLinks(act)[position];
+			b.putString("categoryToLoad", categoryToLoad);
 			b.putInt("pageToLoad", 1);
+			//setting position of selected art by asking Activities HashMap for it by category
+			int selectedArtPosition=((ActivityMain)act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
+			b.putInt("position", selectedArtPosition);
 			artsListFrag.setArguments(b);
 			return artsListFrag;
 		}

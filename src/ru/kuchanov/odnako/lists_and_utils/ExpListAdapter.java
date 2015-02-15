@@ -13,7 +13,6 @@ import ru.kuchanov.odnako.utils.DipToPx;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;

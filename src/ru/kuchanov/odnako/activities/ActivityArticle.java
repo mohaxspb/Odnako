@@ -147,13 +147,13 @@ public class ActivityArticle extends ActivityBase
 			case R.id.theme_ligth:
 				this.pref.edit().putString("theme", "ligth").commit();
 				System.out.println("theme_ligth");
-				this.myRecreate();
+				this.recreate();
 				return true;
 			case R.id.theme_dark:
 				System.out.println("theme_dark");
 				this.pref.edit().putString("theme", "dark").commit();
 
-				this.myRecreate();
+				this.recreate();
 				return super.onOptionsItemSelected(item);
 			default:
 				return super.onOptionsItemSelected(item);

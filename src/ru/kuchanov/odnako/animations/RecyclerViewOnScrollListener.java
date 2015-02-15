@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.animations;
 
-import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;

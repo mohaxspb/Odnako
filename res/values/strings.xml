@@ -54,9 +54,10 @@
     <string name="COMMENTS_AD_UNIT_ID">ca-app-pub-2231528705144312/7019285382</string>
     <string name="DOWNLOADINGS_AD_UNIT_ID">ca-app-pub-2231528705144312/8496018582</string>
     <string name="TWO_PANE_AD_UNIT_ID">ca-app-pub-2231528705144312/7818128982</string>
-    <string name="ligth">Светлая</string>
+    <string name="light">Светлая</string>
     <string name="dark">Тёмная</string>
     <string name="theme">Тема</string>
+    <string name="night_mode">Ночной режим</string>
     <string name="art_text_scale">Размер  текста в статьях</string>
     <string name="text_scale">Размер  шрифта</string>
     <string name="divider">|</string>
@@ -84,11 +85,11 @@
         <item>Тёмная</item>
     </string-array>
     <string-array name="theme_values">
-        <item>ligth</item>
+        <item>light</item>
         <item>dark</item>
     </string-array>
     <string-array name="theme_str_arr">
-        <item name="ligth">@string/ligth</item>
+        <item name="ligth">@string/light</item>
         <item name="dark">@string/dark</item>
     </string-array>
     <!-- Масштаб картинок и текста для главной -->

@@ -24,7 +24,7 @@
                         <item
                             android:id="@+id/theme_ligth"
                             android:orderInCategory="520"
-                            android:title="@string/ligth"/>
+                            android:title="@string/light"/>
                         <item
                             android:id="@+id/theme_dark"
                             android:orderInCategory="530"
