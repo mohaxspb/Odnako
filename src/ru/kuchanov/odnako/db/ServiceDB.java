@@ -51,6 +51,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		//get category
 		String catToLoad = intent.getStringExtra("categoryToLoad");
+		Log.d(LOG_TAG, "catToLoad: "+catToLoad);
 		//get startDownload flag
 		boolean startDownload = intent.getBooleanExtra("startDownload", false);
 		//firstly: if we load from top or not? Get it by pageToLoad

@@ -158,9 +158,7 @@ implements Filterable
 			return 1;
 		}
 		int header = 1;
-//		int footer = 1;
-
-		return this.artsInfo.size() + header;// +footer;
+		return this.artsInfo.size() + header;
 	}
 
 	public ArtInfo getArtInfoByPosition(int position)
@@ -190,8 +188,6 @@ implements Filterable
 
 			break;
 			case (ARTICLE):
-				//				System.out.println("position: "+position);
-				//			System.out.println("this.artsInfo==null: "+String.valueOf(this.artsInfo==null));
 				//catch all cat author frags and return;
 				final ArtInfo p;
 				try
@@ -238,15 +234,6 @@ implements Filterable
 						params.height = (int) DipToPx.convert(120, act);
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
-//						if (this.pref.getString("theme", "dark").equals("dark"))
-//						{
-//							imageLoader.displayImage(HDimgURL, holderMain.art_img,
-//							UniversalImageLoader.getDarkOptions());
-//						}
-//						else
-//						{
-//							imageLoader.displayImage(HDimgURL, holderMain.art_img);
-//						}
 						final DisplayImageOptions options;
 						if (this.pref.getString("theme", "dark").equals("dark"))
 						{

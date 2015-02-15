@@ -184,8 +184,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				
 				ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
-				pagerAdapter,
-				artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
+				pagerAdapter, artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
 				this.artsListPager.setOnPageChangeListener(menuListener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
@@ -193,6 +192,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this));
+				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());

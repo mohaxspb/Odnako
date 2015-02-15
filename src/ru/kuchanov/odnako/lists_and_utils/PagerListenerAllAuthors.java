@@ -35,30 +35,50 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 	private int currentCategoryPosition;
 
-	public PagerListenerAllAuthors(ActivityMain act)
+	public PagerListenerAllAuthors(final ActivityMain act)
 	{
 		this.act = act;
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
-		
-		
-		/////////////
-		
+				
 		this.artCommsPager = (ViewPager) act.findViewById(R.id.article_comments_container);
 		
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);;
-		
-		
-		
-		/////////////
-
-//		this.artCommsPager = artCommsPager;
-//		this.pagerAdapter = pagerAdapter;
-//		
-//		this.toolbar = toolbar;
-//		this.toolbarRight = toolbarRight;
+		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
+		
+		if (twoPane)
+		{
+			toolbarRight.setTitle("");
+
+			final String[] allCatsLinks = CatData.getAllAuthorsBlogsURLs(act);
+			
+			pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(),
+			allCatsLinks[currentCategoryPosition], act);
+			artCommsPager.setAdapter(pagerAdapter);
+			artCommsPager.setPageTransformer(true, new RotationPageTransformer());
+			artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+			{
+				@Override
+				public void onPageSelected(int position)
+				{
+					//move topImg and toolBar while scrolling left list
+					toolbar.setY(0 - toolbar.getHeight());
+					toolbarRight.setTitle("");
+					System.out.println("onPageSelected in articlePager; position: " + position);
+					act.getAllCatListsSelectedArtPosition().put(allCatsLinks[currentCategoryPosition], position);
+
+					Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
+					+ "art_position");
+					Bundle b = new Bundle();
+					b.putInt("position", position);
+					intentToListFrag.putExtras(b);
+
+					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+				}
+			});
+			artCommsPager.setCurrentItem(0, true);
+		}
 	}
 
 	@Override
@@ -106,24 +126,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 				}
 			});
-			int curPos=0;
-//			if(act.getAllCatListsSelectedArtPosition()==null)
-//			{
-//				Log.e(LOG_TAG, "act.getAllCatListsSelectedArtPosition(): "+null);
-//			}
-//			else
-//			{
-//			if(this.act==null)
-//			{
-//				Log.e(LOG_TAG, "this.act==null: "+String.valueOf(null));
-//			}
-//				curPos = act.getAllCatListsSelectedArtPosition().get(CatData.getAllAuthorsBlogsURLs(act)[currentCategoryPosition]);
-//			}
-//			if(this.act==null)
-//				{
-//					Log.e(LOG_TAG, "this.act==null: "+String.valueOf(null));
-//				}
-			artCommsPager.setCurrentItem(curPos, true);
+			artCommsPager.setCurrentItem(0, true);
 		}
 	}
 

@@ -10,15 +10,18 @@ import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
 
 import android.text.Html;
+import android.util.Log;
 
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 public class HtmlHelper
 {
-	String tag = "debug";
+	private final static String TAG = HtmlHelper.class.getSimpleName();
 
 	TagNode rootNode;
 	public String htmlString;
+	
+	private String url;
 
 	HtmlCleaner cleaner;
 
@@ -26,6 +29,8 @@ public class HtmlHelper
 
 	public HtmlHelper(URL htmlPage) throws IOException
 	{
+		this.url=htmlPage.toString();
+		
 		cleaner = new HtmlCleaner();
 		try
 		{
@@ -35,12 +40,11 @@ public class HtmlHelper
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
-			System.out
-			.println("Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
+			Log.e(TAG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
 		} catch (FileNotFoundException e)
 		{
-			System.out.println("FileNotFoundException at HtmlHelper");
-			System.out.println(e.getMessage());
+			Log.e(TAG, "FileNotFoundException at HtmlHelper");
+			Log.e(TAG, e.getMessage());
 		}
 	}
 
@@ -119,7 +123,6 @@ public class HtmlHelper
 			}
 			allAuthorsAsList.add(authorInfo);
 		}
-
 		return allAuthorsAsList;
 	}
 
@@ -174,17 +177,30 @@ public class HtmlHelper
 				}
 				info[2] = imgSrc;
 			}
-			if (author1.length == 0)
-			{
-				info[3] = "empty";
-				info[4] = "empty";
-			}
-			else
-			{
-				info[3] = author1[0].getAttributeByName("href");
-				info[4] = Html.fromHtml(author1[0].getAttributeByName("title")).toString();
-			}
-
+			//if we load AUTHORs articles we do not have author name and blogURL here
+			//so we set it from URL
+//			if(this.isAuthor())
+//			{
+//				//blogURL
+//				info[3] = Author.getURLwithoutSlashAtTheEnd(url);
+//				//name
+//				info[4] = "empty";
+//			}
+//			else
+//			{
+				if (author1.length == 0)
+				{
+					//blogURL
+					info[3] = "empty";
+					//name
+					info[4] = "empty";
+				}
+				else
+				{
+					info[3] = author1[0].getAttributeByName("href");
+					info[4] = Html.fromHtml(author1[0].getAttributeByName("title")).toString();
+				}
+//			}
 			allArtsInfo.add(new ArtInfo(info));
 		}
 		//TODO Check here situation when we parse last page of category/ author and get 30 arts
@@ -293,8 +309,13 @@ public class HtmlHelper
 
 			//			Log.d(tag, "info[2]: '" + info[2]+"'");
 
-			info[3] = "empty";
-			info[4] = "empty";
+//			info[3] = "empty";
+//			info[4] = "empty";
+			
+			//blogURL
+			info[3] = url.substring(0, this.url.indexOf("/page-"));
+			//name
+			info[4] = rootNode.findElementByName("h1", true).getText().toString();
 			//			Log.d(tag, "info[3]" + info[3]);
 			//			Log.d(tag, "info[4]" + info[4]);
 

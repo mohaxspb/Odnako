@@ -64,7 +64,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	private float topImgCoord;
 
 	private int toolbarId = R.id.toolbar;
-	private boolean isInLeftPager=true;
+	private boolean isInLeftPager = true;
 
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
@@ -91,15 +91,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		if (fromArgs != null)
 		{
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
-			this.position=fromArgs.getInt("position", 0);
 		}
-		else
-		{
-			System.out.println("empty fromArgs!");
-		}
-		
-		//try getting position from Activities hashMap by category
-//		this.position=(ActivityMain)act.g
 
 		//restore topImg and toolbar prop's
 		if (savedInstanceState != null)
@@ -157,7 +149,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
-			
+
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
@@ -266,23 +258,23 @@ public class FragmentArtsRecyclerList extends Fragment
 				artSelectedReceiver = null;
 			}
 			this.setInLeftPager(false);
-//			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
-//			String title="";
-//			String[] allAutNames=CatData.getAllAuthorsNames(act);
-//			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
-//			String[] allCatNames=CatData.getAllTagsNames(act);
-//			String[] allCatUrls=CatData.getAllTagsLinks(act);
-//			String[] names=CatData.concatArrays(allCatNames, allAutNames);
-//			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
-//			for(int i=0; i<urls.length; i++)
-//			{
-//				if(this.categoryToLoad.equals(urls[i]))
-//				{
-//					title=names[i];
-//					break;
-//				}
-//			}
-//			toolbarRight.setTitle(title);
+			//			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
+			//			String title="";
+			//			String[] allAutNames=CatData.getAllAuthorsNames(act);
+			//			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
+			//			String[] allCatNames=CatData.getAllTagsNames(act);
+			//			String[] allCatUrls=CatData.getAllTagsLinks(act);
+			//			String[] names=CatData.concatArrays(allCatNames, allAutNames);
+			//			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
+			//			for(int i=0; i<urls.length; i++)
+			//			{
+			//				if(this.categoryToLoad.equals(urls[i]))
+			//				{
+			//					title=names[i];
+			//					break;
+			//				}
+			//			}
+			//			toolbarRight.setTitle(title);
 		}
 		else if (container.getId() == R.id.arts_list_container)
 		{
@@ -352,8 +344,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 		if (this.allArtsInfo == null)
 		{
-			Log.i(categoryToLoad, "this.allArtsInfo=NULL");
-
+			//Log.i(categoryToLoad, "this.allArtsInfo=NULL");
 			this.getAllArtsInfo(false);
 
 			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
@@ -394,8 +385,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void getAllArtsInfo(boolean startDownload)
 	{
-		Log.i(categoryToLoad, "getAllArtsInfo called");
-
+		//Log.i(categoryToLoad, "getAllArtsInfo called");
 		//change circle loading animation depends on pageToLoad
 		if (this.pageToLoad == 1)
 		{
@@ -496,30 +486,30 @@ public class FragmentArtsRecyclerList extends Fragment
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
-	
+
 	private void setTitleToRightToolbar()
 	{
-		if(toolbarId==R.id.toolbar_right)
+		if (toolbarId == R.id.toolbar_right)
 		{
-			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
-			String title="";
-			String[] allAutNames=CatData.getAllAuthorsNames(act);
-			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
-			String[] allCatNames=CatData.getAllTagsNames(act);
-			String[] allCatUrls=CatData.getAllTagsLinks(act);
-			String[] names=CatData.concatArrays(allCatNames, allAutNames);
-			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
-			for(int i=0; i<urls.length; i++)
+			Toolbar toolbarRight = (Toolbar) this.act.findViewById(toolbarId);
+			String title = "";
+			String[] allAutNames = CatData.getAllAuthorsNames(act);
+			String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
+			String[] allCatNames = CatData.getAllTagsNames(act);
+			String[] allCatUrls = CatData.getAllTagsLinks(act);
+			String[] names = CatData.concatArrays(allCatNames, allAutNames);
+			String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
+			for (int i = 0; i < urls.length; i++)
 			{
-				if(this.categoryToLoad.equals(urls[i]))
+				if (this.categoryToLoad.equals(urls[i]))
 				{
-					title=names[i];
+					title = names[i];
 					break;
 				}
 			}
 			toolbarRight.setTitle(title);
 		}
-		
+
 	}
 
 	public boolean isInLeftPager()
