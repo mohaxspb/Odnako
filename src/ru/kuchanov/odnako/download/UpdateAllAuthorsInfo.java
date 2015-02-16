@@ -31,7 +31,7 @@ public class UpdateAllAuthorsInfo extends AsyncTask<Void, Integer, String[][]>
 				{
 					HtmlHelper hh = new HtmlHelper(new URL(allAuthorsUrls[i]));
 
-					output[0][i] = hh.getAuthorsWho();
+					output[0][i] = hh.getAuthorsDescription();
 					output[1][i] = hh.getAuthorsBigImg();
 				} catch (Exception e)
 				{

@@ -8,13 +8,16 @@ package ru.kuchanov.odnako.download;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
@@ -28,10 +31,12 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	String category;
 	int page;
 
-	ActionBarActivity act;
 	Context ctx;
 
-	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback)
+	DataBaseHelper h;
+
+	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback,
+	DataBaseHelper h)
 	{
 		this.callback = callback;
 
@@ -39,6 +44,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		this.page = page;
 
 		this.ctx = ctx;
+
+		this.h = h;
 	}
 
 	public void setLink(String link)
@@ -71,10 +78,24 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			if (hh.isAuthor())
 			{
 				output = hh.getAllArtsInfoFromAUTHORPage();
+
+				//write new Author to DB if it don't exists
+				if (Category.isCategory(h, category) == null)
+				{
+					Author a = new Author(category, hh.getAuthorsName(), hh.getAuthorsDescription(),
+					hh.getAuthorsWho(), hh.getAuthorsImage(), hh.getAuthorsBigImg(), new Date(
+					System.currentTimeMillis()), new Date(0));
+					h.getDaoAuthor().create(a);
+				}
 			}
 			else
 			{
 				output = hh.getAllArtsInfoFromPage();
+				//write new Author if it don't exists
+				if (Category.isCategory(h, category) == null)
+				{
+					//TODO
+				}
 			}
 		} catch (Exception e)
 		{
@@ -96,7 +117,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		{
 			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.category, this.page);
 			Log.e(LOG, "Ошибка соединения \n Проверьте соединение с интернетом");
-//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
+			//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
 		}
 	}// Событие по окончанию парсинга
 }

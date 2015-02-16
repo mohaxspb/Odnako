@@ -49,9 +49,9 @@ public class Actions
 	 * @param act
 	 *            for switching action depend on activity
 	 */
-	public static void showAllAuthorsArticles(String authorBlogUrl, ActionBarActivity act)
+	public static void showAllAuthorsArticles(String authorBlogUrlFUCK, final ActionBarActivity act)
 	{
-		authorBlogUrl = Author.getURLwithoutSlashAtTheEnd(authorBlogUrl);
+		final String authorBlogUrl = Author.getURLwithoutSlashAtTheEnd(authorBlogUrlFUCK);
 		if (!authorBlogUrl.equals("empty") && !authorBlogUrl.equals(""))
 		{
 			Log.d(LOG, "show all AuthorsArticles!");
@@ -63,7 +63,7 @@ public class Actions
 			{
 				if (act.getClass().getSimpleName().equals("ActivityMain"))
 				{
-					ActivityMain mainActivity = (ActivityMain) act;
+					final ActivityMain mainActivity = (ActivityMain) act;
 					//check if we show allAuthors frag
 					if (mainActivity.getCurentCategoryPosition() == 3)
 					{
@@ -109,8 +109,7 @@ public class Actions
 						if (weFindIt)
 						{
 							leftPager.setAdapter(pagerAllAut);
-							ViewPager.SimpleOnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity);
-							leftPager.setOnPageChangeListener(listener);
+							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity));
 							leftPager.setCurrentItem(position);
 							mainActivity.pagerType = ActivityMain.PAGER_TYPE_AUTHORS;
 						}
@@ -118,7 +117,37 @@ public class Actions
 						{
 							leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act,
 							authorBlogUrl));
+							leftPager.setOnPageChangeListener(null);
+							ViewPager rightPager = (ViewPager) mainActivity
+							.findViewById(R.id.article_comments_container);
+							rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
+							authorBlogUrl, mainActivity));
+							rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+							{
+								@Override
+								public void onPageSelected(int position)
+								{
+									//move topImg and toolBar while scrolling left list
+									Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
+									toolbarRight.setTitle("");
+									System.out.println("onPageSelected in articlePager; position: " + position);
+									mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, position);
+
+									Intent intentToListFrag = new Intent(authorBlogUrl + "art_position");
+									Bundle b = new Bundle();
+									b.putInt("position", position);
+									intentToListFrag.putExtras(b);
+
+									LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+								}
+							});
+							if (mainActivity.getAllCatListsSelectedArtPosition().get(authorBlogUrl) != null)
+							{
+								rightPager.setCurrentItem(mainActivity.getAllCatListsSelectedArtPosition().get(
+								authorBlogUrl));
+							}
 							mainActivity.pagerType = ActivityMain.PAGER_TYPE_SINGLE;
+							mainActivity.setCurrentCategory(authorBlogUrl);
 						}
 					}
 				}
@@ -230,7 +259,7 @@ public class Actions
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
 					String authorBlogUrl = allArtsInfo.get(position).authorBlogUrl;
-					
+
 					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 					{
 						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
@@ -244,7 +273,8 @@ public class Actions
 					{
 						//set right pager, cause it do not want to set itself through pageChangeListener
 						ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
-						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList().get(positionInLeftPager).blogLink;
+						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
+						.get(positionInLeftPager).blogLink;
 						rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
 						authorBlogUrlFromAdapter, act));
 						rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -255,9 +285,9 @@ public class Actions
 								//move topImg and toolBar while scrolling left list
 								Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 								toolbarRight.setTitle("");
-								
+
 								System.out.println("onPageSelected in articlePager; position: " + position);
-								
+
 								mainActivity.getAllCatListsSelectedArtPosition().put(
 								authorBlogUrlFromAdapter, position);
 

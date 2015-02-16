@@ -318,29 +318,6 @@ public class Category
 		return isCategory;
 	}
 
-	//	/**
-	//	 * 
-	//	 * @param h
-	//	 * @param url
-	//	 * @param isSynked
-	//	 * 
-	//	 *            set Category entry sinked or not
-	//	 */
-	//	public static void setCategorySinchronized(DataBaseHelper h, String url, boolean isSynked)
-	//	{
-	//		UpdateBuilder<Category, Integer> updateBuilder;
-	//		try
-	//		{
-	//			updateBuilder = h.getDaoCategory().updateBuilder();
-	//			updateBuilder.updateColumnValue(Category.SINCHRONISED_FIELD_NAME, isSynked);
-	//			updateBuilder.where().eq(Category.URL_FIELD_NAME, url);
-	//			updateBuilder.update();
-	//		} catch (SQLException e)
-	//		{
-	//			e.printStackTrace();
-	//		}
-	//	}
-
 	public String[] getAsStringArray()
 	{
 		String[] allInfo = new String[9];
@@ -355,7 +332,6 @@ public class Category
 		allInfo[6] = refreshed.toString();
 		allInfo[7] = lastArticleDate.toString();
 
-		//		allInfo[8] = String.valueOf(sinhronised);
 		allInfo[8] = firstArticleURL;
 
 		return allInfo;

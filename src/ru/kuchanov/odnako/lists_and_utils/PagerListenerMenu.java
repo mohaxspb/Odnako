@@ -56,8 +56,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		this.toolbar = toolbar;
 		this.toolbarRight = toolbarRight;
-		
-//		this.act.setSupportActionBar(toolbar);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
 	}

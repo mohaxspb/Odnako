@@ -24,7 +24,6 @@ public class Author
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "blog_url";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
-//	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
@@ -53,21 +52,6 @@ public class Author
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
 	private Date lastArticleDate;
-
-	//true if there are full list of arts without intervals
-	//false if we have arts, with interval, that we catch while loading arts from web;
-	//i.e. on first launch we have no arts at all, so it's false
-	//after first load we have it's true
-	//then if we'll load MORE arts we search for then in DB
-	//if there are no arts (or less then 30). we load from web
-	//else from bd
-	////
-	//if it's no first load (there are arts in DB) and we have no match of loaded arts (i.e. by url) we set it to false
-	//and so load MORE arts by web;
-	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
-	//so next MORE arts we'll get from DB
-//	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
-//	private boolean sinhronised = false;
 
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,

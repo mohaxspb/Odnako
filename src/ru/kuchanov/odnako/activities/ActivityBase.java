@@ -70,6 +70,7 @@ public class ActivityBase extends ActionBarActivity
 	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
 
 	int currentCategoryPosition = 11;
+	private String currentCategory = "odnako.org/blogs";
 
 	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
@@ -196,7 +197,7 @@ public class ActivityBase extends ActionBarActivity
 		// The drawer title must be set in order to announce state changes when
 		// accessibility is turned on. This is typically a simple description,
 		// e.g. "Navigation".
-//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
+		//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
 		//setHeader BEFORE setting adapter
 		this.addHeaderForDrawer();
 		////
@@ -296,7 +297,7 @@ public class ActivityBase extends ActionBarActivity
 	@SuppressWarnings("unchecked")
 	protected void restoreAllCatArtsInfo(Bundle b)
 	{
-		this.allCatArtsInfo=(HashMap<String, ArrayList<ArtInfo>>) b.getSerializable("all_cats_art_info");
+		this.allCatArtsInfo = (HashMap<String, ArrayList<ArtInfo>>) b.getSerializable("all_cats_art_info");
 	}
 
 	protected void saveAllCatArtsInfo(Bundle b)
@@ -311,6 +312,16 @@ public class ActivityBase extends ActionBarActivity
 		int[] groupChild = this.getGroupChildPositionByCurentPosition(curentCategoryPosition);
 
 		this.setGroupChildPosition(groupChild[0], groupChild[1]);
+	}
+
+	public String getCurrentCategory()
+	{
+		return currentCategory;
+	}
+
+	public void setCurrentCategory(String currentCategory)
+	{
+		this.currentCategory = currentCategory;
 	}
 
 	public int[] getGroupChildPositionByCurentPosition(int curentPosition)
@@ -370,11 +381,11 @@ public class ActivityBase extends ActionBarActivity
 				{
 					//if so - we must show initial state of app
 					//test do it simply by recreating
-//					this.act.getIntent().getExtras().clear();
-					
-//					intent.pu
-					
-//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					//					this.act.getIntent().getExtras().clear();
+
+					//					intent.pu
+
+					//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					this.act.finish();
 					Intent intent = new Intent(this.act, ActivityMain.class);
 					this.act.startActivity(intent);

@@ -564,6 +564,11 @@ public class Article
 				}
 				//crate Article obj to pass it to DB
 				Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
+				//set author image URL for articles
+				if(aut!=null)
+				{
+					art.setImg_author(aut.getAvatar());
+				}
 				try
 				{
 					h.getDaoArticle().create(art);

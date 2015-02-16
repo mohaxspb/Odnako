@@ -29,7 +29,7 @@ import android.util.Log;
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
-	final private static String LOG_TAG = ServiceDB.class.getSimpleName()+"/";
+	final private static String LOG_TAG = ServiceDB.class.getSimpleName() + "/";
 
 	private DataBaseHelper dataBaseHelper;
 
@@ -51,7 +51,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		//get category
 		String catToLoad = intent.getStringExtra("categoryToLoad");
-		Log.d(LOG_TAG, "catToLoad: "+catToLoad);
+		Log.d(LOG_TAG, "catToLoad: " + catToLoad);
 		//get startDownload flag
 		boolean startDownload = intent.getBooleanExtra("startDownload", false);
 		//firstly: if we load from top or not? Get it by pageToLoad
@@ -74,7 +74,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				Log.d(LOG_TAG+catToLoad, DBRezult);
+				Log.d(LOG_TAG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -98,9 +98,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						this.startDownLoad(catToLoad, pageToLoad);
 					break;
 					case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
-					//TODO here we must create new entry in Category (or Author) table
-					//and start download arts of this category
-
+						//TODO here we must create new entry in Category (or Author) table
+						//and start download arts of this category
+						this.startDownLoad(catToLoad, pageToLoad);
 					break;
 					case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 					//here we have nothing to do... Cause there is no need to load somthing from web,
@@ -153,7 +153,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 		Context context = getApplicationContext();
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this);
+		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this,
+		this.getHelper());
 		parse.execute();
 	}
 
@@ -212,7 +213,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
 				}
 			}
-			
+
 			//now update REFRESHED field of Category or Author entry in table if we load from top
 			//and write downloaded arts to ArtCatTable
 			if (pageToLoad == 1)
@@ -223,11 +224,12 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			else
 			{
 				//we don't need to update refreshed Date, cause we do it only when loading from top
-				resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend, categoryToLoad,
+				resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend,
+				categoryToLoad,
 				pageToLoad);
 			}
 		}
-		
+
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 

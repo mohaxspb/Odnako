@@ -58,6 +58,13 @@ public class DBActions
 	 */
 	public String askDBFromTop(String categoryToLoad, Calendar cal, int pageToLoad)
 	{
+		
+		//check if this is known category or author
+		if(Category.isCategory(this.getHelper(), categoryToLoad)==null)
+		{
+			return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
+		}
+		
 		//try to find db entry for given catToLoad
 		//first in Category
 		if (Category.isCategory(this.getHelper(), categoryToLoad))
@@ -112,8 +119,8 @@ public class DBActions
 			//this is Author
 			Author aut = Author.getAuthorByURL(getHelper(), Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
 
-			if (aut != null)
-			{
+//			if (aut != null)
+//			{
 				//first try to know when was last sink
 				long lastRefreshedMills = aut.getRefreshed().getTime();
 				if (lastRefreshedMills == 0)
@@ -158,12 +165,12 @@ public class DBActions
 					//there are no arts of given category in DB, so start to load it
 					return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
 				}
-			}
-			else
-			{
-				//Log.e(LOG_TAG, "It isn't category and aut=null, so it's unknown category");
-				return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
-			}
+//			}
+//			else
+//			{
+//				//Log.e(LOG_TAG, "It isn't category and aut=null, so it's unknown category");
+//				return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
+//			}
 		}
 	}
 
