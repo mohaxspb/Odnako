@@ -100,7 +100,6 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public int getItemCount()
 	{
-		// TODO Auto-generated method stub
 		int header = 1;
 
 		return this.allAuthrsInfoList.size() + header;

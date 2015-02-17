@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.db;
 import java.sql.SQLException;
 import java.util.Date;
 
+import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 
@@ -31,7 +32,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	// name of the database file for your application
 	public static final String DATABASE_NAME = "db_odnako.db";
 	// any time you make changes to your database objects, you may have to increase the database version
-	private static final int DATABASE_VERSION = 1;
+//	private static final int DATABASE_VERSION = 1;
 
 	// the DAO object we use to access the Book table
 	private Dao<Category, Integer> daoCategory = null;
@@ -42,7 +43,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 
 	public DataBaseHelper(Context context)
 	{
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, context.getResources().getInteger(R.integer.db_version));//DATABASE_VERSION);
 
 		this.ctx = context;
 	}

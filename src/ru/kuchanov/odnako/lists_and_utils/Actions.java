@@ -79,7 +79,7 @@ public class Actions
 						int position = 0;
 						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
 						{
-							if (authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).blogLink))
+							if (authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).getBlog_url()))//.blogLink))
 							{
 								position = i;
 								break;
@@ -99,7 +99,8 @@ public class Actions
 						int position = 0;
 						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 						{
-							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
+//							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
+							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
 							{
 								weFindIt = true;
 								position = i;
@@ -262,7 +263,7 @@ public class Actions
 
 					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 					{
-						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
+						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))//.blogLink))
 						{
 							weFindIt = true;
 							positionInLeftPager = i;
@@ -274,7 +275,7 @@ public class Actions
 						//set right pager, cause it do not want to set itself through pageChangeListener
 						ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
 						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
-						.get(positionInLeftPager).blogLink;
+						.get(positionInLeftPager).getBlog_url();//.blogLink;
 						rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
 						authorBlogUrlFromAdapter, act));
 						rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()

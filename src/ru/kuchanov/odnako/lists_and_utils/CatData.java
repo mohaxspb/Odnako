@@ -31,7 +31,7 @@ public class CatData
 	 */
 	public CatData()
 	{
-		// TODO Auto-generated constructor stub
+		
 	}
 
 //	public static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
@@ -61,7 +61,8 @@ public class CatData
 //		return getAllCatArtsInfoFromDB;
 //	}
 	
-	public static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
+	//DO NOT USE IT! DELETE!!!
+	static HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfoFromDB(long requestTime, ActionBarActivity act)
 	{
 		//init arrays from /res
 		authorsMenuNames = act.getResources().getStringArray(R.array.authors);
