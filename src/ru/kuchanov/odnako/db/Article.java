@@ -31,11 +31,10 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Article
 {
 	private static final String LOG = Article.class.getSimpleName();
-	
+
 	public final static String ID_FIELD_NAME = "id";
 	public final static String AUTHOR_FIELD_NAME = "author";
 	public final static String URL_FIELD_NAME = "url";
-	
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -408,7 +407,8 @@ public class Article
 
 	/**
 	 * 
-	 * @return String[20] with full data, including ID, refreshed Date and Author ID
+	 * @return String[20] with full data, including ID, refreshed Date and
+	 *         Author ID
 	 * 
 	 * @see Article.getAsStringArray()
 	 */
@@ -522,6 +522,7 @@ public class Article
 
 		return art;
 	}
+
 	/**
 	 * 
 	 * @param h
@@ -541,14 +542,18 @@ public class Article
 
 		return art;
 	}
-	
-	public static int writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
+
+	public static ArrayList<ArtInfo> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
 	{
-		int quontOfWrittenArticles=0;
+		ArrayList<ArtInfo> updatedData = new ArrayList<ArtInfo>();
+
+		int quontOfWrittenArticles = 0;
+
+		Article existingArt;
 		for (ArtInfo a : data)
 		{
 			//check if there is no already existing arts in DB by queryForURL
-			Article existingArt=Article.getArticleByURL(h, a.url);
+			existingArt = Article.getArticleByURL(h, a.url);
 			if (existingArt == null)
 			{
 				//get author obj if it is in ArtInfo and Author table
@@ -563,23 +568,27 @@ public class Article
 					e.printStackTrace();
 				}
 				//crate Article obj to pass it to DB
-				Article art = new Article(a.getArtInfoAsStringArray(), new Date(System.currentTimeMillis()), aut);
+				/* Article art */existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
+				System.currentTimeMillis()), aut);
 				//set author image URL for articles
-				if(aut!=null)
+				if (aut != null)
 				{
-					art.setImg_author(aut.getAvatar());
+					existingArt.setImg_author(aut.getAvatar());
 				}
 				try
 				{
-					h.getDaoArticle().create(art);
+					h.getDaoArticle().create(existingArt);
 					quontOfWrittenArticles++;
 				} catch (SQLException e)
 				{
-					Log.e(LOG, art.getTitle() + " error while INSERT");
+					Log.e(LOG, existingArt.getTitle() + " error while INSERT");
 				}
 			}
+
+			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
 		}
-		return quontOfWrittenArticles;
+		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+		return updatedData;
 	}
 
 	/**

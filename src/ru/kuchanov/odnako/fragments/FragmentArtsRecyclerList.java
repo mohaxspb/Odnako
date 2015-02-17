@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
@@ -150,6 +151,12 @@ public class FragmentArtsRecyclerList extends Fragment
 		{
 			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
 
+			if (!isAdded())
+			{
+				Log.e(LOG_TAG + categoryToLoad, "fragment not added! RETURN!");
+				return;
+			}
+
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
@@ -258,23 +265,6 @@ public class FragmentArtsRecyclerList extends Fragment
 				artSelectedReceiver = null;
 			}
 			this.setInLeftPager(false);
-			//			Toolbar toolbarRight=(Toolbar) this.act.findViewById(toolbarId);
-			//			String title="";
-			//			String[] allAutNames=CatData.getAllAuthorsNames(act);
-			//			String[] allAutUrls=CatData.getAllAuthorsBlogsURLs(act);
-			//			String[] allCatNames=CatData.getAllTagsNames(act);
-			//			String[] allCatUrls=CatData.getAllTagsLinks(act);
-			//			String[] names=CatData.concatArrays(allCatNames, allAutNames);
-			//			String[] urls=CatData.concatArrays(allCatUrls, allAutUrls);
-			//			for(int i=0; i<urls.length; i++)
-			//			{
-			//				if(this.categoryToLoad.equals(urls[i]))
-			//				{
-			//					title=names[i];
-			//					break;
-			//				}
-			//			}
-			//			toolbarRight.setTitle(title);
 		}
 		else if (container.getId() == R.id.arts_list_container)
 		{
@@ -341,6 +331,13 @@ public class FragmentArtsRecyclerList extends Fragment
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
+
+		//restore allArtsInfo from Activities HashMap
+		if (this.allArtsInfo == null
+		&& ((ActivityMain) this.act).getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
+		{
+			this.allArtsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.getCategoryToLoad());
+		}
 
 		if (this.allArtsInfo == null)
 		{
@@ -489,27 +486,52 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void setTitleToRightToolbar()
 	{
-		if (toolbarId == R.id.toolbar_right)
-		{
-			Toolbar toolbarRight = (Toolbar) this.act.findViewById(toolbarId);
-			String title = "";
-			String[] allAutNames = CatData.getAllAuthorsNames(act);
-			String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
-			String[] allCatNames = CatData.getAllTagsNames(act);
-			String[] allCatUrls = CatData.getAllTagsLinks(act);
-			String[] names = CatData.concatArrays(allCatNames, allAutNames);
-			String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
-			for (int i = 0; i < urls.length; i++)
-			{
-				if (this.categoryToLoad.equals(urls[i]))
-				{
-					title = names[i];
-					break;
-				}
-			}
-			toolbarRight.setTitle(title);
-		}
+		//		if (toolbarId == R.id.toolbar_right)
+		//		{
+		//			Toolbar toolbarRight = (Toolbar) this.act.findViewById(toolbarId);
+		//			String title = "";
+		//			String[] allAutNames = CatData.getAllAuthorsNames(act);
+		//			String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
+		//			String[] allCatNames = CatData.getAllTagsNames(act);
+		//			String[] allCatUrls = CatData.getAllTagsLinks(act);
+		//			String[] names = CatData.concatArrays(allCatNames, allAutNames);
+		//			String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
+		//			for (int i = 0; i < urls.length; i++)
+		//			{
+		//				if (this.categoryToLoad.equals(urls[i]))
+		//				{
+		//					title = names[i];
+		//					break;
+		//				}
+		//			}
+		//			toolbarRight.setTitle(title);
+		//		}
+		Toolbar toolbar = (Toolbar) this.act.findViewById(toolbarId);
+		String title = "";
 
+		String[] allAutNames = CatData.getAllAuthorsNames(act);
+		String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
+
+		String[] allCatNames = CatData.getAllTagsNames(act);
+		String[] allCatUrls = CatData.getAllTagsLinks(act);
+
+		String[] names = CatData.concatArrays(allCatNames, allAutNames);
+		String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
+
+		String[] menuNames = CatData.getAllCategoriesMenuNames(act);
+		String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
+
+		String[] namesFull = CatData.concatArrays(names, menuNames);
+		String[] urlsFull = CatData.concatArrays(urls, menuUrls);
+		for (int i = 0; i < urlsFull.length; i++)
+		{
+			if (this.categoryToLoad.equals(urlsFull[i]))
+			{
+				title = namesFull[i];
+				break;
+			}
+		}
+		toolbar.setTitle(title);
 	}
 
 	public boolean isInLeftPager()

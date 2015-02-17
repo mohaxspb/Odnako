@@ -67,6 +67,7 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 			this.share_quont = "empty";
 			this.to_read_main = "empty";
 			this.to_read_more = "empty";
+			this.img_author = "empty";
 
 			this.allInfo[0] = url;
 			this.allInfo[1] = title;
@@ -109,6 +110,7 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 			this.share_quont = "empty";
 			this.to_read_main = "empty";
 			this.to_read_more = "empty";
+			this.img_author = "empty";
 
 			this.allInfo[0] = url;
 			this.allInfo[1] = title;

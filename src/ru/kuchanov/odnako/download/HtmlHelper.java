@@ -18,6 +18,8 @@ public class HtmlHelper
 {
 	private final static String TAG = HtmlHelper.class.getSimpleName();
 
+	public final static String DOMAIN_MAIN = "http://odnako.org";
+
 	TagNode rootNode;
 	public String htmlString;
 
@@ -34,7 +36,7 @@ public class HtmlHelper
 		cleaner = new HtmlCleaner();
 		try
 		{
-			//			System.out.println("HtmlHelper constructor URL: " + htmlPage.toString());
+			//System.out.println("HtmlHelper constructor URL: " + htmlPage.toString());
 			rootNode = cleaner.clean(htmlPage);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
@@ -171,7 +173,7 @@ public class HtmlHelper
 				String imgSrc = imgEl[0].getAttributeByName("src").toString();
 				if (imgSrc.startsWith("/i/"))
 				{
-					imgSrc = "http://odnako.org" + imgSrc;
+					imgSrc = DOMAIN_MAIN + imgSrc;
 				}
 				info[2] = imgSrc;
 			}
@@ -197,14 +199,18 @@ public class HtmlHelper
 
 	public String getCategoryImage()
 	{
-		String ImageUrl;
+		String imageUrl;
 
 		TagNode imageTag = this.rootNode.findElementByAttValue("class", "l-left header-news-banner-item-pic", true,
 		false);
 
-		ImageUrl = imageTag.getAttributeByName("src");
+		imageUrl = imageTag.getAttributeByName("src");
+		if (imageUrl.startsWith("/i/"))
+		{
+			imageUrl = DOMAIN_MAIN + imageUrl;
+		}
 
-		return ImageUrl;
+		return imageUrl;
 	}
 
 	public String getAuthorsWho()
@@ -223,6 +229,10 @@ public class HtmlHelper
 		TagNode descrTag = rootNode.findElementByAttValue("class", "section first", true, false);
 		TagNode imgTag = descrTag.findElementByName("img", true);
 		String imgUrl = imgTag.getAttributeByName("src");
+		if (imgUrl.startsWith("/i/"))
+		{
+			imgUrl = DOMAIN_MAIN + imgUrl;
+		}
 		return imgUrl;
 	}
 
@@ -254,6 +264,10 @@ public class HtmlHelper
 	{
 		TagNode bigImgTag = rootNode.findElementByAttValue("itemprop", "image", true, false);
 		String bigImg = bigImgTag.getAttributeByName("content");
+		if (bigImg.startsWith("/i/"))
+		{
+			bigImg = DOMAIN_MAIN + bigImg;
+		}
 		return bigImg;
 	}
 
@@ -305,7 +319,7 @@ public class HtmlHelper
 				{
 					if (imgSrc.startsWith("/i/"))
 					{
-						imgSrc = "http://odnako.org" + imgSrc;
+						imgSrc = DOMAIN_MAIN + imgSrc;
 						info[2] = imgSrc;
 					}
 					else

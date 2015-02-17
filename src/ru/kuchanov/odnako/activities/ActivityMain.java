@@ -263,11 +263,15 @@ public class ActivityMain extends ActivityBase
 		//		{
 		//			toolbar.getBackground().setAlpha(255);
 		//		}
-		if (this.twoPane == false)
+		if (this.twoPane)
+		{
+			toolbar.getBackground().setAlpha(0);
+			toolbarRight.getBackground().setAlpha(0);
+		}
+		else
 		{
 			toolbar.getBackground().setAlpha(0);
 		}
-		toolbarRight.getBackground().setAlpha(0);
 
 		//adMob
 		this.AddAds();

@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.db;
 import java.sql.SQLException;
 import java.util.Date;
 
+import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 
 import android.content.Context;
@@ -138,10 +139,28 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		//Authors table
 		String[] urlsA = CatData.getAllAuthorsBlogsURLs(ctx);
 		String[] namesA = CatData.getAllAuthorsNames(ctx);
+		//TODO change who to description (inAuthor const below we already did it
 		String[] descriptionsA = CatData.getAllAuthorsDescriptions(ctx);
 		String[] whoA = CatData.getAllAuthorsWhos(ctx);
 		String[] img_urlsA = CatData.getAllAuthorsAvatars(ctx);
 		String[] img_urlsABIG = CatData.getAllAuthorsAvatarsBig(ctx);
+
+		//set domain for relative url
+		for (int u = 0; u < img_urlsA.length; u++)
+		{
+			if (img_urlsA[u].startsWith("/i/"))
+			{
+				img_urlsA[u] = HtmlHelper.DOMAIN_MAIN + img_urlsA[u];
+			}
+		}
+
+		for (int u = 0; u < img_urlsABIG.length; u++)
+		{
+			if (img_urlsABIG[u].startsWith("/i/"))
+			{
+				img_urlsABIG[u] = HtmlHelper.DOMAIN_MAIN + img_urlsABIG[u];
+			}
+		}
 
 		int lengthA = urlsA.length;
 		for (int i = 0; i < lengthA; i++)
@@ -149,9 +168,9 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			try
 			{
 				this.daoAuthor = this.getDaoAuthor();
-				String[] stringData = { urlsA[i], namesA[i], descriptionsA[i], whoA[i], img_urlsA[i], img_urlsABIG[i] };
-				Date[] dateData = { new Date(0), new Date(0) };
-				Author author = new Author(stringData, dateData);
+
+				Author author = new Author(urlsA[i], namesA[i], whoA[i], descriptionsA[i], img_urlsA[i],
+				img_urlsABIG[i], new Date(0), new Date(0));
 				this.daoAuthor.create(author);
 			} catch (SQLException e)
 			{

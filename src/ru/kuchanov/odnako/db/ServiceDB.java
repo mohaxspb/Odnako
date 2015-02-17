@@ -192,8 +192,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		else
 		{
-			//here we'll write gained arts to Article table
-			Article.writeArtInfoToArticleTable(getHelper(), dataToSend);
+			//here we'll write gained arts to Article table 
+			dataToSend = Article.writeArtInfoToArticleTable(getHelper(), dataToSend);
 
 			//here if we recive less then 30 arts (const quont of arts on page)
 			//we KNOW that last of them is initial art in category (author)
@@ -229,7 +229,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 

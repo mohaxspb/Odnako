@@ -59,6 +59,9 @@ public class Author
 	@DatabaseField(dataType = DataType.STRING, columnName = FIRST_ARTICLE_URL_FIELD_NAME)
 	private String firstArticleURL;
 
+	/**
+	 * need empty constructor for OrmLite
+	 */
 	public Author()
 	{
 
@@ -268,7 +271,6 @@ public class Author
 		allInfo[6] = avatarBig;
 		allInfo[7] = refreshed.toString();
 		allInfo[8] = lastArticleDate.toString();
-//		allInfo[9] = String.valueOf(sinhronised);
 		allInfo[9] = getFirstArticleURL();
 
 		return allInfo;

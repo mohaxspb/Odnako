@@ -68,6 +68,10 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 					{
 						if (page == 1)
 						{
+							if(allArtsInfo==null)
+							{
+								allArtsInfo=new ArrayList<ArtInfo>();
+							}
 							allArtsInfo.clear();
 						}
 						allArtsInfo.addAll(newAllArtsInfo);
@@ -90,6 +94,10 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 					{
 						if (page == 1)
 						{
+							if(allArtsInfo==null)
+							{
+								allArtsInfo=new ArrayList<ArtInfo>();
+							}
 							allArtsInfo.clear();
 						}
 						allArtsInfo.addAll(newAllArtsInfo);
@@ -111,6 +119,10 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 					{
 						if (page == 1)
 						{
+							if(allArtsInfo==null)
+							{
+								allArtsInfo=new ArrayList<ArtInfo>();
+							}
 							allArtsInfo.clear();
 						}
 						allArtsInfo.addAll(newAllArtsInfo);

@@ -45,6 +45,8 @@ import android.widget.TextView;
 public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 implements Filterable
 {
+	final static String TAG=ArtsListAdapter.class.getSimpleName();
+	
 	private static final int HEADER = 0;
 	private static final int ARTICLE = 1;
 	private static final int FOOTER = 2;
@@ -179,6 +181,16 @@ implements Filterable
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
+		final DisplayImageOptions options;
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			options=UniversalImageLoader.getDarkOptions();
+		}
+		else
+		{
+			options=UniversalImageLoader.getLightOptions();
+		}
+		
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
@@ -234,15 +246,7 @@ implements Filterable
 						params.height = (int) DipToPx.convert(120, act);
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
-						final DisplayImageOptions options;
-						if (this.pref.getString("theme", "dark").equals("dark"))
-						{
-							options=UniversalImageLoader.getDarkOptions();
-						}
-						else
-						{
-							options=UniversalImageLoader.getLightOptions();
-						}
+						
 						imageLoader.displayImage(HDimgURL, holderMain.art_img, options,
 						new ImageLoadingListener()
 						{
@@ -361,7 +365,7 @@ implements Filterable
 					}
 					else
 					{
-						holderMain.preview.setText("preview is empty; Must hide on relize");
+						//holderMain.preview.setText("preview is empty; Must hide on relize");
 						holderMain.preview.setTextSize(21 * scaleFactor);
 					}
 
@@ -371,7 +375,7 @@ implements Filterable
 					//				holderMain.preview.setTextSize(21 * scaleFactor);
 					////end of preview
 
-					//name  and img of author
+					//name and image of author
 					if (!p.img_art.equals("empty") && p.img_art.contains("/75_75/"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
@@ -379,19 +383,16 @@ implements Filterable
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
 						
-						DisplayImageOptions options;
-						if (this.pref.getString("theme", "dark").equals("dark"))
-						{
-							options=UniversalImageLoader.getDarkOptions();
-//							imageLoader.displayImage(p.img_art, holderMain.author_img,
-//							UniversalImageLoader.getDarkOptions());
-						}
-						else
-						{
-							options=UniversalImageLoader.getLightOptions();
-//							imageLoader.displayImage(p.img_art, holderMain.author_img);
-						}
 						this.imageLoader.displayImage(p.img_art, holderMain.author_img, options);
+					}
+					else if(!p.img_author.equals("empty"))
+					{
+						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
+						params.height = pixels;
+						params.width = pixels;
+						holderMain.author_img.setLayoutParams(params);
+						
+						this.imageLoader.displayImage(p.img_author, holderMain.author_img, options);
 					}
 					else
 					{

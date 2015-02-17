@@ -50,6 +50,11 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	public static final int ROUTE_ART_CAT = 3;
 
 	/**
+	 * URI ID for route: /artcat
+	 */
+	public static final int ROUTE_AUTHOR = 4;
+
+	/**
 	 * UriMatcher, used to decode incoming URIs.
 	 */
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -58,6 +63,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 		sUriMatcher.addURI(AUTHORITY, "article", ROUTE_ARTICLE);
 		sUriMatcher.addURI(AUTHORITY, "article/*", ROUTE_ARTICLE_ID);
 		sUriMatcher.addURI(AUTHORITY, "artcat", ROUTE_ART_CAT);
+		sUriMatcher.addURI(AUTHORITY, "author", ROUTE_AUTHOR);
 	}
 
 	@Override
@@ -72,6 +78,10 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
 	{
 		Log.d(TAG + uri.toString(), "Cursor query CALLED!");
+
+		String msg;
+		Cursor cursor;
+
 		int uriMatch = sUriMatcher.match(uri);
 		switch (uriMatch)
 		{
@@ -91,7 +101,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 
 				// when you are done, prepare your query and build an iterator
 				CloseableIterator<Article> iterator = null;
-				Cursor cursor = null;
+				cursor = null;
 				try
 				{
 					iterator = this.getHelper().getDaoArticle()
@@ -104,7 +114,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 					e.printStackTrace();
 				}
 				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
-				String msg = String.valueOf(cursor.getCount());
+				msg = String.valueOf(cursor.getCount());
 				Log.d(TAG, "cursor.getCount(): " + msg);
 				return cursor;
 			case ROUTE_ART_CAT:
@@ -123,24 +133,56 @@ public class ContentProviderOdnakoDB extends ContentProvider
 
 				// when you are done, prepare your query and build an iterator
 				CloseableIterator<ArtCatTable> i = null;
-				Cursor c = null;
+				cursor = null;
 				try
 				{
 					i = this.getHelper().getDaoArtCatTable()
 					.iterator(artCatQB.where().ge(ArtCatTable.ID_FIELD_NAME, 0).prepare());
 					// get the raw results which can be cast under Android
 					AndroidDatabaseResults results = (AndroidDatabaseResults) i.getRawResults();
-					c = results.getRawCursor();
+					cursor = results.getRawCursor();
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
 				}
-				c.setNotificationUri(this.getContext().getContentResolver(), uri);
-				String m = String.valueOf(c.getCount());
+				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
+				String m = String.valueOf(cursor.getCount());
 				Log.d(TAG, "cursor.getCount(): " + m);
-				return c;
-		}
+				return cursor;
 
+			case ROUTE_AUTHOR:
+				// Return all known entries.
+				// Note: Notification URI must be manually set here for loaders to correctly
+				// register ContentObservers.
+				// build your query
+				QueryBuilder<Author, Integer> qbAuthor = null;
+				try
+				{
+					qbAuthor = this.getHelper().getDaoAuthor().queryBuilder();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+
+				// when you are done, prepare your query and build an iterator
+				CloseableIterator<Author> iteratorAuthor = null;
+				cursor = null;
+				try
+				{
+					iteratorAuthor = this.getHelper().getDaoAuthor()
+					.iterator(qbAuthor.where().ge(Author.ID_FIELD_NAME, 0).prepare());
+					// get the raw results which can be cast under Android
+					AndroidDatabaseResults results = (AndroidDatabaseResults) iteratorAuthor.getRawResults();
+					cursor = results.getRawCursor();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
+				msg = String.valueOf(cursor.getCount());
+				Log.d(TAG, "cursor.getCount(): " + msg);
+				return cursor;
+		}
 		return null;
 	}
 
