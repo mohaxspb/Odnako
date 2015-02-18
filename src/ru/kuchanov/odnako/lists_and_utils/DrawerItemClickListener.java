@@ -41,11 +41,18 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 
 		if (act instanceof ActivityMain)
 		{
-
+			ActivityMain mainActivity=(ActivityMain) this.act;
+			
+			//if pagerType isn't MENU we set it to Menu and change pagers
+			if(mainActivity.getPagerType()!=ActivityMain.PAGER_TYPE_MENU)
+			{
+				mainActivity.setPagerType(ActivityMain.PAGER_TYPE_MENU);
+				mainActivity.setPagers(ActivityMain.PAGER_TYPE_MENU, mainActivity.getCurentPositionByGroupChildPosition(groupPosition, childPosition));
+			}
 			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 
-			((ActivityMain) this.act).setGroupChildPosition(groupPosition, childPosition);
-			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
+			mainActivity.setGroupChildPosition(groupPosition, childPosition);
+			((ExpListAdapter)mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
 
 			if (groupPosition == 0)
 			{

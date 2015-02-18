@@ -344,6 +344,24 @@ public class ActivityBase extends ActionBarActivity
 		return new int[] { group, child };
 	}
 
+	public int getCurentPositionByGroupChildPosition(int group, int child)
+	{
+		int firstCategoryChildrenQuontity = act.getResources().getStringArray(R.array.authors_links).length;
+
+		int curentPosition = 11;
+
+		if (group == 0)
+		{
+			curentPosition = child;
+		}
+		else if (group == 1)
+		{
+			curentPosition = firstCategoryChildrenQuontity + child;
+		}
+		
+		return curentPosition;
+	}
+
 	@Override
 	public void onBackPressed()
 	{

@@ -574,4 +574,33 @@ public class ActivityMain extends ActivityBase
 			}
 		}, 5000);
 	}
+	
+	/**
+	 * sets pagers depend on type and tablet mode can be used in click listeners
+	 * @param pagerType 
+	 */
+	public void setPagers(int pagerType, int curentCategoryPosition)
+	{
+		switch (pagerType)
+		{
+			case PAGER_TYPE_MENU:
+				//reset pagerType to MENU
+				this.setPagerType(PAGER_TYPE_MENU);
+
+				this.setCurentCategoryPosition(curentCategoryPosition);
+				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+				this.artsListPager.setAdapter(artsListPagerAdapter);
+				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+				ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
+				pagerAdapter,
+				artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
+				this.artsListPager.setOnPageChangeListener(menuListener);
+				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
+			break;
+			//				case PAGER_TYPE_AUTHORS:
+			default:
+				
+			break;
+		}
+	}
 }
