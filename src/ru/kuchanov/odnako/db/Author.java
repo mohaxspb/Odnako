@@ -15,14 +15,15 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * id, blog_url, name, description, who, avatar, avatarBig, refreshed, lastArticleDate, 
- * firstArticleURL
+ * id, blog_url, name, description, who, avatar, avatarBig, refreshed,
+ * lastArticleDate, firstArticleURL
  */
 @DatabaseTable(tableName = "author")
 public class Author
 {
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "blog_url";
+	public final static String NAME_FIELD_NAME = "name";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
@@ -32,7 +33,7 @@ public class Author
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String blog_url;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = NAME_FIELD_NAME)
 	private String name;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
@@ -171,7 +172,7 @@ public class Author
 	{
 		this.lastArticleDate = lastArticleDate;
 	}
-	
+
 	public String getFirstArticleURL()
 	{
 		return firstArticleURL;
@@ -199,16 +200,16 @@ public class Author
 		return firstArtUrl;
 	}
 
-//	public boolean isSinhronised()
-//	{
-//		return sinhronised;
-//	}
-//
-//	public void setSinhronised(boolean sinhronised)
-//	{
-//		this.sinhronised = sinhronised;
-//	}
-	
+	//	public boolean isSinhronised()
+	//	{
+	//		return sinhronised;
+	//	}
+	//
+	//	public void setSinhronised(boolean sinhronised)
+	//	{
+	//		this.sinhronised = sinhronised;
+	//	}
+
 	public static Author getAuthorByURL(DataBaseHelper h, String url)
 	{
 		Author a = null;
@@ -221,24 +222,40 @@ public class Author
 		}
 		return a;
 	}
-	
+
 	/**
 	 * 
 	 * @param h
 	 * @param url
-	 * @return id or null on SQLException and if can't find 
+	 * @return id or null on SQLException and if can't find
 	 */
 	public static int getAuthorIdByURL(DataBaseHelper h, String url)
 	{
 		Integer id = null;
 		try
 		{
-			id = h.getDaoAuthor().queryBuilder().where().eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getId();
+			id = h.getDaoAuthor().queryBuilder().where()
+			.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 		return id;
+	}
+
+	public static String getAvatarUrlByName(DataBaseHelper h, String name)
+	{
+		String avatarUrl = "empty";
+
+		try
+		{
+			avatarUrl = h.getDaoAuthor().queryBuilder().where().eq(NAME_FIELD_NAME, name).queryForFirst().getAvatar();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return avatarUrl;
 	}
 
 	/**
@@ -285,7 +302,7 @@ public class Author
 				"lastArticleDate", "firstArticleURL" };
 		return arrStr1;
 	}
-	
+
 	public static void setInitialArtsUrl(DataBaseHelper h, int authorId, String initialArtsUrl)
 	{
 		UpdateBuilder<Author, Integer> updateBuilder;

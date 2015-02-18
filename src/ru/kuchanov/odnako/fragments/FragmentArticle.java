@@ -13,7 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.utils.UniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -105,7 +105,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			this.restoreState(savedState);
 		}
 
-		this.imageLoader = UniversalImageLoader.get(act);
+		this.imageLoader = MyUniversalImageLoader.get(act);
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
@@ -541,7 +541,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//down images
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, UniversalImageLoader.getDarkOptions());
+			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, MyUniversalImageLoader.getDarkOptions());
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,

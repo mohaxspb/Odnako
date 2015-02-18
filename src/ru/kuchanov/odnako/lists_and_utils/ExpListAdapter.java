@@ -3,13 +3,18 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityDownloads;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DipToPx;
+import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -39,10 +44,10 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	Drawable drawableArrrowRight;
 	private Drawable drawableDownload;
 	private Drawable drawableSettings;
-	private Drawable drawableAsList;
+	Drawable drawableAsList;
 	private Drawable drawableSubject;
 	private Drawable drawableCategoriesMore;
-	private Drawable drawableAuthor;
+	Drawable drawableAuthor;
 	private Drawable drawableAuthorsMore;
 	
 
@@ -356,7 +361,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 
 		/////////
 		//text and it's size
-		holderMain.text.setText(mGroups.get(groupPosition).get(childPosition));
+		String drawerItemTitle=mGroups.get(groupPosition).get(childPosition);
+		holderMain.text.setText(drawerItemTitle);
 		String scaleFactorString = pref.getString("scale", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 		holderMain.text.setTextSize(21 * scaleFactor);
@@ -373,7 +379,12 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				}
 				else
 				{
-					holderMain.left.setImageDrawable(drawableAuthor);
+//					holderMain.left.setImageDrawable(drawableAuthor);
+					//get and display author's avatar
+					ImageLoader imageLoader = MyUniversalImageLoader.get(act);
+					DataBaseHelper helper=new DataBaseHelper(act);
+					String imageUri=Author.getAvatarUrlByName(helper, drawerItemTitle);
+					imageLoader.displayImage(imageUri, holderMain.left, MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
 				}
 
 			break;
@@ -384,7 +395,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				}
 				else
 				{
-					holderMain.left.setImageDrawable(drawableAsList);
+//					holderMain.left.setImageDrawable(drawableAsList);
+					holderMain.left.setImageDrawable(null);
 				}
 			break;
 		}

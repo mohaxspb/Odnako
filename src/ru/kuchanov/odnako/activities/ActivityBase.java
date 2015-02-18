@@ -17,7 +17,7 @@ import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.UniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -218,9 +218,9 @@ public class ActivityBase extends ActionBarActivity
 		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
 		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
 		//		ava.setImageResource(R.drawable.dev_ava);
-		ImageLoader imgLoader = UniversalImageLoader.get(act);
+		ImageLoader imgLoader = MyUniversalImageLoader.get(act);
 		imgLoader.displayImage("drawable://" + R.drawable.dev_ava, ava,
-		UniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
+		MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
 		ava.setOnClickListener(new OnClickListener()
 		{
 

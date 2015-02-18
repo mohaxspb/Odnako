@@ -13,7 +13,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
-import ru.kuchanov.odnako.utils.UniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,8 +45,8 @@ import android.widget.TextView;
 public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 implements Filterable
 {
-	final static String TAG=ArtsListAdapter.class.getSimpleName();
-	
+	final static String TAG = ArtsListAdapter.class.getSimpleName();
+
 	private static final int HEADER = 0;
 	private static final int ARTICLE = 1;
 	private static final int FOOTER = 2;
@@ -77,12 +77,12 @@ implements Filterable
 		this.artsListView = artsListView;
 
 		this.artsListFrag = artsListFrag;
-		this.isInLeftPager=this.artsListFrag.isInLeftPager();
+		this.isInLeftPager = this.artsListFrag.isInLeftPager();
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
-		imageLoader = UniversalImageLoader.get(act);
+		imageLoader = MyUniversalImageLoader.get(act);
 	}
 
 	@SuppressLint("DefaultLocale")
@@ -141,10 +141,10 @@ implements Filterable
 		{
 			return HEADER;
 		}
-//		else if (((position -1) % 30) == 0 && (position == this.getItemCount() - 1))
-//		{
-//			return FOOTER;
-//		}
+		//		else if (((position -1) % 30) == 0 && (position == this.getItemCount() - 1))
+		//		{
+		//			return FOOTER;
+		//		}
 		else
 		{
 			return ARTICLE;
@@ -184,13 +184,13 @@ implements Filterable
 		final DisplayImageOptions options;
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			options=UniversalImageLoader.getDarkOptions();
+			options = MyUniversalImageLoader.getDarkOptions();
 		}
 		else
 		{
-			options=UniversalImageLoader.getLightOptions();
+			options = MyUniversalImageLoader.getLightOptions();
 		}
-		
+
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
@@ -246,7 +246,7 @@ implements Filterable
 						params.height = (int) DipToPx.convert(120, act);
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
-						
+
 						imageLoader.displayImage(HDimgURL, holderMain.art_img, options,
 						new ImageLoadingListener()
 						{
@@ -382,17 +382,19 @@ implements Filterable
 						params.height = pixels;
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
-						
-						this.imageLoader.displayImage(p.img_art, holderMain.author_img, options);
+
+						this.imageLoader.displayImage(p.img_art, holderMain.author_img,
+						MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
 					}
-					else if(!p.img_author.equals("empty"))
+					else if (!p.img_author.equals("empty"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
-						
-						this.imageLoader.displayImage(p.img_author, holderMain.author_img, options);
+
+						this.imageLoader.displayImage(p.img_author, holderMain.author_img,
+						MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
 					}
 					else
 					{
@@ -557,7 +559,7 @@ implements Filterable
 
 					/////////animation
 					// Here you apply the animation when the view is bound
-//					setAnimation(vg, position);
+					//					setAnimation(vg, position);
 				} catch (Exception e)
 				{
 					return;
@@ -575,13 +577,13 @@ implements Filterable
 	protected void setAnimation(View viewToAnimate, int position)
 	{
 		// If the bound view wasn't previously displayed on screen, it's animated
-//		if (position > lastPosition)
-//		{
-			Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.slide_in_left);
-			//        	Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.fade_in);
-			viewToAnimate.startAnimation(animation);
-//			lastPosition = position;
-//		}
+		//		if (position > lastPosition)
+		//		{
+		Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.slide_in_left);
+		//        	Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.fade_in);
+		viewToAnimate.startAnimation(animation);
+		//			lastPosition = position;
+		//		}
 	}
 
 	@Override
@@ -686,8 +688,8 @@ implements Filterable
 	}
 
 	///////
-//	public ArrayList<ArtInfo> getAllArtsInfo()
-//	{
-//		return this.artsInfo;
-//	}
+	//	public ArrayList<ArtInfo> getAllArtsInfo()
+	//	{
+	//		return this.artsInfo;
+	//	}
 }

@@ -19,7 +19,7 @@ import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.utils.UniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -281,9 +281,9 @@ public class FragmentArtsRecyclerList extends Fragment
 				String fullResName = catImgsFilesNames[i];
 				String resName = fullResName.substring(0, fullResName.length() - 4);
 				int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-				ImageLoader imgLoader = UniversalImageLoader.get(act);
+				ImageLoader imgLoader = MyUniversalImageLoader.get(act);
 				imgLoader.displayImage("drawable://" + resId, topImg,
-				UniversalImageLoader.getTransparentBackgroundOptions());
+				MyUniversalImageLoader.getTransparentBackgroundOptions(this.act));
 				break;
 			}
 		}

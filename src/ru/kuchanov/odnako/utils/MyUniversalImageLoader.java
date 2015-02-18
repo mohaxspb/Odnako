@@ -9,8 +9,11 @@ package ru.kuchanov.odnako.utils;
 import java.io.File;
 
 import ru.kuchanov.odnako.R;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -20,7 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
 
-public class UniversalImageLoader
+public class MyUniversalImageLoader
 {
 
 	public static ImageLoader get(ActionBarActivity act)
@@ -86,14 +89,32 @@ public class UniversalImageLoader
 		.build();
 	}
 
-	public static DisplayImageOptions getTransparentBackgroundOptions()
+	public static DisplayImageOptions getTransparentBackgroundOptions(Context ctx)
 	{
-		return new DisplayImageOptions.Builder()
+		int imageOnLoading;
+		int imageForEmptyUri;
+		int imageOnFail;
 
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String theme = pref.getString("theme", "dark");
+		if (theme.equals("dark"))
+		{
+			imageOnLoading = R.drawable.ic_autorenew_white_48dp;
+			imageForEmptyUri = R.drawable.ic_crop_original_white_48dp;
+			imageOnFail = R.drawable.ic_crop_original_white_48dp;
+		}
+		else
+		{
+			imageOnLoading = R.drawable.ic_autorenew_grey600_48dp;
+			imageForEmptyUri = R.drawable.ic_crop_original_grey600_48dp;
+			imageOnFail = R.drawable.ic_crop_original_grey600_48dp;
+		}
+
+		return new DisplayImageOptions.Builder()
 		.displayer(new RoundedBitmapDisplayer(10))
-		.showImageOnLoading(R.drawable.top_img_cover_grey_dark)
-		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
-		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.showImageOnLoading(imageOnLoading)
+		.showImageForEmptyUri(imageForEmptyUri)
+		.showImageOnFail(imageOnFail)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
@@ -103,12 +124,30 @@ public class UniversalImageLoader
 
 	public static DisplayImageOptions getTransparentBackgroundROUNDOptions(ActionBarActivity act)
 	{
-		return new DisplayImageOptions.Builder()
+		int imageOnLoading;
+		int imageForEmptyUri;
+		int imageOnFail;
 
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		String theme = pref.getString("theme", "dark");
+		if (theme.equals("dark"))
+		{
+			imageOnLoading = R.drawable.ic_autorenew_white_48dp;
+			imageForEmptyUri = R.drawable.ic_crop_original_white_48dp;
+			imageOnFail = R.drawable.ic_crop_original_white_48dp;
+		}
+		else
+		{
+			imageOnLoading = R.drawable.ic_autorenew_grey600_48dp;
+			imageForEmptyUri = R.drawable.ic_crop_original_grey600_48dp;
+			imageOnFail = R.drawable.ic_crop_original_grey600_48dp;
+		}
+
+		return new DisplayImageOptions.Builder()
 		.displayer(new RoundedBitmapDisplayer((int) DipToPx.convert(35, act)))
-		.showImageOnLoading(R.drawable.top_img_cover_grey_dark)
-		.showImageForEmptyUri(R.drawable.ic_crop_original_white_48dp)
-		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
+		.showImageOnLoading(imageOnLoading)
+		.showImageForEmptyUri(imageForEmptyUri)
+		.showImageOnFail(imageOnFail)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
