@@ -135,7 +135,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "artSelectedReceiver onReceive called");
+			Log.i(LOG_TAG+categoryToLoad, "artSelectedReceiver onReceive called");
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
@@ -160,11 +160,6 @@ public class FragmentArtsRecyclerList extends Fragment
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-
-			if (msg[0] == null)
-			{
-				Log.e(LOG_TAG + categoryToLoad, "msg[0]==null: " + String.valueOf(msg[0] == null));
-			}
 
 			switch (msg[0])
 			{

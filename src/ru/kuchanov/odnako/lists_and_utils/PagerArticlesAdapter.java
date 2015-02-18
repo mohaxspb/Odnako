@@ -45,110 +45,205 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver, new IntentFilter(category));
+//		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver, new IntentFilter(category + "art_position"));
 	}
+	
+//	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
+//	{
+//		@Override
+//		public void onReceive(Context context, Intent intent)
+//		{
+//			Log.i(LOG_TAG+category, "artSelectedReceiver onReceive called");
+//			int position = intent.getIntExtra("position", 0);
+//
+//			setCurrentItem(position, true);
+////			setActivatedPosition(position);
+//			topImg.setY(0 - topImg.getHeight());
+//			artsListAdapter.notifyDataSetChanged();
+//		}
+//	};
 
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
+			//			Log.i(LOG_TAG + category, "artsDataReceiver onReceive called");
+			//
+			//			String[] msg = intent.getStringArrayExtra(Msg.MSG);
+			//			int page = intent.getIntExtra("pageToLoad", 1);
+			//			ArrayList<ArtInfo> newAllArtsInfo;
+			//
+			//			switch (msg[0])
+			//			{
+			//				case (Msg.NO_NEW):
+			//					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+			//					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+			//
+			//					if (newAllArtsInfo != null)
+			//					{
+			//						if (page == 1)
+			//						{
+			//							if(allArtsInfo==null)
+			//							{
+			//								allArtsInfo=new ArrayList<ArtInfo>();
+			//							}
+			//							allArtsInfo.clear();
+			//						}
+			//						allArtsInfo.addAll(newAllArtsInfo);
+			//						notifyDataSetChanged();
+			//
+			//						//TODO think how realise loading from bootom in ViewPager
+			//						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+			//					}
+			//					else
+			//					{
+			//						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+			//					}
+			//				break;
+			//				case (Msg.NEW_QUONT):
+			//					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
+			//
+			//					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+			//
+			//					if (newAllArtsInfo != null)
+			//					{
+			//						if (page == 1)
+			//						{
+			//							if(allArtsInfo==null)
+			//							{
+			//								allArtsInfo=new ArrayList<ArtInfo>();
+			//							}
+			//							allArtsInfo.clear();
+			//						}
+			//						allArtsInfo.addAll(newAllArtsInfo);
+			//						notifyDataSetChanged();
+			//
+			//						//TODO think how realise loading from bootom in ViewPager
+			//						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+			//					}
+			//					else
+			//					{
+			//						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+			//					}
+			//				break;
+			//				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
+			//
+			//					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+			//
+			//					if (newAllArtsInfo != null)
+			//					{
+			//						if (page == 1)
+			//						{
+			//							if(allArtsInfo==null)
+			//							{
+			//								allArtsInfo=new ArrayList<ArtInfo>();
+			//							}
+			//							allArtsInfo.clear();
+			//						}
+			//						allArtsInfo.addAll(newAllArtsInfo);
+			//						notifyDataSetChanged();
+			//
+			//						//TODO think how realise loading from bootom in ViewPager
+			//						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+			//					}
+			//					else
+			//					{
+			//						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+			//					}
+			//				break;
+			//				case (Msg.ERROR):
+			//					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
+			//					//check if there was error while loading from bottom, if so, decrement pageToLoad
+			//					if (page != 1)
+			//					{
+			//						//TODO think how realise loading from bootom in ViewPager
+			//						page--;
+			//					}
+			//				break;
+			//			}
+
 			Log.i(LOG_TAG + category, "artsDataReceiver onReceive called");
 
+			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-			ArrayList<ArtInfo> newAllArtsInfo;
 
 			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
+					Log.d(LOG_TAG + "/" + category, "Новых статей не обнаружено!");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							if(allArtsInfo==null)
-							{
-								allArtsInfo=new ArrayList<ArtInfo>();
-							}
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						notifyDataSetChanged();
-
-						//TODO think how realise loading from bootom in ViewPager
-						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
 				break;
 				case (Msg.NEW_QUONT):
+					Log.d(LOG_TAG + "/" + category, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
-
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							if(allArtsInfo==null)
-							{
-								allArtsInfo=new ArrayList<ArtInfo>();
-							}
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						notifyDataSetChanged();
-
-						//TODO think how realise loading from bootom in ViewPager
-						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
+				break;
+				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+					Log.d(LOG_TAG + "/" + category, "Обнаружено " + msg[1] + " новых статей");
+					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
-
-					newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
-
-					if (newAllArtsInfo != null)
-					{
-						if (page == 1)
-						{
-							if(allArtsInfo==null)
-							{
-								allArtsInfo=new ArrayList<ArtInfo>();
-							}
-							allArtsInfo.clear();
-						}
-						allArtsInfo.addAll(newAllArtsInfo);
-						notifyDataSetChanged();
-
-						//TODO think how realise loading from bootom in ViewPager
-						//((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
-					}
-					else
-					{
-						System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
-					}
+					updateAdapter(intent, page);
+				break;
+				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
+					//we catch publishing lag from bottom, so we'll toast unsinked status
+					//and start download from top (pageToLoad=1)
+					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
+					page = 1;
+					//TODO check it
+					allArtsInfo=null;
+					notifyDataSetChanged();
+//					getAllArtsInfo(true);
+				break;
+				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
+					Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					updateAdapter(intent, page);
 				break;
 				case (Msg.ERROR):
 					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
 					if (page != 1)
 					{
-						//TODO think how realise loading from bootom in ViewPager
 						page--;
+						//setOnScrollListener();
 					}
 				break;
+				default:
+					Log.e(LOG_TAG, "непредвиденный ответ базы данных");
+					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
 			}
-
 		}
 	};
+
+	private void updateAdapter(Intent intent, int page)
+	{
+		ArrayList<ArtInfo> newAllArtsInfo;
+		newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+
+		if (newAllArtsInfo != null)
+		{
+			if (this.allArtsInfo == null)
+			{
+				this.allArtsInfo = new ArrayList<ArtInfo>();
+			}
+			if (page == 1)
+			{
+				allArtsInfo.clear();
+			}
+			allArtsInfo.addAll(newAllArtsInfo);
+			notifyDataSetChanged();
+
+//			((ActivityBase) act).updateAllCatArtsInfo(category, allArtsInfo);
+		}
+		else
+		{
+			System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+		}
+	}
 
 	@Override
 	public Fragment getItem(int position)

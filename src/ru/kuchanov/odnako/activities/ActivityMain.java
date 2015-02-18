@@ -42,8 +42,9 @@ public class ActivityMain extends ActivityBase
 	public final static int PAGER_TYPE_AUTHORS = 1;
 	public final static int PAGER_TYPE_CATEGORIES = 2;
 	public final static int PAGER_TYPE_SINGLE = 3;
+
 	private final static String PAGER_TYPE_KEY = "pager type key";
-	public int pagerType = PAGER_TYPE_MENU;
+	private int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
 	ViewPager artCommsPager;
@@ -118,7 +119,9 @@ public class ActivityMain extends ActivityBase
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
 
-			this.pagerType = savedInstanceState.getInt(PAGER_TYPE_KEY);
+//			this.setPagerType(savedInstanceState.getInt(PAGER_TYPE_KEY));
+			//TODO CHECK it!
+			this.pagerType=savedInstanceState.getInt(PAGER_TYPE_KEY);
 
 			this.restoreAllCatArtsInfo(savedInstanceState);
 
@@ -183,8 +186,8 @@ public class ActivityMain extends ActivityBase
 		//End of setNavDraw
 
 		//set arts lists viewPager
-		Log.e(LOG_TAG, "pagerType: " + this.pagerType);
-		switch (this.pagerType)
+		Log.e(LOG_TAG, "pagerType: " + this.getPagerType());
+		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
 				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
@@ -199,7 +202,8 @@ public class ActivityMain extends ActivityBase
 				this.artsListPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				artsListPager.setPageTransformer(true, new RotationPageTransformer());
-				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this));
+				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this,
+				((PagerAuthorsListsAdapter) artsListPagerAdapter).getAllAuthorsList()));
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 			case PAGER_TYPE_SINGLE:
@@ -237,7 +241,7 @@ public class ActivityMain extends ActivityBase
 						authorBlogUrl));
 					}
 				}
-				this.pagerType = ActivityMain.PAGER_TYPE_SINGLE;
+				this.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
@@ -322,6 +326,27 @@ public class ActivityMain extends ActivityBase
 		return curPos;
 	}
 
+	public int getPagerType()
+	{
+		return pagerType;
+	}
+
+	public void setPagerType(int pagerType)
+	{
+		this.pagerType = pagerType;
+		//TODO here we'll clear groupChilpPosition for drawer menu, update it
+		switch (pagerType)
+		{
+			case PAGER_TYPE_MENU:
+
+			break;
+			default:
+				this.setGroupChildPosition(-1, -1);
+				this.expAdapter.notifyDataSetChanged();
+			break;
+		}
+	}
+
 	@Override
 	protected void onResume()
 	{
@@ -340,7 +365,7 @@ public class ActivityMain extends ActivityBase
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
 		outState.putString("currentCategory", this.getCurrentCategory());
 
-		outState.putInt(PAGER_TYPE_KEY, pagerType);
+		outState.putInt(PAGER_TYPE_KEY, getPagerType());
 
 		//save toolbar and topImg Y coord
 		saveAllCatToolbartopImgYCoord(outState);
@@ -448,6 +473,23 @@ public class ActivityMain extends ActivityBase
 		//			artCommsPager.setAdapter(pagerAdapter);
 		//		}
 	}
+	
+	@Override
+	public void setCurentCategoryPosition(int curentCategoryPosition)
+	{
+		this.currentCategoryPosition = curentCategoryPosition;
+		
+		//if it's not MenuPager, we must return,
+		//to avoid setting groupChildPosition for drawer menu
+		if(this.pagerType!=PAGER_TYPE_MENU)
+		{
+			return;
+		}
+
+		int[] groupChild = this.getGroupChildPositionByCurentPosition(curentCategoryPosition);
+
+		this.setGroupChildPosition(groupChild[0], groupChild[1]);
+	}
 
 	@Override
 	protected void restoreGroupChildPosition(Bundle state)
@@ -455,9 +497,12 @@ public class ActivityMain extends ActivityBase
 		if (state.containsKey("groupChildPosition"))
 		{
 			this.groupChildPosition = state.getIntArray("groupChildPosition");
-			//			int curentCategoryPosition = this.getCurentPositionByGroupChildPosition(groupChildPosition[0],
-			//			groupChildPosition[1]);
-			//			this.setCurentCategoryPosition(curentCategoryPosition);
+			//if it's not MenuPager, we must return,
+			//to avoid setting currentCategoryPosition
+			if(this.pagerType!=PAGER_TYPE_MENU)
+			{
+				return;
+			}
 			currentCategoryPosition = this.getCurentPositionByGroupChildPosition(groupChildPosition[0],
 			groupChildPosition[1]);
 		}
@@ -481,7 +526,7 @@ public class ActivityMain extends ActivityBase
 			//check left pagerType
 			//if so - we must show initial state of app
 			//else - check if it's second time of pressing back
-			switch (this.pagerType)
+			switch (this.getPagerType())
 			{
 
 				case PAGER_TYPE_MENU:
@@ -501,7 +546,7 @@ public class ActivityMain extends ActivityBase
 				//				case PAGER_TYPE_AUTHORS:
 				default:
 					//reset pagerType to MENU
-					this.pagerType = PAGER_TYPE_MENU;
+					this.setPagerType(PAGER_TYPE_MENU);
 
 					this.setCurentCategoryPosition(11);
 					this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);

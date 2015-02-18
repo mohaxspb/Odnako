@@ -1,12 +1,14 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
-import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.UniversalImageLoader;
 import android.content.SharedPreferences;
@@ -46,9 +48,10 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	FragmentAllAuthorsList artsListFrag;
 
-	AllAuthorsInfo allAuthorsInfo;
-	ArrayList<AuthorInfo> allAuthrsInfoList;
-	ArrayList<AuthorInfo> orig;
+//	AllAuthorsInfo allAuthorsInfo;
+//	ArrayList<AuthorInfo> allAuthrsInfoList;
+	ArrayList<Author> allAuthrsInfoList;
+//	ArrayList<AuthorInfo> orig;
 
 	public AllAuthorsListAdapter(ActionBarActivity act, RecyclerView artsListView, FragmentAllAuthorsList artsListFrag)
 	{
@@ -63,8 +66,15 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 		imageLoader = UniversalImageLoader.get(act);
 
-		allAuthorsInfo = new AllAuthorsInfo(act);
-		allAuthrsInfoList = allAuthorsInfo.getAllAuthorsInfoAsList();
+//		allAuthorsInfo = new AllAuthorsInfo(act);
+//		allAuthrsInfoList = allAuthorsInfo.getAllAuthorsInfoAsList();
+		try
+		{
+			this.allAuthrsInfoList=(ArrayList<Author>) new DataBaseHelper(act).getDaoAuthor().queryForAll();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 
 		//set arrowDownIcon by theme
 		int[] attrs = new int[] { R.attr.arrowDownIcon };
@@ -105,10 +115,12 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		return this.allAuthrsInfoList.size() + header;
 	}
 
-	public AuthorInfo getArtInfoByPosition(int position)
+//	public AuthorInfo getArtInfoByPosition(int position)
+	public Author getArtInfoByPosition(int position)
 	{
-		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
-		return p;
+//		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
+		Author author = this.allAuthrsInfoList.get(position - 1);
+		return author;
 	}
 
 	public static int getPositionInAllArtsInfo(int recyclerViewPosition)
@@ -133,7 +145,8 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			//TODO
 			break;
 			case (AUTHOR):
-				final AuthorInfo p;
+//				final AuthorInfo p;
+				final Author p;
 				p = this.getArtInfoByPosition(position);
 
 				//				final ArtInfo p = this.getArtInfoByPosition(position);
@@ -173,7 +186,8 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				{
 					public void onClick(View v)
 					{
-						Actions.showAllAuthorsArticles(p.blogLink, act);
+//						Actions.showAllAuthorsArticles(p.blogLink, act);
+						Actions.showAllAuthorsArticles(p.getBlog_url(), act);
 					}
 				});
 
@@ -182,31 +196,31 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				params.height = pixels;
 				params.width = pixels;
 				holderMain.author_img.setLayoutParams(params);
-				String link = "";
-				if (p.avaImg.startsWith("/"))
-				{
-					link = "http://odnako.org" + p.avaImg;
-				}
+//				String link = "";
+//				if (p.getAvatar().startsWith("/"))
+//				{
+//					link = "http://odnako.org" + p.getAvatar();
+//				}
 
 				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
-					imageLoader.displayImage(link, holderMain.author_img, UniversalImageLoader.getDarkOptions());
+					imageLoader.displayImage(p.getAvatar(), holderMain.author_img, UniversalImageLoader.getDarkOptions());
 				}
 				else
 				{
-					imageLoader.displayImage(link, holderMain.author_img);
+					imageLoader.displayImage(p.getAvatar(), holderMain.author_img);
 				}
 				//end of ART_IMG
 
 				//name 
-				Spanned spannedContentTitle = Html.fromHtml(p.name);
+				Spanned spannedContentTitle = Html.fromHtml(p.getName());
 				holderMain.name.setText(spannedContentTitle);
 				holderMain.name.setTextSize(21 * scaleFactor);
 
 				//who
-				if (!p.who.equals("empty") && !p.who.equals(""))
+				if (!p.getWho().equals("empty") && !p.getWho().equals(""))
 				{
-					Spanned spannedContentPreview = Html.fromHtml(p.who);
+					Spanned spannedContentPreview = Html.fromHtml(p.getWho());
 					holderMain.who.setText(spannedContentPreview);
 					holderMain.who.setTextSize(21 * scaleFactor);
 				}
@@ -215,9 +229,9 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					holderMain.who.setText(null);
 				}
 				//description
-				if (!p.description.equals("empty") && !p.description.equals(""))
+				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
 				{
-					Spanned spannedContentPreview = Html.fromHtml(p.description);
+					Spanned spannedContentPreview = Html.fromHtml(p.getDescription());
 					holderMain.description.setText(spannedContentPreview);
 					holderMain.description.setTextSize(21 * scaleFactor);
 				}
@@ -230,13 +244,13 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
 				//descriptionIcon
 
-				if (!p.description.equals("empty") && !p.description.equals(""))
+				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
 				{
 					holderMain.more_icon.setImageDrawable(drawableArrowDown);
 				}
 
 				//descr onClick
-				if (!p.description.equals("empty") && !p.description.equals(""))
+				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
 				{
 					//set conateiner height to wrapContent
 					LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();

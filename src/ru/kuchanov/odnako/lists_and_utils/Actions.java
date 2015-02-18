@@ -110,9 +110,9 @@ public class Actions
 						if (weFindIt)
 						{
 							leftPager.setAdapter(pagerAllAut);
-							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity));
+							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList()));
 							leftPager.setCurrentItem(position);
-							mainActivity.pagerType = ActivityMain.PAGER_TYPE_AUTHORS;
+							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 						}
 						else
 						{
@@ -147,7 +147,7 @@ public class Actions
 								rightPager.setCurrentItem(mainActivity.getAllCatListsSelectedArtPosition().get(
 								authorBlogUrl));
 							}
-							mainActivity.pagerType = ActivityMain.PAGER_TYPE_SINGLE;
+							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 							mainActivity.setCurrentCategory(authorBlogUrl);
 						}
 					}
@@ -156,6 +156,7 @@ public class Actions
 			else
 			{
 				//if not twoPane
+				//TODO
 			}
 		}
 		else
@@ -235,24 +236,12 @@ public class Actions
 			final ActivityMain mainActivity = (ActivityMain) act;
 			if (twoPane)
 			{
-				//			ArticlesListFragment artsListFrag = (ArticlesListFragment) ((ActivityMain) act).getSupportFragmentManager()
-				//			.findFragmentById(R.id.arts_list_container);
-				//			artsListFrag.setActivatedPosition(position);
-				//			ViewPager artsListPager = (ViewPager) act.findViewById(R.id.arts_list_container);
-				//			ArtsListsPagerAdapter artsListPagerAdapter = (ArtsListsPagerAdapter) artsListPager.getAdapter();
-				//			int curentCategoryPosition = ((ActivityMain) act).getCurentCategoryPosition();
-				//			ArticlesListFragment curArtsListFrag = (ArticlesListFragment) (artsListPagerAdapter)
-				//			.getRegisteredFragment(curentCategoryPosition);
-				//			curArtsListFrag.setActivatedPosition(position);
-				///////////
-				ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
-				//				if (pager.getAdapter().getClass().getSimpleName().equals(PagerArticlesAdapter.class.getSimpleName()))
-				if (pager.getAdapter().getClass().getSimpleName()
+				ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
+				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
+				if (rightPager.getAdapter().getClass().getSimpleName()
 				.equals(PagerAuthorsListsAdapter.class.getSimpleName()))
 				{
-					//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13)
-					//					if (((ActivityBase) act).getCurentCategoryPosition() == 3)
-					//					{
+					
 					//if so we must change adapters to all ViewPagers
 					ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
 					PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
@@ -272,10 +261,25 @@ public class Actions
 					}
 					if (weFindIt)
 					{
-						//set right pager, cause it do not want to set itself through pageChangeListener
-						ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
 						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
 						.get(positionInLeftPager).getBlog_url();//.blogLink;
+						
+						leftPager.setAdapter(pagerAllAut);
+						leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList()));
+						leftPager.setCurrentItem(positionInLeftPager);
+						//setCurentCategoryPosition for activity
+						mainActivity.setCurentCategoryPosition(positionInLeftPager);
+						
+						//send broadcastMessage to select article in list and pager by given (in method) position
+						Intent intentToListFrag = new Intent(authorBlogUrlFromAdapter + "art_position");
+						Bundle b = new Bundle();
+						b.putInt("position", position);
+						intentToListFrag.putExtras(b);
+						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+						
+						//set right pager, cause it do not want to set itself through pageChangeListener
+//						ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
+						
 						rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
 						authorBlogUrlFromAdapter, act));
 						rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -300,19 +304,20 @@ public class Actions
 								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 							}
 						});
-						rightPager.setCurrentItem(0, true);
-
-						leftPager.setAdapter(pagerAllAut);
-						leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity));
-						leftPager.setCurrentItem(positionInLeftPager);
+						//XXX check it
+						rightPager.setCurrentItem(position, true);
+//						rightPager.setCurrentItem(0, true);
+						
 						//TODO change to setter to change grupPosition for drawer menu
-						mainActivity.pagerType = ActivityMain.PAGER_TYPE_AUTHORS;
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 					}
 					else
 					{
 						leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act,
 						authorBlogUrl));
-						mainActivity.pagerType = ActivityMain.PAGER_TYPE_SINGLE;
+						//setCurentCategoryPosition for activity
+						mainActivity.setCurentCategoryPosition(0);
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 					}
 					//					}
 					//					else if (((ActivityBase) act).getCurentCategoryPosition() == 13)
@@ -333,7 +338,7 @@ public class Actions
 					//				PagerAdapter pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
 					//				act);
 					//				pager.setAdapter(pagerAdapter);
-					pager.setCurrentItem(position, true);
+					rightPager.setCurrentItem(position, true);
 				}
 			}
 			else

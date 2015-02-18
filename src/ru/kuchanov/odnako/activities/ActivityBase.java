@@ -349,24 +349,6 @@ public class ActivityBase extends ActionBarActivity
 	{
 		if (this.act.getClass().getSimpleName().equals("ActivityMain"))
 		{
-			//			if (this.backPressedQ == 1)
-			//			{
-			//				this.backPressedQ = 0;
-			//				super.onBackPressed();
-			//				this.finish();
-			//			}
-			//			else
-			//			{
-			//				if (mDrawerLayout.isDrawerOpen(Gravity.START))
-			//				{
-			//					this.mDrawerLayout.closeDrawer(Gravity.LEFT);
-			//				}
-			//				else
-			//				{
-			//					this.backPressedQ++;
-			//					Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
-			//				}
-			//			}
 			if (mDrawerLayout.isDrawerOpen(Gravity.START))
 			{
 				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
@@ -379,13 +361,6 @@ public class ActivityBase extends ActionBarActivity
 				ViewPager leftPager = (ViewPager) this.act.findViewById(R.id.arts_list_container);
 				if (leftPager.getAdapter().getCount() == 1)
 				{
-					//if so - we must show initial state of app
-					//test do it simply by recreating
-					//					this.act.getIntent().getExtras().clear();
-
-					//					intent.pu
-
-					//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					this.act.finish();
 					Intent intent = new Intent(this.act, ActivityMain.class);
 					this.act.startActivity(intent);
