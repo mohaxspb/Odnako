@@ -52,7 +52,7 @@ import android.widget.Toast;
  */
 public class FragmentArtsRecyclerList extends Fragment
 {
-	private static String LOG_TAG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
+	private static String LOG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
 
 	private int pageToLoad = 1;
 
@@ -108,7 +108,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		else
 		{
-			this.position=((ActivityMain)act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
+			this.position = ((ActivityMain) act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
 		}
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
@@ -128,9 +128,16 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(categoryToLoad, "fragSelectedReceiver onReceive called");
-			artsListAdapter.notifyDataSetChanged();
-			setTitleToRightToolbar();
+			Log.i(LOG + categoryToLoad, "fragSelectedReceiver onReceive called");
+			
+			if(isAdded())
+			{
+				artsListAdapter.notifyDataSetChanged();
+
+//				Log.e(LOG + categoryToLoad, "fragID: " + getId() + "isInLeftPager: " + String.valueOf(isInLeftPager));
+
+				setTitleToRightToolbar();
+			}
 		}
 	};
 
@@ -139,7 +146,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG_TAG+categoryToLoad, "artSelectedReceiver onReceive called");
+			Log.i(LOG + categoryToLoad, "artSelectedReceiver onReceive called");
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
@@ -153,11 +160,11 @@ public class FragmentArtsRecyclerList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG_TAG + categoryToLoad, "artsDataReceiver onReceive called");
+			Log.i(LOG + categoryToLoad, "artsDataReceiver onReceive called");
 
 			if (!isAdded())
 			{
-				Log.e(LOG_TAG + categoryToLoad, "fragment not added! RETURN!");
+				Log.e(LOG + categoryToLoad, "fragment not added! RETURN!");
 				return;
 			}
 
@@ -168,17 +175,17 @@ public class FragmentArtsRecyclerList extends Fragment
 			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
-					Log.d(LOG_TAG + "/" + categoryToLoad, "Новых статей не обнаружено!");
+					Log.d(LOG + "/" + categoryToLoad, "Новых статей не обнаружено!");
 					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
 				case (Msg.NEW_QUONT):
-					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
-					Log.d(LOG_TAG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
@@ -206,7 +213,7 @@ public class FragmentArtsRecyclerList extends Fragment
 					}
 				break;
 				default:
-					Log.e(LOG_TAG, "непредвиденный ответ базы данных");
+					Log.e(LOG, "непредвиденный ответ базы данных");
 					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
 			}
 
@@ -377,7 +384,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			{
 				pageToLoad++;
 				getAllArtsInfo(true);
-				Log.e(LOG_TAG + categoryToLoad, "Start loading page " + pageToLoad + " from bottom!");
+				Log.e(LOG + categoryToLoad, "Start loading page " + pageToLoad + " from bottom!");
 			}
 		});
 	}

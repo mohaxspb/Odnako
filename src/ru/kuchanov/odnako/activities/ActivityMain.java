@@ -29,6 +29,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -54,7 +55,7 @@ public class ActivityMain extends ActivityBase
 
 	//ViewPager and it's adapter for artsLists
 	ViewPager artsListPager;
-	PagerAdapter artsListPagerAdapter;
+//	PagerAdapter artsListPagerAdapter;
 
 	//art's list top image and it's gradient cover
 	//	ImageView topImgCover;
@@ -199,20 +200,31 @@ public class ActivityMain extends ActivityBase
 
 		//set arts lists viewPager
 		Log.e(LOG_TAG, "pagerType: " + this.getPagerType());
+		OnPageChangeListener listener=new PagerListenerMenu(this);
 		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
-				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
+				listener=new PagerListenerMenu(this);
+				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+				if(this.currentCategoryPosition==0)
+				{
+					listener.onPageSelected(currentCategoryPosition);
+				}
+				
 			break;
 			case PAGER_TYPE_AUTHORS:
-				this.artsListPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
-				this.artsListPager.setAdapter(artsListPagerAdapter);
-				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this,
-				((PagerAuthorsListsAdapter) artsListPagerAdapter).getAllAuthorsList()));
+				PagerAuthorsListsAdapter aithorsPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+				this.artsListPager.setAdapter(aithorsPagerAdapter);
+				listener=new PagerListenerAllAuthors(this, aithorsPagerAdapter.getAllAuthorsList());
+				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+				if(this.currentCategoryPosition==0)
+				{
+					listener.onPageSelected(currentCategoryPosition);
+				}
 			break;
 			case PAGER_TYPE_SINGLE:
 				final String authorBlogUrl = this.getCurrentCategory();
@@ -248,10 +260,14 @@ public class ActivityMain extends ActivityBase
 						authorBlogUrl));
 					}
 				}
-				this.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+		//try notify pager that item selected if it's 0 item
+		if (currentCategoryPosition == 0)
+		{
+			listener.onPageSelected(currentCategoryPosition);
+		}
 
 //		if (pagerAdapter == null)
 //		{
@@ -357,10 +373,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		Log.d(LOG_TAG, "onResume");
-		//TODO
-		//		this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-		//		this.pagerListener.onPageSelected(currentCategoryPosition);
+		//Log.d(LOG_TAG, "onResume");
 		super.onResume();
 	}
 
@@ -368,7 +381,6 @@ public class ActivityMain extends ActivityBase
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		//		System.out.println("ActivityMain: onSaveInstanceState");
 
 		this.saveGroupChildPosition(outState);
 
@@ -559,7 +571,7 @@ public class ActivityMain extends ActivityBase
 					this.setPagerType(PAGER_TYPE_MENU);
 
 					this.setCurentCategoryPosition(11);
-					this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+					PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 					this.artsListPager.setAdapter(artsListPagerAdapter);
 					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 					this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
@@ -597,12 +609,18 @@ public class ActivityMain extends ActivityBase
 
 				this.setCurentCategoryPosition(curentCategoryPosition);
 				
-				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
+				OnPageChangeListener listener=new PagerListenerMenu(this);
+				this.artsListPager.setOnPageChangeListener(listener);
 
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
+				
+				if(this.currentCategoryPosition==0)
+				{
+					listener.onPageSelected(curentCategoryPosition);
+				}
 			break;
 			//				case PAGER_TYPE_AUTHORS:
 			default:

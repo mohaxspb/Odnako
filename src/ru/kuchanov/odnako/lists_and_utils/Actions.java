@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -99,7 +100,7 @@ public class Actions
 						int position = 0;
 						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 						{
-//							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
+							//							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
 							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
 							{
 								weFindIt = true;
@@ -110,7 +111,8 @@ public class Actions
 						if (weFindIt)
 						{
 							leftPager.setAdapter(pagerAllAut);
-							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList()));
+							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut
+							.getAllAuthorsList()));
 							leftPager.setCurrentItem(position);
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 						}
@@ -228,8 +230,8 @@ public class Actions
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		//check if it's large screen
-//		if (act.getClass().getSimpleName().equals(ActivityMain.class.getSimpleName()))
-		if(act instanceof ActivityMain)
+		//		if (act.getClass().getSimpleName().equals(ActivityMain.class.getSimpleName()))
+		if (act instanceof ActivityMain)
 		{
 			final ActivityMain mainActivity = (ActivityMain) act;
 			if (twoPane)
@@ -238,7 +240,7 @@ public class Actions
 				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
 				if (rightPager.getAdapter() instanceof PagerAuthorsListsAdapter)
 				{
-					
+
 					//if so we must change adapters to all ViewPagers
 					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
 					PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
@@ -259,16 +261,22 @@ public class Actions
 					if (weFindIt)
 					{
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
-						
-						//setCurentCategoryPosition for activity
 						mainActivity.setCurentCategoryPosition(positionInLeftPager);
-						
+						mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, positionOfArticle);
+
 //						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
 //						.get(positionInLeftPager).getBlog_url();
-						
+
 						leftPager.setAdapter(pagerAllAut);
-						leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList()));
+						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList());
+						leftPager.setOnPageChangeListener(listener);
 						leftPager.setCurrentItem(positionInLeftPager);
+
+						//try notify pager that item selected if it's 0 item
+						if (positionInLeftPager == 0)
+						{
+							listener.onPageSelected(0);
+						}
 					}
 					else
 					{

@@ -82,35 +82,4 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		}
 		//TODO here we can notify Article fragment, that it's selected
 	}
-
-	//	private void setTitleDrawerItemToolbarTopImgETC(int position)
-	//	{
-	//		String title = "";
-	//		title = CatData.getAllCategoriesMenuNames(act)[position];
-	//		this.act.setTitle(title);
-	//
-	//
-	//		//show toolbar when switch category to show it's title
-	//		//restore and set topImg position
-	//		String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-	//		String curCatLink = allMenuCatsLinks[position];
-	//		int toolbarY = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[0];
-	//		int initialDistance = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[2];
-	//		int currentDistance = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[3];
-	//
-	//		if (toolbarY < 0)
-	//		{
-	//			toolbar.getBackground().setAlpha(255);
-	//			toolbar.setY(0);
-	//		}
-	//		else
-	//		{
-	//			toolbar.setY(0);
-	//
-	//			float percent = (float) currentDistance / (float) initialDistance;
-	//			float gradient = 1f - percent;
-	//			int newAlpha = (int) (255 * gradient);
-	//			toolbar.getBackground().setAlpha(newAlpha);
-	//		}
-	//	}
 }

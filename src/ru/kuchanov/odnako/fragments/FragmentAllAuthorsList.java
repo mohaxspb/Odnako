@@ -31,6 +31,8 @@ import android.widget.ImageView;
 
 public class FragmentAllAuthorsList extends Fragment
 {
+	private static final String LOG = FragmentAllAuthorsList.class.getSimpleName() + "/";
+
 	private ImageView topImg;
 	private ImageView topImgCover;
 	private float topImgCoord;
@@ -49,11 +51,9 @@ public class FragmentAllAuthorsList extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//System.out.println("ArticlesListFragment onCreate");
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActivityMain) this.getActivity();
-//		
 
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
@@ -65,7 +65,7 @@ public class FragmentAllAuthorsList extends Fragment
 		}
 		else
 		{
-			this.position=this.act.getAllCatListsSelectedArtPosition().get(this.categoryToLoad);
+			this.position = this.act.getAllCatListsSelectedArtPosition().get(this.categoryToLoad);
 		}
 		// Register to receive messages.
 
@@ -94,10 +94,9 @@ public class FragmentAllAuthorsList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			position = intent.getIntExtra("position", 0);
-
-			setActivatedPosition(position);
-			adapter.notifyDataSetChanged();
+			int newPosition = intent.getIntExtra("position", 0);
+			Log.d(LOG + categoryToLoad, "setActivatedPosition: " + newPosition);
+			setActivatedPosition(newPosition);
 		}
 	};
 
@@ -158,22 +157,9 @@ public class FragmentAllAuthorsList extends Fragment
 
 	public void setActivatedPosition(int position)
 	{
-		Log.d(categoryToLoad, "setActivatedPosition: " + position);
 		this.position = position;
-
-		try
-		{
-			scrollToActivatedPosition();
-			this.adapter.notifyDataSetChanged();
-		} catch (Exception e)
-		{
-			Log.e(categoryToLoad, "Catched!");
-		}
-	}
-
-	public void scrollToActivatedPosition()
-	{
 		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		adapter.notifyDataSetChanged();
 	}
 
 	public int getMyActivatedPosition()
