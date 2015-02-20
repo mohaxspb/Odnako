@@ -33,12 +33,17 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 		super(fm);
 		this.act = act;
 		//		this.allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
+		DataBaseHelper h=new DataBaseHelper(act);
 		try
 		{
-			this.allAuthorsInfo = (ArrayList<Author>) new DataBaseHelper(act).getDaoAuthor().queryForAll();
+			this.allAuthorsInfo = (ArrayList<Author>) h.getDaoAuthor().queryForAll();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			h.close();
 		}
 	}
 

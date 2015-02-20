@@ -6,13 +6,16 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.lists_and_utils.AllAuthorsInfo.AuthorInfo;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
@@ -23,39 +26,46 @@ import android.util.Log;
 public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 {
 	final static String LOG_TAG = PagerListenerMenu.class.getSimpleName();
-	
+
 	ActivityMain act;
 
 	boolean twoPane;
 
 	//ViewPager and it's adapter for articles/comments
-	ViewPager artCommsPager;
-	PagerAdapter pagerAdapter;
+	ViewPager pagerRight;
+	PagerAdapter pagerRightAdapter;
 
 	//ViewPager and it's adapter for artsLists
-	ViewPager artsListPager;
-	PagerAdapter artsListPagerAdapter;
+	ViewPager pagerLeft;
+	PagerAdapter pagerLeftAdapter;
 
 	Toolbar toolbarRight;
 	Toolbar toolbar;
 
 	int currentCategoryPosition;
 
-	public PagerListenerMenu(ActivityMain act, ViewPager artCommsPager, PagerAdapter pagerAdapter,
-	ViewPager artsListPager, PagerAdapter artsListPagerAdapter, Toolbar toolbarRight,
-	Toolbar toolbar)
+	public PagerListenerMenu(ActivityMain act)//, ViewPager artCommsPager, PagerAdapter pagerAdapter,
+//	ViewPager artsListPager, PagerAdapter artsListPagerAdapter, Toolbar toolbarRight,
+//	Toolbar toolbar)
 	{
 		this.act = act;
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.artCommsPager = artCommsPager;
-		this.pagerAdapter = pagerAdapter;
+//		this.artCommsPager = artCommsPager;
+//		this.pagerAdapter = pagerAdapter;
+//
+//		this.artsListPager = artsListPager;
+//		this.artsListPagerAdapter = artsListPagerAdapter;
+//
+//		this.toolbar = toolbar;
+//		this.toolbarRight = toolbarRight;
+		
+		this.pagerLeft=(ViewPager) act.findViewById(R.id.arts_list_container);
+		
+		this.pagerRight = (ViewPager) act.findViewById(R.id.article_comments_container);
 
-		this.artsListPager = artsListPager;
-		this.artsListPagerAdapter = artsListPagerAdapter;
-
-		this.toolbar = toolbar;
-		this.toolbarRight = toolbarRight;
+		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
 	}
@@ -66,13 +76,13 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		Log.d(LOG_TAG, "select artsListPager position= " + position);
 		//this will set current pos, and adapters group/child pos
 		this.act.setCurentCategoryPosition(position);
-		this.currentCategoryPosition=position;
+		this.currentCategoryPosition = position;
 
 		setTitleDrawerItemToolbarTopImgETC(position);
 
-		//sending intent to listfrag to notify it's adapter to fix issue
-		//when there is only 1-st art is shown and other can be shown only from articlesPager
-		//when switching articles
+//		//sending intent to listfrag to notify it's adapter to fix issue
+//		//when there is only 1-st art is shown and other can be shown only from articlesPager
+//		//when switching articles
 		String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 		Intent intentToListFrag = new Intent(allCatsLinks[this.act.getCurentCategoryPosition()]
 		+ "_notify_that_selected");
@@ -82,72 +92,97 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 			{
 				toolbarRight.setTitle("");
-				
-				String categoryForRightPager=CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-				Log.e(LOG_TAG, "categoryForRightPager: "+categoryForRightPager);
-				pagerAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(), categoryForRightPager, act);
-				artCommsPager.setAdapter(pagerAdapter);
-				artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-				artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-				{
-					@Override
-					public void onPageSelected(int position)
-					{
-						//move topImg and toolBar while scrolling left list
-						toolbar.setY(0 - toolbar.getHeight());
-						toolbarRight.setTitle("");
-						System.out.println("onPageSelected in articlePager; position: " + position);
-						String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-						act.getAllCatListsSelectedArtPosition().put(allCatsLinks[currentCategoryPosition], position);
 
-						Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
-						+ "art_position");
-						Bundle b = new Bundle();
-						b.putInt("position", position);
-						intentToListFrag.putExtras(b);
-
-						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-					}
-				});
+				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
+				Log.e(LOG_TAG, "categoryForRightPager: " + categoryForRightPager);
+				pagerRightAdapter=new PagerArticlesAdapter(act.getSupportFragmentManager(), categoryForRightPager, act);
+				pagerRight.setAdapter(pagerRightAdapter);
+				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				pagerRight.setOnPageChangeListener(new PagerListenerArticle(this.act, categoryForRightPager));
 				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				artCommsPager.setCurrentItem(curPos, true);
+				pagerRight.setCurrentItem(curPos, true);
 			}
 			else if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
-				pagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
-				artCommsPager.setAdapter(pagerAdapter);
-				artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-				artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+				pagerRightAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+				pagerRight.setAdapter(pagerRightAdapter);
+				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				pagerRight.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
 				{
 					@Override
-					public void onPageSelected(int position)
+					public void onPageSelected(final int position)
 					{
 						//move topImg and toolBar while scrolling left list
 						toolbar.setY(0 - toolbar.getHeight());
 						toolbarRight.getBackground().setAlpha(0);
 
 						//XXX							topImg.setY(0 - topImg.getHeight());
-						System.out.println("onPageSelected in articlePager; position: " + position);
-						String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+						Log.d(LOG_TAG, "onPageSelected in articlePager; position: " + position);
+						final String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
 						act.getAllCatListsSelectedArtPosition().put(allCatsLinks[currentCategoryPosition], position);
 
+						new Handler().postDelayed(new Runnable() {
+						    @Override
+						    public void run() {
+						    	Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
+								+ "art_position");
+								Bundle b = new Bundle();
+								b.putInt("position", position);
+								intentToListFrag.putExtras(b);
+								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+								//send message to change right toolbar title
+								//						ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
+								ArrayList<String> allAuthorsURLs = new ArrayList<String>();
+								DataBaseHelper h = new DataBaseHelper(act);
+								try
+								{
+									allAuthorsURLs = h.getAllAuthorUrls();
+								} catch (SQLException e)
+								{
+									e.printStackTrace();
+								}
+								finally
+								{
+									h.close();
+								}
+								//						Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink
+								//						+ "_notify_that_selected");
+								Intent intentToRightListFrag = new Intent(allAuthorsURLs.get(position)
+								+ "_notify_that_selected");
+								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
+						    }
+						}, 10);
 						Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition]
 						+ "art_position");
 						Bundle b = new Bundle();
 						b.putInt("position", position);
 						intentToListFrag.putExtras(b);
-
 						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 						//send message to change right toolbar title
-						ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
-						Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink
+						//						ArrayList<AuthorInfo> allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
+						ArrayList<String> allAuthorsURLs = new ArrayList<String>();
+						DataBaseHelper h = new DataBaseHelper(act);
+						try
+						{
+							allAuthorsURLs = h.getAllAuthorUrls();
+						} catch (SQLException e)
+						{
+							e.printStackTrace();
+						}
+						finally
+						{
+							h.close();
+						}
+						//						Intent intentToRightListFrag = new Intent(allAuthorsInfo.get(position).blogLink
+						//						+ "_notify_that_selected");
+						Intent intentToRightListFrag = new Intent(allAuthorsURLs.get(position)
 						+ "_notify_that_selected");
 						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToRightListFrag);
 					}
 				});
 				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				artCommsPager.setCurrentItem(curPos, true);
+				pagerRight.setCurrentItem(curPos, true);
 			}
 			else if (currentCategoryPosition == 13)
 			{
@@ -172,7 +207,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		//			title = CatData.getAllCategoriesMenuNames(act)[position];
 		//		}
 		title = CatData.getAllCategoriesMenuNames(act)[position];
-//		this.act.setTitle(title);
+		//		this.act.setTitle(title);
 		this.act.setTitle(title);
 
 		//change topImg

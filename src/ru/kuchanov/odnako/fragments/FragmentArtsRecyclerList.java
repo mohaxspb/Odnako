@@ -106,6 +106,10 @@ public class FragmentArtsRecyclerList extends Fragment
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
 		}
+		else
+		{
+			this.position=((ActivityMain)act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
+		}
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
 		new IntentFilter(this.getCategoryToLoad()));
@@ -264,6 +268,9 @@ public class FragmentArtsRecyclerList extends Fragment
 		else if (container.getId() == R.id.arts_list_container)
 		{
 			this.toolbarId = R.id.toolbar;
+			//reciver for scrolling and highligting selected position
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
+			new IntentFilter(this.getCategoryToLoad() + "art_position"));
 			this.setInLeftPager(true);
 		}
 

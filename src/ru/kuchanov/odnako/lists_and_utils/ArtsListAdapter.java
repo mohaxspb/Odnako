@@ -460,6 +460,7 @@ implements Filterable
 					holderMain.save.setScaleType(ScaleType.FIT_XY);
 					//					holderMain.save.setLayoutParams(paramsForIcons);
 
+					//TODO
 					if (currentArticleFile.exists())
 					{
 
@@ -490,6 +491,7 @@ implements Filterable
 					////end SaveImg
 
 					//read Img
+					//TODO
 					ReadUnreadRegister read = new ReadUnreadRegister(act);
 					//					holderMain.read.setLayoutParams(paramsForIcons);
 

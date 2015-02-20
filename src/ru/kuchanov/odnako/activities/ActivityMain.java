@@ -6,10 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
@@ -118,10 +120,7 @@ public class ActivityMain extends ActivityBase
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
-
-//			this.setPagerType(savedInstanceState.getInt(PAGER_TYPE_KEY));
-			//TODO CHECK it!
-			this.pagerType=savedInstanceState.getInt(PAGER_TYPE_KEY);
+			this.pagerType = savedInstanceState.getInt(PAGER_TYPE_KEY);
 
 			this.restoreAllCatArtsInfo(savedInstanceState);
 
@@ -141,11 +140,24 @@ public class ActivityMain extends ActivityBase
 		//set selected pos for all cats if they are null (first launch without any state)
 		if (this.allCatListsSelectedArtPosition == null)
 		{
-			String[] catMenuLinks = CatData.getAllCategoriesMenuLinks(act);
-			this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
-			for (int i = 0; i < catMenuLinks.length; i++)
+			ArrayList<String> allCatAndAutURLs = new ArrayList<String>();
+
+			DataBaseHelper h = new DataBaseHelper(act);
+			try
 			{
-				this.allCatListsSelectedArtPosition.put(catMenuLinks[i], 0);
+				allCatAndAutURLs = h.getAllCatAndAutUrls();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				h.close();
+			}
+
+			this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
+			for (int i = 0; i < allCatAndAutURLs.size(); i++)
+			{
+				this.allCatListsSelectedArtPosition.put(allCatAndAutURLs.get(i), 0);
 			}
 		}
 
@@ -192,16 +204,12 @@ public class ActivityMain extends ActivityBase
 			case PAGER_TYPE_MENU:
 				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-
-				ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
-				pagerAdapter, artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
-				this.artsListPager.setOnPageChangeListener(menuListener);
+				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 			case PAGER_TYPE_AUTHORS:
 				this.artsListPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-				artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				this.artsListPager.setOnPageChangeListener(new PagerListenerAllAuthors(this,
 				((PagerAuthorsListsAdapter) artsListPagerAdapter).getAllAuthorsList()));
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
@@ -226,7 +234,6 @@ public class ActivityMain extends ActivityBase
 							toolbarRight.setTitle("");
 							System.out.println("onPageSelected in articlePager; position: " + position);
 							getAllCatListsSelectedArtPosition().put(authorBlogUrl, position);
-
 							Intent intentToListFrag = new Intent(authorBlogUrl + "art_position");
 							Bundle b = new Bundle();
 							b.putInt("position", position);
@@ -246,14 +253,14 @@ public class ActivityMain extends ActivityBase
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 
-		if (pagerAdapter == null)
-		{
-			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
-		}
-		else
-		{
-			Log.e(LOG_TAG, "pagerAdapter!=null");
-		}
+//		if (pagerAdapter == null)
+//		{
+//			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
+//		}
+//		else
+//		{
+//			Log.e(LOG_TAG, "pagerAdapter!=null");
+//		}
 
 		///////////////
 
@@ -350,7 +357,10 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		//		System.out.println("ActivityMain onResume");
+		Log.d(LOG_TAG, "onResume");
+		//TODO
+		//		this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+		//		this.pagerListener.onPageSelected(currentCategoryPosition);
 		super.onResume();
 	}
 
@@ -473,15 +483,15 @@ public class ActivityMain extends ActivityBase
 		//			artCommsPager.setAdapter(pagerAdapter);
 		//		}
 	}
-	
+
 	@Override
 	public void setCurentCategoryPosition(int curentCategoryPosition)
 	{
 		this.currentCategoryPosition = curentCategoryPosition;
-		
+
 		//if it's not MenuPager, we must return,
 		//to avoid setting groupChildPosition for drawer menu
-		if(this.pagerType!=PAGER_TYPE_MENU)
+		if (this.pagerType != PAGER_TYPE_MENU)
 		{
 			return;
 		}
@@ -499,7 +509,7 @@ public class ActivityMain extends ActivityBase
 			this.groupChildPosition = state.getIntArray("groupChildPosition");
 			//if it's not MenuPager, we must return,
 			//to avoid setting currentCategoryPosition
-			if(this.pagerType!=PAGER_TYPE_MENU)
+			if (this.pagerType != PAGER_TYPE_MENU)
 			{
 				return;
 			}
@@ -552,10 +562,7 @@ public class ActivityMain extends ActivityBase
 					this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 					this.artsListPager.setAdapter(artsListPagerAdapter);
 					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-					ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
-					pagerAdapter,
-					artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
-					this.artsListPager.setOnPageChangeListener(menuListener);
+					this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
 					this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 				break;
 			}
@@ -574,10 +581,11 @@ public class ActivityMain extends ActivityBase
 			}
 		}, 5000);
 	}
-	
+
 	/**
 	 * sets pagers depend on type and tablet mode can be used in click listeners
-	 * @param pagerType 
+	 * 
+	 * @param pagerType
 	 */
 	public void setPagers(int pagerType, int curentCategoryPosition)
 	{
@@ -588,18 +596,17 @@ public class ActivityMain extends ActivityBase
 				this.setPagerType(PAGER_TYPE_MENU);
 
 				this.setCurentCategoryPosition(curentCategoryPosition);
+				
 				this.artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-				ViewPager.SimpleOnPageChangeListener menuListener = new PagerListenerMenu(this, artCommsPager,
-				pagerAdapter,
-				artsListPager, artsListPagerAdapter, toolbarRight, toolbar);
-				this.artsListPager.setOnPageChangeListener(menuListener);
+				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
+
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 			break;
 			//				case PAGER_TYPE_AUTHORS:
 			default:
-				
+
 			break;
 		}
 	}

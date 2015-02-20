@@ -7,7 +7,9 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.HtmlHelper;
@@ -32,7 +34,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	// name of the database file for your application
 	public static final String DATABASE_NAME = "db_odnako.db";
 	// any time you make changes to your database objects, you may have to increase the database version
-//	private static final int DATABASE_VERSION = 1;
+	//	private static final int DATABASE_VERSION = 1;
 
 	// the DAO object we use to access the Book table
 	private Dao<Category, Integer> daoCategory = null;
@@ -77,6 +79,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable(connectionSource, ArtCatTable.class);
 			//create artAutTable table
 			TableUtils.createTable(connectionSource, ArtAutTable.class);
+
 			Log.i(DataBaseHelper.class.getSimpleName(), "all tables have been created");
 
 			//fill with initial data
@@ -226,11 +229,8 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 
 	public Dao<Article, Integer> getDaoArticle() throws SQLException
 	{
-		//		return DaoManager.createDao(connectionSource, Article.class);
 		if (this.daoArticle == null)
 		{
-			//			this.daoAuthor=DaoManager.createDao(connectionSource, Author.class);
-			//			this.daoArticle = this.getDao(Article.class);
 			this.daoArticle = DaoManager.createDao(this.getConnectionSource(), Article.class);
 		}
 		return this.daoArticle;
@@ -268,19 +268,88 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		this.daoCategory = null;
 	}
 
-	public void clearArticleTable()
+	/**
+	 * this method searches trough DB for Categories and Authors and returns their urls
+	 * @param h
+	 * @return 
+	 */
+	public ArrayList<String> getAllCatAndAutUrls() throws SQLException
 	{
+		ArrayList<String> allURLs = new ArrayList<String>();
+
 		try
 		{
-			this.getDaoArticle().deleteBuilder().delete();
-			Log.d(DATABASE_NAME, "Article table's objects are already DELETED");
-			Log.d(DATABASE_NAME, "this.getDaoArticle().queryForAll().size(): "
-			+ this.getDaoArticle().queryForAll().size());
+			List<Category> allCategories = this.getDaoCategory().queryForAll();
+			for (int i = 0; i < allCategories.size(); i++)
+			{
+				allURLs.add(allCategories.get(i).getUrl());
+			}
+
+			List<Author> allAuthors = this.getDaoAuthor().queryForAll();
+			for (int i = 0; i < allAuthors.size(); i++)
+			{
+				allURLs.add(allAuthors.get(i).getBlog_url());
+			}
+			
+			//TODO change MENU urls
+			String[] menuUrls=CatData.getAllCategoriesMenuLinks(ctx);
+			for (int i = 0; i < menuUrls.length; i++)
+			{
+				allURLs.add(menuUrls[i]);
+			}
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
+		return allURLs;
+	}
+	
+	/**
+	 * this method searches trough DB for Authors and returns their urls
+	 * @param h
+	 * @return 
+	 */
+	public ArrayList<String> getAllAuthorUrls() throws SQLException
+	{
+		ArrayList<String> allURLs = new ArrayList<String>();
+
+		try
+		{
+			List<Author> allAuthors = this.getDaoAuthor().queryForAll();
+			for (int i = 0; i < allAuthors.size(); i++)
+			{
+				allURLs.add(allAuthors.get(i).getBlog_url());
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return allURLs;
+	}
+	
+	/**
+	 * this method searches trough DB for Categories and returns their urls
+	 * @param h
+	 * @return 
+	 */
+	public ArrayList<String> getAllCategoriesUrls() throws SQLException
+	{
+		ArrayList<String> allURLs = new ArrayList<String>();
+
+		try
+		{
+			List<Category> allCategories = this.getDaoCategory().queryForAll();
+			for (int i = 0; i < allCategories.size(); i++)
+			{
+				allURLs.add(allCategories.get(i).getUrl());
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return allURLs;
+	}
 }

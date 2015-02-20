@@ -20,10 +20,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,19 +34,17 @@ public class FragmentAllAuthorsList extends Fragment
 	private ImageView topImg;
 	private ImageView topImgCover;
 	private float topImgCoord;
-	
+
 	private SharedPreferences pref;
-	
+
 	private RecyclerView artsList;
 	private AllAuthorsListAdapter adapter;
 
 	private String categoryToLoad = "odnako.org/authors";
 
-	private ActionBarActivity act;
+	private ActivityMain act;
 
 	private int position = 0;
-
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -55,7 +53,8 @@ public class FragmentAllAuthorsList extends Fragment
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActivityMain) this.getActivity();
-		
+//		
+
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		//restore topImg and toolbar prop's
@@ -63,6 +62,10 @@ public class FragmentAllAuthorsList extends Fragment
 		{
 			this.position = savedInstanceState.getInt("position");
 			this.topImgCoord = savedInstanceState.getFloat("topImgYCoord");
+		}
+		else
+		{
+			this.position=this.act.getAllCatListsSelectedArtPosition().get(this.categoryToLoad);
 		}
 		// Register to receive messages.
 
@@ -80,6 +83,8 @@ public class FragmentAllAuthorsList extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
+			Log.d(categoryToLoad, "fragSelectedReceiver onReceive called");
+			act.setTitle("Все авторы");
 			adapter.notifyDataSetChanged();
 		}
 	};
@@ -96,16 +101,14 @@ public class FragmentAllAuthorsList extends Fragment
 		}
 	};
 
-	
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		//System.out.println("ArticlesListFragment onCreateView");
 		View v = inflater.inflate(R.layout.fragment_all_authors_list, container, false);
-		
-		this.topImg=(ImageView) v.findViewById(R.id.top_img);
-		
+
+		this.topImg = (ImageView) v.findViewById(R.id.top_img);
+
 		this.topImg.setY(topImgCoord);
 		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
 		if (this.pref.getString("theme", "dark").equals("dark"))
@@ -126,7 +129,8 @@ public class FragmentAllAuthorsList extends Fragment
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
 		//set onScrollListener
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad, this.topImg));
+		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
+		this.topImg));
 
 		return v;
 	}
@@ -143,7 +147,7 @@ public class FragmentAllAuthorsList extends Fragment
 	{
 		//		System.out.println("ArticlesListFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
-		
+
 		outState.putFloat("topImgYCoord", this.topImg.getY());
 
 		//category saving
@@ -154,10 +158,17 @@ public class FragmentAllAuthorsList extends Fragment
 
 	public void setActivatedPosition(int position)
 	{
-		System.out.println("setActivatedPosition(int position: " + position);
+		Log.d(categoryToLoad, "setActivatedPosition: " + position);
 		this.position = position;
 
-		scrollToActivatedPosition();
+		try
+		{
+			scrollToActivatedPosition();
+			this.adapter.notifyDataSetChanged();
+		} catch (Exception e)
+		{
+			Log.e(categoryToLoad, "Catched!");
+		}
 	}
 
 	public void scrollToActivatedPosition()
@@ -179,7 +190,7 @@ public class FragmentAllAuthorsList extends Fragment
 	{
 		this.categoryToLoad = categoryToLoad;
 	}
-	
+
 	@Override
 	public void onDestroy()
 	{

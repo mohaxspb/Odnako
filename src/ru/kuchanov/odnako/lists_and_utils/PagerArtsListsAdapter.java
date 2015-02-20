@@ -22,6 +22,18 @@ public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 
+	//////////
+	//XXX
+	public static interface FirstShot
+	{
+		public void onFirstShot();
+	}
+
+	private FirstShot firstShot;
+	private boolean shot = false;
+
+	//////////
+
 	public PagerArtsListsAdapter(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
@@ -31,22 +43,30 @@ public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
+		//XXX
+		if (!shot && firstShot != null)
+		{
+			shot = true;
+			firstShot.onFirstShot();
+		}
+		////////////
+		
 		if (position != 3 && position != 13)
 		{
 			FragmentArtsRecyclerList artsListFrag = new FragmentArtsRecyclerList();
 			Bundle b = new Bundle();
-			String categoryToLoad=CatData.getAllCategoriesMenuLinks(act)[position];
+			String categoryToLoad = CatData.getAllCategoriesMenuLinks(act)[position];
 			b.putString("categoryToLoad", categoryToLoad);
 			b.putInt("pageToLoad", 1);
 			//setting position of selected art by asking Activities HashMap for it by category
-			int selectedArtPosition=((ActivityMain)act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
+			int selectedArtPosition = ((ActivityMain) act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
 			b.putInt("position", selectedArtPosition);
 			artsListFrag.setArguments(b);
 			return artsListFrag;
 		}
-		else if(position==3)
+		else if (position == 3)
 		{
-			FragmentAllAuthorsList frag=new FragmentAllAuthorsList();
+			FragmentAllAuthorsList frag = new FragmentAllAuthorsList();
 			return frag;
 		}
 		else

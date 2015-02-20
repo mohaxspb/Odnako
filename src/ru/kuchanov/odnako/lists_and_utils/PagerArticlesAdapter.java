@@ -28,7 +28,7 @@ import android.widget.Toast;
 public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 {
 	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName() + "/";
-
+	
 	ArrayList<ArtInfo> allArtsInfo;
 
 	String category;
@@ -45,23 +45,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver, new IntentFilter(category));
-//		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver, new IntentFilter(category + "art_position"));
 	}
-	
-//	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
-//	{
-//		@Override
-//		public void onReceive(Context context, Intent intent)
-//		{
-//			Log.i(LOG_TAG+category, "artSelectedReceiver onReceive called");
-//			int position = intent.getIntExtra("position", 0);
-//
-//			setCurrentItem(position, true);
-////			setActivatedPosition(position);
-//			topImg.setY(0 - topImg.getHeight());
-//			artsListAdapter.notifyDataSetChanged();
-//		}
-//	};
 
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{

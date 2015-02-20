@@ -43,7 +43,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		Log.d(LOG_TAG, "onStartCommand");
+//		Log.d(LOG_TAG, "onStartCommand");
 		if (intent == null)
 		{
 			Log.e(LOG_TAG, "intent=null!!! WTF?!");
@@ -51,7 +51,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 		//get category
 		String catToLoad = intent.getStringExtra("categoryToLoad");
-		Log.d(LOG_TAG, "catToLoad: " + catToLoad);
+//		Log.d(LOG_TAG, "catToLoad: " + catToLoad);
 		//get startDownload flag
 		boolean startDownload = intent.getBooleanExtra("startDownload", false);
 		//firstly: if we load from top or not? Get it by pageToLoad
@@ -74,7 +74,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				Log.d(LOG_TAG + catToLoad, DBRezult);
+//				Log.d(LOG_TAG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{

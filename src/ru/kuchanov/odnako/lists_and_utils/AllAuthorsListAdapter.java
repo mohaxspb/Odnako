@@ -65,15 +65,18 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		twoPane = pref.getBoolean("twoPane", false);
 
 		imageLoader = MyUniversalImageLoader.get(act);
-
-//		allAuthorsInfo = new AllAuthorsInfo(act);
-//		allAuthrsInfoList = allAuthorsInfo.getAllAuthorsInfoAsList();
+		
+		DataBaseHelper h=new DataBaseHelper(act);
 		try
 		{
-			this.allAuthrsInfoList=(ArrayList<Author>) new DataBaseHelper(act).getDaoAuthor().queryForAll();
+			this.allAuthrsInfoList = (ArrayList<Author>) h.getDaoAuthor().queryForAll();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			h.close();
 		}
 
 		//set arrowDownIcon by theme

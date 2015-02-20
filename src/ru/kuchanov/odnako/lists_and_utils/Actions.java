@@ -221,34 +221,31 @@ public class Actions
 		}
 	}
 
-	public static void showArticle(ArrayList<ArtInfo> allArtsInfo, int position, final ActionBarActivity act)
+	public static void showArticle(ArrayList<ArtInfo> allArtsInfo, int positionOfArticle, final ActionBarActivity act)
 	{
-		Toast.makeText(act, "showArticle!", Toast.LENGTH_SHORT).show();
-
-		//fill CUR_ART_INFO var 
-		//		((ActivityMain) act).setCUR_ART_INFO(artInfo);
+		Log.d(LOG, "showArticle!");
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		//check if it's large screen
-		if (act.getClass().getSimpleName().equals(ActivityMain.class.getSimpleName()))
+//		if (act.getClass().getSimpleName().equals(ActivityMain.class.getSimpleName()))
+		if(act instanceof ActivityMain)
 		{
 			final ActivityMain mainActivity = (ActivityMain) act;
 			if (twoPane)
 			{
-				ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
+				final ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
 				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
-				if (rightPager.getAdapter().getClass().getSimpleName()
-				.equals(PagerAuthorsListsAdapter.class.getSimpleName()))
+				if (rightPager.getAdapter() instanceof PagerAuthorsListsAdapter)
 				{
 					
 					//if so we must change adapters to all ViewPagers
-					ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
 					PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
 					act.getSupportFragmentManager(), act);
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
-					String authorBlogUrl = allArtsInfo.get(position).authorBlogUrl;
+					String authorBlogUrl = allArtsInfo.get(positionOfArticle).authorBlogUrl;
 
 					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 					{
@@ -261,55 +258,17 @@ public class Actions
 					}
 					if (weFindIt)
 					{
-						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
-						.get(positionInLeftPager).getBlog_url();//.blogLink;
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
+						
+						//setCurentCategoryPosition for activity
+						mainActivity.setCurentCategoryPosition(positionInLeftPager);
+						
+//						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
+//						.get(positionInLeftPager).getBlog_url();
 						
 						leftPager.setAdapter(pagerAllAut);
 						leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList()));
 						leftPager.setCurrentItem(positionInLeftPager);
-						//setCurentCategoryPosition for activity
-						mainActivity.setCurentCategoryPosition(positionInLeftPager);
-						
-						//send broadcastMessage to select article in list and pager by given (in method) position
-						Intent intentToListFrag = new Intent(authorBlogUrlFromAdapter + "art_position");
-						Bundle b = new Bundle();
-						b.putInt("position", position);
-						intentToListFrag.putExtras(b);
-						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-						
-						//set right pager, cause it do not want to set itself through pageChangeListener
-//						ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
-						
-						rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
-						authorBlogUrlFromAdapter, act));
-						rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-						{
-							@Override
-							public void onPageSelected(int position)
-							{
-								//move topImg and toolBar while scrolling left list
-								Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
-								toolbarRight.setTitle("");
-
-								System.out.println("onPageSelected in articlePager; position: " + position);
-
-								mainActivity.getAllCatListsSelectedArtPosition().put(
-								authorBlogUrlFromAdapter, position);
-
-								Intent intentToListFrag = new Intent(authorBlogUrlFromAdapter + "art_position");
-								Bundle b = new Bundle();
-								b.putInt("position", position);
-								intentToListFrag.putExtras(b);
-
-								LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-							}
-						});
-						//XXX check it
-						rightPager.setCurrentItem(position, true);
-//						rightPager.setCurrentItem(0, true);
-						
-						//TODO change to setter to change grupPosition for drawer menu
-						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 					}
 					else
 					{
@@ -319,34 +278,19 @@ public class Actions
 						mainActivity.setCurentCategoryPosition(0);
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 					}
-					//					}
-					//					else if (((ActivityBase) act).getCurentCategoryPosition() == 13)
-					//					{
-					//						//if so we must change adapters to all ViewPagers 
-					//						//TODO
-					//					}
-					//					else
-					//					{
-					//						pager.setCurrentItem(position, true);
-					//					}
 				}
 				//TODO CHECK IT so it's comments adapter and need to switch to artAdapter
 				else
 				{
-					//				PagerAdapter pagerAdapter = new ArticleViewPagerAdapter(act.getSupportFragmentManager(),
-					//				((ActivityMain) act).getAllArtsInfo(), act);
-					//				PagerAdapter pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(), allArtsInfo,
-					//				act);
-					//				pager.setAdapter(pagerAdapter);
-					rightPager.setCurrentItem(position, true);
+					rightPager.setCurrentItem(positionOfArticle, true);
 				}
 			}
 			else
 			{
 				Intent intent = new Intent(act, ActivityArticle.class);
 				Bundle b = new Bundle();
-				b.putInt("position", position);
-				ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, allArtsInfo.get(position));
+				b.putInt("position", positionOfArticle);
+				ArtInfo.writeAllArtsInfoToBundle(b, allArtsInfo, allArtsInfo.get(positionOfArticle));
 				b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 				intent.putExtras(b);
 
