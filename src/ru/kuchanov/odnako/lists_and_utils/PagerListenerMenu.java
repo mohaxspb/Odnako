@@ -39,9 +39,9 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		this.act = act;
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.pagerLeft = (ViewPager) act.findViewById(R.id.arts_list_container);
+		this.pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
 
-		this.pagerRight = (ViewPager) act.findViewById(R.id.article_comments_container);
+		this.pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
@@ -72,9 +72,10 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				toolbarRight.setTitle("");
 
 				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-				Log.e(LOG, "categoryForRightPager: " + categoryForRightPager);
-				pagerRight.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(), categoryForRightPager,
-				act));
+				PagerArticlesAdapter adapterLeft = new PagerArticlesAdapter(act.getSupportFragmentManager(),
+				categoryForRightPager,
+				act);
+				pagerRight.setAdapter(adapterLeft);
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(this.act, categoryForRightPager);
 				pagerRight.setOnPageChangeListener(listener);

@@ -88,7 +88,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		this.pagerAdapter = new CommentsViewPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo,
 		this.allArtsCommentsInfo, act);
 		this.pager.setAdapter(pagerAdapter);
-		this.pager.setCurrentItem(curArtPosition, true);
+		this.pager.setCurrentItem(getCurArtPosition(), true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//adMob

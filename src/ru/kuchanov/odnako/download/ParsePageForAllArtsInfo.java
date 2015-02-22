@@ -94,7 +94,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 				//write new Author if it don't exists
 				if (Category.isCategory(h, category) == null)
 				{
-					//TODO
+					//TODO create new entry in Category
 				}
 			}
 		} catch (Exception e)

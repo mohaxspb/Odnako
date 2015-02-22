@@ -26,7 +26,7 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 		this.act = act;
 		if (act instanceof ActivityMain)
 		{
-			this.viewPager = (ViewPager) ((ActivityMain) act).findViewById(R.id.arts_list_container);
+			this.viewPager = (ViewPager) ((ActivityMain) act).findViewById(R.id.pager_left);
 		}
 	}
 

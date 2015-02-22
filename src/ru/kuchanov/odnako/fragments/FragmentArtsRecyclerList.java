@@ -19,6 +19,7 @@ import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
@@ -129,13 +131,10 @@ public class FragmentArtsRecyclerList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG + categoryToLoad, "fragSelectedReceiver onReceive called");
-			
-			if(isAdded())
+
+			if (isAdded())
 			{
 				artsListAdapter.notifyDataSetChanged();
-
-//				Log.e(LOG + categoryToLoad, "fragID: " + getId() + "isInLeftPager: " + String.valueOf(isInLeftPager));
-
 				setTitleToRightToolbar();
 			}
 		}
@@ -167,6 +166,12 @@ public class FragmentArtsRecyclerList extends Fragment
 				Log.e(LOG + categoryToLoad, "fragment not added! RETURN!");
 				return;
 			}
+			
+			//check if this fragment is currently displayed 
+			boolean isDisplayed=false;
+//			if() TODO
+			
+			
 
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
@@ -181,11 +186,19 @@ public class FragmentArtsRecyclerList extends Fragment
 				break;
 				case (Msg.NEW_QUONT):
 					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					//setPosition to zero to avoid bugs
+					position = 0;
+					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
+					//and setRightPagers curItem
+
 					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					position = 0;
+					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
+
 					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
 					updateAdapter(intent, page);
 				break;
@@ -196,11 +209,23 @@ public class FragmentArtsRecyclerList extends Fragment
 					//we catch publishing lag from bottom, so we'll toast unsinked status
 					//and start download from top (pageToLoad=1)
 					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
+
+					position = 0;
+					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
+					allArtsInfo = null;
+					ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
+					def
+					.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
+					allArtsInfo = def;
+					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 					pageToLoad = 1;
+					artsList.getAdapter().notifyDataSetChanged();
 					getAllArtsInfo(true);
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
 					Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					position = 0;
+					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 					updateAdapter(intent, page);
 				break;
 				case (Msg.ERROR):
@@ -209,12 +234,12 @@ public class FragmentArtsRecyclerList extends Fragment
 					if (page != 1)
 					{
 						pageToLoad--;
-						//setOnScrollListener();
 					}
 				break;
 				default:
 					Log.e(LOG, "непредвиденный ответ базы данных");
 					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
+				break;
 			}
 
 			setOnScrollListener();
@@ -229,8 +254,13 @@ public class FragmentArtsRecyclerList extends Fragment
 				swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
 				swipeRef.setRefreshing(false);
 			}
-		}
-	};
+			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false);
+			if (refreshRightToolbarAndPager)
+			{
+				updateRightPagerAndToolbar(msg);
+			}
+		}//onRexeive
+	};//artsDataReceiver
 
 	private void updateAdapter(Intent intent, int page)
 	{
@@ -254,6 +284,62 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 	}
 
+	private void updateRightPagerAndToolbar(String[] msg)
+	{
+		ActivityMain mainActivity = (ActivityMain) this.act;
+		ViewPager pagerRight = (ViewPager) mainActivity.findViewById(R.id.pager_right);
+		Toolbar rightToolbar = (Toolbar) mainActivity.findViewById(R.id.toolbar_right);
+		int selectedArt;
+		int allArtsSize;
+
+		ViewPager.OnPageChangeListener listener = new PagerListenerArticle(mainActivity, categoryToLoad);
+
+		switch (msg[0])
+		{
+			case (Msg.NO_NEW):
+				pagerRight.getAdapter().notifyDataSetChanged();
+
+				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
+				allArtsSize = this.allArtsInfo.size();
+				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+			break;
+			case (Msg.NEW_QUONT):
+				pagerRight.getAdapter().notifyDataSetChanged();
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(0);
+			break;
+			case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+				pagerRight.getAdapter().notifyDataSetChanged();
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(0);
+			break;
+			case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
+				pagerRight.getAdapter().notifyDataSetChanged();
+
+				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
+				allArtsSize = this.allArtsInfo.size();
+				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+			break;
+			case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
+				pagerRight.getAdapter().notifyDataSetChanged();
+
+				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
+				allArtsSize = this.allArtsInfo.size();
+				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+			break;
+			case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
+				pagerRight.getAdapter().notifyDataSetChanged();
+			break;
+			case (Msg.ERROR):
+			//nothing to do;
+			break;
+			default:
+			//nothing to do;
+			break;
+		}
+
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -261,7 +347,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		View v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
 		//find cur frag's toolbar
-		if (container.getId() == R.id.article_comments_container)
+		if (container.getId() == R.id.pager_right)
 		{
 			this.toolbarId = R.id.toolbar_right;
 			//unregister from articles selected events to not highlight items
@@ -272,12 +358,12 @@ public class FragmentArtsRecyclerList extends Fragment
 			}
 			this.setInLeftPager(false);
 		}
-		else if (container.getId() == R.id.arts_list_container)
+		else if (container.getId() == R.id.pager_left)
 		{
 			this.toolbarId = R.id.toolbar;
 			//reciver for scrolling and highligting selected position
-			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
-			new IntentFilter(this.getCategoryToLoad() + "art_position"));
+			//			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
+			//			new IntentFilter(this.getCategoryToLoad() + "art_position"));
 			this.setInLeftPager(true);
 		}
 

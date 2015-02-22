@@ -74,7 +74,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-//				Log.d(LOG_TAG + catToLoad, DBRezult);
+				Log.d(LOG_TAG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -126,7 +126,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				//initial art is shown, do nothing
 				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
-				//arts already sended to frag with initial art, do nothing
+				//arts already send to frag with initial art, do nothing
 				break;
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
 					//so load from web
@@ -144,7 +144,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 					this.startDownLoad(catToLoad, pageToLoad);
 				break;
 			}
-
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -161,28 +160,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		//		String[] resultMessage;
-		//		if (dataToSend.size() != 0)
-		//		{
-		//			//before sending message to listener (frag) we must write gained info to DB
-		//			resultMessage = new DBActions(this, this.getHelper()).writeArtsToDB(dataToSend, categoryToLoad, pageToLoad);
-		//		}
-		//		else
-		//		{
-		//			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
-		//			dataToSend.add(new ArtInfo(artInfoArr));
-		//			resultMessage = new String[]{Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_WRITE, null};
-		//		}
-		//		//now update REFRESHED field of Category or Author entry in table if we load from top
-		//		if (pageToLoad == 1)
-		//		{
-		//			new DBActions(this, this.getHelper()).updateRefreshedDate(categoryToLoad);
-		//		}
-		//		else
-		//		{
-		//			//we don't need to update refreshed Date, cause we do it only when loading from top
-		//		}
-		//		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
+		Log.d(LOG_TAG+categoryToLoad, "sendDownloadedData");
 		String[] resultMessage;
 		if (dataToSend.size() == 0)
 		{
@@ -229,6 +207,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
+		Log.d(LOG_TAG, resultMessage[0]/*+"/"+resultMessage[1]*/);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
@@ -270,6 +249,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
+		Log.d(LOG_TAG+categoryToLoad, "sendBroadcastWithResult");
+		
 		Intent intent = new Intent(categoryToLoad);
 
 		Bundle b = new Bundle();

@@ -55,7 +55,7 @@ public class ActivityMain extends ActivityBase
 
 	//ViewPager and it's adapter for artsLists
 	ViewPager artsListPager;
-//	PagerAdapter artsListPagerAdapter;
+	//	PagerAdapter artsListPagerAdapter;
 
 	//art's list top image and it's gradient cover
 	//	ImageView topImgCover;
@@ -117,7 +117,7 @@ public class ActivityMain extends ActivityBase
 		/////
 		if (savedInstanceState != null)
 		{
-			this.curArtPosition = savedInstanceState.getInt("position");
+			this.setCurArtPosition(savedInstanceState.getInt("position"));
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
@@ -186,10 +186,10 @@ public class ActivityMain extends ActivityBase
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
 
-		this.artsListPager = (ViewPager) this.findViewById(R.id.arts_list_container);
+		this.artsListPager = (ViewPager) this.findViewById(R.id.pager_left);
 		if (this.twoPane)
 		{
-			this.artCommsPager = (ViewPager) this.findViewById(R.id.article_comments_container);
+			this.artCommsPager = (ViewPager) this.findViewById(R.id.pager_right);
 			this.toolbarRight = (Toolbar) this.findViewById(R.id.toolbar_right);
 		}
 
@@ -200,28 +200,30 @@ public class ActivityMain extends ActivityBase
 
 		//set arts lists viewPager
 		Log.e(LOG_TAG, "pagerType: " + this.getPagerType());
-		OnPageChangeListener listener=new PagerListenerMenu(this);
+		OnPageChangeListener listener = new PagerListenerMenu(this);
 		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
-				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-				listener=new PagerListenerMenu(this);
+				listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-				if(this.currentCategoryPosition==0)
+				if (this.currentCategoryPosition == 0)
 				{
 					listener.onPageSelected(currentCategoryPosition);
 				}
-				
+
 			break;
 			case PAGER_TYPE_AUTHORS:
-				PagerAuthorsListsAdapter aithorsPagerAdapter = new PagerAuthorsListsAdapter(act.getSupportFragmentManager(), act);
+				PagerAuthorsListsAdapter aithorsPagerAdapter = new PagerAuthorsListsAdapter(
+				act.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(aithorsPagerAdapter);
-				listener=new PagerListenerAllAuthors(this, aithorsPagerAdapter.getAllAuthorsList());
+				listener = new PagerListenerAllAuthors(this, aithorsPagerAdapter.getAllAuthorsList());
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-				if(this.currentCategoryPosition==0)
+				if (this.currentCategoryPosition == 0)
 				{
 					listener.onPageSelected(currentCategoryPosition);
 				}
@@ -269,14 +271,14 @@ public class ActivityMain extends ActivityBase
 			listener.onPageSelected(currentCategoryPosition);
 		}
 
-//		if (pagerAdapter == null)
-//		{
-//			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
-//		}
-//		else
-//		{
-//			Log.e(LOG_TAG, "pagerAdapter!=null");
-//		}
+		//		if (pagerAdapter == null)
+		//		{
+		//			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
+		//		}
+		//		else
+		//		{
+		//			Log.e(LOG_TAG, "pagerAdapter!=null");
+		//		}
 
 		///////////////
 
@@ -376,6 +378,18 @@ public class ActivityMain extends ActivityBase
 		//Log.d(LOG_TAG, "onResume");
 		super.onResume();
 	}
+//
+//	@Override
+//	protected void onStop()
+//	{
+//		//TODO
+//		if (artsDataReceiver != null)
+//		{
+//			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
+//			artsDataReceiver = null;
+//		}
+//		super.onStop();
+//	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
@@ -571,7 +585,8 @@ public class ActivityMain extends ActivityBase
 					this.setPagerType(PAGER_TYPE_MENU);
 
 					this.setCurentCategoryPosition(11);
-					PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+					PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+					this.getSupportFragmentManager(), act);
 					this.artsListPager.setAdapter(artsListPagerAdapter);
 					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 					this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
@@ -608,16 +623,17 @@ public class ActivityMain extends ActivityBase
 				this.setPagerType(PAGER_TYPE_MENU);
 
 				this.setCurentCategoryPosition(curentCategoryPosition);
-				
-				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(this.getSupportFragmentManager(), act);
+
+				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-				OnPageChangeListener listener=new PagerListenerMenu(this);
+				OnPageChangeListener listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
-				
-				if(this.currentCategoryPosition==0)
+
+				if (this.currentCategoryPosition == 0)
 				{
 					listener.onPageSelected(curentCategoryPosition);
 				}

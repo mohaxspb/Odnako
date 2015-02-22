@@ -48,7 +48,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.artCommsPager = (ViewPager) act.findViewById(R.id.article_comments_container);
+		this.artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);

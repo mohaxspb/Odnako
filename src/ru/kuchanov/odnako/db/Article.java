@@ -581,13 +581,14 @@ public class Article
 					quontOfWrittenArticles++;
 				} catch (SQLException e)
 				{
+					Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 					Log.e(LOG, existingArt.getTitle() + " error while INSERT");
 				}
 			}
 
 			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
 		}
-		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+//		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 		return updatedData;
 	}
 

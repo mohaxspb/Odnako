@@ -81,7 +81,7 @@ public class ActivityArticle extends ActivityBase
 		this.pager = (ViewPager) this.findViewById(R.id.article_container);
 //		this.pagerAdapter = new ArticlesPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo, this);
 		this.pager.setAdapter(pagerAdapter);
-		this.pager.setCurrentItem(curArtPosition, true);
+		this.pager.setCurrentItem(getCurArtPosition(), true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 		//adMob
@@ -121,11 +121,11 @@ public class ActivityArticle extends ActivityBase
 		switch (item.getItemId())
 		{
 			case R.id.comments:
-				Actions.showComments(curAllArtsInfo, curArtPosition, act);//.showComments(allArtsInfo, position, act);
+				Actions.showComments(curAllArtsInfo, getCurArtPosition(), act);//.showComments(allArtsInfo, position, act);
 				return true;
 			case R.id.share:
 //				Actions.shareUrl(this.curArtInfo.url, this.act);
-				Actions.shareUrl(this.curAllArtsInfo.get(this.curArtPosition).url, this.act);
+				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).url, this.act);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

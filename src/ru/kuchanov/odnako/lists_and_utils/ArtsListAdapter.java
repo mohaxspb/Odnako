@@ -603,14 +603,6 @@ implements Filterable
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
 
-			case (FOOTER):
-				itemLayoutView = new ImageView(act);
-				((ImageView) itemLayoutView).setImageResource(R.drawable.ic_launcher);
-				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) DipToPx.convert(165,
-				act)));
-
-				holder = new HeaderHolder(itemLayoutView);
-				return holder;
 			case (ARTICLE):
 				// create a new view
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,
@@ -630,15 +622,6 @@ implements Filterable
 	{
 
 		HeaderHolder(View itemLayoutView)
-		{
-			super(itemLayoutView);
-		}
-	}
-
-	static class FooterHolder extends RecyclerView.ViewHolder
-	{
-
-		FooterHolder(View itemLayoutView)
 		{
 			super(itemLayoutView);
 		}

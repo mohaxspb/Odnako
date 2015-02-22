@@ -75,7 +75,7 @@ public class Actions
 						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
 
 						//switch to frag in right pager
-						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.article_comments_container);
+						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.pager_right);
 						PagerAuthorsListsAdapter adapter = (PagerAuthorsListsAdapter) rightPager.getAdapter();
 						int position = 0;
 						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
@@ -93,7 +93,7 @@ public class Actions
 						//else we must show authors list.
 						//we can switch here if we have him in autList or not
 						//if so we can show arts list in allAuthor frag or not
-						ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 						PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
 						act.getSupportFragmentManager(), act);
 						boolean weFindIt = false;
@@ -122,7 +122,7 @@ public class Actions
 							authorBlogUrl));
 							leftPager.setOnPageChangeListener(null);
 							ViewPager rightPager = (ViewPager) mainActivity
-							.findViewById(R.id.article_comments_container);
+							.findViewById(R.id.pager_right);
 							rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
 							authorBlogUrl, mainActivity));
 							rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
@@ -185,7 +185,7 @@ public class Actions
 		if (act.getClass().getSimpleName().equals("ActivityMain"))
 		{
 			FragmentArtsRecyclerList artsListFrag = (FragmentArtsRecyclerList) act.getSupportFragmentManager()
-			.findFragmentById(R.id.arts_list_container);
+			.findFragmentById(R.id.pager_left);
 			artsListFrag.setActivatedPosition(position);
 		}
 
@@ -196,7 +196,7 @@ public class Actions
 		if (twoPane)
 		{
 
-			ViewPager pager = (ViewPager) act.findViewById(R.id.article_comments_container);
+			ViewPager pager = (ViewPager) act.findViewById(R.id.pager_right);
 			if (pager.getAdapter().getClass().getSimpleName().equals(CommentsViewPagerAdapter.class.getSimpleName()))
 			{
 				pager.setCurrentItem(position, true);
@@ -236,13 +236,13 @@ public class Actions
 			final ActivityMain mainActivity = (ActivityMain) act;
 			if (twoPane)
 			{
-				final ViewPager rightPager = (ViewPager) act.findViewById(R.id.article_comments_container);
+				final ViewPager rightPager = (ViewPager) act.findViewById(R.id.pager_right);
 				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
 				if (rightPager.getAdapter() instanceof PagerAuthorsListsAdapter)
 				{
 
 					//if so we must change adapters to all ViewPagers
-					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.arts_list_container);
+					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
 					act.getSupportFragmentManager(), act);
 					boolean weFindIt = false;

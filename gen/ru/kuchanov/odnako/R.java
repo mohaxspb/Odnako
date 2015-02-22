@@ -2591,9 +2591,7 @@ containing a value of this type.
         public static final int art_tags_main=0x7f0c009f;
         public static final int art_text=0x7f0c00a0;
         public static final int art_title=0x7f0c0096;
-        public static final int article_comments_container=0x7f0c005e;
         public static final int article_container=0x7f0c0055;
-        public static final int arts_list_container=0x7f0c005d;
         public static final int arts_list_refresh=0x7f0c00a3;
         public static final int arts_list_view=0x7f0c0092;
         public static final int author_card_bottom_lin=0x7f0c007f;
@@ -2665,6 +2663,8 @@ containing a value of this type.
         public static final int normal=0x7f0c000b;
         public static final int num_of_comms=0x7f0c0077;
         public static final int num_of_sharings=0x7f0c0073;
+        public static final int pager_left=0x7f0c005d;
+        public static final int pager_right=0x7f0c005e;
         public static final int production=0x7f0c0025;
         public static final int progress_circular=0x7f0c0007;
         public static final int progress_horizontal=0x7f0c0008;

@@ -71,7 +71,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private CardView alsoToReadCard;
 
 	private ArtInfo curArtInfo;
-	int position;/* position in all art arr; need to show next/previous arts */
+//	position in all art arr; need to show next/previous arts
+	private int position;
 	ArrayList<ArtInfo> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
@@ -181,7 +182,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					@Override
 					public void onClick(View v)
 					{
-						Actions.showComments(allArtsInfo, position, act);
+						Actions.showComments(allArtsInfo, getPosition(), act);
 					}
 				});
 
@@ -673,7 +674,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//save scrollView position
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
-		outState.putInt("position", this.position);
+		outState.putInt("position", this.getPosition());
 		outState.putParcelable(ArtInfo.KEY_CURENT_ART, curArtInfo);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 	}
@@ -681,14 +682,24 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private void restoreState(Bundle state)
 	{
 		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
-		this.position = state.getInt("position");
+		this.setPosition(state.getInt("position"));
 		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 	}
 
 	@Override
 	public void update(ArrayList<ArtInfo> allArtInfo)
 	{
-		this.curArtInfo = allArtInfo.get(position);
+		this.curArtInfo = allArtInfo.get(getPosition());
 		this.checkCurArtInfo(null);
+	}
+
+	public int getPosition()
+	{
+		return position;
+	}
+
+	public void setPosition(int position)
+	{
+		this.position = position;
 	}
 }

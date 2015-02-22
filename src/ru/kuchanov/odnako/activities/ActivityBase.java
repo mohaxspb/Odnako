@@ -74,7 +74,7 @@ public class ActivityBase extends ActionBarActivity
 
 	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
-	protected int curArtPosition = 0;
+	private int curArtPosition = 0;
 	protected ArrayList<ArtInfo> curAllArtsInfo = null;
 
 	protected int backPressedQ;
@@ -272,7 +272,7 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void restoreState(Bundle state)
 	{
-		this.curArtPosition = state.getInt("position");
+		this.setCurArtPosition(state.getInt("position"));
 		this.curAllArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
 		Log.e(LOG_TAG + "/restoreState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
@@ -376,7 +376,7 @@ public class ActivityBase extends ActionBarActivity
 				//check if we have only one page in Left ViewPager
 				//if so - we must show initial state of app
 				//else - check if it's second time of pressing back
-				ViewPager leftPager = (ViewPager) this.act.findViewById(R.id.arts_list_container);
+				ViewPager leftPager = (ViewPager) this.act.findViewById(R.id.pager_left);
 				if (leftPager.getAdapter().getCount() == 1)
 				{
 					this.act.finish();
@@ -424,5 +424,15 @@ public class ActivityBase extends ActionBarActivity
 				super.onBackPressed();
 			}
 		}
+	}
+
+	public int getCurArtPosition()
+	{
+		return curArtPosition;
+	}
+
+	public void setCurArtPosition(int curArtPosition)
+	{
+		this.curArtPosition = curArtPosition;
 	}
 }

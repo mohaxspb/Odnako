@@ -52,7 +52,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.pagerRight = (ViewPager) act.findViewById(R.id.article_comments_container);
+		this.pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
@@ -71,7 +71,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 	@Override
 	public void onPageSelected(int position)
 	{
-		Log.d(LOG_TAG, "select artsListPager position= " + position);
+		Log.d(LOG_TAG, "select pagerListenerAllAuthors position = " + position);
 
 		if (isInRightPager)
 		{
