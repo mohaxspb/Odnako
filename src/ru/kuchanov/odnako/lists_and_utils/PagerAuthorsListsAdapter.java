@@ -33,15 +33,14 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 		super(fm);
 		this.act = act;
 		//		this.allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
-		DataBaseHelper h=new DataBaseHelper(act);
+		DataBaseHelper h = new DataBaseHelper(act);
 		try
 		{
 			this.allAuthorsInfo = (ArrayList<Author>) h.getDaoAuthor().queryForAll();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
-		}
-		finally
+		} finally
 		{
 			h.close();
 		}
@@ -68,6 +67,16 @@ public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
 	public ArrayList<Author> getAllAuthorsList()
 	{
 		return allAuthorsInfo;
+	}
+
+	public ArrayList<String> getAllAuthorsURLsList()
+	{
+		ArrayList<String> allAuthorsURLsList = new ArrayList<String>();
+		for (Author a : allAuthorsInfo)
+		{
+			allAuthorsURLsList.add(a.getBlog_url());
+		}
+		return allAuthorsURLsList;
 	}
 
 	@Override

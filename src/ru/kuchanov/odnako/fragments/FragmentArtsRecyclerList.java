@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -19,6 +20,7 @@ import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
+import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.BroadcastReceiver;
@@ -34,7 +36,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,7 +73,8 @@ public class FragmentArtsRecyclerList extends Fragment
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
 
-	private ActionBarActivity act;
+	//	private ActionBarActivity act;
+	private ActivityMain act;
 	private SharedPreferences pref;
 
 	private String categoryToLoad;
@@ -87,7 +89,7 @@ public class FragmentArtsRecyclerList extends Fragment
 		//Log.d(LOG_TAG+categoryToLoad, "onCreate");
 		super.onCreate(savedInstanceState);
 
-		this.act = (ActionBarActivity) this.getActivity();
+		this.act = (ActivityMain) this.getActivity();
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		Bundle fromArgs = this.getArguments();
@@ -110,7 +112,18 @@ public class FragmentArtsRecyclerList extends Fragment
 		}
 		else
 		{
-			this.position = ((ActivityMain) act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
+			if (act.getAllCatListsSelectedArtPosition().containsKey(categoryToLoad))
+			{
+				this.position = act.getAllCatListsSelectedArtPosition().get(categoryToLoad);
+			}
+			else
+			{
+				this.position = 0;
+				act.getAllCatListsSelectedArtPosition().put(categoryToLoad, this.position);
+				act.getAllCatArtsInfo().put(categoryToLoad, /* new
+															 * ArrayList<ArtInfo
+															 * >() */null);
+			}
 		}
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
@@ -166,12 +179,47 @@ public class FragmentArtsRecyclerList extends Fragment
 				Log.e(LOG + categoryToLoad, "fragment not added! RETURN!");
 				return;
 			}
-			
+
 			//check if this fragment is currently displayed 
-			boolean isDisplayed=false;
-//			if() TODO
-			
-			
+			boolean isDisplayed = false;
+			int pagerType = act.getPagerType();
+			int currentCategoryPosition = act.getCurentCategoryPosition();
+			switch (pagerType)
+			{
+				case ActivityMain.PAGER_TYPE_MENU:
+					String[] allMenuLinks = CatData.getAllCategoriesMenuLinks(act);
+					if (categoryToLoad.equals(allMenuLinks[currentCategoryPosition]) && isInLeftPager)
+					{
+						//so it's currently displayed fragment
+						isDisplayed = true;
+					}
+					else
+					{
+						isDisplayed = false;
+					}
+				break;
+				case ActivityMain.PAGER_TYPE_AUTHORS:
+					ViewPager pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
+					PagerAuthorsListsAdapter allAuthorsAdapter = (PagerAuthorsListsAdapter) pagerLeft.getAdapter();
+					List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
+
+					if (categoryToLoad.equals(allAuthorsUrls.get(currentCategoryPosition)) && isInLeftPager)
+					{
+						//so it's currently displayed fragment
+						isDisplayed = true;
+					}
+					else
+					{
+						isDisplayed = false;
+					}
+				break;
+				case ActivityMain.PAGER_TYPE_CATEGORIES:
+				//TODO
+				break;
+				case ActivityMain.PAGER_TYPE_SINGLE:
+				//TODO
+				break;
+			}
 
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
@@ -180,26 +228,32 @@ public class FragmentArtsRecyclerList extends Fragment
 			switch (msg[0])
 			{
 				case (Msg.NO_NEW):
-					Log.d(LOG + "/" + categoryToLoad, "Новых статей не обнаружено!");
-					Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+					Log.d(LOG + categoryToLoad, "Новых статей не обнаружено!");
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
+					}
 					updateAdapter(intent, page);
 				break;
 				case (Msg.NEW_QUONT):
-					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					//setPosition to zero to avoid bugs
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
-					//and setRightPagers curItem
-
-					Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
+					}
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
-					Log.d(LOG + "/" + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
+					Log.d(LOG + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
-
-					Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "Обнаружено более 30 новых статей", Toast.LENGTH_SHORT).show();
+					}
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
@@ -208,8 +262,12 @@ public class FragmentArtsRecyclerList extends Fragment
 				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
 					//we catch publishing lag from bottom, so we'll toast unsinked status
 					//and start download from top (pageToLoad=1)
-					Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT).show();
-
+					Log.d(LOG + "/" + categoryToLoad, "Синхронизирую базу данных. Загружаю новые статьи");
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT)
+						.show();
+					}
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 					allArtsInfo = null;
@@ -223,13 +281,21 @@ public class FragmentArtsRecyclerList extends Fragment
 					getAllArtsInfo(true);
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
-					Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					Log.e(LOG + categoryToLoad, "Ни одной статьи не обнаружено!");
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "Ни одной статьи не обнаружено!", Toast.LENGTH_SHORT).show();
+					}
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 					updateAdapter(intent, page);
 				break;
 				case (Msg.ERROR):
-					Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
+					Log.e(LOG + categoryToLoad, msg[1]);
+					if (isDisplayed)
+					{
+						Toast.makeText(act, msg[1], Toast.LENGTH_SHORT).show();
+					}
 					//check if there was error while loading from bottom, if so, decrement pageToLoad
 					if (page != 1)
 					{
@@ -237,8 +303,11 @@ public class FragmentArtsRecyclerList extends Fragment
 					}
 				break;
 				default:
-					Log.e(LOG, "непредвиденный ответ базы данных");
-					Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
+					Log.e(LOG + categoryToLoad, "непредвиденный ответ базы данных");
+					if (isDisplayed)
+					{
+						Toast.makeText(act, "непредвиденный ответ базы данных", Toast.LENGTH_SHORT).show();
+					}
 				break;
 			}
 
@@ -254,7 +323,7 @@ public class FragmentArtsRecyclerList extends Fragment
 				swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
 				swipeRef.setRefreshing(false);
 			}
-			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false);
+			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false) && isDisplayed;
 			if (refreshRightToolbarAndPager)
 			{
 				updateRightPagerAndToolbar(msg);
