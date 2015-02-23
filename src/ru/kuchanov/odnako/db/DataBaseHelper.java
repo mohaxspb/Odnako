@@ -28,13 +28,10 @@ import com.j256.ormlite.table.TableUtils;
 
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 {
-
 	Context ctx;
 
 	// name of the database file for your application
 	public static final String DATABASE_NAME = "db_odnako.db";
-	// any time you make changes to your database objects, you may have to increase the database version
-	//	private static final int DATABASE_VERSION = 1;
 
 	// the DAO object we use to access the Book table
 	private Dao<Category, Integer> daoCategory = null;
@@ -269,9 +266,11 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	}
 
 	/**
-	 * this method searches trough DB for Categories and Authors and returns their urls
+	 * this method searches trough DB for Categories and Authors and returns
+	 * their urls
+	 * 
 	 * @param h
-	 * @return 
+	 * @return
 	 */
 	public ArrayList<String> getAllCatAndAutUrls() throws SQLException
 	{
@@ -290,9 +289,9 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			{
 				allURLs.add(allAuthors.get(i).getBlog_url());
 			}
-			
+
 			//TODO change MENU urls
-			String[] menuUrls=CatData.getAllCategoriesMenuLinks(ctx);
+			String[] menuUrls = CatData.getAllCategoriesMenuLinks(ctx);
 			for (int i = 0; i < menuUrls.length; i++)
 			{
 				allURLs.add(menuUrls[i]);
@@ -304,11 +303,12 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 
 		return allURLs;
 	}
-	
+
 	/**
 	 * this method searches trough DB for Authors and returns their urls
+	 * 
 	 * @param h
-	 * @return 
+	 * @return
 	 */
 	public ArrayList<String> getAllAuthorUrls() throws SQLException
 	{
@@ -328,11 +328,12 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 
 		return allURLs;
 	}
-	
+
 	/**
 	 * this method searches trough DB for Categories and returns their urls
+	 * 
 	 * @param h
-	 * @return 
+	 * @return
 	 */
 	public ArrayList<String> getAllCategoriesUrls() throws SQLException
 	{

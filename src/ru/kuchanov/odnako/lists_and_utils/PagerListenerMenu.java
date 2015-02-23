@@ -72,7 +72,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				toolbarRight.setTitle("");
 
 				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-				PagerArticlesAdapter adapterLeft = new PagerArticlesAdapter(act.getSupportFragmentManager(),
+				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				categoryForRightPager,
 				act);
 				pagerRight.setAdapter(adapterLeft);
@@ -90,7 +90,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			else if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
-				PagerAuthorsListsAdapter pagerRightAdapter = new PagerAuthorsListsAdapter(
+				PagerAdapterAuthorsLists pagerRightAdapter = new PagerAdapterAuthorsLists(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());

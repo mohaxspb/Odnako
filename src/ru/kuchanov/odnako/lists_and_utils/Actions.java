@@ -76,7 +76,7 @@ public class Actions
 
 						//switch to frag in right pager
 						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.pager_right);
-						PagerAuthorsListsAdapter adapter = (PagerAuthorsListsAdapter) rightPager.getAdapter();
+						PagerAdapterAuthorsLists adapter = (PagerAdapterAuthorsLists) rightPager.getAdapter();
 						int position = 0;
 						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
 						{
@@ -94,7 +94,7 @@ public class Actions
 						//we can switch here if we have him in autList or not
 						//if so we can show arts list in allAuthor frag or not
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
-						PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
+						PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
 						act.getSupportFragmentManager(), act);
 						boolean weFindIt = false;
 						int position = 0;
@@ -118,39 +118,22 @@ public class Actions
 						}
 						else
 						{
-							leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act,
-							authorBlogUrl));
-							leftPager.setOnPageChangeListener(null);
-							ViewPager rightPager = (ViewPager) mainActivity
-							.findViewById(R.id.pager_right);
-							rightPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
-							authorBlogUrl, mainActivity));
-							rightPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-							{
-								@Override
-								public void onPageSelected(int position)
-								{
-									//move topImg and toolBar while scrolling left list
-									Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
-									toolbarRight.setTitle("");
-									System.out.println("onPageSelected in articlePager; position: " + position);
-									mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, position);
-
-									Intent intentToListFrag = new Intent(authorBlogUrl + "art_position");
-									Bundle b = new Bundle();
-									b.putInt("position", position);
-									intentToListFrag.putExtras(b);
-
-									LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-								}
-							});
-							if (mainActivity.getAllCatListsSelectedArtPosition().get(authorBlogUrl) != null)
-							{
-								rightPager.setCurrentItem(mainActivity.getAllCatListsSelectedArtPosition().get(
-								authorBlogUrl));
-							}
+							//we can't find this author in DB, so show it in singleCategoryPager
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
+							mainActivity.setCurentCategoryPosition(0);
 							mainActivity.setCurrentCategory(authorBlogUrl);
+
+							leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+							authorBlogUrl));
+							OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+							leftPager.setOnPageChangeListener(listener);
+							leftPager.setCurrentItem(0);
+
+							//try notify pager that item selected if it's 0 item
+							if (leftPager.getCurrentItem() == 0)
+							{
+								listener.onPageSelected(0);
+							}
 						}
 					}
 				}
@@ -238,12 +221,12 @@ public class Actions
 			{
 				final ViewPager rightPager = (ViewPager) act.findViewById(R.id.pager_right);
 				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
-				if (rightPager.getAdapter() instanceof PagerAuthorsListsAdapter)
+				if (rightPager.getAdapter() instanceof PagerAdapterAuthorsLists)
 				{
 
 					//if so we must change adapters to all ViewPagers
 					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
-					PagerAuthorsListsAdapter pagerAllAut = new PagerAuthorsListsAdapter(
+					PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
 					act.getSupportFragmentManager(), act);
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
@@ -264,11 +247,9 @@ public class Actions
 						mainActivity.setCurentCategoryPosition(positionInLeftPager);
 						mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, positionOfArticle);
 
-//						final String authorBlogUrlFromAdapter = pagerAllAut.getAllAuthorsList()
-//						.get(positionInLeftPager).getBlog_url();
-
 						leftPager.setAdapter(pagerAllAut);
-						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut.getAllAuthorsList());
+						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,
+						pagerAllAut.getAllAuthorsList());
 						leftPager.setOnPageChangeListener(listener);
 						leftPager.setCurrentItem(positionInLeftPager);
 
@@ -280,13 +261,27 @@ public class Actions
 					}
 					else
 					{
-						leftPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act,
-						authorBlogUrl));
-						//setCurentCategoryPosition for activity
-						mainActivity.setCurentCategoryPosition(0);
+						//we can't find this author in DB, so show it in singleCategoryPager
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
+						mainActivity.setCurentCategoryPosition(0);
+
+						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+						authorBlogUrl));
+						OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+						leftPager.setOnPageChangeListener(listener);
+						leftPager.setCurrentItem(0);
+
+						//try notify pager that item selected if it's 0 item
+						if (leftPager.getCurrentItem() == 0)
+						{
+							listener.onPageSelected(0);
+						}
 					}
 				}
+				//				else if(true)
+				//				{
+				//					//TODO
+				//				}
 				//TODO CHECK IT so it's comments adapter and need to switch to artAdapter
 				else
 				{

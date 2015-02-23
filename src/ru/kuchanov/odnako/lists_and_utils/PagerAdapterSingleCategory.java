@@ -16,12 +16,12 @@ import android.support.v7.app.ActionBarActivity;
 /**
  * PagerAdapter for mainActivity, which shows One given category
  */
-public class PagerOneArtsListAdapter extends FragmentStatePagerAdapter
+public class PagerAdapterSingleCategory extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 	String categoryToLoad;
 
-	public PagerOneArtsListAdapter(FragmentManager fm, ActionBarActivity act, String categoryToLoad)
+	public PagerAdapterSingleCategory(FragmentManager fm, ActionBarActivity act, String categoryToLoad)
 	{
 		super(fm);
 		this.act = act;

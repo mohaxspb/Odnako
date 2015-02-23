@@ -258,6 +258,20 @@ public class Author
 		return avatarUrl;
 	}
 
+	public static String getNameByUrl(DataBaseHelper h, String url)
+	{
+		String name;
+		try
+		{
+			name = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getName();
+		} catch (SQLException e)
+		{
+			name = url;
+			e.printStackTrace();
+		}
+		return name;
+	}
+
 	/**
 	 * 
 	 * @param url

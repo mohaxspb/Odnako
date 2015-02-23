@@ -17,11 +17,11 @@ public class ArtsDataReceiver extends BroadcastReceiver
 
 	String category;
 
-	PagerArticlesAdapter pagerArtsAdapter;
+	PagerAdapterArticles pagerArtsAdapter;
 
 	ActionBarActivity act;
 
-	public ArtsDataReceiver(String category, PagerArticlesAdapter pagerArtsAdapter, ActionBarActivity act)
+	public ArtsDataReceiver(String category, PagerAdapterArticles pagerArtsAdapter, ActionBarActivity act)
 	{
 		this.category = category;
 		this.act = act;

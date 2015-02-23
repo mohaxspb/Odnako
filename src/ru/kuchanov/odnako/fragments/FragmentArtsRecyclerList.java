@@ -20,7 +20,7 @@ import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.BroadcastReceiver;
@@ -200,7 +200,7 @@ public class FragmentArtsRecyclerList extends Fragment
 				break;
 				case ActivityMain.PAGER_TYPE_AUTHORS:
 					ViewPager pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
-					PagerAuthorsListsAdapter allAuthorsAdapter = (PagerAuthorsListsAdapter) pagerLeft.getAdapter();
+					PagerAdapterAuthorsLists allAuthorsAdapter = (PagerAdapterAuthorsLists) pagerLeft.getAdapter();
 					List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
 
 					if (categoryToLoad.equals(allAuthorsUrls.get(currentCategoryPosition)) && isInLeftPager)
@@ -217,7 +217,26 @@ public class FragmentArtsRecyclerList extends Fragment
 				//TODO
 				break;
 				case ActivityMain.PAGER_TYPE_SINGLE:
-				//TODO
+					//it's the only one fragment, so isDisplayed is always true
+					isDisplayed = true;
+					//try setting title to toolbar
+					ArrayList<ArtInfo> allArts = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+					Toolbar toolbar = (Toolbar) act.findViewById(toolbarId);
+					if (allArts != null)
+					{
+						if (allArts.get(0).authorName.equals("empty"))
+						{
+							toolbar.setTitle(categoryToLoad);
+						}
+						else
+						{
+							toolbar.setTitle(allArts.get(0).authorName);
+						}
+					}
+					else
+					{
+						toolbar.setTitle(categoryToLoad);
+					}
 				break;
 			}
 

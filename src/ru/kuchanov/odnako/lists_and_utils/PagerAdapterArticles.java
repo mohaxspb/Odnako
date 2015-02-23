@@ -18,9 +18,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class PagerArticlesAdapter extends FragmentStatePagerAdapter
+public class PagerAdapterArticles extends FragmentStatePagerAdapter
 {
-	static String LOG_TAG = PagerArticlesAdapter.class.getSimpleName() + "/";
+	static String LOG_TAG = PagerAdapterArticles.class.getSimpleName() + "/";
 
 	ArrayList<ArtInfo> allArtsInfo;
 
@@ -28,7 +28,7 @@ public class PagerArticlesAdapter extends FragmentStatePagerAdapter
 
 	ActionBarActivity act;
 
-	public PagerArticlesAdapter(FragmentManager fm, String category, ActionBarActivity act)
+	public PagerAdapterArticles(FragmentManager fm, String category, ActionBarActivity act)
 	{
 		super(fm);
 		Log.i(LOG_TAG + category, "ArticlesPagerAdapter CONSTRUCTOR called");

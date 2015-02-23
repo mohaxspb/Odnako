@@ -11,14 +11,17 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.PagerArticlesAdapter;
-import ru.kuchanov.odnako.lists_and_utils.PagerArtsListsAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.lists_and_utils.PagerAuthorsListsAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
-import ru.kuchanov.odnako.lists_and_utils.PagerOneArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
@@ -204,64 +207,36 @@ public class ActivityMain extends ActivityBase
 		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
-				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-				if (this.currentCategoryPosition == 0)
-				{
-					listener.onPageSelected(currentCategoryPosition);
-				}
-
+			//				if (this.currentCategoryPosition == 0)
+			//				{
+			//					listener.onPageSelected(currentCategoryPosition);
+			//				}
 			break;
 			case PAGER_TYPE_AUTHORS:
-				PagerAuthorsListsAdapter aithorsPagerAdapter = new PagerAuthorsListsAdapter(
+				PagerAdapterAuthorsLists aithorsPagerAdapter = new PagerAdapterAuthorsLists(
 				act.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(aithorsPagerAdapter);
 				listener = new PagerListenerAllAuthors(this, aithorsPagerAdapter.getAllAuthorsList());
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-				if (this.currentCategoryPosition == 0)
-				{
-					listener.onPageSelected(currentCategoryPosition);
-				}
+			//				if (this.currentCategoryPosition == 0)
+			//				{
+			//					listener.onPageSelected(currentCategoryPosition);
+			//				}
 			break;
 			case PAGER_TYPE_SINGLE:
-				final String authorBlogUrl = this.getCurrentCategory();
-				this.artsListPager.setAdapter(new PagerOneArtsListAdapter(act.getSupportFragmentManager(), act,
-				authorBlogUrl));
-				this.artsListPager.setOnPageChangeListener(null);
-
-				if (this.twoPane)
-				{
-					this.artCommsPager.setAdapter(new PagerArticlesAdapter(act.getSupportFragmentManager(),
-					authorBlogUrl, act));
-					artCommsPager.setPageTransformer(true, new RotationPageTransformer());
-					this.artCommsPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-					{
-						@Override
-						public void onPageSelected(int position)
-						{
-							//move topImg and toolBar while scrolling left list
-							toolbarRight.setTitle("");
-							System.out.println("onPageSelected in articlePager; position: " + position);
-							getAllCatListsSelectedArtPosition().put(authorBlogUrl, position);
-							Intent intentToListFrag = new Intent(authorBlogUrl + "art_position");
-							Bundle b = new Bundle();
-							b.putInt("position", position);
-							intentToListFrag.putExtras(b);
-
-							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-						}
-					});
-					if (this.getAllCatListsSelectedArtPosition().get(authorBlogUrl) != null)
-					{
-						this.artCommsPager.setCurrentItem(this.getAllCatListsSelectedArtPosition().get(
-						authorBlogUrl));
-					}
-				}
+				final String singleCategoryUrl = this.getCurrentCategory();
+				this.artsListPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+				singleCategoryUrl));
+				listener = new PagerListenerSingleCategory((ActivityMain) act);
+				this.artsListPager.setOnPageChangeListener(listener);
+				
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
@@ -270,17 +245,6 @@ public class ActivityMain extends ActivityBase
 		{
 			listener.onPageSelected(currentCategoryPosition);
 		}
-
-		//		if (pagerAdapter == null)
-		//		{
-		//			this.artsListPager.setCurrentItem(this.currentCategoryPosition, true);
-		//		}
-		//		else
-		//		{
-		//			Log.e(LOG_TAG, "pagerAdapter!=null");
-		//		}
-
-		///////////////
 
 		//onMain if we don't use twoPane mode we'll set alpha for action bar
 		//we'll do it after setNavDrawer, cause we find toolbar in it
@@ -378,18 +342,6 @@ public class ActivityMain extends ActivityBase
 		//Log.d(LOG_TAG, "onResume");
 		super.onResume();
 	}
-//
-//	@Override
-//	protected void onStop()
-//	{
-//		//TODO
-//		if (artsDataReceiver != null)
-//		{
-//			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
-//			artsDataReceiver = null;
-//		}
-//		super.onStop();
-//	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
@@ -442,6 +394,9 @@ public class ActivityMain extends ActivityBase
 				return true;
 			case R.id.refresh:
 				System.out.println("refresh");
+				DataBaseHelper h = new DataBaseHelper(act);
+				int DBVersion = h.getWritableDatabase().getVersion();
+				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// TODO
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();
@@ -585,7 +540,7 @@ public class ActivityMain extends ActivityBase
 					this.setPagerType(PAGER_TYPE_MENU);
 
 					this.setCurentCategoryPosition(11);
-					PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+					PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
 					this.getSupportFragmentManager(), act);
 					this.artsListPager.setAdapter(artsListPagerAdapter);
 					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
@@ -624,7 +579,7 @@ public class ActivityMain extends ActivityBase
 
 				this.setCurentCategoryPosition(curentCategoryPosition);
 
-				PagerArtsListsAdapter artsListPagerAdapter = new PagerArtsListsAdapter(
+				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());

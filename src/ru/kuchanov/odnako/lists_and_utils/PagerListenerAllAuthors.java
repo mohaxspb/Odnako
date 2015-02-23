@@ -111,7 +111,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				//				toolbarRight.setTitle("");
 				String curentCategory = allAuthorsUrls.get(currentCategoryPosition);
 
-				pagerRightAdapter = new PagerArticlesAdapter(act.getSupportFragmentManager(),
+				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				curentCategory, act);
 				pagerRight.setAdapter(pagerRightAdapter);
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());

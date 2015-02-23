@@ -18,7 +18,7 @@ import android.support.v7.app.ActionBarActivity;
 /**
  * PagerAdapter for mainActivity, which shows main menu Categories
  */
-public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
+public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 
@@ -34,7 +34,7 @@ public class PagerArtsListsAdapter extends FragmentStatePagerAdapter
 
 	//////////
 
-	public PagerArtsListsAdapter(FragmentManager fm, ActionBarActivity act)
+	public PagerAdapterArtsLists(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
 		this.act = act;

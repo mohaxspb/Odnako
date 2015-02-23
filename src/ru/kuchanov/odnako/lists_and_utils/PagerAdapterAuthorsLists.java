@@ -22,13 +22,13 @@ import android.support.v7.app.ActionBarActivity;
  * PagerAdapter for artsList of Authors arts. We use here fragments with
  * ListView instead of RecyclerView
  */
-public class PagerAuthorsListsAdapter extends FragmentStatePagerAdapter
+public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 	//	ArrayList<AuthorInfo> allAuthorsInfo;
 	ArrayList<Author> allAuthorsInfo;
 
-	public PagerAuthorsListsAdapter(FragmentManager fm, ActionBarActivity act)
+	public PagerAdapterAuthorsLists(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
 		this.act = act;
