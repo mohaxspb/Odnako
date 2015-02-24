@@ -6,12 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,25 +25,13 @@ import android.support.v7.app.ActionBarActivity;
 public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
-	//	ArrayList<AuthorInfo> allAuthorsInfo;
 	ArrayList<Author> allAuthorsInfo;
 
-	public PagerAdapterAuthorsLists(FragmentManager fm, ActionBarActivity act)
+	public PagerAdapterAuthorsLists(FragmentManager fm, ActivityMain act)
 	{
 		super(fm);
 		this.act = act;
-		//		this.allAuthorsInfo = new AllAuthorsInfo(act).getAllAuthorsInfoAsList();
-		DataBaseHelper h = new DataBaseHelper(act);
-		try
-		{
-			this.allAuthorsInfo = (ArrayList<Author>) h.getDaoAuthor().queryForAll();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		} finally
-		{
-			h.close();
-		}
+		this.allAuthorsInfo = (ArrayList<Author>) act.getAllAuthorsList();
 	}
 
 	/**
@@ -51,7 +39,6 @@ public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
 	 * 
 	 * @param allAuthorsInfo
 	 */
-	//	public void updateData(ArrayList<AuthorInfo> allAuthorsInfo)
 	public void updateData(ArrayList<Author> allAuthorsInfo)
 	{
 		if (this.allAuthorsInfo == null)
@@ -63,7 +50,6 @@ public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
 		this.notifyDataSetChanged();
 	}
 
-	//	public ArrayList<AuthorInfo> getAllAuthorsList()
 	public ArrayList<Author> getAllAuthorsList()
 	{
 		return allAuthorsInfo;

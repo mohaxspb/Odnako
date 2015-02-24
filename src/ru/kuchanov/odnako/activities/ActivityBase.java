@@ -8,8 +8,10 @@ package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
@@ -66,9 +68,15 @@ public class ActivityBase extends ActionBarActivity
 	///drawer
 
 	/**
-	 * map with lists of articles info for menu categories
+	 * map with lists of articles info for all categories and authors, witch
+	 * keys gets from BD
 	 */
 	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+
+	/**
+	 * List of all authors from DB
+	 */
+	private List<Author> allAuthorsList;
 
 	int currentCategoryPosition = 11;
 	private String currentCategory = "odnako.org/blogs";
@@ -173,7 +181,7 @@ public class ActivityBase extends ActionBarActivity
 		// Now retrieve the DrawerLayout so that we can set the status bar color.
 		// This only takes effect on Lollipop, or when using translucentStatusBar
 		// on KitKat.
-			    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+		mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
 
 		////////////////////////////////
 
@@ -359,7 +367,7 @@ public class ActivityBase extends ActionBarActivity
 		{
 			curentPosition = firstCategoryChildrenQuontity + child;
 		}
-		
+
 		return curentPosition;
 	}
 
@@ -435,5 +443,15 @@ public class ActivityBase extends ActionBarActivity
 	public void setCurArtPosition(int curArtPosition)
 	{
 		this.curArtPosition = curArtPosition;
+	}
+
+	public List<Author> getAllAuthorsList()
+	{
+		return allAuthorsList;
+	}
+
+	public void setAllAuthorsList(List<Author> allAuthorsList)
+	{
+		this.allAuthorsList = allAuthorsList;
 	}
 }

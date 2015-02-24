@@ -23,7 +23,7 @@ import android.util.Log;
 
 public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListener
 {
-	final static String LOG_TAG = PagerListenerAllAuthors.class.getSimpleName();
+	private final static String LOG = PagerListenerAllAuthors.class.getSimpleName();
 
 	private ActivityMain act;
 
@@ -40,9 +40,9 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 	private int currentCategoryPosition;
 
-	final ArrayList<Author> allAuthors;
+	private final ArrayList<Author> allAuthors;
 
-	final ArrayList<String> allAuthorsUrls;
+	private final ArrayList<String> allAuthorsUrls;
 
 	public PagerListenerAllAuthors(final ActivityMain act, final ArrayList<Author> allAuthors)
 	{
@@ -71,12 +71,11 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 	@Override
 	public void onPageSelected(int position)
 	{
-		Log.d(LOG_TAG, "select pagerListenerAllAuthors position = " + position);
+		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
 
 		if (isInRightPager)
 		{
 			//is in right (MenuPager, 3 position)
-
 			String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
 
 			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
@@ -84,7 +83,6 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.toolbarRight.setTitle(this.allAuthorsUrls.get(position));
 
 			//notify allAuthors frag about author selected
-//			Intent intentToAllAuthorsFrag = new Intent(menuUrls[this.currentCategoryPosition] + "art_position");
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
 			intentToAllAuthorsFrag.putExtra("position", position);
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAuthorsFrag);
@@ -109,7 +107,6 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 			if (twoPane)
 			{
-				//				toolbarRight.setTitle("");
 				String curentCategory = allAuthorsUrls.get(currentCategoryPosition);
 
 				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),

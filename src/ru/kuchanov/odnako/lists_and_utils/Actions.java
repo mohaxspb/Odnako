@@ -94,12 +94,11 @@ public class Actions
 						//if so we can show arts list in allAuthor frag or not
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 						PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
-						act.getSupportFragmentManager(), act);
+						act.getSupportFragmentManager(), mainActivity);
 						boolean weFindIt = false;
 						int position = 0;
 						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 						{
-							//							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).blogLink))
 							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
 							{
 								weFindIt = true;
@@ -233,7 +232,7 @@ public class Actions
 					//if so we must change adapters to all ViewPagers
 					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
-					act.getSupportFragmentManager(), act);
+					act.getSupportFragmentManager(), mainActivity);
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
 					String authorBlogUrl = allArtsInfo.get(positionOfArticle).authorBlogUrl;

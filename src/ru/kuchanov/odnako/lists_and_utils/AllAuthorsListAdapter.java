@@ -1,13 +1,12 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
@@ -48,12 +47,13 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	FragmentAllAuthorsList artsListFrag;
 
-//	AllAuthorsInfo allAuthorsInfo;
-//	ArrayList<AuthorInfo> allAuthrsInfoList;
+	//	AllAuthorsInfo allAuthorsInfo;
+	//	ArrayList<AuthorInfo> allAuthrsInfoList;
 	ArrayList<Author> allAuthrsInfoList;
-//	ArrayList<AuthorInfo> orig;
 
-	public AllAuthorsListAdapter(ActionBarActivity act, RecyclerView artsListView, FragmentAllAuthorsList artsListFrag)
+	//	ArrayList<AuthorInfo> orig;
+
+	public AllAuthorsListAdapter(ActivityMain act, RecyclerView artsListView, FragmentAllAuthorsList artsListFrag)
 	{
 		this.act = act;
 
@@ -65,19 +65,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		twoPane = pref.getBoolean("twoPane", false);
 
 		imageLoader = MyUniversalImageLoader.get(act);
-		
-		DataBaseHelper h=new DataBaseHelper(act);
-		try
-		{
-			this.allAuthrsInfoList = (ArrayList<Author>) h.getDaoAuthor().queryForAll();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			h.close();
-		}
+		this.allAuthrsInfoList=(ArrayList<Author>) act.getAllAuthorsList();
 
 		//set arrowDownIcon by theme
 		int[] attrs = new int[] { R.attr.arrowDownIcon };
@@ -118,10 +106,10 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		return this.allAuthrsInfoList.size() + header;
 	}
 
-//	public AuthorInfo getArtInfoByPosition(int position)
+	//	public AuthorInfo getArtInfoByPosition(int position)
 	public Author getArtInfoByPosition(int position)
 	{
-//		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
+		//		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
 		Author author = this.allAuthrsInfoList.get(position - 1);
 		return author;
 	}
@@ -148,7 +136,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			//TODO
 			break;
 			case (AUTHOR):
-//				final AuthorInfo p;
+				//				final AuthorInfo p;
 				final Author p;
 				p = this.getArtInfoByPosition(position);
 
@@ -189,7 +177,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				{
 					public void onClick(View v)
 					{
-//						Actions.showAllAuthorsArticles(p.blogLink, act);
+						//						Actions.showAllAuthorsArticles(p.blogLink, act);
 						Actions.showAllAuthorsArticles(p.getBlog_url(), act);
 					}
 				});
@@ -199,15 +187,16 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				params.height = pixels;
 				params.width = pixels;
 				holderMain.author_img.setLayoutParams(params);
-//				String link = "";
-//				if (p.getAvatar().startsWith("/"))
-//				{
-//					link = "http://odnako.org" + p.getAvatar();
-//				}
+				//				String link = "";
+				//				if (p.getAvatar().startsWith("/"))
+				//				{
+				//					link = "http://odnako.org" + p.getAvatar();
+				//				}
 
 				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
-					imageLoader.displayImage(p.getAvatar(), holderMain.author_img, MyUniversalImageLoader.getDarkOptions());
+					imageLoader.displayImage(p.getAvatar(), holderMain.author_img,
+					MyUniversalImageLoader.getDarkOptions());
 				}
 				else
 				{
@@ -243,8 +232,8 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					holderMain.description.setText(null);
 				}
 				//fuck it. It ruins layout(((
-//				holderMain.description.setLinksClickable(true);
-//				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
+				//				holderMain.description.setLinksClickable(true);
+				//				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
 				//descriptionIcon
 
 				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
@@ -61,6 +62,8 @@ public class ActivityMain extends ActivityBase
 	//	ImageView topImg;
 
 	Toolbar toolbarRight;
+
+	//	public ActivityMain act;// = this;
 
 	//curent displayed info
 	//AllArtsList Arrays for author's and categories links
@@ -122,7 +125,7 @@ public class ActivityMain extends ActivityBase
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
 			this.pagerType = savedInstanceState.getInt(PAGER_TYPE_KEY);
 
-			this.restoreAllCatArtsInfo(savedInstanceState);
+			//			this.restoreAllCatArtsInfo(savedInstanceState);
 
 			this.restoreGroupChildPosition(savedInstanceState);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
@@ -137,12 +140,23 @@ public class ActivityMain extends ActivityBase
 			this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
 		}
 
+		//XXX get all Authors from DB
+		DataBaseHelper h = new DataBaseHelper(act);
+		try
+		{
+			this.setAllAuthorsList(h.getDaoAuthor().queryBuilder().orderBy(Author.NAME_FIELD_NAME, true).query());
+		} catch (SQLException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		//set selected pos for all cats if they are null (first launch without any state)
 		if (this.allCatListsSelectedArtPosition == null)
 		{
 			ArrayList<String> allCatAndAutURLs = new ArrayList<String>();
 
-			DataBaseHelper h = new DataBaseHelper(act);
+			//			DataBaseHelper h = new DataBaseHelper(act);
 			try
 			{
 				allCatAndAutURLs = h.getAllCatAndAutUrls();
@@ -211,22 +225,14 @@ public class ActivityMain extends ActivityBase
 				listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-			//							if (this.currentCategoryPosition == 0)
-			//							{
-			//								listener.onPageSelected(currentCategoryPosition);
-			//							}
 			break;
 			case PAGER_TYPE_AUTHORS:
-				PagerAdapterAuthorsLists aithorsPagerAdapter = new PagerAdapterAuthorsLists(
-				act.getSupportFragmentManager(), act);
-				this.artsListPager.setAdapter(aithorsPagerAdapter);
-				listener = new PagerListenerAllAuthors(this, aithorsPagerAdapter.getAllAuthorsList());
+				PagerAdapterAuthorsLists authorsPagerAdapter = new PagerAdapterAuthorsLists(
+				act.getSupportFragmentManager(), this);
+				this.artsListPager.setAdapter(authorsPagerAdapter);
+				listener = new PagerListenerAllAuthors(this, authorsPagerAdapter.getAllAuthorsList());
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-			//				if (this.currentCategoryPosition == 0)
-			//				{
-			//					listener.onPageSelected(currentCategoryPosition);
-			//				}
 			break;
 			case PAGER_TYPE_SINGLE:
 				final String singleCategoryUrl = this.getCurrentCategory();

@@ -19,18 +19,15 @@ import android.util.Log;
 
 public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 {
-	final static String LOG = PagerListenerMenu.class.getSimpleName() + "/";
+	private final static String LOG = PagerListenerMenu.class.getSimpleName() + "/";
 
-	ActivityMain act;
+	private ActivityMain act;
 
-	boolean twoPane;
+	private boolean twoPane;
 
-	ViewPager pagerRight;
-
-	ViewPager pagerLeft;
-
-	Toolbar toolbarRight;
-	Toolbar toolbar;
+	private ViewPager pagerRight;
+	
+	private Toolbar toolbar;
 
 	int currentCategoryPosition;
 
@@ -39,12 +36,9 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		this.act = act;
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
-
 		this.pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
 	}
@@ -56,8 +50,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		//this will set current pos, and adapters group/child pos
 		this.act.setCurentCategoryPosition(position);
 		this.currentCategoryPosition = position;
-
-		//setTitle to toolbar
 
 		setTitleDrawerItemToolbarTopImgETC(position);
 
@@ -71,8 +63,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		{
 			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 			{
-//				toolbarRight.setTitle("");
-
 				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				categoryForRightPager,
@@ -92,8 +82,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			else if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
-//				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-//				Log.e(LOG, "selectedArtPosition: "+curPos);
 				PagerAdapterAuthorsLists pagerRightAdapter = new PagerAdapterAuthorsLists(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
