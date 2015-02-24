@@ -120,9 +120,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			{
 				this.position = 0;
 				act.getAllCatListsSelectedArtPosition().put(categoryToLoad, this.position);
-				act.getAllCatArtsInfo().put(categoryToLoad, /* new
-															 * ArrayList<ArtInfo
-															 * >() */null);
+				act.getAllCatArtsInfo().put(categoryToLoad, null);
 			}
 		}
 
@@ -162,7 +160,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
-			topImg.setY(0 - topImg.getHeight());
+			//			topImg.setY(0 - topImg.getHeight());
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
@@ -715,6 +713,7 @@ public class FragmentArtsRecyclerList extends Fragment
 			}
 		}
 		toolbar.setTitle(title);
+		Log.e(LOG, "toolbar.getTitle(): " + toolbar.getTitle());
 	}
 
 	public boolean isInLeftPager()

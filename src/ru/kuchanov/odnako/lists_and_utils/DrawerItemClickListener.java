@@ -41,6 +41,7 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 
 		if (act instanceof ActivityMain)
 		{
+			//TODO check twopane
 			ActivityMain mainActivity=(ActivityMain) this.act;
 			
 			//if pagerType isn't MENU we set it to Menu and change pagers

@@ -22,12 +22,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -69,10 +67,10 @@ public class Actions
 					if (mainActivity.getCurentCategoryPosition() == 3)
 					{
 						//if so send message to switch items
-						String[] allMenuCategories = CatData.getAllCategoriesMenuLinks(act);
-						Intent intentToAllAutFrag = new Intent(
-						allMenuCategories[mainActivity.getCurentCategoryPosition()] + "art_position");
-						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
+						//						String[] allMenuCategories = CatData.getAllCategoriesMenuLinks(act);
+						//						Intent intentToAllAutFrag = new Intent(
+						//						allMenuCategories[mainActivity.getCurentCategoryPosition()] + "art_position");
+						//						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
 
 						//switch to frag in right pager
 						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.pager_right);
@@ -87,6 +85,7 @@ public class Actions
 							}
 						}
 						rightPager.setCurrentItem(position, true);
+
 					}
 					else
 					{
@@ -110,11 +109,18 @@ public class Actions
 						}
 						if (weFindIt)
 						{
-							leftPager.setAdapter(pagerAllAut);
-							leftPager.setOnPageChangeListener(new PagerListenerAllAuthors(mainActivity, pagerAllAut
-							.getAllAuthorsList()));
-							leftPager.setCurrentItem(position);
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
+							mainActivity.setCurentCategoryPosition(position);
+
+							leftPager.setAdapter(pagerAllAut);
+							OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut
+							.getAllAuthorsList());
+							leftPager.setOnPageChangeListener(listener);
+							leftPager.setCurrentItem(position);
+							if (position == 0)
+							{
+								listener.onPageSelected(0);
+							}
 						}
 						else
 						{
@@ -246,6 +252,9 @@ public class Actions
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 						mainActivity.setCurentCategoryPosition(positionInLeftPager);
 						mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, positionOfArticle);
+						//and also set selectedArtPosition for allAuthors fragment;
+						mainActivity.getAllCatListsSelectedArtPosition().put(
+						CatData.getAllCategoriesMenuLinks(mainActivity)[3], positionInLeftPager);
 
 						leftPager.setAdapter(pagerAllAut);
 						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,

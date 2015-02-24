@@ -21,6 +21,7 @@ import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -172,7 +173,7 @@ public class ActivityBase extends ActionBarActivity
 		// Now retrieve the DrawerLayout so that we can set the status bar color.
 		// This only takes effect on Lollipop, or when using translucentStatusBar
 		// on KitKat.
-		//	    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+			    mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
 
 		////////////////////////////////
 

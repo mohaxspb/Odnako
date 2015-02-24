@@ -19,7 +19,7 @@ import android.util.Log;
 
 public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 {
-	final static String LOG_TAG = PagerListenerArticle.class.getSimpleName();
+	final static String LOG = PagerListenerArticle.class.getSimpleName();
 
 	ActivityBase act;
 
@@ -54,21 +54,25 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
+		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
 	}
 
 	@Override
 	public void onPageSelected(int position)
 	{
+//		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
 		//on MainActivity it can we shown ONLY in tablet mode
 		//else it's ActivityArticle!
 		if (this.twoPane)
 		{
 			ActivityMain mainActivity = (ActivityMain) this.act;
 			//move topImg and toolBar while scrolling left list
-			toolbar.setY(0 - toolbar.getHeight());
+//			toolbar.setY(0 - toolbar.getHeight());
+			toolbar.setY(0);
+			toolbar.getBackground().setAlpha(255);
 
 			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/" + artCommsPager.getAdapter().getCount());
-			Log.d(LOG_TAG, "onPageSelected in articlePager; position: " + position);
+			Log.d(LOG, "onPageSelected in articlePager; position: " + position);
 
 			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 
@@ -81,5 +85,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			toolbar.setY(0);
 		}
 		//TODO here we can notify Article fragment, that it's selected
+//		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
 	}
 }

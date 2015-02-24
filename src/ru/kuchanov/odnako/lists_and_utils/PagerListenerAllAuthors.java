@@ -84,7 +84,8 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.toolbarRight.setTitle(this.allAuthorsUrls.get(position));
 
 			//notify allAuthors frag about author selected
-			Intent intentToAllAuthorsFrag = new Intent(menuUrls[this.currentCategoryPosition] + "art_position");
+//			Intent intentToAllAuthorsFrag = new Intent(menuUrls[this.currentCategoryPosition] + "art_position");
+			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
 			intentToAllAuthorsFrag.putExtra("position", position);
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAuthorsFrag);
 

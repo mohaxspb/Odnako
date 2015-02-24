@@ -57,6 +57,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		this.act.setCurentCategoryPosition(position);
 		this.currentCategoryPosition = position;
 
+		//setTitle to toolbar
+
 		setTitleDrawerItemToolbarTopImgETC(position);
 
 		//		//sending intent to listfrag to notify it's adapter to fix issue
@@ -69,7 +71,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		{
 			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 			{
-				toolbarRight.setTitle("");
+//				toolbarRight.setTitle("");
 
 				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
@@ -90,6 +92,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			else if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
+//				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
+//				Log.e(LOG, "selectedArtPosition: "+curPos);
 				PagerAdapterAuthorsLists pagerRightAdapter = new PagerAdapterAuthorsLists(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
@@ -97,6 +101,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
+				Log.e(LOG, "selectedArtPosition: "+curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -113,7 +118,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
-		this.act.setTitle(CatData.getAllCategoriesMenuNames(act)[position]);
+		//		this.act.setTitle(CatData.getAllCategoriesMenuNames(act)[position]); XXX
+		this.toolbar.setTitle(CatData.getAllCategoriesMenuNames(act)[position]);
 
 		//show toolbar when switch category to show it's title
 		//restore and set topImg position

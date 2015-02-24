@@ -11,11 +11,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
@@ -29,7 +26,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -188,6 +184,8 @@ public class ActivityMain extends ActivityBase
 		/////////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
+		//XXX
+		this.setSupportActionBar(toolbar);
 
 		this.artsListPager = (ViewPager) this.findViewById(R.id.pager_left);
 		if (this.twoPane)
@@ -213,10 +211,10 @@ public class ActivityMain extends ActivityBase
 				listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
-			//				if (this.currentCategoryPosition == 0)
-			//				{
-			//					listener.onPageSelected(currentCategoryPosition);
-			//				}
+			//							if (this.currentCategoryPosition == 0)
+			//							{
+			//								listener.onPageSelected(currentCategoryPosition);
+			//							}
 			break;
 			case PAGER_TYPE_AUTHORS:
 				PagerAdapterAuthorsLists aithorsPagerAdapter = new PagerAdapterAuthorsLists(
@@ -236,7 +234,10 @@ public class ActivityMain extends ActivityBase
 				singleCategoryUrl));
 				listener = new PagerListenerSingleCategory((ActivityMain) act);
 				this.artsListPager.setOnPageChangeListener(listener);
-				
+				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+			break;
+			case PAGER_TYPE_CATEGORIES:
+			//TODO
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());

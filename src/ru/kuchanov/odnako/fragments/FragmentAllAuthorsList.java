@@ -165,6 +165,7 @@ public class FragmentAllAuthorsList extends Fragment
 	public int getMyActivatedPosition()
 	{
 		return this.position;
+//		return ArtsListAdapter.getPositionInRecyclerView(position);
 	}
 
 	public String getCategoryToLoad()

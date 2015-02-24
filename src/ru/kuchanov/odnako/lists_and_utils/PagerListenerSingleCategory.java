@@ -12,9 +12,7 @@ import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
@@ -36,28 +34,19 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 	private boolean twoPane;
 
 	private ViewPager pagerRight;
-
-	private ViewPager pagerLeft;
-
-	private Toolbar toolbarRight;
 	private Toolbar toolbar;
 
-	int currentCategoryPosition = 0;
-	final String singleCategoryUrl;// = this.getCurrentCategory();
+	private int currentCategoryPosition = 0;
+	private final String singleCategoryUrl;
 
 	public PagerListenerSingleCategory(ActivityMain act)
 	{
 		this.act = act;
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
-
 		this.pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
-
-		//		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
 		this.act.setCurentCategoryPosition(this.currentCategoryPosition);
 		singleCategoryUrl = this.act.getCurrentCategory();
 	}
@@ -67,24 +56,6 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 	{
 		Log.d(LOG + singleCategoryUrl, "onPageSelected position: " + position);
 
-		//here we can get authors name from allArtsInfo from activity if it is
-		//else we'll set url as title
-//		if (this.act.getAllCatArtsInfo().containsKey(singleCategoryUrl))
-//		{
-//			if (!this.act.getAllCatArtsInfo().get(singleCategoryUrl).get(0).authorName.equals("empty"))
-//			{
-//				this.toolbar.setTitle(this.act.getAllCatArtsInfo().get(singleCategoryUrl).get(0).authorName);
-//			}
-//			else
-//			{
-//				this.toolbar.setTitle(singleCategoryUrl);
-//			}
-//		}
-//		else
-//		{
-//			this.toolbar.setTitle(singleCategoryUrl);
-//		}
-		
 		//find Category or Author name in DB
 		DataBaseHelper h = new DataBaseHelper(act);
 		if (Category.isCategory(h, singleCategoryUrl) == null)
@@ -120,15 +91,11 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 			{
 				this.act.getAllCatListsSelectedArtPosition().put(singleCategoryUrl, curPos);
 			}
-			pagerRight.setCurrentItem(curPos, true);
-			if (curPos == 0)
-			{
-				listener.onPageSelected(curPos);
-			}
+			//			pagerRight.setCurrentItem(curPos, true);
+			//			if (curPos == 0)
+			//			{
+			listener.onPageSelected(curPos);
+			//			}
 		}
-
-		//		Intent intentToListFrag = new Intent(singleCategoryUrl + "art_position");
-		//		intentToListFrag.putExtra("position", position);
-		//		LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 	}
 }
