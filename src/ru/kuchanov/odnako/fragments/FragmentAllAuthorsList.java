@@ -47,7 +47,7 @@ public class FragmentAllAuthorsList extends Fragment
 	private ActivityMain act;
 
 	private int position = 0;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -69,14 +69,38 @@ public class FragmentAllAuthorsList extends Fragment
 		}
 		// Register to receive messages.
 
-		//reciver for scrolling and highligting selected position
+		//receiver for scrolling and highligting selected position
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
-		//reciver for notify when frag selected
+		//receiver for notify when frag selected
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
+
+		//receiver for notify when we set filter to Authors list
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(setFilterReceiver,
+		new IntentFilter(this.getCategoryToLoad() + "_set_filter"));
 	}
+
+	private BroadcastReceiver setFilterReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.d(LOG + categoryToLoad, "setFilterReceiver called");
+
+			String filterText;
+			if (intent.getExtras()!=null)
+			{
+				filterText = intent.getStringExtra("filter_text");
+				adapter.setFilter(filterText);
+			}
+			else
+			{
+				adapter.flushFilter();
+			}
+		}
+	};
 
 	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
 	{
@@ -84,7 +108,7 @@ public class FragmentAllAuthorsList extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.d(categoryToLoad, "fragSelectedReceiver onReceive called");
-			act.setTitle("Все авторы");
+
 			adapter.notifyDataSetChanged();
 		}
 	};
@@ -119,16 +143,16 @@ public class FragmentAllAuthorsList extends Fragment
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
 		}
 
-		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
+		this.setArtsList((RecyclerView) v.findViewById(R.id.arts_list_view));
 
-		this.adapter = new AllAuthorsListAdapter(act, this.artsList, this);
-		this.artsList.setAdapter(adapter);
+		this.adapter = new AllAuthorsListAdapter(act, this.getArtsList(), this);
+		this.getArtsList().setAdapter(adapter);
 
-		this.artsList.setItemAnimator(new DefaultItemAnimator());
-		this.artsList.setLayoutManager(new LinearLayoutManager(act));
+		this.getArtsList().setItemAnimator(new DefaultItemAnimator());
+		this.getArtsList().setLayoutManager(new LinearLayoutManager(act));
 
 		//set onScrollListener
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
+		this.getArtsList().setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
 		this.topImg));
 
 		return v;
@@ -158,14 +182,14 @@ public class FragmentAllAuthorsList extends Fragment
 	public void setActivatedPosition(int position)
 	{
 		this.position = position;
-		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		this.getArtsList().scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
 		adapter.notifyDataSetChanged();
 	}
 
 	public int getMyActivatedPosition()
 	{
 		return this.position;
-//		return ArtsListAdapter.getPositionInRecyclerView(position);
+		//		return ArtsListAdapter.getPositionInRecyclerView(position);
 	}
 
 	public String getCategoryToLoad()
@@ -181,7 +205,12 @@ public class FragmentAllAuthorsList extends Fragment
 	@Override
 	public void onDestroy()
 	{
-		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		// If the Receivers still exists, unregister it and set it to null
+		if (setFilterReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(setFilterReceiver);
+			setFilterReceiver = null;
+		}
 		if (artSelectedReceiver != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
@@ -194,5 +223,15 @@ public class FragmentAllAuthorsList extends Fragment
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();
+	}
+
+	public RecyclerView getArtsList()
+	{
+		return artsList;
+	}
+
+	public void setArtsList(RecyclerView artsList)
+	{
+		this.artsList = artsList;
 	}
 }

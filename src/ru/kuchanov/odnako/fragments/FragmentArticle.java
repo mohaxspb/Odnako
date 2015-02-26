@@ -76,7 +76,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	ArrayList<ArtInfo> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
-
+	
 	@Override
 	public void onCreate(Bundle savedState)
 	{

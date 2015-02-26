@@ -30,6 +30,7 @@
     <string name="more_comm">Загрузить ещё</string>
     <string name="hello_world">Hello world!</string>
     <string name="search_author">Поиск автора</string>
+    <string name="search">Поиск</string>
     <string name="share">Поделиться</string>
     <string name="notifications_settings">Настройки уведомлений</string>
     <string name="notifications">Уведомления</string>

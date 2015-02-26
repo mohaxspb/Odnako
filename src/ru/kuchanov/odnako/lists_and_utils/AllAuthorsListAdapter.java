@@ -1,6 +1,7 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -10,6 +11,7 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -23,33 +25,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable
 {
-	final Drawable drawableArrowDown;
-	final Drawable drawableArrowUp;
+	private final Drawable drawableArrowDown;
+	private final Drawable drawableArrowUp;
 
 	private static final int HEADER = 0;
 	private static final int ADS = 1;
 	private static final int AUTHOR = 2;
-	ActionBarActivity act;
+	private ActionBarActivity act;
 
-	RecyclerView artsListView;
+	private RecyclerView artsListView;
 
-	ImageLoader imageLoader;
-	SharedPreferences pref;
+	private ImageLoader imageLoader;
+	private SharedPreferences pref;
 
-	boolean twoPane;
+	private boolean twoPane;
 
-	FragmentAllAuthorsList artsListFrag;
+	private FragmentAllAuthorsList artsListFrag;
 
 	//	AllAuthorsInfo allAuthorsInfo;
 	//	ArrayList<AuthorInfo> allAuthrsInfoList;
-	ArrayList<Author> allAuthrsInfoList;
+	private ArrayList<Author> allAuthrsInfoList;
+
+	private ArrayList<Author> orig;
 
 	//	ArrayList<AuthorInfo> orig;
 
@@ -65,7 +71,9 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		twoPane = pref.getBoolean("twoPane", false);
 
 		imageLoader = MyUniversalImageLoader.get(act);
-		this.allAuthrsInfoList=(ArrayList<Author>) act.getAllAuthorsList();
+		this.allAuthrsInfoList = (ArrayList<Author>) act.getAllAuthorsList();
+		//XXX
+		this.orig = this.allAuthrsInfoList;
 
 		//set arrowDownIcon by theme
 		int[] attrs = new int[] { R.attr.arrowDownIcon };
@@ -103,14 +111,20 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	{
 		int header = 1;
 
-		return this.allAuthrsInfoList.size() + header;
+		//		return this.allAuthrsInfoList.size() + header;
+		return this.orig.size() + header;
 	}
 
 	//	public AuthorInfo getArtInfoByPosition(int position)
 	public Author getArtInfoByPosition(int position)
 	{
-		//		AuthorInfo p = this.allAuthrsInfoList.get(position - 1);
-		Author author = this.allAuthrsInfoList.get(position - 1);
+		//		Author author = this.allAuthrsInfoList.get(position - 1);
+		//		if(this.orig==null)
+		//		{
+		//			this.orig=this.allAuthrsInfoList;
+		//		}
+
+		Author author = this.orig.get(position - 1);
 		return author;
 	}
 
@@ -361,5 +375,74 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 			this.bottom_lin = (ViewGroup) itemLayoutView.findViewById(R.id.author_card_bottom_lin);
 		}
+	}
+
+	@SuppressLint("DefaultLocale")
+	public Filter getFilter()
+	{
+		return new Filter()
+		{
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint)
+			{
+				final FilterResults oReturn = new FilterResults();
+				final ArrayList<Author> results = new ArrayList<Author>();
+				if (orig == null)
+				{
+					orig = allAuthrsInfoList;
+				}
+
+				if (constraint != null)
+				{
+					if (orig != null && orig.size() > 0)
+					{
+						for (final Author a : orig)
+						{
+							if (a.getName().toLowerCase().contains(constraint.toString()))
+							{
+								results.add(a);
+							}
+						}
+					}
+					oReturn.values = results;
+				}
+				return oReturn;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, FilterResults results)
+			{
+				allAuthrsInfoList = (ArrayList<Author>) results.values;
+				notifyDataSetChanged();
+			}
+		};
+	}
+
+	public void flushFilter()
+	{
+		/* visibleObjects */orig = new ArrayList<>();
+		orig.addAll(allAuthrsInfoList);
+		notifyDataSetChanged();
+	}
+
+	public void setFilter(String queryText)
+	{
+		orig = new ArrayList<>();
+		//	        constraint = constraint.toString().toLowerCase();
+		for (int i = 0; i < allAuthrsInfoList.size(); i++)
+		{
+			Author item = allAuthrsInfoList.get(i);
+			if (item.getName().toLowerCase(new Locale("RU_ru")).contains(queryText.toLowerCase()))
+			{
+				orig.add(item);
+			}
+			else
+			{
+				this.notifyItemRemoved(i);
+			}
+		}
+		notifyDataSetChanged();
 	}
 }

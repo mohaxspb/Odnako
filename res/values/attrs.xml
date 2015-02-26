@@ -16,6 +16,7 @@
     <attr name="refreshIcon" format="reference" />
     <attr name="commentsIcon" format="reference" />
     <attr name="shareIcon" format="reference" />
+    <attr name="searchIconOdnako" format="reference" />
     <!-- arrows -->
     <attr name="arrowLeftIcon" format="reference" />
     <attr name="arrowRightIcon" format="reference" />

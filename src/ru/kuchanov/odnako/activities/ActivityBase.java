@@ -87,6 +87,9 @@ public class ActivityBase extends ActionBarActivity
 	protected ArrayList<ArtInfo> curAllArtsInfo = null;
 
 	protected int backPressedQ;
+	
+	protected Menu menu;
+	protected String searchText;
 
 	protected void AddAds()
 	{

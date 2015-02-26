@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
@@ -19,7 +20,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * lastArticleDate, firstArticleURL
  */
 @DatabaseTable(tableName = "author")
-public class Author
+public class Author implements Comparable<Author>
 {
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "blog_url";
@@ -329,6 +330,36 @@ public class Author
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public int compareTo(Author other)
+	{
+		return this.getName().compareToIgnoreCase(other.getName());
+	}
+
+	public static class AuthorNameComparator implements Comparator<Author>
+	{
+		public int compare(Author chair1, Author chair2)
+		{
+			return chair1.getName().compareToIgnoreCase(chair2.getName());
+		}
+	}
+
+	public static class AuthorDescriptionComparator implements Comparator<Author>
+	{
+		public int compare(Author chair1, Author chair2)
+		{
+			return chair1.getDescription().compareToIgnoreCase(chair2.getDescription());
+		}
+	}
+
+	public static class AuthorWhoComparator implements Comparator<Author>
+	{
+		public int compare(Author chair1, Author chair2)
+		{
+			return chair1.getWho().compareToIgnoreCase(chair2.getWho());
 		}
 	}
 

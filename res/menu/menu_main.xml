@@ -33,6 +33,20 @@
         android:icon="?refreshIcon"
         android:orderInCategory="100"
         android:title="@string/refresh"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+    <!--
+        <item
+        android:id="@+id/action_search"
+        android:icon="@attr/searchIconOdnako"
+        android:title="@string/search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
+    -->
+    <item
+        android:id="@+id/action_search"
+        android:icon="?searchIconOdnako"
+        android:title="@string/search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
 
 </menu>

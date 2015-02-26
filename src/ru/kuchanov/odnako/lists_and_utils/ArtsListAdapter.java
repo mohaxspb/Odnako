@@ -14,7 +14,6 @@ import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -34,8 +33,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -43,7 +40,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-implements Filterable
 {
 	final static String TAG = ArtsListAdapter.class.getSimpleName();
 
@@ -85,49 +81,6 @@ implements Filterable
 		imageLoader = MyUniversalImageLoader.get(act);
 	}
 
-	@SuppressLint("DefaultLocale")
-	public Filter getFilter()
-	{
-		return new Filter()
-		{
-
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint)
-			{
-				final FilterResults oReturn = new FilterResults();
-				final ArrayList<ArtInfo> results = new ArrayList<ArtInfo>();
-				if (orig == null)
-				{
-					orig = artsInfo;
-				}
-
-				if (constraint != null)
-				{
-					if (orig != null && orig.size() > 0)
-					{
-						for (final ArtInfo g : orig)
-						{
-							if (g.title.toLowerCase().contains(constraint.toString()))
-							{
-								results.add(g);
-							}
-						}
-					}
-					oReturn.values = results;
-				}
-				return oReturn;
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint, FilterResults results)
-			{
-				artsInfo = (ArrayList<ArtInfo>) results.values;
-				notifyDataSetChanged();
-			}
-		};
-	}
-
 	@Override
 	public long getItemId(int position)
 	{
@@ -141,10 +94,6 @@ implements Filterable
 		{
 			return HEADER;
 		}
-		//		else if (((position -1) % 30) == 0 && (position == this.getItemCount() - 1))
-		//		{
-		//			return FOOTER;
-		//		}
 		else
 		{
 			return ARTICLE;

@@ -82,7 +82,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	//TODO check if we need it
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{

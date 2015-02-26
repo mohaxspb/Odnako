@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.activities;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Author;
@@ -23,23 +24,34 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnCloseListener;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase
 {
-	final private static String LOG_TAG = ActivityMain.class.getSimpleName();
+	final private static String LOG = ActivityMain.class.getSimpleName();
 
 	public final static int PAGER_TYPE_MENU = 0;
 	public final static int PAGER_TYPE_AUTHORS = 1;
@@ -91,10 +103,12 @@ public class ActivityMain extends ActivityBase
 	 * item) item in list. Only in twoPane mode.
 	 */
 	private HashMap<String, Integer> allCatListsSelectedArtPosition;
+	
+	private String queryToSave;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//System.out.println("ActivityMain onCreate");
+		Log.e(LOG, "ActivityMain onCreate called");
 		this.act = this;
 
 		//get default settings to get all settings later
@@ -131,6 +145,11 @@ public class ActivityMain extends ActivityBase
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
 			this.restoreAllCatArtsInfo(savedInstanceState);
 			this.restoreAllCatListsSelectedArtPosition(savedInstanceState);
+
+			if (savedInstanceState.containsKey("searchText"))
+			{
+				searchText = savedInstanceState.getString("searchText");
+			}
 		}
 
 		//get artsInfo data from DB
@@ -214,7 +233,7 @@ public class ActivityMain extends ActivityBase
 		//End of setNavDraw
 
 		//set arts lists viewPager
-		Log.e(LOG_TAG, "pagerType: " + this.getPagerType());
+		Log.e(LOG, "pagerType: " + this.getPagerType());
 		OnPageChangeListener listener = new PagerListenerMenu(this);
 		switch (this.getPagerType())
 		{
@@ -253,16 +272,6 @@ public class ActivityMain extends ActivityBase
 			listener.onPageSelected(currentCategoryPosition);
 		}
 
-		//onMain if we don't use twoPane mode we'll set alpha for action bar
-		//we'll do it after setNavDrawer, cause we find toolbar in it
-		//		if (android.os.Build.VERSION.SDK_INT >= 11 && this.twoPane == false)
-		//		{
-		//			toolbar.getBackground().setAlpha(0);
-		//		}
-		//		else if (this.pref.getBoolean("animate_lists", false))
-		//		{
-		//			toolbar.getBackground().setAlpha(255);
-		//		}
 		if (this.twoPane)
 		{
 			toolbar.getBackground().setAlpha(0);
@@ -275,7 +284,23 @@ public class ActivityMain extends ActivityBase
 
 		//adMob
 		this.AddAds();
-		//end of adMob
+
+		//restore search
+		//		this.supportInvalidateOptionsMenu();
+		//		this.getSupportActionBar().invalidateOptionsMenu();
+		//		if (this.searchText != null)
+		//		{
+		//			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
+		//			searchMenuItem.expandActionView();
+		//			SearchView sv = (SearchView) searchMenuItem.getActionView();
+		//			sv.setQuery(this.searchText, false);
+		//		}
+		if(this.searchText!=null)
+		{
+			this.queryToSave=this.searchText;
+		}
+		
+
 	}
 
 	private void saveAllCatListsSelectedArtPosition(Bundle b)
@@ -346,8 +371,12 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		//Log.d(LOG_TAG, "onResume");
+		Log.e(LOG, "onResume");
 		super.onResume();
+
+		//restore search
+		//		this.supportInvalidateOptionsMenu();
+
 	}
 
 	@Override
@@ -370,13 +399,161 @@ public class ActivityMain extends ActivityBase
 
 		//save selected pos
 		this.saveAllCatListsSelectedArtPosition(outState);
+
+		if (this.searchText != null)
+		{
+			outState.putString("searchText", this.searchText);
+		}
+
+		//allAuthors list
+		//		outState TODO implement Parcelable to Author and Category and Article to store them through standart methods
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(final Menu menu)
 	{
+		Log.e(LOG, "onCreateOptionsMenu called");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
+
+		///searchView setting
+		final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+		final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener()
+		{
+
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item)
+			{
+				System.out.println("onMenuItemActionExpand");
+				//				pullToRefreshView.getRefreshableView().clearTextFilter();
+				if(searchText!=null)
+				{
+					queryToSave=new StringBuffer(searchText).toString();
+				}
+				
+				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
+				allSettings.setVisible(false);
+				MenuItem refresh = menu.findItem(R.id.refresh);
+				refresh.setVisible(false);
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item)
+			{
+				System.out.println("onMenuItemActionCollapse");
+				//pullToRefreshView.getRefreshableView().clearTextFilter();
+				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
+				allSettings.setVisible(true);
+				MenuItem refresh = menu.findItem(R.id.refresh);
+				refresh.setVisible(true);
+				return true;
+			}
+		});
+
+		searchView.setOnQueryTextListener(new OnQueryTextListener()
+		{
+			@Override
+			public boolean onQueryTextChange(String newText)
+			{
+				Log.e(LOG, "onQueryTextChange newText: '"+newText+"'");
+				if (TextUtils.isEmpty(newText))
+				{
+					searchText = null;
+					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+					+ "_set_filter");
+					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+				}
+				else
+				{
+					searchText = newText;
+					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+					+ "_set_filter");
+					intentToListFrag.putExtra("filter_text", newText);
+					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextSubmit(String query)
+			{
+				System.out.println("onQueryTextSubmit");
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+				//				searchMenuItem.collapseActionView();
+				return false;
+			}
+		});
+
+		//save Menu to var to access it some where
+//		this.menu = menu;
+		
+		this.menu = menu;
+//		if (this.searchText != null)
+//		{
+//			Log.e(LOG, "searchText: "+searchText);
+//			String query=new String(this.searchText);
+//			searchMenuItem.expandActionView();
+//			
+//			searchView.onActionViewExpanded();
+//			searchView.setQuery(query, false);
+//		}
+//		else
+//		{
+//			Log.e(LOG, "searchText==null");
+//		}
+
 		return true;
+	}
+	
+	/* Called whenever we call supportInvalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		Log.e(LOG, "onPrepareOptionsMenu called");
+		//save Menu to var to access it some where
+//		this.menu = menu;
+//		if (this.searchText != null)
+//		{
+//			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
+//			searchMenuItem.expandActionView();
+//			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+//			searchView.setQuery(this.searchText, false);
+//		}
+//		else
+//		{
+//			Log.e(LOG, "searchText==null");
+//		}
+		
+		if (this.queryToSave != null)
+		{
+			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
+			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			Log.e(LOG, "searchText: "+searchText);
+//			String query=new StringBuffer(this.searchText).toString();
+			
+//			searchMenuItem.expandActionView();
+//			searchView.setQuery(query, false);
+			
+//			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.onActionViewExpanded();
+//			searchView.setIconified(false);
+			MenuItemCompat.expandActionView(searchMenuItem); 
+			searchView.setQuery(queryToSave, false);
+		}
+		else
+		{
+			Log.e(LOG, "searchText==null");
+		}
+
+		// If the nav drawer is open, hide action items related to the content view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
+		menu.findItem(R.id.refresh).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -397,13 +574,13 @@ public class ActivityMain extends ActivityBase
 				{
 					themeMenuItem.setChecked(true);
 				}
-				Log.e(LOG_TAG, String.valueOf(themeMenuItem.isChecked()));
+				Log.e(LOG, String.valueOf(themeMenuItem.isChecked()));
 				return true;
 			case R.id.refresh:
-				System.out.println("refresh");
-				DataBaseHelper h = new DataBaseHelper(act);
-				int DBVersion = h.getWritableDatabase().getVersion();
-				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
+				Log.e(LOG, "refresh");
+				//				DataBaseHelper h = new DataBaseHelper(act);
+				//				int DBVersion = h.getWritableDatabase().getVersion();
+				//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// TODO
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();
@@ -412,6 +589,25 @@ public class ActivityMain extends ActivityBase
 				//				b.putBoolean("startDownload", true);
 				//				intent.putExtras(b);
 				//				this.startService(intent);
+				//XXX
+				//				PagerAdapterArtsLists adapter=(PagerAdapterArtsLists)this.artsListPager.getAdapter();
+				//				FragmentAllAuthorsList allAuthorsFrag=(FragmentAllAuthorsList) (adapter.getItem(currentCategoryPosition));
+				//				RecyclerView rec=allAuthorsFrag.getArtsList();
+				//
+				//				this.setAllAuthorsList(Collections.sort(getAllAuthorsList()));
+				//				rec.swapAdapter(new AllAuthorsListAdapter(this, rec, allAuthorsFrag), true);
+				//((AllAuthorsListAdapter)rec.getAdapter()).getFilter().filter("Мараховский");
+				//				rec.setFilterText("Мараховский");
+
+				//				List<Author> allAutList = this.getAllAuthorsList();
+				//				Collections.sort(allAutList, new Author.AuthorNameComparator(/*"Василий"*/));
+				//				Collections.sort(allAutList, new Author.AuthorDescriptionComparator());
+				//				Collections.sort(allAutList, new Author.AuthorWhoComparator());
+				//				this.setAllAuthorsList(allAutList);
+				//				Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+				//				+ "_set_filter");
+				//				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
@@ -434,16 +630,7 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	/* Called whenever we call supportInvalidateOptionsMenu() */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
-		// If the nav drawer is open, hide action items related to the content view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
-		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
-		menu.findItem(R.id.refresh).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
+	
 
 	public HashMap<String, int[]> getAllCatToolbarTopImgYCoord()
 	{
@@ -463,13 +650,6 @@ public class ActivityMain extends ActivityBase
 	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
 	{
 		this.allCatArtsInfo.put(category, newData);
-		//		String curCategoryLink = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
-		//		if (twoPane && category.equals(curCategoryLink))
-		//		{
-		//			pagerAdapter = new ArticlesPagerAdapter(act.getSupportFragmentManager(),
-		//			CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition], act);
-		//			artCommsPager.setAdapter(pagerAdapter);
-		//		}
 	}
 
 	@Override
@@ -514,7 +694,12 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public void onBackPressed()
 	{
-
+		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
+		if (searchMenuItem.isActionViewExpanded())
+		{
+			searchMenuItem.collapseActionView();
+			return;
+		}
 		if (mDrawerLayout.isDrawerOpen(Gravity.START))
 		{
 			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
