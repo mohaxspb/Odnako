@@ -24,20 +24,20 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnCloseListener;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -45,8 +45,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnActionExpandListener;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase
@@ -103,8 +105,10 @@ public class ActivityMain extends ActivityBase
 	 * item) item in list. Only in twoPane mode.
 	 */
 	private HashMap<String, Integer> allCatListsSelectedArtPosition;
-	
+
 	private String queryToSave;
+	private boolean isKeyboardOpened = false;
+	private final static String KEY_IS_KEYBOARD_OPENED = "isKeyboardOpened";
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -150,6 +154,7 @@ public class ActivityMain extends ActivityBase
 			{
 				searchText = savedInstanceState.getString("searchText");
 			}
+			this.isKeyboardOpened = savedInstanceState.getBoolean(KEY_IS_KEYBOARD_OPENED);
 		}
 
 		//get artsInfo data from DB
@@ -295,11 +300,10 @@ public class ActivityMain extends ActivityBase
 		//			SearchView sv = (SearchView) searchMenuItem.getActionView();
 		//			sv.setQuery(this.searchText, false);
 		//		}
-		if(this.searchText!=null)
+		if (this.searchText != null)
 		{
-			this.queryToSave=this.searchText;
+			this.queryToSave = this.searchText;
 		}
-		
 
 	}
 
@@ -404,6 +408,7 @@ public class ActivityMain extends ActivityBase
 		{
 			outState.putString("searchText", this.searchText);
 		}
+		outState.putBoolean(KEY_IS_KEYBOARD_OPENED, isKeyboardOpened);
 
 		//allAuthors list
 		//		outState TODO implement Parcelable to Author and Category and Article to store them through standart methods
@@ -427,11 +432,12 @@ public class ActivityMain extends ActivityBase
 			{
 				System.out.println("onMenuItemActionExpand");
 				//				pullToRefreshView.getRefreshableView().clearTextFilter();
-				if(searchText!=null)
+				if (searchText != null)
 				{
-					queryToSave=new StringBuffer(searchText).toString();
+					queryToSave = new StringBuffer(searchText).toString();
 				}
-				
+				isKeyboardOpened = true;
+
 				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 				allSettings.setVisible(false);
 				MenuItem refresh = menu.findItem(R.id.refresh);
@@ -448,6 +454,11 @@ public class ActivityMain extends ActivityBase
 				allSettings.setVisible(true);
 				MenuItem refresh = menu.findItem(R.id.refresh);
 				refresh.setVisible(true);
+
+				isKeyboardOpened = false;
+				queryToSave = null;
+				searchText = null;
+				searchView.setQuery("", true);
 				return true;
 			}
 		});
@@ -457,7 +468,11 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onQueryTextChange(String newText)
 			{
-				Log.e(LOG, "onQueryTextChange newText: '"+newText+"'");
+				if (mDrawerLayout.isDrawerOpen(Gravity.LEFT))
+				{
+					return true;
+				}
+				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
 				if (TextUtils.isEmpty(newText))
 				{
 					searchText = null;
@@ -468,6 +483,7 @@ public class ActivityMain extends ActivityBase
 				else
 				{
 					searchText = newText;
+					queryToSave = searchText;
 					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
 					+ "_set_filter");
 					intentToListFrag.putExtra("filter_text", newText);
@@ -483,76 +499,94 @@ public class ActivityMain extends ActivityBase
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
-				//				searchMenuItem.collapseActionView();
+				isKeyboardOpened = false;
 				return false;
 			}
 		});
 
-		//save Menu to var to access it some where
-//		this.menu = menu;
-		
-		this.menu = menu;
-//		if (this.searchText != null)
-//		{
-//			Log.e(LOG, "searchText: "+searchText);
-//			String query=new String(this.searchText);
-//			searchMenuItem.expandActionView();
-//			
-//			searchView.onActionViewExpanded();
-//			searchView.setQuery(query, false);
-//		}
-//		else
-//		{
-//			Log.e(LOG, "searchText==null");
-//		}
+		//set on focus change listener
+		searchView.setOnFocusChangeListener(new OnFocusChangeListener()
+		{
 
-		return true;
-	}
-	
-	/* Called whenever we call supportInvalidateOptionsMenu() */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu)
-	{
-		Log.e(LOG, "onPrepareOptionsMenu called");
+			@Override
+			public void onFocusChange(View v, boolean hasFocus)
+			{
+				if (hasFocus)
+				{
+					isKeyboardOpened = true;
+				}
+				else
+				{
+					isKeyboardOpened = false;
+				}
+
+			}
+		});
+
 		//save Menu to var to access it some where
-//		this.menu = menu;
-//		if (this.searchText != null)
-//		{
-//			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
-//			searchMenuItem.expandActionView();
-//			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-//			searchView.setQuery(this.searchText, false);
-//		}
-//		else
-//		{
-//			Log.e(LOG, "searchText==null");
-//		}
-		
+		this.menu = menu;
 		if (this.queryToSave != null)
 		{
-			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
-			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			Log.e(LOG, "searchText: "+searchText);
-//			String query=new StringBuffer(this.searchText).toString();
-			
-//			searchMenuItem.expandActionView();
-//			searchView.setQuery(query, false);
-			
-//			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			searchView.onActionViewExpanded();
-//			searchView.setIconified(false);
-			MenuItemCompat.expandActionView(searchMenuItem); 
-			searchView.setQuery(queryToSave, false);
+			if (this.isKeyboardOpened)
+			{
+				searchView.onActionViewExpanded();
+				MenuItemCompat.expandActionView(searchMenuItem);
+				searchView.setQuery(queryToSave, false);
+			}
+			else
+			{
+				//				searchView.onActionViewExpanded();
+				MenuItemCompat.expandActionView(searchMenuItem);
+
+				searchView.setQuery(queryToSave, true);
+
+				this.isKeyboardOpened = false;
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+				searchView.clearFocus();
+			}
+			MenuItem allSettings = menu.findItem(R.id.action_settings_all);
+			allSettings.setVisible(false);
+			MenuItem refresh = menu.findItem(R.id.refresh);
+			refresh.setVisible(false);
 		}
 		else
 		{
 			Log.e(LOG, "searchText==null");
 		}
 
+		return true;
+	}
+
+	/* Called whenever we call supportInvalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		Log.e(LOG, "onPrepareOptionsMenu called");
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
-		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
-		menu.findItem(R.id.refresh).setVisible(!drawerOpen);
+		if (drawerOpen)
+		{
+			menu.findItem(R.id.action_settings_all).setVisible(false);
+			menu.findItem(R.id.refresh).setVisible(false);
+			menu.findItem(R.id.action_search).setVisible(false);
+		}
+		else
+		{
+			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified()==false)
+			{
+				menu.findItem(R.id.action_settings_all).setVisible(false);
+				menu.findItem(R.id.refresh).setVisible(false);
+				///test
+				menu.findItem(R.id.action_search).setVisible(true);
+			}
+			else
+			{
+				menu.findItem(R.id.action_settings_all).setVisible(true);
+				menu.findItem(R.id.refresh).setVisible(true);
+				menu.findItem(R.id.action_search).setVisible(true);
+			}
+		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -630,8 +664,6 @@ public class ActivityMain extends ActivityBase
 		}
 	}
 
-	
-
 	public HashMap<String, int[]> getAllCatToolbarTopImgYCoord()
 	{
 		return allCatToolbarTopImgYCoord;
@@ -695,8 +727,10 @@ public class ActivityMain extends ActivityBase
 	public void onBackPressed()
 	{
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
-		if (searchMenuItem.isActionViewExpanded())
+		SearchView searchView = (SearchView) searchMenuItem.getActionView();
+		if (searchView.isIconified() == false)
 		{
+			Log.d(LOG, "searchView.isIconified()==false");
 			searchMenuItem.collapseActionView();
 			return;
 		}
@@ -791,4 +825,51 @@ public class ActivityMain extends ActivityBase
 			break;
 		}
 	}
+
+	//	//test listener to arriving soft keyboard
+	//	private void setKeyBoardArrivingListener()
+	//	{
+	//		/*
+	//		Somewhere else in your code
+	//		*/
+	//		//TODO switch by twoPane mode
+	//		DrawerLayout mainLayout = (DrawerLayout) findViewById(R.layout.activity_main_large); // You must use your root layout
+	//		InputMethodManager im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+	//
+	//		/*
+	//		Instantiate and pass a callback
+	//		*/
+	//		SoftKeyboard softKeyboard;
+	//		softKeyboard = new SoftKeyboard(mainLayout, im);
+	//		softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
+	//		{
+	//
+	//		    @Override
+	//		    public void onSoftKeyboardHide() 
+	//		    {
+	//		        // Code here
+	//		        new Handler(Looper.getMainLooper()).post(new Runnable() {
+	//		                @Override
+	//		                public void run() {
+	//		                    // Code here will run in UI thread
+	//		                    //...
+	//		                }
+	//		            });
+	//		    }
+	//
+	//		    @Override
+	//		    public void onSoftKeyboardShow() 
+	//		    {
+	//		        // Code here
+	//		        new Handler(Looper.getMainLooper()).post(new Runnable() {
+	//		                @Override
+	//		                public void run() {
+	//		                    // Code here will run in UI thread
+	//		                   // ...
+	//		                }
+	//		            });
+	//
+	//		    }   
+	//		});
+	//	}
 }
