@@ -24,19 +24,16 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -48,7 +45,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase
@@ -417,7 +413,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
-		Log.e(LOG, "onCreateOptionsMenu called");
+//		Log.e(LOG, "onCreateOptionsMenu called");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 
 		///searchView setting
@@ -430,7 +426,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item)
 			{
-				System.out.println("onMenuItemActionExpand");
+//				System.out.println("onMenuItemActionExpand");
 				//				pullToRefreshView.getRefreshableView().clearTextFilter();
 				if (searchText != null)
 				{
@@ -448,7 +444,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item)
 			{
-				System.out.println("onMenuItemActionCollapse");
+//				System.out.println("onMenuItemActionCollapse");
 				//pullToRefreshView.getRefreshableView().clearTextFilter();
 				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 				allSettings.setVisible(true);
@@ -472,7 +468,7 @@ public class ActivityMain extends ActivityBase
 				{
 					return true;
 				}
-				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
+//				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
 				if (TextUtils.isEmpty(newText))
 				{
 					searchText = null;
@@ -495,7 +491,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onQueryTextSubmit(String query)
 			{
-				System.out.println("onQueryTextSubmit");
+//				System.out.println("onQueryTextSubmit");
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
@@ -552,7 +548,7 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			Log.e(LOG, "searchText==null");
+//			Log.e(LOG, "searchText==null");
 		}
 
 		return true;
@@ -562,7 +558,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		Log.e(LOG, "onPrepareOptionsMenu called");
+//		Log.e(LOG, "onPrepareOptionsMenu called");
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 		if (drawerOpen)

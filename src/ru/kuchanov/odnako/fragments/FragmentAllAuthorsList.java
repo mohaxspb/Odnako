@@ -94,6 +94,7 @@ public class FragmentAllAuthorsList extends Fragment
 			{
 				filterText = intent.getStringExtra("filter_text");
 				adapter.setFilter(filterText);
+//				adapter.filterOut(filterText);
 			}
 			else
 			{
@@ -145,7 +146,7 @@ public class FragmentAllAuthorsList extends Fragment
 
 		this.setArtsList((RecyclerView) v.findViewById(R.id.arts_list_view));
 
-		this.adapter = new AllAuthorsListAdapter(act, this.getArtsList(), this);
+		this.adapter = new AllAuthorsListAdapter(act, /*this.getArtsList(), */this);
 		this.getArtsList().setAdapter(adapter);
 
 		this.getArtsList().setItemAnimator(new DefaultItemAnimator());

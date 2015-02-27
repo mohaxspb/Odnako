@@ -11,7 +11,6 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -21,19 +20,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable
+public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+	final static String LOG = AllAuthorsListAdapter.class.getSimpleName();
+
 	private final Drawable drawableArrowDown;
 	private final Drawable drawableArrowUp;
 
@@ -42,7 +42,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private static final int AUTHOR = 2;
 	private ActionBarActivity act;
 
-	private RecyclerView artsListView;
+	//	private RecyclerView artsListView;
 
 	private ImageLoader imageLoader;
 	private SharedPreferences pref;
@@ -51,19 +51,14 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private FragmentAllAuthorsList artsListFrag;
 
-	//	AllAuthorsInfo allAuthorsInfo;
-	//	ArrayList<AuthorInfo> allAuthrsInfoList;
 	private ArrayList<Author> allAuthrsInfoList;
-
 	private ArrayList<Author> orig;
 
-	//	ArrayList<AuthorInfo> orig;
+	private String currentFilter = null;
 
-	public AllAuthorsListAdapter(ActivityMain act, RecyclerView artsListView, FragmentAllAuthorsList artsListFrag)
+	public AllAuthorsListAdapter(ActivityMain act, FragmentAllAuthorsList artsListFrag)
 	{
 		this.act = act;
-
-		this.artsListView = artsListView;
 
 		this.artsListFrag = artsListFrag;
 
@@ -377,49 +372,6 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	}
 
-	@SuppressLint("DefaultLocale")
-	public Filter getFilter()
-	{
-		return new Filter()
-		{
-
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint)
-			{
-				final FilterResults oReturn = new FilterResults();
-				final ArrayList<Author> results = new ArrayList<Author>();
-				if (orig == null)
-				{
-					orig = allAuthrsInfoList;
-				}
-
-				if (constraint != null)
-				{
-					if (orig != null && orig.size() > 0)
-					{
-						for (final Author a : orig)
-						{
-							if (a.getName().toLowerCase().contains(constraint.toString()))
-							{
-								results.add(a);
-							}
-						}
-					}
-					oReturn.values = results;
-				}
-				return oReturn;
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint, FilterResults results)
-			{
-				allAuthrsInfoList = (ArrayList<Author>) results.values;
-				notifyDataSetChanged();
-			}
-		};
-	}
-
 	public void flushFilter()
 	{
 		/* visibleObjects */orig = new ArrayList<>();
@@ -429,12 +381,13 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	public void setFilter(String queryText)
 	{
+		queryText = queryText.toLowerCase(new Locale("RU_ru"));
+		this.currentFilter = queryText;
 		orig = new ArrayList<>();
-		//	        constraint = constraint.toString().toLowerCase();
 		for (int i = 0; i < allAuthrsInfoList.size(); i++)
 		{
 			Author item = allAuthrsInfoList.get(i);
-			if (item.getName().toLowerCase(new Locale("RU_ru")).contains(queryText.toLowerCase()))
+			if (item.getName().toLowerCase(new Locale("RU_ru")).contains(queryText.toLowerCase(new Locale("RU_ru"))))
 			{
 				orig.add(item);
 			}
@@ -444,5 +397,96 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			}
 		}
 		notifyDataSetChanged();
+	}
+
+	//TODO Fix it sme day
+	public void filterIn(String filter)
+	{
+		//test adding to orig
+		int countToAdd = 0;
+		String filterLowerCase = filter.toLowerCase(new Locale("RU_ru"));
+		this.currentFilter = filterLowerCase;
+		for (int i = 0; i < this.allAuthrsInfoList.size(); i++)
+		{
+			String autName = this.allAuthrsInfoList.get(i).getName().toLowerCase(new Locale("RU_ru"));
+			if (this.orig.size() < i)
+			{
+				//XXX ERROR HERE
+			}
+			String autNameInOrig = this.orig.get(i).getName().toLowerCase(new Locale("RU_ru"));
+			//firstly check if allAutName is already exists in orig at this location
+			if (autName.equals(autNameInOrig))
+			{
+				//notify about already added if is
+				if (countToAdd != 0)
+				{
+					this.notifyItemRangeInserted(i - countToAdd, countToAdd);
+					countToAdd = 0;
+				}
+			}
+			else
+			{
+				//check if allAut contains filter
+				if (autName.contains(filterLowerCase))
+				{
+					this.orig.add(i, this.allAuthrsInfoList.get(i));
+					countToAdd++;
+				}
+			}
+		}
+	}
+
+	public void filterOut(String filter)
+	{
+		filter = filter.toLowerCase(new Locale("RU_ru"));
+		Log.e(LOG, filter);
+		//check if there were some filtering
+		if (this.currentFilter != null)
+		{
+			//check if previous filter equals to new without new's last char
+			if (this.currentFilter.equals(filter.substring(0, filter.length() - 1)))
+			{
+				//if so we continue filtering this way and set currentFilter
+				this.currentFilter = filter;
+			}
+			else
+			{
+				//new filter totaly mismatch or have less lenght than previous
+				//so we'll filter another way
+				//by just setting new "orig"
+				this.setFilter(filter);
+				//				this.filterIn(filter);
+				return;
+			}
+		}
+		else
+		{
+			//there were no filter here, so set it
+			this.currentFilter = filter;
+		}
+
+		//		final int size = allAuthrsInfoList.size();
+		final int size = orig.size();
+		int batchCount = 0; // continuous # of items that are being removed
+		for (int i = size - 1; i >= 0; i--)
+		{
+			//			if (allAuthrsInfoList.get(i).test(filter) == false)
+			if (!orig.get(i).getName().toLowerCase(new Locale("RU_ru")).contains(filter))
+			{
+				Log.e(LOG, orig.get(i).getName().toLowerCase(new Locale("RU_ru")) + "/" + filter);
+				orig.remove(i);
+				batchCount++;
+			}
+			else if (batchCount != 0)
+			{ // dispatch batch
+				notifyItemRangeRemoved(i + 1, batchCount);
+				batchCount = 0;
+			}
+		}
+		// notify for remaining
+		if (batchCount != 0)
+		{ // dispatch remaining
+			notifyItemRangeRemoved(0, batchCount);
+		}
 	}
 }
