@@ -89,7 +89,7 @@ public class ActivityBase extends ActionBarActivity
 	protected int backPressedQ;
 	
 	protected Menu menu;
-	protected String searchText;
+	private String searchText;
 
 	protected void AddAds()
 	{
@@ -456,5 +456,15 @@ public class ActivityBase extends ActionBarActivity
 	public void setAllAuthorsList(List<Author> allAuthorsList)
 	{
 		this.allAuthorsList = allAuthorsList;
+	}
+
+	public String getSearchText()
+	{
+		return searchText;
+	}
+
+	public void setSearchText(String searchText)
+	{
+		this.searchText = searchText;
 	}
 }

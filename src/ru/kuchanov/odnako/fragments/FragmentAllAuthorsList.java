@@ -6,11 +6,15 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
+import java.util.Locale;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +24,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,9 +50,10 @@ public class FragmentAllAuthorsList extends Fragment
 	private String categoryToLoad = "odnako.org/authors";
 
 	private ActivityMain act;
+	//	private boolean twoPane;
 
 	private int position = 0;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -89,18 +95,145 @@ public class FragmentAllAuthorsList extends Fragment
 		{
 			Log.d(LOG + categoryToLoad, "setFilterReceiver called");
 
-			String filterText;
-			if (intent.getExtras()!=null)
+			String filterText = null;
+			if (intent.getExtras() != null)
 			{
 				filterText = intent.getStringExtra("filter_text");
+				filterText = filterText.toLowerCase(new Locale("RU_ru"));
 				adapter.setFilter(filterText);
-//				adapter.filterOut(filterText);
 			}
 			else
 			{
 				adapter.flushFilter();
 			}
+			//update rightPager if it is (if it's twoPane mode
+			if (pref.getBoolean("twoPane", false) == false)
+			{
+				return;
+			}
+			ActivityMain mainActivity = (ActivityMain) act;
+			ViewPager pagerRight = (ViewPager) mainActivity.findViewById(R.id.pager_right);
+			PagerAdapterAuthorsLists pagerAdapter = (PagerAdapterAuthorsLists) pagerRight.getAdapter();
+			//here we can somehow restore previous state and select author, but it's hard, because of 
+			//calling onCreateOpteionMenu and setting "" query to searchView on its expanding...
+			//so f*ck it now!
+			//Just set adapter for right pager
+			if (filterText != null)
+			{
+				pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+				pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+				pagerRight.setAdapter(pagerAdapter);
+				PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+				adapter.getCurAllAuthorsList());
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(0);
+			}
+			else
+			{
+				pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+//				pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+				pagerRight.setAdapter(pagerAdapter);
+				PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+				adapter.getCurAllAuthorsList());
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(0);
+			}
+
+			//			if (filterText != null)
+			//			{
+			//				//there is some text so check if there is some filter in adapter
+			//				//by matching counts
+			//				if(adapter.getItemCount()==pagerAdapter.getCount())
+			//				{
+			//					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			//					adapter.getCurAllAuthorsList());
+			//					pagerRight.setOnPageChangeListener(listener);
+			//					int curPos = mainActivity.getAllCatListsSelectedArtPosition().get(
+			//					CatData.getAllCategoriesMenuLinks(mainActivity)[3]);
+			//					pagerRight.setCurrentItem(curPos);
+			//					if (curPos == 0)
+			//					{
+			//						listener.onPageSelected(0);
+			//					}
+			//					//and check if given equals to existing
+			////					if (adapter.getFilter().equals(filterText))
+			////					{
+			////						//filters equal to each other,
+			////						//so nothing to do? //TODO check it!
+			////					}
+			////					else
+			////					{
+			//						//Mismatching so set new adapter
+			////						pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+			////						pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+			////						pagerRight.setAdapter(pagerAdapter);
+			////						PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			////						adapter.getCurAllAuthorsList());
+			////						pagerRight.setOnPageChangeListener(listener);
+			////						listener.onPageSelected(0);
+			//						
+			////						pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+			////						pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+			////						pagerRight.setAdapter(pagerAdapter);
+			////						PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			////						adapter.getCurAllAuthorsList());
+			////						pagerRight.setOnPageChangeListener(listener);
+			////						int curPos = mainActivity.getAllCatListsSelectedArtPosition().get(
+			////						CatData.getAllCategoriesMenuLinks(mainActivity)[3]);
+			////						pagerRight.setCurrentItem(curPos);
+			////						if (curPos == 0)
+			////						{
+			////							listener.onPageSelected(0);
+			////						}
+			////					}
+			//				}
+			//				else
+			//				{
+			//					//so just set new adapter to right pager
+			//					pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+			//					pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+			//					pagerRight.setAdapter(pagerAdapter);
+			//					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			//					adapter.getCurAllAuthorsList());
+			//					pagerRight.setOnPageChangeListener(listener);
+			//					listener.onPageSelected(0);
+			//				}
+			//			}
+			//			else
+			//			{
+			//				//given filter is null,
+			//				//so we must reset right adaper
+			//				//if it has some filter. We check it by matching their count
+			////				pagerAdapter=(PagerAdapterAuthorsLists) pagerRight.getAdapter();
+			//				if(adapter.getItemCount()==pagerAdapter.getCount())
+			//				{
+			//					//they are equal, do noting
+			//				}
+			//				else
+			//				{
+			//					//reset
+			//					pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+			//					pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+			//					pagerRight.setAdapter(pagerAdapter);
+			//					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			//					adapter.getCurAllAuthorsList());
+			//					pagerRight.setOnPageChangeListener(listener);
+			//					listener.onPageSelected(0);
+			//				}
+			//				
+			////				if (adapter.getFilter()!=null)
+			////				{
+			////					pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
+			////					pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+			////					pagerRight.setAdapter(pagerAdapter);
+			////					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+			////					adapter.getCurAllAuthorsList());
+			////					pagerRight.setOnPageChangeListener(listener);
+			////					listener.onPageSelected(0);
+			////				}
+			//			}
 		}
+
 	};
 
 	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
@@ -146,7 +279,7 @@ public class FragmentAllAuthorsList extends Fragment
 
 		this.setArtsList((RecyclerView) v.findViewById(R.id.arts_list_view));
 
-		this.adapter = new AllAuthorsListAdapter(act, /*this.getArtsList(), */this);
+		this.adapter = new AllAuthorsListAdapter(act, this);
 		this.getArtsList().setAdapter(adapter);
 
 		this.getArtsList().setItemAnimator(new DefaultItemAnimator());

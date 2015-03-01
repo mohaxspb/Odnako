@@ -103,7 +103,16 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 				}
 				else
 				{
-					((FragArtUPD) object).update(this.allArtsInfo);
+					try
+					{
+						((FragArtUPD) object).update(this.allArtsInfo);
+					}
+					catch(NullPointerException e)
+					{
+						Log.e(LOG_TAG, "CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETXHANGED!!!");
+						e.printStackTrace();
+						return POSITION_NONE;
+					}
 				}
 			}
 			else

@@ -82,7 +82,7 @@ public class FragmentArtsRecyclerList extends Fragment
 	//TODO check if we need it
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -161,6 +161,7 @@ public class FragmentArtsRecyclerList extends Fragment
 
 			setActivatedPosition(position);
 			//			topImg.setY(0 - topImg.getHeight());
+
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
@@ -548,7 +549,6 @@ public class FragmentArtsRecyclerList extends Fragment
 
 	private void setOnScrollListener()
 	{
-
 		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
 		this.toolbarId)
 		{

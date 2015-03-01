@@ -23,7 +23,7 @@ import android.util.Log;
 
 public class ContentProviderOdnakoDB extends ContentProvider
 {
-	private static final String TAG = ContentProviderOdnakoDB.class.getSimpleName();
+	private static final String LOG = ContentProviderOdnakoDB.class.getSimpleName();
 
 	private DataBaseHelper dataBaseHelper;
 
@@ -69,7 +69,9 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	@Override
 	public boolean onCreate()
 	{
+		Log.e(LOG, "onCreate called");
 		this.ctx = this.getContext();
+//		Toast.makeText(ctx, "Installed!", Toast.LENGTH_LONG).show();
 		this.getHelper();
 		return false;
 	}
@@ -77,7 +79,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
 	{
-		Log.d(TAG + uri.toString(), "Cursor query CALLED!");
+		Log.d(LOG + uri.toString(), "Cursor query CALLED!");
 
 		String msg;
 		Cursor cursor;
@@ -115,7 +117,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				}
 				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				msg = String.valueOf(cursor.getCount());
-				Log.d(TAG, "cursor.getCount(): " + msg);
+				Log.d(LOG, "cursor.getCount(): " + msg);
 				return cursor;
 			case ROUTE_ART_CAT:
 				// Return all known entries.
@@ -147,7 +149,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				}
 				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				String m = String.valueOf(cursor.getCount());
-				Log.d(TAG, "cursor.getCount(): " + m);
+				Log.d(LOG, "cursor.getCount(): " + m);
 				return cursor;
 
 			case ROUTE_AUTHOR:
@@ -180,7 +182,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				}
 				cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
 				msg = String.valueOf(cursor.getCount());
-				Log.d(TAG, "cursor.getCount(): " + msg);
+				Log.d(LOG, "cursor.getCount(): " + msg);
 				return cursor;
 		}
 		return null;

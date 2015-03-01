@@ -54,7 +54,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
-		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
 	}
 
 	@Override
@@ -85,6 +84,5 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			toolbar.setY(0);
 		}
 		//TODO here we can notify Article fragment, that it's selected
-//		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
 	}
 }

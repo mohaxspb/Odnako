@@ -148,7 +148,7 @@ public class ActivityMain extends ActivityBase
 
 			if (savedInstanceState.containsKey("searchText"))
 			{
-				searchText = savedInstanceState.getString("searchText");
+				setSearchText(savedInstanceState.getString("searchText"));
 			}
 			this.isKeyboardOpened = savedInstanceState.getBoolean(KEY_IS_KEYBOARD_OPENED);
 		}
@@ -296,9 +296,9 @@ public class ActivityMain extends ActivityBase
 		//			SearchView sv = (SearchView) searchMenuItem.getActionView();
 		//			sv.setQuery(this.searchText, false);
 		//		}
-		if (this.searchText != null)
+		if (this.getSearchText() != null)
 		{
-			this.queryToSave = this.searchText;
+			this.queryToSave = this.getSearchText();
 		}
 
 	}
@@ -400,9 +400,9 @@ public class ActivityMain extends ActivityBase
 		//save selected pos
 		this.saveAllCatListsSelectedArtPosition(outState);
 
-		if (this.searchText != null)
+		if (this.getSearchText() != null)
 		{
-			outState.putString("searchText", this.searchText);
+			outState.putString("searchText", this.getSearchText());
 		}
 		outState.putBoolean(KEY_IS_KEYBOARD_OPENED, isKeyboardOpened);
 
@@ -428,9 +428,9 @@ public class ActivityMain extends ActivityBase
 			{
 //				System.out.println("onMenuItemActionExpand");
 				//				pullToRefreshView.getRefreshableView().clearTextFilter();
-				if (searchText != null)
+				if (getSearchText() != null)
 				{
-					queryToSave = new StringBuffer(searchText).toString();
+					queryToSave = new StringBuffer(getSearchText()).toString();
 				}
 				isKeyboardOpened = true;
 
@@ -453,7 +453,7 @@ public class ActivityMain extends ActivityBase
 
 				isKeyboardOpened = false;
 				queryToSave = null;
-				searchText = null;
+				setSearchText(null);
 				searchView.setQuery("", true);
 				return true;
 			}
@@ -471,15 +471,15 @@ public class ActivityMain extends ActivityBase
 //				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
 				if (TextUtils.isEmpty(newText))
 				{
-					searchText = null;
+					setSearchText(null);
 					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
 					+ "_set_filter");
 					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 				}
 				else
 				{
-					searchText = newText;
-					queryToSave = searchText;
+					setSearchText(newText);
+					queryToSave = getSearchText();
 					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
 					+ "_set_filter");
 					intentToListFrag.putExtra("filter_text", newText);

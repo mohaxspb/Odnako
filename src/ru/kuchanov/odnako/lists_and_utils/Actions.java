@@ -233,10 +233,22 @@ public class Actions
 					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
 					act.getSupportFragmentManager(), mainActivity);
+					AllAuthorsListAdapter adAllAut = new AllAuthorsListAdapter(mainActivity, null);
+					String curFilter = mainActivity.getSearchText();
+					if (curFilter != null)
+					{
+						adAllAut.setFilter(mainActivity.getSearchText());
+					}
+					else
+					{
+						adAllAut.flushFilter();
+					}
+
+					pagerAllAut.updateData(adAllAut.getCurAllAuthorsList());
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
-					String authorBlogUrl = allArtsInfo.get(positionOfArticle).authorBlogUrl;
-
+					String authorBlogUrl = Author
+					.getURLwithoutSlashAtTheEnd(allArtsInfo.get(positionOfArticle).authorBlogUrl);
 					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 					{
 						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))//.blogLink))
@@ -254,13 +266,11 @@ public class Actions
 						//and also set selectedArtPosition for allAuthors fragment;
 						mainActivity.getAllCatListsSelectedArtPosition().put(
 						CatData.getAllCategoriesMenuLinks(mainActivity)[3], positionInLeftPager);
-
 						leftPager.setAdapter(pagerAllAut);
 						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,
 						pagerAllAut.getAllAuthorsList());
 						leftPager.setOnPageChangeListener(listener);
 						leftPager.setCurrentItem(positionInLeftPager);
-
 						//try notify pager that item selected if it's 0 item
 						if (positionInLeftPager == 0)
 						{
@@ -272,6 +282,7 @@ public class Actions
 						//we can't find this author in DB, so show it in singleCategoryPager
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
 						mainActivity.setCurentCategoryPosition(0);
+						mainActivity.setCurrentCategory(authorBlogUrl);
 
 						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 						authorBlogUrl));

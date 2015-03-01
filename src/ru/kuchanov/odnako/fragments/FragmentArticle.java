@@ -137,18 +137,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			if (this.curArtInfo.artText == null)
-			{
-				//load...
-				this.swipeRef.setRefreshing(true);
-
-				this.fillFielsdsWithInfo(this.getView());
-
-				//setting size of Images and text
-				this.setSizeAndTheme();
-				//End of setting size of Images and text
-			}
-			else if (this.curArtInfo.artText.equals("empty"))
+			if (this.curArtInfo.artText == null || this.curArtInfo.artText.equals("empty"))
 			{
 				//load...
 				this.swipeRef.setRefreshing(true);

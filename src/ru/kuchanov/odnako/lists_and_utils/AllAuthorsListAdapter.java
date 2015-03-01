@@ -81,6 +81,16 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		drawableArrowUp = ta.getDrawable(0);
 		ta.recycle();
 	}
+	
+	public ArrayList<Author> getCurAllAuthorsList()
+	{
+		return this.orig;
+	}
+	
+	public ArrayList<Author> getAllAuthorsList()
+	{
+		return this.allAuthrsInfoList;
+	}
 
 	@Override
 	public long getItemId(int position)
@@ -374,16 +384,22 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	public void flushFilter()
 	{
+		this.currentFilter = null;
 		/* visibleObjects */orig = new ArrayList<>();
 		orig.addAll(allAuthrsInfoList);
 		notifyDataSetChanged();
+	}
+	
+	public String getFilter()
+	{
+		return this.currentFilter.toLowerCase(new Locale("RU_ru"));
 	}
 
 	public void setFilter(String queryText)
 	{
 		queryText = queryText.toLowerCase(new Locale("RU_ru"));
 		this.currentFilter = queryText;
-		orig = new ArrayList<>();
+		orig = new ArrayList<Author>();
 		for (int i = 0; i < allAuthrsInfoList.size(); i++)
 		{
 			Author item = allAuthrsInfoList.get(i);
