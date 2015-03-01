@@ -415,7 +415,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		notifyDataSetChanged();
 	}
 
-	//TODO Fix it sme day
+	//TODO Fix it some day
 	public void filterIn(String filter)
 	{
 		//test adding to orig

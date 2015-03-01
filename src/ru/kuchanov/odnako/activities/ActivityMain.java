@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.activities;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
@@ -413,7 +414,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
-//		Log.e(LOG, "onCreateOptionsMenu called");
+		//		Log.e(LOG, "onCreateOptionsMenu called");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 
 		///searchView setting
@@ -426,7 +427,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item)
 			{
-//				System.out.println("onMenuItemActionExpand");
+				//				System.out.println("onMenuItemActionExpand");
 				//				pullToRefreshView.getRefreshableView().clearTextFilter();
 				if (getSearchText() != null)
 				{
@@ -444,7 +445,7 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item)
 			{
-//				System.out.println("onMenuItemActionCollapse");
+				//				System.out.println("onMenuItemActionCollapse");
 				//pullToRefreshView.getRefreshableView().clearTextFilter();
 				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 				allSettings.setVisible(true);
@@ -468,30 +469,91 @@ public class ActivityMain extends ActivityBase
 				{
 					return true;
 				}
-//				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
-				if (TextUtils.isEmpty(newText))
+				//				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
+				switch (pagerType)
 				{
-					setSearchText(null);
-					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
-					+ "_set_filter");
-					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+					case PAGER_TYPE_MENU:
+						if (TextUtils.isEmpty(newText))
+						{
+							setSearchText(null);
+							Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+							+ "_set_filter");
+							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+						}
+						else
+						{
+							setSearchText(newText);
+							queryToSave = getSearchText();
+							Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+							+ "_set_filter");
+							intentToListFrag.putExtra("filter_text", newText);
+							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+						}
+					break;
+					case PAGER_TYPE_AUTHORS:
+						//TODO
+						if (TextUtils.isEmpty(newText))
+						{
+							setSearchText(null);
+							//initialyse allAuthorsList with default authors list
+//							ArrayList<Author> filteredList = new ArrayList<Author>(getAllAuthorsList());
+							//update allAuthorsAdapter of left pager
+//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
+							PagerAdapterAuthorsLists adapter=new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), (ActivityMain) act);
+//							adapter.updateData(filteredList);
+							artsListPager.setAdapter(adapter);
+							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter.getAllAuthorsList());
+							artsListPager.setOnPageChangeListener(listener);
+//							artsListPager.setCurrentItem(positionInLeftPager);
+							//try notify pager that item selected if it's 0 item
+//							if (positionInLeftPager == 0)
+//							{
+								listener.onPageSelected(0);
+//							}
+						}
+						else
+						{
+							setSearchText(newText);
+							queryToSave = getSearchText();
+							//initialyse allAuthorsList
+							ArrayList<Author> filteredList = new ArrayList<Author>();
+							//filter it
+							for (int i = 0; i < getAllAuthorsList().size(); i++)
+							{
+								Author item = getAllAuthorsList().get(i);
+								if (item.getName().toLowerCase(new Locale("RU_ru"))
+								.contains(newText.toLowerCase(new Locale("RU_ru"))))
+								{
+									filteredList.add(item);
+								}
+							}
+							//update allAuthorsAdapter of left pager
+//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
+							PagerAdapterAuthorsLists adapter=new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), (ActivityMain) act);
+							adapter.updateData(filteredList);
+							artsListPager.setAdapter(adapter);
+							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter.getAllAuthorsList());
+							artsListPager.setOnPageChangeListener(listener);
+//							artsListPager.setCurrentItem(positionInLeftPager);
+							//try notify pager that item selected if it's 0 item
+//							if (positionInLeftPager == 0)
+//							{
+								listener.onPageSelected(0);
+//							}
+						}
+					break;
+					case PAGER_TYPE_CATEGORIES:
+					//TODO
+					break;
 				}
-				else
-				{
-					setSearchText(newText);
-					queryToSave = getSearchText();
-					Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
-					+ "_set_filter");
-					intentToListFrag.putExtra("filter_text", newText);
-					LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-				}
+
 				return true;
 			}
 
 			@Override
 			public boolean onQueryTextSubmit(String query)
 			{
-//				System.out.println("onQueryTextSubmit");
+				//				System.out.println("onQueryTextSubmit");
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
@@ -548,7 +610,7 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-//			Log.e(LOG, "searchText==null");
+			//			Log.e(LOG, "searchText==null");
 		}
 
 		return true;
@@ -558,7 +620,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-//		Log.e(LOG, "onPrepareOptionsMenu called");
+		//		Log.e(LOG, "onPrepareOptionsMenu called");
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 		if (drawerOpen)
@@ -569,7 +631,7 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified()==false)
+			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
 				menu.findItem(R.id.action_settings_all).setVisible(false);
 				menu.findItem(R.id.refresh).setVisible(false);
