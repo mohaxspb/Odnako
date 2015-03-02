@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
@@ -83,6 +84,10 @@ public class FragmentArtsListRecycler extends Fragment
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
 
+	//flag to know if loading from bottom is in progress, which is need in onScrolListener
+//	private boolean isLoading = true;
+//	private static final String KEY_IS_LOADING = "isLoading";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -109,6 +114,7 @@ public class FragmentArtsListRecycler extends Fragment
 			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
+//			this.isLoading = savedInstanceState.getBoolean(KEY_IS_LOADING);
 		}
 		else
 		{
@@ -130,7 +136,49 @@ public class FragmentArtsListRecycler extends Fragment
 		//reciver for scrolling and highligting selected position
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
+
+		//reciver for scrolling and highligting selected position
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(categoryIsLoadingReceiver,
+		new IntentFilter(this.getCategoryToLoad() + Const.Action.IS_LOADING));
 	}
+
+	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
+			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
+			if (isCurrentlyLoading)
+			{
+				if (pageToLoad == 1)
+				{
+					int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
+					int indexOfAttrTextSize = 0;
+					TypedValue typedValue = new TypedValue();
+					TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+					int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
+					a.recycle();
+					//			this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
+					swipeRef.setProgressViewEndTarget(false, actionBarSize);
+				}
+				else
+				{
+					int[] textSizeAttr = new int[] { android.R.attr.textSize };
+					int indexOfAttrTextSize = 0;
+					TypedValue typedValue = new TypedValue();
+					TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+					int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
+					a.recycle();
+					DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+					int height = displayMetrics.heightPixels;
+					swipeRef.setProgressViewOffset(false, 0, height - actionBarSize * 2);
+					swipeRef.setProgressViewEndTarget(false, height - actionBarSize * 2);
+				}
+				swipeRef.setRefreshing(true);
+			}
+		}
+	};
 
 	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
 	{
@@ -507,13 +555,13 @@ public class FragmentArtsListRecycler extends Fragment
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
 		//restore allArtsInfo from Activities HashMap
-		if (this.allArtsInfo == null
-		&& ((ActivityMain) this.act).getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
+		if (this.allArtsInfo == null && this.act.getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
 		{
-			this.allArtsInfo = ((ActivityMain) this.act).getAllCatArtsInfo().get(this.getCategoryToLoad());
+			this.allArtsInfo = this.act.getAllCatArtsInfo().get(this.getCategoryToLoad());
 		}
 
-		if (this.allArtsInfo == null)
+		if (this.allArtsInfo == null
+		|| this.allArtsInfo.get(0).title.equals("Статьи загружаются, подождите пожалуйста"))
 		{
 			//Log.i(categoryToLoad, "this.allArtsInfo=NULL");
 			this.getAllArtsInfo(false);
@@ -528,10 +576,20 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 		else
 		{
+			Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 
 			this.artsListAdapter.notifyDataSetChanged();
+
+			//ask service if it has working task with this page and category
+			Intent intent = new Intent(this.act, ServiceDB.class);
+			intent.setAction(Const.Action.IS_LOADING);
+			Bundle b = new Bundle();
+			b.putString("categoryToLoad", this.getCategoryToLoad());
+			b.putInt("pageToLoad", this.pageToLoad);
+			intent.putExtras(b);
+			this.act.startService(intent);
 		}
 		//set onScrollListener
 		setOnScrollListener();
@@ -546,9 +604,12 @@ public class FragmentArtsListRecycler extends Fragment
 		{
 			public void onLoadMore()
 			{
-				pageToLoad++;
-				getAllArtsInfo(true);
-				Log.e(LOG + categoryToLoad, "Start loading page " + pageToLoad + " from bottom!");
+				if (!swipeRef.isRefreshing())
+				{
+					pageToLoad++;
+					getAllArtsInfo(true);
+					Log.e(LOG + categoryToLoad, "Start loading page " + pageToLoad + " from bottom!");
+				}
 			}
 		});
 	}
@@ -584,6 +645,7 @@ public class FragmentArtsListRecycler extends Fragment
 		this.swipeRef.setRefreshing(true);
 
 		Intent intent = new Intent(this.act, ServiceDB.class);
+		intent.setAction(Const.Action.DATA_REQUEST);
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", this.getCategoryToLoad());
 		b.putInt("pageToLoad", this.pageToLoad);
@@ -609,6 +671,8 @@ public class FragmentArtsListRecycler extends Fragment
 		outState.putInt("position", this.position);
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 		//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
+
+//		outState.putBoolean(KEY_IS_LOADING, isLoading);
 	}
 
 	public void setActivatedPosition(int position)
@@ -648,6 +712,11 @@ public class FragmentArtsListRecycler extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
 			artsDataReceiver = null;
 		}
+		if (categoryIsLoadingReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(categoryIsLoadingReceiver);
+			categoryIsLoadingReceiver = null;
+		}
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
@@ -661,4 +730,14 @@ public class FragmentArtsListRecycler extends Fragment
 	{
 		this.isInLeftPager = isInLeftPager;
 	}
+
+//	public boolean isLoading()
+//	{
+//		return isLoading;
+//	}
+//
+//	public void setLoading(boolean isLoading)
+//	{
+//		this.isLoading = isLoading;
+//	}
 }

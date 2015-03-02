@@ -8,11 +8,13 @@ package ru.kuchanov.odnako.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
@@ -21,6 +23,7 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,13 +32,15 @@ import android.util.Log;
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback
 {
-	final private static String LOG_TAG = ServiceDB.class.getSimpleName() + "/";
+	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
 	private DataBaseHelper dataBaseHelper;
 
+	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
+
 	public void onCreate()
 	{
-		Log.d(LOG_TAG, "onCreate");
+		Log.d(LOG, "onCreate");
 		super.onCreate();
 
 		this.getHelper();
@@ -43,19 +48,49 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-//		Log.d(LOG_TAG, "onStartCommand");
+				Log.d(LOG, "onStartCommand");
+				
+		//get category
+		String catToLoad;// = intent.getStringExtra("categoryToLoad");
+		//				Log.d(LOG_TAG, "catToLoad: " + catToLoad);
+		//firstly: if we load from top or not? Get it by pageToLoad
+		int pageToLoad;// = intent.getIntExtra("pageToLoad", 1);
 		if (intent == null)
 		{
-			Log.e(LOG_TAG, "intent=null!!! WTF?!");
+			Log.e(LOG, "intent=null!!! WTF?!");
 			return super.onStartCommand(intent, flags, startId);
 		}
-		//get category
-		String catToLoad = intent.getStringExtra("categoryToLoad");
-//		Log.d(LOG_TAG, "catToLoad: " + catToLoad);
+		else
+		{
+			String action = intent.getAction();
+			Log.e(LOG, "intent.getAction(): "+intent.getAction());
+			catToLoad = intent.getStringExtra("categoryToLoad");
+			pageToLoad = intent.getIntExtra("pageToLoad", 1);
+			if (action.equals(Const.Action.IS_LOADING))
+			{
+				for (ParsePageForAllArtsInfo a : this.currentTasks)
+				{
+					if (catToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
+					&& (a.getStatus() == AsyncTask.Status.RUNNING))
+					{
+						Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+						intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+						Log.e(LOG+catToLoad, "isLoading == true");
+						return super.onStartCommand(intent, flags, startId);
+					}
+				}
+				Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+				intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
+				LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+				Log.e(LOG+catToLoad, "isLoading == false");
+				return super.onStartCommand(intent, flags, startId);
+			}
+		}
+
 		//get startDownload flag
 		boolean startDownload = intent.getBooleanExtra("startDownload", false);
-		//firstly: if we load from top or not? Get it by pageToLoad
-		int pageToLoad = intent.getIntExtra("pageToLoad", 1);
+
 		if (pageToLoad == 1)
 		{
 			//if pageToLoad=1 we load from top
@@ -74,7 +109,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				Log.d(LOG_TAG + catToLoad, DBRezult);
+				Log.d(LOG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -112,10 +147,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			//if pageToLoad!=1 we load from bottom
-			Log.d(LOG_TAG, "LOAD FROM BOTTOM!");
+			Log.d(LOG, "LOAD FROM BOTTOM!");
 			DBActions dbActions = new DBActions(this, this.getHelper());
 			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-			Log.d(LOG_TAG, dBRezult);
+			Log.d(LOG, dBRezult);
 
 			switch (dBRezult)
 			{
@@ -150,17 +185,21 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		Log.d(LOG_TAG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
-		Context context = getApplicationContext();
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, context, this,
-		this.getHelper());
+		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+
+		//TODO check quontity and allAuthors situation
+
+		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this, this.getHelper());
 		parse.execute();
+
+		this.currentTasks.add(parse);
+		//		parse.getStatus()==AsyncTask.Status.RUNNING;
 	}
 
 	@Override
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		Log.d(LOG_TAG+categoryToLoad, "sendDownloadedData");
+		Log.d(LOG + categoryToLoad, "sendDownloadedData");
 		String[] resultMessage;
 		if (dataToSend.size() == 0)
 		{
@@ -207,7 +246,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-		Log.d(LOG_TAG, resultMessage[0]/*+"/"+resultMessage[1]*/);
+		Log.d(LOG, resultMessage[0]/* +"/"+resultMessage[1] */);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
@@ -220,7 +259,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	public IBinder onBind(Intent intent)
 	{
-		Log.d(LOG_TAG, "onBind");
+		Log.d(LOG, "onBind");
 		return null;
 	}
 
@@ -238,7 +277,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public void onDestroy()
 	{
 		super.onDestroy();
-		Log.d(LOG_TAG, "onDestroy");
+		Log.d(LOG, "onDestroy");
 		if (dataBaseHelper != null)
 		{
 			OpenHelperManager.releaseHelper();
@@ -249,8 +288,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
-		Log.d(LOG_TAG+categoryToLoad, "sendBroadcastWithResult");
-		
+		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+
 		Intent intent = new Intent(categoryToLoad);
 
 		Bundle b = new Bundle();

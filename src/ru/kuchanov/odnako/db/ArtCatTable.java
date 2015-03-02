@@ -197,7 +197,7 @@ public class ArtCatTable
 	 *            list
 	 * @param fromGivenId
 	 *            if false, returning list will start from next of given id
-	 * @return List of ArtCat with <=30 entries
+	 * @return List of ArtCat with <=30 entries or null
 	 */
 	public static List<ArtCatTable> getArtCatTableListByCategoryIdFromGivenId(DataBaseHelper h, int categoryId, int id,
 	boolean fromGivenId)

@@ -28,7 +28,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	String link;
 
-	String category;
+	private String categoryToLoad;
 	int page;
 
 	Context ctx;
@@ -40,7 +40,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	{
 		this.callback = callback;
 
-		this.category = category;
+		this.categoryToLoad=category;
 		this.page = page;
 
 		this.ctx = ctx;
@@ -58,18 +58,18 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		ArrayList<ArtInfo> output = null;
 		String link;
-		if (this.category.startsWith("http://"))
+		if (this.getCategoryToLoad().startsWith("http://"))
 		{
-			link = category + "/page-" + String.valueOf(this.page) + "/";
+			link = getCategoryToLoad() + "/page-" + String.valueOf(this.page) + "/";
 		}
 		else
 		{
-			link = "http://" + category + "/page-" + String.valueOf(this.page) + "/";
+			link = "http://" + getCategoryToLoad() + "/page-" + String.valueOf(this.page) + "/";
 		}
 		if (this.link != null)
 		{
 			link = this.link;
-			Log.d(category, link);
+			Log.d(getCategoryToLoad(), link);
 		}
 
 		try
@@ -80,9 +80,9 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 				output = hh.getAllArtsInfoFromAUTHORPage();
 
 				//write new Author to DB if it don't exists
-				if (Category.isCategory(h, category) == null)
+				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
-					Author a = new Author(category, hh.getAuthorsName(), hh.getAuthorsDescription(),
+					Author a = new Author(getCategoryToLoad(), hh.getAuthorsName(), hh.getAuthorsDescription(),
 					hh.getAuthorsWho(), hh.getAuthorsImage(), hh.getAuthorsBigImg(), new Date(
 					System.currentTimeMillis()), new Date(0));
 					h.getDaoAuthor().create(a);
@@ -92,7 +92,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			{
 				output = hh.getAllArtsInfoFromPage();
 				//write new Author if it don't exists
-				if (Category.isCategory(h, category) == null)
+				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
 					//TODO create new entry in Category
 				}
@@ -110,14 +110,24 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//check internet
 		if (output != null)
 		{
-			callback.sendDownloadedData(output, this.category, this.page);
+			callback.sendDownloadedData(output, this.getCategoryToLoad(), this.page);
 		}
 		//NO internet
 		else
 		{
-			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.category, this.page);
+			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.getCategoryToLoad(), this.page);
 			Log.e(LOG, "Ошибка соединения \n Проверьте соединение с интернетом");
 			//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
 		}
 	}// Событие по окончанию парсинга
+
+	public String getCategoryToLoad()
+	{
+		return categoryToLoad;
+	}
+	
+	public int getPageToLoad()
+	{
+		return page;
+	}
 }
