@@ -104,7 +104,7 @@ public class DBActions
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
 				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
 //				String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-				String[] resultMessage = new String[] { Msg.NO_NEW, null };
+				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
@@ -157,7 +157,7 @@ public class DBActions
 				List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
 				ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
 //				String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-				String[] resultMessage = new String[] { Msg.NO_NEW, null };
+				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;

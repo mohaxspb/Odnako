@@ -130,26 +130,7 @@ public class FragmentArtsListRecycler extends Fragment
 		//reciver for scrolling and highligting selected position
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
-
-		//reciver for notify when frag selected
-//		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
-//		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 	}
-
-//	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
-//	{
-//		@Override
-//		public void onReceive(Context context, Intent intent)
-//		{
-//			Log.i(LOG + categoryToLoad, "fragSelectedReceiver onReceive called");
-//
-//			if (isAdded())
-//			{
-//				artsListAdapter.notifyDataSetChanged();
-//				setTitleToRightToolbar();
-//			}
-//		}
-//	};
 
 	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
 	{
@@ -245,6 +226,10 @@ public class FragmentArtsListRecycler extends Fragment
 
 			switch (msg[0])
 			{
+				case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+					Log.d(LOG + categoryToLoad, "Msg.DB_ANSWER_INFO_SENDED_TO_FRAG");
+					updateAdapter(intent, page);
+				break;
 				case (Msg.NO_NEW):
 					Log.d(LOG + categoryToLoad, "Новых статей не обнаружено!");
 					if (isDisplayed)
@@ -275,6 +260,7 @@ public class FragmentArtsListRecycler extends Fragment
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
+					Log.d(LOG + categoryToLoad, "Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT");
 					updateAdapter(intent, page);
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
@@ -383,6 +369,12 @@ public class FragmentArtsListRecycler extends Fragment
 
 		switch (msg[0])
 		{
+			case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+				pagerRight.getAdapter().notifyDataSetChanged();
+
+				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
+				allArtsSize = this.allArtsInfo.size();
+				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
 			case (Msg.NO_NEW):
 				pagerRight.getAdapter().notifyDataSetChanged();
 
@@ -656,44 +648,9 @@ public class FragmentArtsListRecycler extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
 			artsDataReceiver = null;
 		}
-//		if (fragSelectedReceiver != null)
-//		{
-//			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-//			fragSelectedReceiver = null;
-//		}
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
-
-//	private void setTitleToRightToolbar()
-//	{
-//		Toolbar toolbar = (Toolbar) this.act.findViewById(toolbarId);
-//		String title = "";
-//
-//		String[] allAutNames = CatData.getAllAuthorsNames(act);
-//		String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
-//
-//		String[] allCatNames = CatData.getAllTagsNames(act);
-//		String[] allCatUrls = CatData.getAllTagsLinks(act);
-//
-//		String[] names = CatData.concatArrays(allCatNames, allAutNames);
-//		String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
-//
-//		String[] menuNames = CatData.getAllCategoriesMenuNames(act);
-//		String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
-//
-//		String[] namesFull = CatData.concatArrays(names, menuNames);
-//		String[] urlsFull = CatData.concatArrays(urls, menuUrls);
-//		for (int i = 0; i < urlsFull.length; i++)
-//		{
-//			if (this.categoryToLoad.equals(urlsFull[i]))
-//			{
-//				title = namesFull[i];
-//				break;
-//			}
-//		}
-//		toolbar.setTitle(title);
-//	}
 
 	public boolean isInLeftPager()
 	{
