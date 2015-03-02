@@ -53,9 +53,9 @@ import android.widget.Toast;
  * Fragment for artsList. We use it as main Fragment for menu categories instead
  * of allAuthors and -Categories
  */
-public class FragmentArtsRecyclerList extends Fragment
+public class FragmentArtsListRecycler extends Fragment
 {
-	private static String LOG = FragmentArtsRecyclerList.class.getSimpleName() + "/";
+	private static String LOG = FragmentArtsListRecycler.class.getSimpleName() + "/";
 
 	private int pageToLoad = 1;
 
@@ -132,24 +132,24 @@ public class FragmentArtsRecyclerList extends Fragment
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
 		//reciver for notify when frag selected
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
-		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
+//		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
+//		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 	}
 
-	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			Log.i(LOG + categoryToLoad, "fragSelectedReceiver onReceive called");
-
-			if (isAdded())
-			{
-				artsListAdapter.notifyDataSetChanged();
-				setTitleToRightToolbar();
-			}
-		}
-	};
+//	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
+//	{
+//		@Override
+//		public void onReceive(Context context, Intent intent)
+//		{
+//			Log.i(LOG + categoryToLoad, "fragSelectedReceiver onReceive called");
+//
+//			if (isAdded())
+//			{
+//				artsListAdapter.notifyDataSetChanged();
+//				setTitleToRightToolbar();
+//			}
+//		}
+//	};
 
 	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
 	{
@@ -656,65 +656,44 @@ public class FragmentArtsRecyclerList extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
 			artsDataReceiver = null;
 		}
-		if (fragSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-			fragSelectedReceiver = null;
-		}
+//		if (fragSelectedReceiver != null)
+//		{
+//			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+//			fragSelectedReceiver = null;
+//		}
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
 
-	private void setTitleToRightToolbar()
-	{
-		//		if (toolbarId == R.id.toolbar_right)
-		//		{
-		//			Toolbar toolbarRight = (Toolbar) this.act.findViewById(toolbarId);
-		//			String title = "";
-		//			String[] allAutNames = CatData.getAllAuthorsNames(act);
-		//			String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
-		//			String[] allCatNames = CatData.getAllTagsNames(act);
-		//			String[] allCatUrls = CatData.getAllTagsLinks(act);
-		//			String[] names = CatData.concatArrays(allCatNames, allAutNames);
-		//			String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
-		//			for (int i = 0; i < urls.length; i++)
-		//			{
-		//				if (this.categoryToLoad.equals(urls[i]))
-		//				{
-		//					title = names[i];
-		//					break;
-		//				}
-		//			}
-		//			toolbarRight.setTitle(title);
-		//		}
-		Toolbar toolbar = (Toolbar) this.act.findViewById(toolbarId);
-		String title = "";
-
-		String[] allAutNames = CatData.getAllAuthorsNames(act);
-		String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
-
-		String[] allCatNames = CatData.getAllTagsNames(act);
-		String[] allCatUrls = CatData.getAllTagsLinks(act);
-
-		String[] names = CatData.concatArrays(allCatNames, allAutNames);
-		String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
-
-		String[] menuNames = CatData.getAllCategoriesMenuNames(act);
-		String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
-
-		String[] namesFull = CatData.concatArrays(names, menuNames);
-		String[] urlsFull = CatData.concatArrays(urls, menuUrls);
-		for (int i = 0; i < urlsFull.length; i++)
-		{
-			if (this.categoryToLoad.equals(urlsFull[i]))
-			{
-				title = namesFull[i];
-				break;
-			}
-		}
-		toolbar.setTitle(title);
-		Log.e(LOG, "toolbar.getTitle(): " + toolbar.getTitle());
-	}
+//	private void setTitleToRightToolbar()
+//	{
+//		Toolbar toolbar = (Toolbar) this.act.findViewById(toolbarId);
+//		String title = "";
+//
+//		String[] allAutNames = CatData.getAllAuthorsNames(act);
+//		String[] allAutUrls = CatData.getAllAuthorsBlogsURLs(act);
+//
+//		String[] allCatNames = CatData.getAllTagsNames(act);
+//		String[] allCatUrls = CatData.getAllTagsLinks(act);
+//
+//		String[] names = CatData.concatArrays(allCatNames, allAutNames);
+//		String[] urls = CatData.concatArrays(allCatUrls, allAutUrls);
+//
+//		String[] menuNames = CatData.getAllCategoriesMenuNames(act);
+//		String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
+//
+//		String[] namesFull = CatData.concatArrays(names, menuNames);
+//		String[] urlsFull = CatData.concatArrays(urls, menuUrls);
+//		for (int i = 0; i < urlsFull.length; i++)
+//		{
+//			if (this.categoryToLoad.equals(urlsFull[i]))
+//			{
+//				title = namesFull[i];
+//				break;
+//			}
+//		}
+//		toolbar.setTitle(title);
+//	}
 
 	public boolean isInLeftPager()
 	{

@@ -9,13 +9,13 @@ package ru.kuchanov.odnako.lists_and_utils;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 {
@@ -52,13 +52,9 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		this.currentCategoryPosition = position;
 
 		setTitleDrawerItemToolbarTopImgETC(position);
-
-		//		//sending intent to listfrag to notify it's adapter to fix issue
-		//		//when there is only 1-st art is shown and other can be shown only from articlesPager
-		//		//when switching articles
+		
 		String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
-		Intent intentToListFrag = new Intent(allCatsLinks[currentCategoryPosition] + "_notify_that_selected");
-		LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+		
 		if (twoPane)
 		{
 			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
@@ -106,7 +102,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
-		//		this.act.setTitle(CatData.getAllCategoriesMenuNames(act)[position]); XXX
 		this.toolbar.setTitle(CatData.getAllCategoriesMenuNames(act)[position]);
 
 		//show toolbar when switch category to show it's title
@@ -121,8 +116,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		if (toolbarY < 0)
 		{
-			toolbar.getBackground().setAlpha(255);
 			toolbar.setY(0);
+			toolbar.getBackground().setAlpha(255);
 		}
 		else
 		{
@@ -132,6 +127,29 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			float gradient = 1f - percent;
 			int newAlpha = (int) (255 * gradient);
 			toolbar.getBackground().setAlpha(newAlpha);
+		}
+		
+		//menuOptions
+		Menu menu=toolbar.getMenu();
+		MenuItem refresh=menu.findItem(R.id.refresh);
+		MenuItem search=menu.findItem(R.id.action_search);
+		if(search==null)
+		{
+			//this may be if onCreateOptionsMenu called after onResume
+		}
+		else
+		{
+			
+			if(position==3 || position==13)
+			{
+				search.setVisible(true);
+				refresh.setVisible(false);
+			}
+			else
+			{
+				search.setVisible(false);
+				refresh.setVisible(true);
+			}
 		}
 	}
 }

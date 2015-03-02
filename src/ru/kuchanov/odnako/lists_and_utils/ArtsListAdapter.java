@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
@@ -61,10 +61,10 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 	boolean twoPane;
 	boolean isInLeftPager;
 
-	FragmentArtsRecyclerList artsListFrag;
+	FragmentArtsListRecycler artsListFrag;
 
 	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
-	FragmentArtsRecyclerList artsListFrag)
+	FragmentArtsListRecycler artsListFrag)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;

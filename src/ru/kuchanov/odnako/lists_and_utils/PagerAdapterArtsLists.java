@@ -7,7 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +53,7 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 		
 		if (position != 3 && position != 13)
 		{
-			FragmentArtsRecyclerList artsListFrag = new FragmentArtsRecyclerList();
+			FragmentArtsListRecycler artsListFrag = new FragmentArtsListRecycler();
 			Bundle b = new Bundle();
 			String categoryToLoad = CatData.getAllCategoriesMenuLinks(act)[position];
 			b.putString("categoryToLoad", categoryToLoad);

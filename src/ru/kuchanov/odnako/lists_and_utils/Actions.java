@@ -14,7 +14,7 @@ import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 
 import android.content.Context;
@@ -172,7 +172,7 @@ public class Actions
 		//light clicked card if we can find frag from @param act 
 		if (act.getClass().getSimpleName().equals("ActivityMain"))
 		{
-			FragmentArtsRecyclerList artsListFrag = (FragmentArtsRecyclerList) act.getSupportFragmentManager()
+			FragmentArtsListRecycler artsListFrag = (FragmentArtsListRecycler) act.getSupportFragmentManager()
 			.findFragmentById(R.id.pager_left);
 			artsListFrag.setActivatedPosition(position);
 		}

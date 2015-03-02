@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,7 +65,7 @@ public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		FragmentArtsRecyclerList frag = new FragmentArtsRecyclerList();
+		FragmentArtsListRecycler frag = new FragmentArtsListRecycler();
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", allAuthorsInfo.get(position).getBlog_url());
 		b.putInt("pageToLoad", 1);

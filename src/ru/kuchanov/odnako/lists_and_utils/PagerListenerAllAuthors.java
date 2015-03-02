@@ -20,6 +20,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListener
 {
@@ -87,8 +89,8 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			intentToAllAuthorsFrag.putExtra("position", position);
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAuthorsFrag);
 
-			Intent intentToListFrag = new Intent(allAuthorsUrls.get(position) + "_notify_that_selected");
-			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(position) + "_notify_that_selected");
+			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 		}
 		else
 		{
@@ -99,9 +101,21 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.currentCategoryPosition = position;
 
 			this.toolbar.setTitle(this.allAuthors.get(position).getName());
+			Menu menu = toolbar.getMenu();
+			MenuItem search = menu.findItem(R.id.action_search);
+			MenuItem refresh = menu.findItem(R.id.refresh);
+			if (search == null)
+			{
+				//can be if menu populated after on resume and we hide elements there
+			}
+			else
+			{
+				search.setVisible(true);
+				refresh.setVisible(true);
+			}
 
-			Intent intentToListFrag = new Intent(allAuthorsUrls.get(currentCategoryPosition) + "_notify_that_selected");
-			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(currentCategoryPosition) + "_notify_that_selected");
+			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 
 			//if twoPane we must set rightPager
 

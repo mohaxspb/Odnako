@@ -6,7 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
-import ru.kuchanov.odnako.fragments.FragmentArtsRecyclerList;
+import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +31,7 @@ public class PagerAdapterSingleCategory extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		FragmentArtsRecyclerList artsListFrag = new FragmentArtsRecyclerList();
+		FragmentArtsListRecycler artsListFrag = new FragmentArtsListRecycler();
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", categoryToLoad);
 		b.putInt("pageToLoad", 1);

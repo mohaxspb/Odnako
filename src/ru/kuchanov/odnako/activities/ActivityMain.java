@@ -496,20 +496,22 @@ public class ActivityMain extends ActivityBase
 						{
 							setSearchText(null);
 							//initialyse allAuthorsList with default authors list
-//							ArrayList<Author> filteredList = new ArrayList<Author>(getAllAuthorsList());
+							//							ArrayList<Author> filteredList = new ArrayList<Author>(getAllAuthorsList());
 							//update allAuthorsAdapter of left pager
-//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
-							PagerAdapterAuthorsLists adapter=new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), (ActivityMain) act);
-//							adapter.updateData(filteredList);
+							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
+							PagerAdapterAuthorsLists adapter = new PagerAdapterAuthorsLists(act
+							.getSupportFragmentManager(), (ActivityMain) act);
+							//							adapter.updateData(filteredList);
 							artsListPager.setAdapter(adapter);
-							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter.getAllAuthorsList());
+							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
+							.getAllAuthorsList());
 							artsListPager.setOnPageChangeListener(listener);
-//							artsListPager.setCurrentItem(positionInLeftPager);
+							//							artsListPager.setCurrentItem(positionInLeftPager);
 							//try notify pager that item selected if it's 0 item
-//							if (positionInLeftPager == 0)
-//							{
-								listener.onPageSelected(0);
-//							}
+							//							if (positionInLeftPager == 0)
+							//							{
+							listener.onPageSelected(0);
+							//							}
 						}
 						else
 						{
@@ -528,18 +530,20 @@ public class ActivityMain extends ActivityBase
 								}
 							}
 							//update allAuthorsAdapter of left pager
-//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
-							PagerAdapterAuthorsLists adapter=new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), (ActivityMain) act);
+							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
+							PagerAdapterAuthorsLists adapter = new PagerAdapterAuthorsLists(act
+							.getSupportFragmentManager(), (ActivityMain) act);
 							adapter.updateData(filteredList);
 							artsListPager.setAdapter(adapter);
-							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter.getAllAuthorsList());
+							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
+							.getAllAuthorsList());
 							artsListPager.setOnPageChangeListener(listener);
-//							artsListPager.setCurrentItem(positionInLeftPager);
+							//							artsListPager.setCurrentItem(positionInLeftPager);
 							//try notify pager that item selected if it's 0 item
-//							if (positionInLeftPager == 0)
-//							{
-								listener.onPageSelected(0);
-//							}
+							//							if (positionInLeftPager == 0)
+							//							{
+							listener.onPageSelected(0);
+							//							}
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
@@ -612,7 +616,6 @@ public class ActivityMain extends ActivityBase
 		{
 			//			Log.e(LOG, "searchText==null");
 		}
-
 		return true;
 	}
 
@@ -623,26 +626,57 @@ public class ActivityMain extends ActivityBase
 		//		Log.e(LOG, "onPrepareOptionsMenu called");
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
+
+		MenuItem refresh = menu.findItem(R.id.refresh);
+		MenuItem settingsAll = menu.findItem(R.id.action_settings_all);
+		MenuItem search = menu.findItem(R.id.action_search);
+
 		if (drawerOpen)
 		{
-			menu.findItem(R.id.action_settings_all).setVisible(false);
+			settingsAll.setVisible(false);
 			menu.findItem(R.id.refresh).setVisible(false);
-			menu.findItem(R.id.action_search).setVisible(false);
+			search.setVisible(false);
 		}
 		else
 		{
 			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
-				menu.findItem(R.id.action_settings_all).setVisible(false);
-				menu.findItem(R.id.refresh).setVisible(false);
-				///test
-				menu.findItem(R.id.action_search).setVisible(true);
+				settingsAll.setVisible(false);
+				refresh.setVisible(false);
+				search.setVisible(true);
 			}
 			else
 			{
-				menu.findItem(R.id.action_settings_all).setVisible(true);
-				menu.findItem(R.id.refresh).setVisible(true);
-				menu.findItem(R.id.action_search).setVisible(true);
+				settingsAll.setVisible(true);
+				refresh.setVisible(true);
+				search.setVisible(true);
+			}
+			//setvisibility depending on category
+
+			int position = this.getCurentCategoryPosition();
+			switch (this.pagerType)
+			{
+				case PAGER_TYPE_MENU:
+					if (position == 3 || position == 13)
+					{
+						search.setVisible(true);
+						refresh.setVisible(false);
+					}
+					else
+					{
+						search.setVisible(false);
+						refresh.setVisible(true);
+					}
+				break;
+				case PAGER_TYPE_CATEGORIES:
+				case PAGER_TYPE_AUTHORS:
+					search.setVisible(true);
+					refresh.setVisible(true);
+				break;
+				case PAGER_TYPE_SINGLE:
+					search.setVisible(false);
+					refresh.setVisible(true);
+				break;
 			}
 		}
 		return super.onPrepareOptionsMenu(menu);
