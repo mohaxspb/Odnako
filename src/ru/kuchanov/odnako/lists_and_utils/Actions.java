@@ -265,7 +265,7 @@ public class Actions
 						mainActivity.getAllCatListsSelectedArtPosition().put(authorBlogUrl, positionOfArticle);
 						//and also set selectedArtPosition for allAuthors fragment;
 						mainActivity.getAllCatListsSelectedArtPosition().put(
-						CatData.getAllCategoriesMenuLinks(mainActivity)[3], positionInLeftPager);
+						CatData.getMenuLinks(mainActivity)[3], positionInLeftPager);
 						leftPager.setAdapter(pagerAllAut);
 						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,
 						pagerAllAut.getAllAuthorsList());

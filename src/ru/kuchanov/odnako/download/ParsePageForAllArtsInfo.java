@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.client.methods.HttpGet;
+
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -35,12 +37,14 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	DataBaseHelper h;
 
+	public HttpGet get;
+
 	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback,
 	DataBaseHelper h)
 	{
 		this.callback = callback;
 
-		this.categoryToLoad=category;
+		this.categoryToLoad = category;
 		this.page = page;
 
 		this.ctx = ctx;
@@ -75,6 +79,9 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(new URL(link));
+			///////
+			this.get = hh.get;
+			//////////
 			if (hh.isAuthor())
 			{
 				output = hh.getAllArtsInfoFromAUTHORPage();
@@ -115,17 +122,25 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//NO internet
 		else
 		{
-			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.getCategoryToLoad(), this.page);
+			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.getCategoryToLoad(),
+			this.page);
 			Log.e(LOG, "Ошибка соединения \n Проверьте соединение с интернетом");
 			//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
 		}
 	}// Событие по окончанию парсинга
 
+	@Override
+	protected void onCancelled()
+	{
+		Log.d(LOG, String.format("mAsyncTask - onCancelled: isCancelled = %b: ", this.isCancelled()));
+		super.onCancelled();
+	}
+
 	public String getCategoryToLoad()
 	{
 		return categoryToLoad;
 	}
-	
+
 	public int getPageToLoad()
 	{
 		return page;

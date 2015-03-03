@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.apache.http.client.methods.HttpGet;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
@@ -27,16 +28,17 @@ public class HtmlHelper
 
 	HtmlCleaner cleaner;
 
+	public HttpGet get;
+
 	//	public static int NUM_OF_ARTS_ON_CUR_PAGE;
 
 	public HtmlHelper(URL htmlPage) throws IOException
 	{
 		this.url = htmlPage.toString();
 
-		cleaner = new HtmlCleaner();
 		try
 		{
-			//System.out.println("HtmlHelper constructor URL: " + htmlPage.toString());
+			cleaner = new HtmlCleaner();
 			rootNode = cleaner.clean(htmlPage);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)

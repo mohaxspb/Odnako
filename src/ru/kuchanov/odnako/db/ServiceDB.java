@@ -38,23 +38,40 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
 
+	//	List<String> categoriesToCheck;
+
 	public void onCreate()
 	{
 		Log.d(LOG, "onCreate");
 		super.onCreate();
 
 		this.getHelper();
+
+		//		categoriesToCheck = new ArrayList<String>();
+		//		String[] menuUrls = CatData.getMenuLinks(this);
+		//		//Onotole
+		//		categoriesToCheck.add(menuUrls[2]);
+		//		//Ideology
+		//		categoriesToCheck.add(menuUrls[4]);
+		//		//first author (Olga A Agarcove) as I remember
+		//		Author firstAuthorOrderedByName;
+		//		try
+		//		{
+		//			firstAuthorOrderedByName = this.getHelper().getDaoAuthor().queryBuilder()
+		//			.orderBy(Author.NAME_FIELD_NAME, true).queryForFirst();
+		//			categoriesToCheck.add(Author.getURLwithoutSlashAtTheEnd(firstAuthorOrderedByName.getBlog_url()));
+		//		} catch (SQLException e)
+		//		{
+		//			e.printStackTrace();
+		//		}
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-				Log.d(LOG, "onStartCommand");
-				
-		//get category
-		String catToLoad;// = intent.getStringExtra("categoryToLoad");
-		//				Log.d(LOG_TAG, "catToLoad: " + catToLoad);
+		//Log.d(LOG, "onStartCommand");
+		String catToLoad;
 		//firstly: if we load from top or not? Get it by pageToLoad
-		int pageToLoad;// = intent.getIntExtra("pageToLoad", 1);
+		int pageToLoad;
 		if (intent == null)
 		{
 			Log.e(LOG, "intent=null!!! WTF?!");
@@ -63,7 +80,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			String action = intent.getAction();
-			Log.e(LOG, "intent.getAction(): "+intent.getAction());
+			//Log.e(LOG, "intent.getAction(): "+intent.getAction());
 			catToLoad = intent.getStringExtra("categoryToLoad");
 			pageToLoad = intent.getIntExtra("pageToLoad", 1);
 			if (action.equals(Const.Action.IS_LOADING))
@@ -76,14 +93,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
 						intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-						Log.e(LOG+catToLoad, "isLoading == true");
+						//						Log.e(LOG + catToLoad, "isLoading == true");
 						return super.onStartCommand(intent, flags, startId);
 					}
 				}
 				Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
 				intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
 				LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-				Log.e(LOG+catToLoad, "isLoading == false");
+				//				Log.e(LOG + catToLoad, "isLoading == false");
 				return super.onStartCommand(intent, flags, startId);
 			}
 		}
@@ -188,12 +205,33 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 
 		//TODO check quontity and allAuthors situation
+		//So, we can have MAX quint of tasks=3 (cur pager frag +left and right)
+		//but in case of MenuPager on position=3 && twoPane mode we have 4 tasks -
+		//next and prev categories and first 2 authors.
+		//And in this case 1-st of these authors is last in queue
+		//so we must catch this situation and sort list of tasks
 
-		ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this, this.getHelper());
-		parse.execute();
+		if (this.currentTasks.size() < 4)
+		{
+			//Everything is OK. Just add it and execute
+			ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this,
+			this.getHelper());
+			parse.execute();
+			this.currentTasks.add(parse);
+		}
+		else
+		{
+			//cancel 1-st and add given to the end
+			ParsePageForAllArtsInfo removedParse = this.currentTasks.remove(0);
+			removedParse.cancel(true);
+			this.onError("загрузка прервана", removedParse.getCategoryToLoad(), removedParse.getPageToLoad());
 
-		this.currentTasks.add(parse);
-		//		parse.getStatus()==AsyncTask.Status.RUNNING;
+			ParsePageForAllArtsInfo parseToAdd = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this,
+			this.getHelper());
+			parseToAdd.execute();
+
+			this.currentTasks.add(parseToAdd);
+		}
 	}
 
 	@Override

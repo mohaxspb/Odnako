@@ -115,11 +115,11 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			}
 		}
 		//menuCategories
-		String[] urlsM = CatData.getAllCategoriesMenuLinks(ctx);
-		String[] titlesM = CatData.getAllCategoriesMenuNames(ctx);
-		String[] descriptionsM = CatData.getAllCategoriesMenuDescriptions(ctx);
-		String[] img_urlsM = CatData.getAllCategoriesMenuImgsUrls(ctx);
-		String[] img_files_namesM = CatData.getAllCategoriesMenuImgsFilesNames(ctx);
+		String[] urlsM = CatData.getMenuLinks(ctx);
+		String[] titlesM = CatData.getMenuNames(ctx);
+		String[] descriptionsM = CatData.getMenuDescriptions(ctx);
+		String[] img_urlsM = CatData.getMenuImgsUrls(ctx);
+		String[] img_files_namesM = CatData.getMenuImgsFilesNames(ctx);
 
 		int lengthM = urlsM.length;
 		for (int i = 0; i < lengthM; i++)
@@ -291,7 +291,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			}
 
 			//TODO change MENU urls
-			String[] menuUrls = CatData.getAllCategoriesMenuLinks(ctx);
+			String[] menuUrls = CatData.getMenuLinks(ctx);
 			for (int i = 0; i < menuUrls.length; i++)
 			{
 				allURLs.add(menuUrls[i]);

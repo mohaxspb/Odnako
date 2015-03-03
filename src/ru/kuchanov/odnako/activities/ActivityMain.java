@@ -166,10 +166,10 @@ public class ActivityMain extends ActivityBase
 		try
 		{
 			this.setAllAuthorsList(h.getDaoAuthor().queryBuilder().orderBy(Author.NAME_FIELD_NAME, true).query());
-		} catch (SQLException e1)
+		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 
 		//set selected pos for all cats if they are null (first launch without any state)
@@ -200,7 +200,7 @@ public class ActivityMain extends ActivityBase
 		if (allCatToolbarTopImgYCoord == null)
 		{
 			setAllCatToolbarTopImgYCoord(new HashMap<String, int[]>());
-			String[] allCategoriesMenuLinks = CatData.getAllCategoriesMenuLinks(act);
+			String[] allCategoriesMenuLinks = CatData.getMenuLinks(act);
 			for (int i = 0; i < allCategoriesMenuLinks.length; i++)
 			{
 				getAllCatToolbarTopImgYCoord().put(allCategoriesMenuLinks[i],
@@ -476,7 +476,7 @@ public class ActivityMain extends ActivityBase
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);
-							Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+							Intent intentToListFrag = new Intent(CatData.getMenuLinks(act)[3]
 							+ "_set_filter");
 							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 						}
@@ -484,7 +484,7 @@ public class ActivityMain extends ActivityBase
 						{
 							setSearchText(newText);
 							queryToSave = getSearchText();
-							Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
+							Intent intentToListFrag = new Intent(CatData.getMenuLinks(act)[3]
 							+ "_set_filter");
 							intentToListFrag.putExtra("filter_text", newText);
 							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
@@ -704,9 +704,9 @@ public class ActivityMain extends ActivityBase
 				return true;
 			case R.id.refresh:
 				Log.e(LOG, "refresh");
-				//				DataBaseHelper h = new DataBaseHelper(act);
-				//				int DBVersion = h.getWritableDatabase().getVersion();
-				//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
+								DataBaseHelper h = new DataBaseHelper(act);
+								int DBVersion = h.getWritableDatabase().getVersion();
+								h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// TODO
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();

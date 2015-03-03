@@ -7,7 +7,6 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

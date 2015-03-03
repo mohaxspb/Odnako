@@ -177,6 +177,10 @@ public class FragmentArtsListRecycler extends Fragment
 				}
 				swipeRef.setRefreshing(true);
 			}
+			else
+			{
+				swipeRef.setRefreshing(false);
+			}
 		}
 	};
 
@@ -215,7 +219,7 @@ public class FragmentArtsListRecycler extends Fragment
 			switch (pagerType)
 			{
 				case ActivityMain.PAGER_TYPE_MENU:
-					String[] allMenuLinks = CatData.getAllCategoriesMenuLinks(act);
+					String[] allMenuLinks = CatData.getMenuLinks(act);
 					if (categoryToLoad.equals(allMenuLinks[currentCategoryPosition]) && isInLeftPager)
 					{
 						//so it's currently displayed fragment

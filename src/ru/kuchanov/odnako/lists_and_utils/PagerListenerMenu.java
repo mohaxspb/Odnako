@@ -53,13 +53,13 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		setTitleDrawerItemToolbarTopImgETC(position);
 		
-		String[] allCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+		String[] allCatsLinks = CatData.getMenuLinks(act);
 		
 		if (twoPane)
 		{
 			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
 			{
-				String categoryForRightPager = CatData.getAllCategoriesMenuLinks(act)[currentCategoryPosition];
+				String categoryForRightPager = CatData.getMenuLinks(act)[currentCategoryPosition];
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				categoryForRightPager,
 				act);
@@ -102,11 +102,11 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
-		this.toolbar.setTitle(CatData.getAllCategoriesMenuNames(act)[position]);
+		this.toolbar.setTitle(CatData.getMenuNames(act)[position]);
 
 		//show toolbar when switch category to show it's title
 		//restore and set topImg position
-		String[] allMenuCatsLinks = CatData.getAllCategoriesMenuLinks(act);
+		String[] allMenuCatsLinks = CatData.getMenuLinks(act);
 		String curCatLink = allMenuCatsLinks[position];
 		int toolbarY = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[0];
 		//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];

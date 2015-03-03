@@ -78,7 +78,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 		if (isInRightPager)
 		{
 			//is in right (MenuPager, 3 position)
-			String[] menuUrls = CatData.getAllCategoriesMenuLinks(act);
+			String[] menuUrls = CatData.getMenuLinks(act);
 
 			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
 
