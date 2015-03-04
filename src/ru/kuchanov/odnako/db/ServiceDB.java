@@ -284,7 +284,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-		Log.d(LOG, resultMessage[0]/* +"/"+resultMessage[1] */);
+		Log.d(LOG+"sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 

@@ -33,7 +33,6 @@ public class Actions
 {
 	private static String LOG = Actions.class.getSimpleName() + "/";
 
-	//	public static void showAllAuthorsArticles(ArtInfo p, ActionBarActivity act)
 	/**
 	 * We can have such situations:
 	 * <ul>
@@ -66,15 +65,9 @@ public class Actions
 					//check if we show allAuthors frag
 					if (mainActivity.getCurentCategoryPosition() == 3)
 					{
-						//if so send message to switch items
-						//						String[] allMenuCategories = CatData.getAllCategoriesMenuLinks(act);
-						//						Intent intentToAllAutFrag = new Intent(
-						//						allMenuCategories[mainActivity.getCurentCategoryPosition()] + "art_position");
-						//						LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAutFrag);
-
 						//switch to frag in right pager
 						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.pager_right);
-						PagerAdapterAuthorsLists adapter = (PagerAdapterAuthorsLists) rightPager.getAdapter();
+						PagerAdapterAllAuthors adapter = (PagerAdapterAllAuthors) rightPager.getAdapter();
 						int position = 0;
 						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
 						{
@@ -85,7 +78,10 @@ public class Actions
 							}
 						}
 						rightPager.setCurrentItem(position, true);
-
+					}
+					else if (mainActivity.getCurentCategoryPosition() == 13)
+					{
+						//TODO
 					}
 					else
 					{
@@ -93,7 +89,7 @@ public class Actions
 						//we can switch here if we have him in autList or not
 						//if so we can show arts list in allAuthor frag or not
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
-						PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
+						PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 						act.getSupportFragmentManager(), mainActivity);
 						boolean weFindIt = false;
 						int position = 0;
@@ -140,7 +136,7 @@ public class Actions
 								listener.onPageSelected(0);
 							}
 						}
-					}
+					}//if NOT all authors or categories
 				}
 			}
 			else
@@ -153,7 +149,112 @@ public class Actions
 		{
 			System.out.println("p.authorBlogUrl.equals('empty' || ''): WTF?!");
 		}
-	}
+	}//showAllAuthorsArticles
+
+	//TODO
+	public static void showAllCategoriesArticles(String categoryUrlFUCK, final ActionBarActivity act)
+	{
+		Log.d(LOG + categoryUrlFUCK, "show all categories articles!");
+		final String categoryUrl = Author.getURLwithoutSlashAtTheEnd(categoryUrlFUCK);
+		if (!categoryUrl.equals("empty") && !categoryUrl.equals(""))
+		{
+
+			//check if it's large screen
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+			boolean twoPane = pref.getBoolean("twoPane", false);
+			if (twoPane)
+			{
+				if (act.getClass().getSimpleName().equals("ActivityMain"))
+				{
+					final ActivityMain mainActivity = (ActivityMain) act;
+					//check if we show allAuthors frag
+					if (mainActivity.getCurentCategoryPosition() == 3)
+					{
+						//switch to frag in right pager
+						ViewPager rightPager = (ViewPager) mainActivity.findViewById(R.id.pager_right);
+						PagerAdapterAllAuthors adapter = (PagerAdapterAllAuthors) rightPager.getAdapter();
+						int position = 0;
+						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
+						{
+							if (categoryUrl.equals(adapter.getAllAuthorsList().get(i).getBlog_url()))//.blogLink))
+							{
+								position = i;
+								break;
+							}
+						}
+						rightPager.setCurrentItem(position, true);
+					}
+					else if (mainActivity.getCurentCategoryPosition() == 13)
+					{
+						//TODO
+					}
+					else
+					{
+						//else we must show authors list.
+						//we can switch here if we have him in autList or not
+						//if so we can show arts list in allAuthor frag or not
+						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
+						PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
+						act.getSupportFragmentManager(), mainActivity);
+						boolean weFindIt = false;
+						int position = 0;
+						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
+						{
+							if (categoryUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
+							{
+								weFindIt = true;
+								position = i;
+								break;
+							}
+						}
+						if (weFindIt)
+						{
+							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
+							mainActivity.setCurentCategoryPosition(position);
+
+							leftPager.setAdapter(pagerAllAut);
+							OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut
+							.getAllAuthorsList());
+							leftPager.setOnPageChangeListener(listener);
+							leftPager.setCurrentItem(position);
+							if (position == 0)
+							{
+								listener.onPageSelected(0);
+							}
+						}
+						else
+						{
+							//we can't find this author in DB, so show it in singleCategoryPager
+							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
+							mainActivity.setCurentCategoryPosition(0);
+							mainActivity.setCurrentCategory(categoryUrl);
+
+							leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+							categoryUrl));
+							OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+							leftPager.setOnPageChangeListener(listener);
+							leftPager.setCurrentItem(0);
+
+							//try notify pager that item selected if it's 0 item
+							if (leftPager.getCurrentItem() == 0)
+							{
+								listener.onPageSelected(0);
+							}
+						}
+					}//if NOT all authors or categories
+				}
+			}
+			else
+			{
+				//if not twoPane
+				//TODO
+			}
+		}
+		else
+		{
+			System.out.println("p.authorBlogUrl.equals('empty' || ''): WTF?!");
+		}
+	}//showAllCategoriesArticles
 
 	public static void markAsRead(String url, Context ctx)
 	{
@@ -226,12 +327,12 @@ public class Actions
 			{
 				final ViewPager rightPager = (ViewPager) act.findViewById(R.id.pager_right);
 				//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
-				if (rightPager.getAdapter() instanceof PagerAdapterAuthorsLists)
+				if (rightPager.getAdapter() instanceof PagerAdapterAllAuthors)
 				{
 
 					//if so we must change adapters to all ViewPagers
 					final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
-					PagerAdapterAuthorsLists pagerAllAut = new PagerAdapterAuthorsLists(
+					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 					act.getSupportFragmentManager(), mainActivity);
 					AllAuthorsListAdapter adAllAut = new AllAuthorsListAdapter(mainActivity, null);
 					String curFilter = mainActivity.getSearchText();

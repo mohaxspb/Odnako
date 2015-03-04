@@ -14,11 +14,12 @@ import java.util.Locale;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
@@ -161,14 +162,16 @@ public class ActivityMain extends ActivityBase
 			this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
 		}
 
-		//XXX get all Authors from DB
+		//get all Authors and categories from DB
 		DataBaseHelper h = new DataBaseHelper(act);
 		try
 		{
 			this.setAllAuthorsList(h.getDaoAuthor().queryBuilder().orderBy(Author.NAME_FIELD_NAME, true).query());
+			this.setAllCategoriesList(h.getDaoCategory().queryBuilder().orderBy(Category.TITLE_FIELD_NAME, true)
+			.query());
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
+			Log.e(LOG, "Catched exception on gettitg authors and categories from DB on init of ActivityMain");
 			e.printStackTrace();
 		}
 
@@ -248,7 +251,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 			case PAGER_TYPE_AUTHORS:
-				PagerAdapterAuthorsLists authorsPagerAdapter = new PagerAdapterAuthorsLists(
+				PagerAdapterAllAuthors authorsPagerAdapter = new PagerAdapterAllAuthors(
 				act.getSupportFragmentManager(), this);
 				this.artsListPager.setAdapter(authorsPagerAdapter);
 				listener = new PagerListenerAllAuthors(this, authorsPagerAdapter.getAllAuthorsList());
@@ -499,7 +502,7 @@ public class ActivityMain extends ActivityBase
 							//							ArrayList<Author> filteredList = new ArrayList<Author>(getAllAuthorsList());
 							//update allAuthorsAdapter of left pager
 							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
-							PagerAdapterAuthorsLists adapter = new PagerAdapterAuthorsLists(act
+							PagerAdapterAllAuthors adapter = new PagerAdapterAllAuthors(act
 							.getSupportFragmentManager(), (ActivityMain) act);
 							//							adapter.updateData(filteredList);
 							artsListPager.setAdapter(adapter);
@@ -531,7 +534,7 @@ public class ActivityMain extends ActivityBase
 							}
 							//update allAuthorsAdapter of left pager
 							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
-							PagerAdapterAuthorsLists adapter = new PagerAdapterAuthorsLists(act
+							PagerAdapterAllAuthors adapter = new PagerAdapterAllAuthors(act
 							.getSupportFragmentManager(), (ActivityMain) act);
 							adapter.updateData(filteredList);
 							artsListPager.setAdapter(adapter);
@@ -704,9 +707,9 @@ public class ActivityMain extends ActivityBase
 				return true;
 			case R.id.refresh:
 				Log.e(LOG, "refresh");
-								DataBaseHelper h = new DataBaseHelper(act);
-								int DBVersion = h.getWritableDatabase().getVersion();
-								h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
+				DataBaseHelper h = new DataBaseHelper(act);
+				int DBVersion = h.getWritableDatabase().getVersion();
+				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// TODO
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();

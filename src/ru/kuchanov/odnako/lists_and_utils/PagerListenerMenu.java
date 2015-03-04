@@ -78,7 +78,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			else if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
-				PagerAdapterAuthorsLists pagerRightAdapter = new PagerAdapterAuthorsLists(
+				PagerAdapterAllAuthors pagerRightAdapter = new PagerAdapterAllAuthors(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());

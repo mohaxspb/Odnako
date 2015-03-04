@@ -6,7 +6,8 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
-import ru.kuchanov.odnako.fragments.FragmentAllAuthorsList;
+import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
+import ru.kuchanov.odnako.fragments.FragmentAllCategories;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 			firstShot.onFirstShot();
 		}
 		////////////
-		
+
 		if (position != 3 && position != 13)
 		{
 			FragmentArtsListRecycler artsListFrag = new FragmentArtsListRecycler();
@@ -66,7 +67,12 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 		}
 		else if (position == 3)
 		{
-			FragmentAllAuthorsList frag = new FragmentAllAuthorsList();
+			FragmentAllAuthors frag = new FragmentAllAuthors();
+			return frag;
+		}
+		else if (position == 13)
+		{
+			FragmentAllCategories frag = new FragmentAllCategories();
 			return frag;
 		}
 		else

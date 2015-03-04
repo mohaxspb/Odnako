@@ -23,12 +23,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "category")
 public class Category
 {
-	private static final String LOG = Category.class.getSimpleName();
+	private static final String LOG = Category.class.getSimpleName() + "/";
 
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "url";
+	public final static String TITLE_FIELD_NAME = "title";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
-	//	public static final String SINCHRONISED_FIELD_NAME = "sinhronised";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
@@ -37,7 +37,7 @@ public class Category
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String url;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = TITLE_FIELD_NAME)
 	private String title;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
@@ -147,12 +147,12 @@ public class Category
 		this.description = description;
 	}
 
-	public String getImg_url()
+	public String getImgUrl()
 	{
 		return img_url;
 	}
 
-	public void setImg_url(String img_url)
+	public void setImgUrl(String img_url)
 	{
 		this.img_url = img_url;
 	}

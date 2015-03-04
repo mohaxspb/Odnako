@@ -21,7 +21,7 @@ import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
 import android.content.BroadcastReceiver;
@@ -231,7 +231,7 @@ public class FragmentArtsListRecycler extends Fragment
 						if (currentCategoryPosition == 3)
 						{
 							ViewPager pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
-							PagerAdapterAuthorsLists allAuthorsAdapter = (PagerAdapterAuthorsLists) pagerRight
+							PagerAdapterAllAuthors allAuthorsAdapter = (PagerAdapterAllAuthors) pagerRight
 							.getAdapter();
 							List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
 							int selectedArtPosOfAllAuthorsFrag = act.getAllCatListsSelectedArtPosition().get(
@@ -258,7 +258,7 @@ public class FragmentArtsListRecycler extends Fragment
 				break;
 				case ActivityMain.PAGER_TYPE_AUTHORS:
 					ViewPager pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
-					PagerAdapterAuthorsLists allAuthorsAdapter = (PagerAdapterAuthorsLists) pagerLeft.getAdapter();
+					PagerAdapterAllAuthors allAuthorsAdapter = (PagerAdapterAllAuthors) pagerLeft.getAdapter();
 					List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
 
 					if (categoryToLoad.equals(allAuthorsUrls.get(currentCategoryPosition)) && isInLeftPager)

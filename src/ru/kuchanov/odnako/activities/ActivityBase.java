@@ -12,6 +12,7 @@ import java.util.List;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
@@ -77,6 +78,11 @@ public class ActivityBase extends ActionBarActivity
 	 * List of all authors from DB
 	 */
 	private List<Author> allAuthorsList;
+	
+	/**
+	 * List of all categories from DB
+	 */
+	private List<Category> allCategoriesList;
 
 	int currentCategoryPosition = 11;
 	private String currentCategory = "odnako.org/blogs";
@@ -456,6 +462,16 @@ public class ActivityBase extends ActionBarActivity
 	public void setAllAuthorsList(List<Author> allAuthorsList)
 	{
 		this.allAuthorsList = allAuthorsList;
+	}
+
+	public List<Category> getAllCategoriesList()
+	{
+		return allCategoriesList;
+	}
+
+	public void setAllCategoriesList(List<Category> allCategoriesList)
+	{
+		this.allCategoriesList = allCategoriesList;
 	}
 
 	public String getSearchText()

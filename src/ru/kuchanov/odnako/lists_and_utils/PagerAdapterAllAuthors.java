@@ -21,14 +21,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * PagerAdapter for artsList of Authors arts. We use here fragments with
  * ListView instead of RecyclerView
  */
-public class PagerAdapterAuthorsLists extends FragmentStatePagerAdapter
+public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 {
-	final static String LOG = PagerAdapterAuthorsLists.class.getSimpleName();
+	final static String LOG = PagerAdapterAllAuthors.class.getSimpleName();
 
 	ActivityMain act;
 	ArrayList<Author> allAuthorsInfo;
 
-	public PagerAdapterAuthorsLists(FragmentManager fm, ActivityMain act)
+	public PagerAdapterAllAuthors(FragmentManager fm, ActivityMain act)
 	{
 		super(fm);
 		this.act = act;

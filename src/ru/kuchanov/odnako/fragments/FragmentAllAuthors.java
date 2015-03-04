@@ -13,7 +13,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAuthorsLists;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,20 +23,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class FragmentAllAuthorsList extends Fragment
+public class FragmentAllAuthors extends Fragment
 {
-	private static final String LOG = FragmentAllAuthorsList.class.getSimpleName() + "/";
+	private static final String LOG = FragmentAllAuthors.class.getSimpleName() + "/";
 
 	private ImageView topImg;
 	private ImageView topImgCover;
@@ -44,7 +46,7 @@ public class FragmentAllAuthorsList extends Fragment
 
 	private SharedPreferences pref;
 
-	private RecyclerView artsList;
+	private RecyclerView recyclerView;
 	private AllAuthorsListAdapter adapter;
 
 	private String categoryToLoad = "odnako.org/authors";
@@ -80,8 +82,8 @@ public class FragmentAllAuthorsList extends Fragment
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
 		//receiver for notify when frag selected
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
-		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
+		//		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
+		//		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
 
 		//receiver for notify when we set filter to Authors list
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(setFilterReceiver,
@@ -113,25 +115,53 @@ public class FragmentAllAuthorsList extends Fragment
 			}
 			ActivityMain mainActivity = (ActivityMain) act;
 			ViewPager pagerRight = (ViewPager) mainActivity.findViewById(R.id.pager_right);
-			PagerAdapterAuthorsLists pagerAdapter = (PagerAdapterAuthorsLists) pagerRight.getAdapter();
+			PagerAdapterAllAuthors pagerAdapter;// = (PagerAdapterAllAuthors) pagerRight.getAdapter();
 			//here we can somehow restore previous state and select author, but it's hard, because of 
 			//calling onCreateOpteionMenu and setting "" query to searchView on its expanding...
 			//so f*ck it now!
 			//Just set adapter for right pager
 			if (filterText != null)
 			{
-				pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
-				pagerAdapter.updateData(adapter.getCurAllAuthorsList());
-				pagerRight.setAdapter(pagerAdapter);
-				PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
-				adapter.getCurAllAuthorsList());
-				pagerRight.setOnPageChangeListener(listener);
-				listener.onPageSelected(0);
+				//in case of no authors we must set empty pager adapter
+				//to prevent exceptions
+				if (adapter.getCurAllAuthorsList().size() == 0)
+				{
+					pagerRight.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager())
+					{
+
+						@Override
+						public int getCount()
+						{
+							// TODO Auto-generated method stub
+							return 0;
+						}
+
+						@Override
+						public Fragment getItem(int arg0)
+						{
+							// TODO Auto-generated method stub
+							return null;
+						}
+					});
+					//and we must update right toolbar
+					Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
+					toolbarRight.setTitle("Ни одного автора не обнаружено");
+				}
+				else
+				{
+					pagerAdapter = new PagerAdapterAllAuthors(act.getSupportFragmentManager(), mainActivity);
+					pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+					pagerRight.setAdapter(pagerAdapter);
+					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
+					adapter.getCurAllAuthorsList());
+					pagerRight.setOnPageChangeListener(listener);
+					listener.onPageSelected(0);
+				}
 			}
 			else
 			{
-				pagerAdapter = new PagerAdapterAuthorsLists(act.getSupportFragmentManager(), mainActivity);
-//				pagerAdapter.updateData(adapter.getCurAllAuthorsList());
+				pagerAdapter = new PagerAdapterAllAuthors(act.getSupportFragmentManager(), mainActivity);
+				//				pagerAdapter.updateData(adapter.getCurAllAuthorsList());
 				pagerRight.setAdapter(pagerAdapter);
 				PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
 				adapter.getCurAllAuthorsList());
@@ -236,16 +266,16 @@ public class FragmentAllAuthorsList extends Fragment
 
 	};
 
-	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			Log.d(categoryToLoad, "fragSelectedReceiver onReceive called");
-
-			adapter.notifyDataSetChanged();
-		}
-	};
+	//	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
+	//	{
+	//		@Override
+	//		public void onReceive(Context context, Intent intent)
+	//		{
+	//			Log.d(categoryToLoad, "fragSelectedReceiver onReceive called");
+	//
+	//			adapter.notifyDataSetChanged();
+	//		}
+	//	};
 
 	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
 	{
@@ -277,16 +307,16 @@ public class FragmentAllAuthorsList extends Fragment
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
 		}
 
-		this.setArtsList((RecyclerView) v.findViewById(R.id.arts_list_view));
+		this.recyclerView = ((RecyclerView) v.findViewById(R.id.arts_list_view));
 
 		this.adapter = new AllAuthorsListAdapter(act, this);
-		this.getArtsList().setAdapter(adapter);
+		this.recyclerView.setAdapter(adapter);
 
-		this.getArtsList().setItemAnimator(new DefaultItemAnimator());
-		this.getArtsList().setLayoutManager(new LinearLayoutManager(act));
+		this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+		this.recyclerView.setLayoutManager(new LinearLayoutManager(act));
 
 		//set onScrollListener
-		this.getArtsList().setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
+		this.recyclerView.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
 		this.topImg));
 
 		return v;
@@ -316,7 +346,7 @@ public class FragmentAllAuthorsList extends Fragment
 	public void setActivatedPosition(int position)
 	{
 		this.position = position;
-		this.getArtsList().scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		this.recyclerView.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
 		adapter.notifyDataSetChanged();
 	}
 
@@ -350,22 +380,12 @@ public class FragmentAllAuthorsList extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
 			artSelectedReceiver = null;
 		}
-		if (fragSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-			fragSelectedReceiver = null;
-		}
+		//		if (fragSelectedReceiver != null)
+		//		{
+		//			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+		//			fragSelectedReceiver = null;
+		//		}
 		// Must always call the super method at the end.
 		super.onDestroy();
-	}
-
-	public RecyclerView getArtsList()
-	{
-		return artsList;
-	}
-
-	public void setArtsList(RecyclerView artsList)
-	{
-		this.artsList = artsList;
 	}
 }

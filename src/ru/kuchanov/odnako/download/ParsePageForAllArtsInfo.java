@@ -25,7 +25,7 @@ import android.util.Log;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
 {
-	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName();
+	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName()+"/";
 
 	AllArtsInfoCallback callback;
 

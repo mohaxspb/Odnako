@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
-import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,9 +23,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListener
+public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeListener
 {
-	private final static String LOG = PagerListenerAllAuthors.class.getSimpleName();
+	private final static String LOG = PagerListenerAllCategories.class.getSimpleName() + "/";
 
 	private ActivityMain act;
 
@@ -42,15 +42,15 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 	private int currentCategoryPosition;
 
-	private final ArrayList<Author> allAuthors;
+	private final ArrayList<Category> allCategories;
 
-	private final ArrayList<String> allAuthorsUrls;
+	private final ArrayList<String> allCategoriesUrls;
 
-	public PagerListenerAllAuthors(final ActivityMain act, final ArrayList<Author> allAuthors)
+	public PagerListenerAllCategories(final ActivityMain act, final ArrayList<Category> allCategories)
 	{
 		this.act = act;
 
-		this.allAuthors = allAuthors;
+		this.allCategories = allCategories;
 
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
@@ -61,12 +61,12 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 
 		this.currentCategoryPosition = this.act.getCurentCategoryPosition();
 
-		this.isInRightPager = (this.currentCategoryPosition == 3 && act.getPagerType() == ActivityMain.PAGER_TYPE_MENU && twoPane);
+		this.isInRightPager = (this.currentCategoryPosition == 13 && act.getPagerType() == ActivityMain.PAGER_TYPE_MENU && twoPane);
 
-		this.allAuthorsUrls = new ArrayList<String>();
-		for (Author a : allAuthors)
+		this.allCategoriesUrls = new ArrayList<String>();
+		for (Category a : allCategories)
 		{
-			allAuthorsUrls.add(a.getBlog_url());
+			allCategoriesUrls.add(a.getUrl());
 		}
 	}
 
@@ -80,17 +80,14 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			//is in right (MenuPager, 3 position)
 			String[] menuUrls = CatData.getMenuLinks(act);
 
-			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
+			this.act.getAllCatListsSelectedArtPosition().put(allCategoriesUrls.get(position), position);
 
-			this.toolbarRight.setTitle(this.allAuthors.get(position).getName());
+			this.toolbarRight.setTitle(this.allCategoriesUrls.get(position));
 
-			//notify allAuthors frag about author selected
-			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
+			//notify allCategories frag about author selected
+			Intent intentToAllAuthorsFrag = new Intent(menuUrls[13] + "art_position");
 			intentToAllAuthorsFrag.putExtra("position", position);
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAuthorsFrag);
-
-			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(position) + "_notify_that_selected");
-			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 		}
 		else
 		{
@@ -100,7 +97,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.act.setCurentCategoryPosition(position);
 			this.currentCategoryPosition = position;
 
-			this.toolbar.setTitle(this.allAuthors.get(position).getName());
+			this.toolbar.setTitle(this.allCategories.get(position).getTitle());
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
 			MenuItem refresh = menu.findItem(R.id.refresh);
@@ -114,14 +111,10 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				refresh.setVisible(true);
 			}
 
-			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(currentCategoryPosition) + "_notify_that_selected");
-			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-
 			//if twoPane we must set rightPager
-
 			if (twoPane)
 			{
-				String curentCategory = allAuthorsUrls.get(currentCategoryPosition);
+				String curentCategory = allCategoriesUrls.get(currentCategoryPosition);
 
 				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				curentCategory, act);
