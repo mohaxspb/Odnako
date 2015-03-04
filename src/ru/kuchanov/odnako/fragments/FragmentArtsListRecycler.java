@@ -85,8 +85,8 @@ public class FragmentArtsListRecycler extends Fragment
 	private int position = 0;
 
 	//flag to know if loading from bottom is in progress, which is need in onScrolListener
-//	private boolean isLoading = true;
-//	private static final String KEY_IS_LOADING = "isLoading";
+	//	private boolean isLoading = true;
+	//	private static final String KEY_IS_LOADING = "isLoading";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -114,7 +114,7 @@ public class FragmentArtsListRecycler extends Fragment
 			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
-//			this.isLoading = savedInstanceState.getBoolean(KEY_IS_LOADING);
+			//			this.isLoading = savedInstanceState.getBoolean(KEY_IS_LOADING);
 		}
 		else
 		{
@@ -220,10 +220,36 @@ public class FragmentArtsListRecycler extends Fragment
 			{
 				case ActivityMain.PAGER_TYPE_MENU:
 					String[] allMenuLinks = CatData.getMenuLinks(act);
+
 					if (categoryToLoad.equals(allMenuLinks[currentCategoryPosition]) && isInLeftPager)
 					{
 						//so it's currently displayed fragment
 						isDisplayed = true;
+					}
+					else if (!isInLeftPager)
+					{
+						if (currentCategoryPosition == 3)
+						{
+							ViewPager pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
+							PagerAdapterAuthorsLists allAuthorsAdapter = (PagerAdapterAuthorsLists) pagerRight
+							.getAdapter();
+							List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
+							int selectedArtPosOfAllAuthorsFrag = act.getAllCatListsSelectedArtPosition().get(
+							allMenuLinks[3]);
+							if (categoryToLoad.equals(allAuthorsUrls.get(selectedArtPosOfAllAuthorsFrag)))
+							{
+								//so it's currently displayed fragment
+								isDisplayed = true;
+							}
+							else
+							{
+								isDisplayed = false;
+							}
+						}
+						else if (currentCategoryPosition == 13)
+						{
+							//TODO
+						}
 					}
 					else
 					{
@@ -676,7 +702,7 @@ public class FragmentArtsListRecycler extends Fragment
 		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
 		//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
 
-//		outState.putBoolean(KEY_IS_LOADING, isLoading);
+		//		outState.putBoolean(KEY_IS_LOADING, isLoading);
 	}
 
 	public void setActivatedPosition(int position)
@@ -735,13 +761,13 @@ public class FragmentArtsListRecycler extends Fragment
 		this.isInLeftPager = isInLeftPager;
 	}
 
-//	public boolean isLoading()
-//	{
-//		return isLoading;
-//	}
-//
-//	public void setLoading(boolean isLoading)
-//	{
-//		this.isLoading = isLoading;
-//	}
+	//	public boolean isLoading()
+	//	{
+	//		return isLoading;
+	//	}
+	//
+	//	public void setLoading(boolean isLoading)
+	//	{
+	//		this.isLoading = isLoading;
+	//	}
 }

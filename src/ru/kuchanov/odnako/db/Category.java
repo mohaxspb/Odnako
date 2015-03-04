@@ -187,16 +187,6 @@ public class Category
 		this.lastArticleDate = lastArticleDate;
 	}
 
-	//	public boolean isSinhronised()
-	//	{
-	//		return sinhronised;
-	//	}
-	//
-	//	public void setSinhronised(boolean sinhronised)
-	//	{
-	//		this.sinhronised = sinhronised;
-	//	}
-
 	public String getFirstArticleURL()
 	{
 		return firstArticleURL;
@@ -227,6 +217,12 @@ public class Category
 		return c;
 	}
 
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return Category if can find or (null on SQLException or if can't find)
+	 */
 	public static Category getCategoryByURL(DataBaseHelper h, String url)
 	{
 		Category c = null;

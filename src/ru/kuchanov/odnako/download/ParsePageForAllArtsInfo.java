@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.apache.http.client.methods.HttpGet;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -106,6 +107,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			}
 		} catch (Exception e)
 		{
+			Log.e(LOG + categoryToLoad, "Catched Exception: " + e.getClass().getSimpleName());
 			e.printStackTrace();
 		}
 		return output;
@@ -122,17 +124,15 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//NO internet
 		else
 		{
-			callback.onError("Ошибка соединения \n Проверьте соединение с интернетом", this.getCategoryToLoad(),
-			this.page);
-			Log.e(LOG, "Ошибка соединения \n Проверьте соединение с интернетом");
-			//			Toast.makeText(ctx, "Ошибка соединения \n Проверьте соединение с интернетом", Toast.LENGTH_LONG).show();
+			callback.onError(Const.Error.CONNECTION_ERROR, this.getCategoryToLoad(), this.page);
+			Log.e(LOG + categoryToLoad, "Ошибка соединения. Проверьте соединение с интернетом");
 		}
 	}// Событие по окончанию парсинга
 
 	@Override
 	protected void onCancelled()
 	{
-		Log.d(LOG, String.format("mAsyncTask - onCancelled: isCancelled = %b: ", this.isCancelled()));
+		Log.d(LOG + categoryToLoad, String.format("mAsyncTask - onCancelled: isCancelled = %b: ", this.isCancelled()));
 		super.onCancelled();
 	}
 

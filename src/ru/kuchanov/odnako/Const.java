@@ -20,4 +20,9 @@ public class Const
 		 */
 		public static final String IS_LOADING = Action.class.getName() + ".IS_LOADING";
 	}
+
+	public static class Error
+	{
+		public static final String CONNECTION_ERROR = "Ошибка соединения. Проверьте соединение с интернетом";//Error.class.getName() + ".CONNECTION_ERROR";
+	}
 }

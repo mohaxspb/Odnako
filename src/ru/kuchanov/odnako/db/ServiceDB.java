@@ -293,7 +293,61 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	{
 		String[] resultMessage = new String[] { Msg.ERROR, e };
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
-	}
+		//here if we loaded from top and get NO_CONNECTION ERROR we can ask DB for arts.
+		//And toast if there are no arts in DB (cache);
+		//So ask DB with calendar(time of last refresh);
+		Calendar calOfLastRefresh = Calendar.getInstance();
+		Boolean isCategory = Category.isCategory(getHelper(), categoryToLoad);
+		if (isCategory == null)
+		{
+			resultMessage = new String[] { Msg.ERROR, "Категория в базе данных не обнаружена. И разработчик очень удивится, узнав, что вы читаете это сообщение" };
+			ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+			return;
+		}
+		if (Category.isCategory(getHelper(), categoryToLoad))
+		{
+			Category c = Category.getCategoryByURL(getHelper(), categoryToLoad);
+			calOfLastRefresh.setTime(c.getRefreshed());
+		}
+		else
+		{
+			Author a = Author.getAuthorByURL(getHelper(), categoryToLoad);
+			calOfLastRefresh.setTime(a.getRefreshed());
+		}
+		//if category was never refreshed it's=0, so Toast that there are no arts in cache
+		if (calOfLastRefresh.getTimeInMillis() == 0)
+		{
+			resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
+			ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+			return;
+		}
+		if (pageToLoad == 1)
+		{
+			switch (new DBActions(this, this.getHelper()).askDBFromTop(categoryToLoad, calOfLastRefresh, pageToLoad))
+			{
+				case Msg.DB_ANSWER_NEVER_REFRESHED:
+				//that's can't be, because we check it before
+				break;
+				case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
+				//that's can't be, because we give same time that we retrieve from category
+				break;
+				case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
+					//That's strange... We have non zero REFRESHED time and given Category record in DB,
+					//but no arts... Anyway we tell about it;
+					resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
+					ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+				break;
+				case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
+				//that's can't be, because we check it before
+				break;
+				case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+					//Everything is OK. We send arts from DB to fragment
+					resultMessage = new String[] { Msg.ERROR, "Статьи загружены из кэша" };
+					ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+				break;
+			}//switch
+		}//if (pageToLoad == 1)
+	}//onError
 
 	public IBinder onBind(Intent intent)
 	{
@@ -301,6 +355,12 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		return null;
 	}
 
+	/**
+	 * this method simply returns connection (?) (and open it if neccesary) to
+	 * DB with version gained from resources
+	 * 
+	 * @return
+	 */
 	private DataBaseHelper getHelper()
 	{
 		if (dataBaseHelper == null)
@@ -323,6 +383,15 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		}
 	}
 
+	/**
+	 * Sends intent with message and data to fragment
+	 * 
+	 * @param ctx
+	 * @param resultMessage
+	 * @param dataToSend
+	 * @param categoryToLoad
+	 * @param pageToLoad
+	 */
 	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{

@@ -22,7 +22,10 @@ public interface AllArtsInfoCallback
 	public void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad);
 	
 	/**
-	 * We use it to say user, that we have some error in asynkTask
+	 * We use it to say user, that we have some error in asynkTask.
+	 * Now we (as i know, and who knows more?..) use it only in 2 cases:
+	 * 1) On result=null in onPostExecute in AsyncTask
+	 * 2) When we canceling AsyncTask from service when their quantity>4
 	 * 
 	 * @param e message to show to user
 	 */

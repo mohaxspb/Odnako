@@ -211,12 +211,19 @@ public class Author implements Comparable<Author>
 	//		this.sinhronised = sinhronised;
 	//	}
 
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return Author if can find or (null if can't or on SQLException)
+	 */
 	public static Author getAuthorByURL(DataBaseHelper h, String url)
 	{
 		Author a = null;
 		try
 		{
-			a = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
+			a = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+			.queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -332,7 +339,7 @@ public class Author implements Comparable<Author>
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public int compareTo(Author other)
 	{

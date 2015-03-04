@@ -103,7 +103,6 @@ public class DBActions
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
 				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
-//				String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -120,8 +119,6 @@ public class DBActions
 			//this is Author
 			Author aut = Author.getAuthorByURL(getHelper(), Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
 
-			//			if (aut != null)
-			//			{
 			//first try to know when was last sink
 			long lastRefreshedMills = aut.getRefreshed().getTime();
 			if (lastRefreshedMills == 0)
@@ -156,7 +153,6 @@ public class DBActions
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
 				ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
-//				String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -167,12 +163,6 @@ public class DBActions
 				//there are no arts of given category in DB, so start to load it
 				return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
 			}
-			//			}
-			//			else
-			//			{
-			//				//Log.e(LOG_TAG, "It isn't category and aut=null, so it's unknown category");
-			//				return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
-			//			}
 		}
 	}
 
