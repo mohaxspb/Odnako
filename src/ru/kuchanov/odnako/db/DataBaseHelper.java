@@ -127,7 +127,8 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		String[] img_urlsM = ctx.getResources().getStringArray(R.array.categories_imgs_urls);
 		String[] img_files_namesM = ctx.getResources().getStringArray(R.array.categories_imgs_files_names);
 
-		int lengthM = urlsM.length;
+		//we loop through urlsM.length-1, because of ALL_CATEGORIES
+		int lengthM = urlsM.length-1;
 		for (int i = 0; i < lengthM; i++)
 		{
 			try

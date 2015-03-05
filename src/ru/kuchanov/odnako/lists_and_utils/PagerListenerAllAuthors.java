@@ -74,7 +74,6 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 	public void onPageSelected(int position)
 	{
 		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
-
 		if (isInRightPager)
 		{
 			//is in right (MenuPager, 3 position)
@@ -88,14 +87,10 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
 			intentToAllAuthorsFrag.putExtra("position", position);
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToAllAuthorsFrag);
-
-			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(position) + "_notify_that_selected");
-			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-		}
+		}//isInRightPager
 		else
 		{
 			//is in left, so it isn't MenuPager
-
 			//update currentCategoryPosition
 			this.act.setCurentCategoryPosition(position);
 			this.currentCategoryPosition = position;
@@ -113,10 +108,6 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				search.setVisible(true);
 				refresh.setVisible(true);
 			}
-
-			//			Intent intentToListFrag = new Intent(allAuthorsUrls.get(currentCategoryPosition) + "_notify_that_selected");
-			//			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-
 			//if twoPane we must set rightPager
 
 			if (twoPane)
@@ -137,7 +128,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				{
 					listener.onPageSelected(curPos);
 				}
-			}
-		}
-	}
-}
+			}//if twoPane
+		}//!isInRightPager
+	}//onPageSelected
+}//Class

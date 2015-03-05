@@ -138,19 +138,13 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 			break;
 			case (CATEGORY):
-				//				final AuthorInfo p;
-				final Category p;
-				p = this.getCategoryByPosition(position);
+				final Category p = this.getCategoryByPosition(position);
 				final int positionInAllArtsInfo = AllCategoriesListAdapter.getPositionInAllArtsInfo(position);
-
 				final CategoryHolder holderMain = (CategoryHolder) holder;
 
 				//variables for scaling text and icons and images from settings
 				String scaleFactorString = pref.getString("scale", "1");
 				float scaleFactor = Float.valueOf(scaleFactorString);
-
-				final float scale = act.getResources().getDisplayMetrics().density;
-				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 				////End of variables for scaling text and icons and images from settings
 
 				//light checked item in listView
@@ -173,72 +167,47 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 				////////
 				//setOnclick
-				holderMain.container.setOnClickListener(new OnClickListener()
+				holderMain.topLin.setOnClickListener(new OnClickListener()
 				{
 					public void onClick(View v)
 					{
-						//						Actions.showAllAuthorsArticles(p.blogLink, act);
-						Actions.showAllCategoriesArticles(p.getTitle(), act);
+						Actions.showAllCategoriesArticles(p.getUrl(), act);
 					}
 				});
 
-				// Author ava
-				LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
-				params.height = pixels;
-				params.width = pixels;
-				holderMain.author_img.setLayoutParams(params);
-				//				String link = "";
-				//				if (p.getAvatar().startsWith("/"))
-				//				{
-				//					link = "http://odnako.org" + p.getAvatar();
-				//				}
-
+				//Category img
+				String link = "";
+				if (p.getImgUrl().startsWith("/"))
+				{
+					link = "http://odnako.org" + p.getImgUrl();
+				}
 				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
-					imageLoader.displayImage(p.getImgUrl(), holderMain.author_img,
-					MyUniversalImageLoader.getDarkOptions());
+					imageLoader.displayImage(link, holderMain.categoryImg, MyUniversalImageLoader.getDarkOptions());
 				}
 				else
 				{
-					imageLoader.displayImage(p.getImgUrl(), holderMain.author_img);
+					imageLoader.displayImage(link, holderMain.categoryImg);
 				}
 				//end of ART_IMG
 
-				//name 
+				//title 
 				Spanned spannedContentTitle = Html.fromHtml(p.getTitle());
-				holderMain.name.setText(spannedContentTitle);
-				holderMain.name.setTextSize(21 * scaleFactor);
+				holderMain.title.setText(spannedContentTitle);
+				holderMain.title.setTextSize(35 * scaleFactor);
 
-				//				//who
-				//				if (!p.getWho().equals("empty") && !p.getWho().equals(""))
-				//				{
-				//					Spanned spannedContentPreview = Html.fromHtml(p.getWho());
-				//					holderMain.who.setText(spannedContentPreview);
-				//					holderMain.who.setTextSize(21 * scaleFactor);
-				//				}
-				//				else
-				//				{
-				//					holderMain.who.setText(null);
-				//				}
 				//description
 				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
 				{
 					Spanned spannedContentPreview = Html.fromHtml(p.getDescription());
 					holderMain.description.setText(spannedContentPreview);
 					holderMain.description.setTextSize(21 * scaleFactor);
+					holderMain.more_icon.setImageDrawable(drawableArrowDown);
 				}
 				else
 				{
 					holderMain.description.setText(null);
-				}
-				//fuck it. It ruins layout(((
-				//				holderMain.description.setLinksClickable(true);
-				//				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
-				//descriptionIcon
-
-				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
-				{
-					holderMain.more_icon.setImageDrawable(drawableArrowDown);
+					holderMain.more_icon.setImageDrawable(null);
 				}
 
 				//descr onClick
@@ -303,7 +272,7 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 				return holder;
 			case (CATEGORY):
 				// create a new view
-				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.author_card,
+				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_card,
 				parent,
 				false);
 				// create ViewHolder
@@ -324,28 +293,32 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 	static class CategoryHolder extends RecyclerView.ViewHolder
 	{
-		TextView name;
-		TextView who;
-		TextView description;
-		ImageView author_img;
-		ImageView more_icon;
-		ViewGroup bottom_lin;
 		View container;
+
+		ViewGroup topLin;
+
+		ImageView categoryImg;
+		TextView title;
+
+		ViewGroup bottom_lin;
+
+		TextView description;
+		ImageView more_icon;
 
 		CategoryHolder(View itemLayoutView)
 		{
 			super(itemLayoutView);
-			//author
-			this.name = (TextView) itemLayoutView.findViewById(R.id.name);
-
-			this.who = (TextView) itemLayoutView.findViewById(R.id.who);
-			this.description = (TextView) itemLayoutView.findViewById(R.id.description);
 			this.container = itemLayoutView;
 
-			this.author_img = (ImageView) itemLayoutView.findViewById(R.id.ava_img);
-			this.more_icon = (ImageView) itemLayoutView.findViewById(R.id.more_icon);
+			this.topLin = (ViewGroup) itemLayoutView.findViewById(R.id.category_top_lin);
 
-			this.bottom_lin = (ViewGroup) itemLayoutView.findViewById(R.id.author_card_bottom_lin);
+			this.categoryImg = (ImageView) itemLayoutView.findViewById(R.id.category_img);
+			this.title = (TextView) itemLayoutView.findViewById(R.id.category_title);
+
+			this.bottom_lin = (ViewGroup) itemLayoutView.findViewById(R.id.category_card_bottom_lin);
+
+			this.description = (TextView) itemLayoutView.findViewById(R.id.category_description);
+			this.more_icon = (ImageView) itemLayoutView.findViewById(R.id.more_icon);
 		}
 	}
 

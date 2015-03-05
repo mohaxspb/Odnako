@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:checkable="true"
         android:focusable="false"
         card_view:cardBackgroundColor="?cardBackGroundColor"
@@ -15,64 +15,59 @@
         card_view:cardElevation="3dp" >
 
         <LinearLayout
-            android:id="@+id/art_card_main_lin"
+            android:id="@+id/category_mian_lin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/art_card_top_lin"
+            <FrameLayout
+                android:id="@+id/category_top_lin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content" >
 
                 <ImageView
-                    android:id="@+id/ava_img"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:id="@+id/category_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
                     android:contentDescription="@string/hello_world"
                     android:scaleType="fitXY" />
 
-                <LinearLayout
-                    android:layout_width="0dip"
+                <ImageView
+                    android:id="@+id/top_img_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:contentDescription="@string/img"
+                    android:scaleType="fitXY"
+                    android:src="?coverTopToBottom" />
+
+                <TextView
+                    android:id="@+id/category_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title"
-                        android:textColor="?android:textColorPrimary"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/who"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/date"
-                        android:textColor="?android:textColorSecondary" />
-                </LinearLayout>
-            </LinearLayout>
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="7dp"
+                    android:text="@string/title"
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold" />
+            </FrameLayout>
 
             <LinearLayout
-                android:id="@+id/author_card_bottom_lin"
+                android:id="@+id/category_card_bottom_lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/description"
+                    android:id="@+id/category_description"
                     android:layout_width="0dip"
                     android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:textColor="?android:textColorPrimary" />
-                <ImageView
+
+                <ImageView
                     android:id="@+id/more_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

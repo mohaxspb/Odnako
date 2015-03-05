@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="android:Theme.Light"></style>
+    <!-- <style name="AppBaseTheme" parent="android:Theme.Light"></style> -->
 
     <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -57,6 +57,8 @@
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_white_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
+        <!--  -->
+        <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
     </style>
 
     <style name="DarkSearchViewStyle" parent="Widget.AppCompat.SearchView">
@@ -149,6 +151,8 @@
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_grey600_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
+        <!--  -->
+        <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

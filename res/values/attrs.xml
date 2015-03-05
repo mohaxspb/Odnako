@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- <declare-styleable name="cardBackGroundColor">
+    <!--
+    <declare-styleable name="cardBackGroundColor">
         <attr name="customAttr" format="color" />
-    </declare-styleable> -->
+    </declare-styleable>
+    -->
     <declare-styleable name="CustomTheme">
         <attr name="cardBackGroundColor" format="reference" />
     </declare-styleable>
-    
-     <attr name="selectorColor" format="reference|color" />
 
+    <attr name="selectorColor" format="reference|color" />
     <attr name="themeIcon" format="reference" />
     <attr name="overflowIcon" format="reference" />
     <attr name="settingsIcon" format="reference" />
@@ -40,5 +41,7 @@
     <attr name="openInBrowserIcon" format="reference" />
     <attr name="mailToMeIcon" format="reference" />
     <attr name="tabletIcon" format="reference" />
+    
+    <attr name="coverTopToBottom" format="reference" />
 
 </resources>
