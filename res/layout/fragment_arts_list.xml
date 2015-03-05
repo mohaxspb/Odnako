@@ -9,15 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="@string/img"
-        android:scaleType="fitXY"
-        android:src="@drawable/odnako" />
+        android:scaleType="fitXY"/>
 
     <ImageView
         android:id="@+id/top_img_cover"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="@string/img"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:src="?topImgCover" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"

@@ -2,6 +2,7 @@
 
     <!-- <style name="AppBaseTheme" parent="android:Theme.Light"></style> -->
 
+
     <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBarOverlay">true</item>
@@ -59,29 +60,26 @@
         <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
+        <item name="topImgCover">@drawable/top_img_cover_dark</item>
     </style>
 
     <style name="DarkSearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!--
-        Background for the search query section (e.g. EditText)
-        <item name="queryBackground">@style/ThemeDark.colorPrimaryDark</item>
-       Background for the actions section (e.g. voice, submit)
-        <item name="submitBackground">@style/ThemeDark.colorPrimaryDark</item>
-      Close button icon
-        <item name="closeIcon">...</item>
-        -->
+        <!-- Background for the search query section (e.g. EditText) -->
+        <!-- <item name="queryBackground">@style/ThemeDark.colorPrimaryDark</item> -->
+        <!-- Background for the actions section (e.g. voice, submit) -->
+        <!-- <item name="submitBackground">@style/ThemeDark.colorPrimaryDark</item> -->
+        <!-- Close button icon -->
+        <!-- <item name="closeIcon">...</item> -->
         <!-- Search button icon -->
-        <item name="searchIcon">@drawable/ic_search_white_48dp</item>
+        <!-- <item name="searchIcon">@drawable/ic_search_white_48dp</item> -->
         <!-- Go/commit button icon -->
-        <!--
-        <item name="goIcon">...</item>
-        Voice search button icon
-        <item name="voiceIcon">...</item>
-        Commit icon shown in the query suggestion row
-        <item name="commitIcon">...</item>
-        Layout for query suggestion rows
-        <item name="suggestionRowLayout">...</item>
-        -->
+        <!-- <item name="goIcon">...</item> -->
+        <!-- Voice search button icon -->
+        <!-- <item name="voiceIcon">...</item> -->
+        <!-- Commit icon shown in the query suggestion row -->
+        <!-- <item name="commitIcon">...</item> -->
+        <!-- Layout for query suggestion rows -->
+        <!-- <item name="suggestionRowLayout">...</item> -->
     </style>
 
     <style name="OdnakoPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
@@ -153,6 +151,7 @@
         <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
+        <item name="topImgCover">@drawable/top_img_cover_light</item>
     </style>
 
     <style name="OdnakoPopupMenuLight" parent="@style/Widget.AppCompat.PopupMenu">

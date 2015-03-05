@@ -703,7 +703,6 @@ public class ActivityMain extends ActivityBase
 				{
 					themeMenuItem.setChecked(true);
 				}
-				Log.e(LOG, String.valueOf(themeMenuItem.isChecked()));
 				return true;
 			case R.id.refresh:
 				Log.e(LOG, "refresh");

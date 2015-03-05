@@ -63,7 +63,6 @@ public class FragmentArtsListRecycler extends Fragment
 	private SwipeRefreshLayout swipeRef;
 
 	//art's list top image and it's gradient cover
-	private ImageView topImgCover;
 	private ImageView topImg;
 
 	private float topImgCoord;
@@ -518,13 +517,8 @@ public class FragmentArtsListRecycler extends Fragment
 		else if (container.getId() == R.id.pager_left)
 		{
 			this.toolbarId = R.id.toolbar;
-			//reciver for scrolling and highligting selected position
-			//			LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
-			//			new IntentFilter(this.getCategoryToLoad() + "art_position"));
 			this.setInLeftPager(true);
 		}
-
-		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
 		this.topImg = (ImageView) v.findViewById(R.id.top_img);
 
 		String defPackage = act.getPackageName();
@@ -545,15 +539,6 @@ public class FragmentArtsListRecycler extends Fragment
 			}
 		}
 		this.topImg.setY(topImgCoord);
-
-		if (this.pref.getString("theme", "dark").equals("dark"))
-		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
-		}
-		else
-		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
-		}
 
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
 		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called

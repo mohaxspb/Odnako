@@ -43,5 +43,6 @@
     <attr name="tabletIcon" format="reference" />
     
     <attr name="coverTopToBottom" format="reference" />
+    <attr name="topImgCover" format="reference" />
 
 </resources>

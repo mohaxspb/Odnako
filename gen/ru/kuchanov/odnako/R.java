@@ -1837,6 +1837,10 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int topBottomBarArrowSize=0x7f0100a8;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int topImgCover=0x7f0100f8;
         /**  Drawable to use as the "track" that the switch thumb slides within. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -2536,8 +2540,8 @@ containing a value of this type.
         public static final int social_vkontakte=0x7f0200b5;
         public static final int spinner_default_holo_dark_am=0x7f0200b6;
         public static final int spinner_default_holo_light_am=0x7f0200b7;
-        public static final int top_img_cover_grey_dark=0x7f0200b8;
-        public static final int top_img_cover_grey_light=0x7f0200b9;
+        public static final int top_img_cover_dark=0x7f0200b8;
+        public static final int top_img_cover_light=0x7f0200b9;
     }
     public static final class id {
         public static final int action_bar=0x7f0c0045;
@@ -3231,17 +3235,22 @@ containing a value of this type.
         public static final int CardView=0x7f090000;
         public static final int CardView_Dark=0x7f090002;
         public static final int CardView_Light=0x7f090001;
-        /**  Go/commit button icon 
-
-        <item name="goIcon">...</item>
-        Voice search button icon
-        <item name="voiceIcon">...</item>
-        Commit icon shown in the query suggestion row
-        <item name="commitIcon">...</item>
-        Layout for query suggestion rows
-        <item name="suggestionRowLayout">...</item>
-
-        
+        /**  Background for the search query section (e.g. EditText) 
+ <item name="queryBackground">@style/ThemeDark.colorPrimaryDark</item> 
+ Background for the actions section (e.g. voice, submit) 
+ <item name="submitBackground">@style/ThemeDark.colorPrimaryDark</item> 
+ Close button icon 
+ <item name="closeIcon">...</item> 
+ Search button icon 
+ <item name="searchIcon">@drawable/ic_search_white_48dp</item> 
+ Go/commit button icon 
+ <item name="goIcon">...</item> 
+ Voice search button icon 
+ <item name="voiceIcon">...</item> 
+ Commit icon shown in the query suggestion row 
+ <item name="commitIcon">...</item> 
+ Layout for query suggestion rows 
+ <item name="suggestionRowLayout">...</item> 
          */
         public static final int DarkSearchViewStyle=0x7f0900f4;
         public static final int OdnakoDropDownListView=0x7f0900f6;

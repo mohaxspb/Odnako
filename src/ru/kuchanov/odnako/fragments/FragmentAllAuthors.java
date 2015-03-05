@@ -300,11 +300,11 @@ public class FragmentAllAuthors extends Fragment
 		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_dark);
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_dark);
 		}
 		else
 		{
-			topImgCover.setBackgroundResource(R.drawable.top_img_cover_grey_light);
+			topImgCover.setBackgroundResource(R.drawable.top_img_cover_light);
 		}
 
 		this.recyclerView = ((RecyclerView) v.findViewById(R.id.arts_list_view));
