@@ -62,9 +62,10 @@ public class FragmentArtsListRecycler extends Fragment
 
 	private SwipeRefreshLayout swipeRef;
 
-	//art's list top image and it's gradient cover
+	/**
+	 * art's list top image
+	 */
 	private ImageView topImg;
-
 	private float topImgCoord;
 
 	private int toolbarId = R.id.toolbar;
@@ -73,7 +74,6 @@ public class FragmentArtsListRecycler extends Fragment
 	private RecyclerView artsList;
 	private ArtsListAdapter artsListAdapter;
 
-	//	private ActionBarActivity act;
 	private ActivityMain act;
 	private SharedPreferences pref;
 
@@ -82,10 +82,6 @@ public class FragmentArtsListRecycler extends Fragment
 	//TODO check if we need it
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
-
-	//flag to know if loading from bottom is in progress, which is need in onScrolListener
-	//	private boolean isLoading = true;
-	//	private static final String KEY_IS_LOADING = "isLoading";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -113,7 +109,6 @@ public class FragmentArtsListRecycler extends Fragment
 			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
 			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
-			//			this.isLoading = savedInstanceState.getBoolean(KEY_IS_LOADING);
 		}
 		else
 		{
@@ -146,7 +141,7 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
+//			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
 			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
 			if (isCurrentlyLoading)
 			{
@@ -193,7 +188,6 @@ public class FragmentArtsListRecycler extends Fragment
 
 			setActivatedPosition(position);
 			//			topImg.setY(0 - topImg.getHeight());
-
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};

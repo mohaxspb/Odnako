@@ -222,7 +222,6 @@ public class ActivityMain extends ActivityBase
 		/////////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
-		//XXX
 		this.setSupportActionBar(toolbar);
 
 		this.artsListPager = (ViewPager) this.findViewById(R.id.pager_left);

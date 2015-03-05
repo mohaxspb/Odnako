@@ -13,20 +13,19 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 {
-	private final static String LOG = PagerListenerMenu.class.getSimpleName() + "/";
+	final static String LOG = PagerListenerMenu.class.getSimpleName() + "/";
 
 	private ActivityMain act;
 
 	private boolean twoPane;
 
 	private ViewPager pagerRight;
-	
+
 	private Toolbar toolbar;
 
 	int currentCategoryPosition;
@@ -46,23 +45,60 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 	@Override
 	public void onPageSelected(int position)
 	{
-		Log.d(LOG, "select artsListPager position= " + position);
+		//		Log.d(LOG, "select artsListPager position= " + position);
 		//this will set current pos, and adapters group/child pos
 		this.act.setCurentCategoryPosition(position);
 		this.currentCategoryPosition = position;
 
 		setTitleDrawerItemToolbarTopImgETC(position);
-		
+
 		String[] allCatsLinks = CatData.getMenuLinks(act);
-		
+
 		if (twoPane)
 		{
-			if (currentCategoryPosition != 3 && currentCategoryPosition != 13)
+
+			if (currentCategoryPosition == 3)
+			{
+				//show all authors adapters
+				PagerAdapterAllAuthors pagerRightAdapter = new PagerAdapterAllAuthors(
+				act.getSupportFragmentManager(), act);
+				pagerRight.setAdapter(pagerRightAdapter);
+				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
+				pagerRight.setOnPageChangeListener(listener);
+				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
+				//				Log.e(LOG, "selectedArtPosition: " + curPos);
+				pagerRight.setCurrentItem(curPos, true);
+
+				if (curPos == 0)
+				{
+					listener.onPageSelected(curPos);
+				}
+			}
+			else if (currentCategoryPosition == 13)
+			{
+				//TODO show all categories adapters
+				PagerAdapterAllCategories pagerRightAdapter = new PagerAdapterAllCategories(
+				act.getSupportFragmentManager(), act);
+				pagerRight.setAdapter(pagerRightAdapter);
+				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				OnPageChangeListener listener = new PagerListenerAllCategories(act,
+				pagerRightAdapter.getAllCategoriesList());
+				pagerRight.setOnPageChangeListener(listener);
+				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
+				//				Log.e(LOG, "selectedArtPosition: " + curPos);
+				pagerRight.setCurrentItem(curPos, true);
+
+				if (curPos == 0)
+				{
+					listener.onPageSelected(curPos);
+				}
+			}//13
+			else
 			{
 				String categoryForRightPager = CatData.getMenuLinks(act)[currentCategoryPosition];
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
-				categoryForRightPager,
-				act);
+				categoryForRightPager, act);
 				pagerRight.setAdapter(adapterLeft);
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(this.act, categoryForRightPager);
@@ -74,31 +110,9 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				{
 					listener.onPageSelected(curPos);
 				}
-			}
-			else if (currentCategoryPosition == 3)
-			{
-				//show all authors adapters
-				PagerAdapterAllAuthors pagerRightAdapter = new PagerAdapterAllAuthors(
-				act.getSupportFragmentManager(), act);
-				pagerRight.setAdapter(pagerRightAdapter);
-				pagerRight.setPageTransformer(true, new RotationPageTransformer());
-				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
-				pagerRight.setOnPageChangeListener(listener);
-				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				Log.e(LOG, "selectedArtPosition: "+curPos);
-				pagerRight.setCurrentItem(curPos, true);
-
-				if (curPos == 0)
-				{
-					listener.onPageSelected(curPos);
-				}
-			}
-			else if (currentCategoryPosition == 13)
-			{
-				//TODO show all categories adapters
-			}
-		}
-	}
+			}//not 3 neither 13
+		}//twoPane
+	}//onPageChangeListener
 
 	private void setTitleDrawerItemToolbarTopImgETC(int position)
 	{
@@ -109,10 +123,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		String[] allMenuCatsLinks = CatData.getMenuLinks(act);
 		String curCatLink = allMenuCatsLinks[position];
 		int toolbarY = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[0];
-		//		int topImgY = allCatToolbarTopImgYCoord.get(curCatLink)[1];
 		int initialDistance = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[2];
 		int currentDistance = this.act.getAllCatToolbarTopImgYCoord().get(curCatLink)[3];
-		//	XXX	topImg.setY(topImgY);
 
 		if (toolbarY < 0)
 		{
@@ -128,19 +140,18 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			int newAlpha = (int) (255 * gradient);
 			toolbar.getBackground().setAlpha(newAlpha);
 		}
-		
+
 		//menuOptions
-		Menu menu=toolbar.getMenu();
-		MenuItem refresh=menu.findItem(R.id.refresh);
-		MenuItem search=menu.findItem(R.id.action_search);
-		if(search==null)
+		Menu menu = toolbar.getMenu();
+		MenuItem refresh = menu.findItem(R.id.refresh);
+		MenuItem search = menu.findItem(R.id.action_search);
+		if (search == null)
 		{
 			//this may be if onCreateOptionsMenu called after onResume
 		}
 		else
 		{
-			
-			if(position==3 || position==13)
+			if (position == 3 || position == 13)
 			{
 				search.setVisible(true);
 				refresh.setVisible(false);
