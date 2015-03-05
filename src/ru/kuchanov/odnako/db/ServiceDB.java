@@ -223,8 +223,13 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		{
 			//cancel 1-st and add given to the end
 			ParsePageForAllArtsInfo removedParse = this.currentTasks.remove(0);
-			removedParse.cancel(true);
-			this.onError("загрузка прервана", removedParse.getCategoryToLoad(), removedParse.getPageToLoad());
+			//test fixing canceling already finished task
+			if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
+			{
+				Log.e(LOG, removedParse.getCategoryToLoad() + " :" + AsyncTask.Status.RUNNING.toString() + "/RUNNING");
+				removedParse.cancel(true);
+				this.onError("загрузка прервана", removedParse.getCategoryToLoad(), removedParse.getPageToLoad());
+			}
 
 			ParsePageForAllArtsInfo parseToAdd = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this,
 			this.getHelper());
@@ -238,6 +243,16 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
 		Log.d(LOG + categoryToLoad, "sendDownloadedData");
+		//find and remove finished task from list
+		for (int i = 0; i < this.currentTasks.size(); i++)
+		{
+			if (categoryToLoad.equals(this.currentTasks.get(i).getCategoryToLoad())
+			&& pageToLoad == this.currentTasks.get(i).getPageToLoad())
+			{
+				/* ParsePageForAllArtsInfo taskToRemove = */this.currentTasks.remove(i);
+				//				taskToRemove = null;
+			}
+		}
 		String[] resultMessage;
 		if (dataToSend.size() == 0)
 		{
@@ -284,13 +299,24 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-		Log.d(LOG+"sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
+		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
 	@Override
 	public void onError(String e, String categoryToLoad, int pageToLoad)
 	{
+		//find and remove finished task from list
+		for (int i = 0; i < this.currentTasks.size(); i++)
+		{
+			if (categoryToLoad.equals(this.currentTasks.get(i).getCategoryToLoad())
+			&& pageToLoad == this.currentTasks.get(i).getPageToLoad())
+			{
+				/* ParsePageForAllArtsInfo taskToRemove = */this.currentTasks.remove(i);
+				//				taskToRemove = null;
+			}
+		}
+
 		String[] resultMessage = new String[] { Msg.ERROR, e };
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 		//here if we loaded from top and get NO_CONNECTION ERROR we can ask DB for arts.

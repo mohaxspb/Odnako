@@ -125,7 +125,7 @@ public class FragmentAllCategories extends Fragment
 				{
 					pagerRight.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager())
 					{
-
+						//empty adapter for no results
 						@Override
 						public int getCount()
 						{

@@ -115,11 +115,17 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			}
 		}
 		//menuCategories
-		String[] urlsM = CatData.getMenuLinks(ctx);
-		String[] titlesM = CatData.getMenuNames(ctx);
-		String[] descriptionsM = CatData.getMenuDescriptions(ctx);
-		String[] img_urlsM = CatData.getMenuImgsUrls(ctx);
-		String[] img_files_namesM = CatData.getMenuImgsFilesNames(ctx);
+		//		String[] urlsM = CatData.getMenuLinks(ctx);
+		//		String[] titlesM = CatData.getMenuNames(ctx);
+		//		String[] descriptionsM = CatData.getMenuDescriptions(ctx);
+		//		String[] img_urlsM = CatData.getMenuImgsUrls(ctx);
+		//		String[] img_files_namesM = CatData.getMenuImgsFilesNames(ctx);
+
+		String[] urlsM = ctx.getResources().getStringArray(R.array.categories_links);
+		String[] titlesM = ctx.getResources().getStringArray(R.array.categories);
+		String[] descriptionsM = ctx.getResources().getStringArray(R.array.categories_descriptions);
+		String[] img_urlsM = ctx.getResources().getStringArray(R.array.categories_imgs_urls);
+		String[] img_files_namesM = ctx.getResources().getStringArray(R.array.categories_imgs_files_names);
 
 		int lengthM = urlsM.length;
 		for (int i = 0; i < lengthM; i++)

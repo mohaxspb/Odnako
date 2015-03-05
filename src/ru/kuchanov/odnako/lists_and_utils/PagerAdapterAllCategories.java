@@ -35,13 +35,13 @@ public class PagerAdapterAllCategories extends FragmentStatePagerAdapter
 	}
 
 	/**
-	 * updates allAluthors list by given and notify about changes
+	 * updates allCategories list by given and notify about changes
 	 * 
-	 * @param allAuthorsInfo
+	 * @param allCategories
 	 */
-	public void updateData(ArrayList<Category> allAuthorsInfo)
+	public void updateData(ArrayList<Category> allCategories)
 	{
-		this.allCategories = new ArrayList<Category>(allAuthorsInfo);
+		this.allCategories = new ArrayList<Category>(allCategories);
 		this.notifyDataSetChanged();
 	}
 

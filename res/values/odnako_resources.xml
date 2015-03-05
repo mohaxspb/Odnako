@@ -27,9 +27,9 @@
         <item><![CDATA[agr_dummy.jpg]]></item>
     </string-array>
     <string-array name="authors_links">
-        <item>leontev.odnako.org</item>
-        <item>viktormarahovskiy.odnako.org</item>
-        <item>awas.odnako.org</item>
+        <item>http://leontev.odnako.org</item>
+        <item>http://viktormarahovskiy.odnako.org</item>
+        <item>http://awas.odnako.org</item>
         <item>odnako.org/authors</item>
     </string-array>
     <string-array name="categories">
@@ -45,16 +45,40 @@
         <item>Все категории</item>
     </string-array>
     <string-array name="categories_links">
-        <item>ideologiya.odnako.org</item>
-        <item>ekonomicheskayapolitika.odnako.org</item>
-        <item>gosudarstvennoestroitelstvo.odnako.org</item>
-        <item>oboronnayapolitika.odnako.org</item>
-        <item>eurasia.odnako.org</item>
-        <item>chelovekostroenie.odnako.org</item>
-        <item>miroporyadok.odnako.org</item>
-        <item>odnako.org/blogs</item>
-        <item>novosti.odnako.org</item>
+        <item>http://ideologiya.odnako.org</item>
+        <item>http://ekonomicheskayapolitika.odnako.org</item>
+        <item>http://gosudarstvennoestroitelstvo.odnako.org</item>
+        <item>http://oboronnayapolitika.odnako.org</item>
+        <item>http://eurasia.odnako.org</item>
+        <item>http://chelovekostroenie.odnako.org</item>
+        <item>http://miroporyadok.odnako.org</item>
+        <item>http://odnako.org/blogs</item>
+        <item>http://novosti.odnako.org</item>
         <item>all_categiries</item>
+    </string-array>
+    <string-array name="categories_descriptions">
+        <item>empty</item>
+        <item>empty</item>
+        <item>empty</item>
+        <item>empty</item>
+        <item>
+<![CDATA[Раздел посвящён исследованию стратегии и тактики постсоветской реинтеграции в Евразии, первым уровнем которой является Таможенный союз.
+
+Мы исходим из неизбежности системного кризиса современной финансово-экономической, а, следовательно, и политической картины мира на протяжении ближайших 5-7 лет. В этих условиях единственным выходом является форсированная реинтеграция постсоветского пространства – от торгового союза до военно-политического союза государств. Поэтому приоритетом ближайшей пятилетки должна стать идеология Воссоединения. Мы не переживём кризис, пока не восстановим страну.
+
+Однако недостаточно просто «собрать страну» как арифметическую сумму в разной степени деградировавших национальных государств в нашем историческом пространстве. В основе Воссоединения должен лежать комплексный проект цивилизационного масштаба, охватывающий все сферы общественной жизни.]]>
+        </item>
+        <item>
+<![CDATA[Мы рассматриваем социальную сферу в целом как человекостроение –системообразующую сферу государственной политики, которая обеспечивает взращивание, воспитание, развитие человека и гражданина, сохранение культурного кода и жизнеспособности российской цивилизации. 
+
+В этом понятии мы объединяем образование и просвещение, здравоохранение и демографическую политику, продвижение в культурном пространстве традиционных нравственных ценностей. С этой точки зрения мы категорически отказываемся рассматривать такие пустые и вредительские понятия, как «рынок медицинских услуг», «прагматизация образования».
+
+Человек как свободная личность является в нашем понимании одновременно и субъектом, и объектом общественного развития. Задачей российского государства является обеспечение каждому гражданину возможности для всестороннего личностного развития – вплоть до принуждения его к использованию этих возможностей. В свою очередь, только народ как синергия всесторонне развитых свободных личностей способен решить задачи, объективно стоящие перед страной, а также генерировать всё новые и новые амбициозные цели.]]>
+        </item>
+        <item>empty</item>
+        <item>empty</item>
+        <item>empty</item>
+        <item>empty</item>
     </string-array>
     <string-array name="categories_imgs_urls">
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
