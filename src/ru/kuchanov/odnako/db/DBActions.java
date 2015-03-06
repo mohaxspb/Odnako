@@ -292,7 +292,8 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
-				String initialAutArtUrl = Category.getFirstArticleURLById(getHelper(), authorId);
+//				String initialAutArtUrl = Category.getFirstArticleURLById(getHelper(), authorId);
+				String initialAutArtUrl = Author.getFirstArticleURLById(getHelper(), authorId);
 				if (initialAutArtUrl != null)
 				{
 					int lastShownArtsId = allArtsFromFirst.get(allArtsFromFirst.size() - 1).getArticleId();

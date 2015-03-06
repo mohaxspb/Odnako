@@ -409,29 +409,29 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
-		//		Log.e(LOG, "onCreateOptionsMenu called");
+		//Log.e(LOG, "onCreateOptionsMenu called");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 
 		///searchView setting
 		final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+		
+		final MenuItem refresh = menu.findItem(R.id.refresh);
+		final MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener()
 		{
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item)
 			{
-				//				System.out.println("onMenuItemActionExpand");
-				//				pullToRefreshView.getRefreshableView().clearTextFilter();
+				//System.out.println("onMenuItemActionExpand");
 				if (getSearchText() != null)
 				{
 					queryToSave = new StringBuffer(getSearchText()).toString();
 				}
 				isKeyboardOpened = true;
-
-				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
+				
 				allSettings.setVisible(false);
-				MenuItem refresh = menu.findItem(R.id.refresh);
 				refresh.setVisible(false);
 				return true;
 			}
@@ -439,11 +439,8 @@ public class ActivityMain extends ActivityBase
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item)
 			{
-				//				System.out.println("onMenuItemActionCollapse");
-				//pullToRefreshView.getRefreshableView().clearTextFilter();
-				MenuItem allSettings = menu.findItem(R.id.action_settings_all);
+				//System.out.println("onMenuItemActionCollapse");
 				allSettings.setVisible(true);
-				MenuItem refresh = menu.findItem(R.id.refresh);
 				refresh.setVisible(true);
 
 				isKeyboardOpened = false;
@@ -474,7 +471,9 @@ public class ActivityMain extends ActivityBase
 						{
 							setSearchText(null);
 							Intent intentToListFrag = new Intent(intentAction);
-							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							//we need to do it synchroniously to prevent filtering adapters after setting new pagers
+							//LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							LocalBroadcastManager.getInstance(act).sendBroadcastSync(intentToListFrag);
 						}
 						else
 						{
@@ -482,7 +481,9 @@ public class ActivityMain extends ActivityBase
 							queryToSave = getSearchText();
 							Intent intentToListFrag = new Intent(intentAction);
 							intentToListFrag.putExtra("filter_text", newText);
-							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							//we need to do it synchroniously to prevent filtering adapters after setting new pagers
+							//LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+							LocalBroadcastManager.getInstance(act).sendBroadcastSync(intentToListFrag);
 						}
 					break;
 					case PAGER_TYPE_AUTHORS:
@@ -623,9 +624,7 @@ public class ActivityMain extends ActivityBase
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 				searchView.clearFocus();
 			}
-			MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 			allSettings.setVisible(false);
-			MenuItem refresh = menu.findItem(R.id.refresh);
 			refresh.setVisible(false);
 		}
 		else
@@ -639,7 +638,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		//		Log.e(LOG, "onPrepareOptionsMenu called");
+		//Log.e(LOG, "onPrepareOptionsMenu called");
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 
@@ -650,49 +649,84 @@ public class ActivityMain extends ActivityBase
 		if (drawerOpen)
 		{
 			settingsAll.setVisible(false);
-			menu.findItem(R.id.refresh).setVisible(false);
+			refresh.setVisible(false);
 			search.setVisible(false);
 		}
 		else
 		{
+			//if expanded
 			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
-				settingsAll.setVisible(false);
-				refresh.setVisible(false);
-				search.setVisible(true);
+//				settingsAll.setVisible(false);
+//				refresh.setVisible(false);
+//				search.setVisible(true);
+				//setvisibility depending on category
+				int position = this.getCurentCategoryPosition();
+				switch (this.pagerType)
+				{
+					case PAGER_TYPE_MENU:
+						if (position == 3 || position == 13)
+						{
+							search.setVisible(true);
+							refresh.setVisible(false);
+							settingsAll.setVisible(false);
+						}
+						else
+						{
+							search.setVisible(false);
+							refresh.setVisible(true);
+							settingsAll.setVisible(true);
+						}
+					break;
+					case PAGER_TYPE_CATEGORIES:
+					case PAGER_TYPE_AUTHORS:
+						search.setVisible(true);
+						refresh.setVisible(false);
+						settingsAll.setVisible(false);
+					break;
+					case PAGER_TYPE_SINGLE:
+						search.setVisible(false);
+						refresh.setVisible(true);
+						settingsAll.setVisible(true);
+					break;
+				}
 			}
 			else
 			{
-				settingsAll.setVisible(true);
-				refresh.setVisible(true);
-				search.setVisible(true);
-			}
-			//setvisibility depending on category
-
-			int position = this.getCurentCategoryPosition();
-			switch (this.pagerType)
-			{
-				case PAGER_TYPE_MENU:
-					if (position == 3 || position == 13)
-					{
+				//searchView is collapsed
+//				settingsAll.setVisible(true);
+//				refresh.setVisible(true);
+//				search.setVisible(true);
+				//setvisibility depending on category
+				int position = this.getCurentCategoryPosition();
+				switch (this.pagerType)
+				{
+					case PAGER_TYPE_MENU:
+						if (position == 3 || position == 13)
+						{
+							search.setVisible(true);
+							refresh.setVisible(false);
+							settingsAll.setVisible(true);
+						}
+						else
+						{
+							search.setVisible(false);
+							refresh.setVisible(true);
+							settingsAll.setVisible(true);
+						}
+					break;
+					case PAGER_TYPE_CATEGORIES:
+					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-						refresh.setVisible(false);
-					}
-					else
-					{
+						refresh.setVisible(true);
+						settingsAll.setVisible(true);
+					break;
+					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
 						refresh.setVisible(true);
-					}
-				break;
-				case PAGER_TYPE_CATEGORIES:
-				case PAGER_TYPE_AUTHORS:
-					search.setVisible(true);
-					refresh.setVisible(true);
-				break;
-				case PAGER_TYPE_SINGLE:
-					search.setVisible(false);
-					refresh.setVisible(true);
-				break;
+						settingsAll.setVisible(true);
+					break;
+				}
 			}
 		}
 		return super.onPrepareOptionsMenu(menu);
