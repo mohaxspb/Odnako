@@ -54,7 +54,7 @@
         <item>http://miroporyadok.odnako.org</item>
         <item>http://odnako.org/blogs</item>
         <item>http://novosti.odnako.org</item>
-        <item>all_categiries</item>
+        <item>all_categories</item>
     </string-array>
     <string-array name="categories_descriptions">
         <item>empty</item>

@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -67,7 +68,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				//				Log.e(LOG, "selectedArtPosition: " + curPos);
+				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -86,7 +87,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRightAdapter.getAllCategoriesList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				//				Log.e(LOG, "selectedArtPosition: " + curPos);
+				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)

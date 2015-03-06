@@ -79,7 +79,8 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			//is in right (MenuPager, 3 position)
 			String[] menuUrls = CatData.getMenuLinks(act);
 
-			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
+//			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
+			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[3], position);
 
 			this.toolbarRight.setTitle(this.allAuthors.get(position).getName());
 

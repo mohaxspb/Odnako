@@ -49,7 +49,7 @@ public class FragmentAllCategories extends Fragment
 	private RecyclerView artsList;
 	private AllCategoriesListAdapter adapter;
 
-	private String categoryToLoad = "all_categiries";
+	private String categoryToLoad = "all_categories";
 
 	private ActivityMain act;
 

@@ -80,7 +80,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			//is in right (MenuPager, 3 position)
 			String[] menuUrls = CatData.getMenuLinks(act);
 
-			this.act.getAllCatListsSelectedArtPosition().put(allCategoriesUrls.get(position), position);
+			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[13], position);
 
 			this.toolbarRight.setTitle(this.allCategories.get(position).getTitle());
 
