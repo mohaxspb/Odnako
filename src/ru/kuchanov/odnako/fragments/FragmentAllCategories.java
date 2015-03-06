@@ -30,7 +30,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,7 @@ import android.widget.ImageView;
 
 public class FragmentAllCategories extends Fragment
 {
-	private static final String LOG = FragmentAllCategories.class.getSimpleName() + "/";
+	static final String LOG = FragmentAllCategories.class.getSimpleName() + "/";
 
 	private ImageView topImg;
 	private ImageView topImgCover;
@@ -80,10 +79,6 @@ public class FragmentAllCategories extends Fragment
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
-		//receiver for notify when frag selected
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
-		new IntentFilter(this.getCategoryToLoad() + "_notify_that_selected"));
-
 		//receiver for notify when we set filter to Authors list
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(setFilterReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "_set_filter"));
@@ -94,8 +89,7 @@ public class FragmentAllCategories extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.d(LOG + categoryToLoad, "setFilterReceiver called");
-
+//			Log.d(LOG + categoryToLoad, "setFilterReceiver called");
 			String filterText = null;
 			if (intent.getExtras() != null)
 			{
@@ -140,7 +134,7 @@ public class FragmentAllCategories extends Fragment
 					});
 					//and we must update right toolbar
 					Toolbar toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
-					toolbarRight.setTitle("Ни одного автора не обнаружено");
+					toolbarRight.setTitle("Ни одной категории не обнаружено");
 				}
 				else
 				{
@@ -165,24 +159,13 @@ public class FragmentAllCategories extends Fragment
 		}
 	};
 
-	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			Log.d(categoryToLoad, "fragSelectedReceiver onReceive called");
-
-			adapter.notifyDataSetChanged();
-		}
-	};
-
 	private BroadcastReceiver artSelectedReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
 			int newPosition = intent.getIntExtra("position", 0);
-			Log.d(LOG + categoryToLoad, "setActivatedPosition: " + newPosition);
+//			Log.d(LOG + categoryToLoad, "setActivatedPosition: " + newPosition);
 			setActivatedPosition(newPosition);
 		}
 	};
@@ -276,11 +259,6 @@ public class FragmentAllCategories extends Fragment
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artSelectedReceiver);
 			artSelectedReceiver = null;
-		}
-		if (fragSelectedReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
-			fragSelectedReceiver = null;
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();

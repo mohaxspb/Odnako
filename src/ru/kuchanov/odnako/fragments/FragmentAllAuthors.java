@@ -52,7 +52,6 @@ public class FragmentAllAuthors extends Fragment
 	private String categoryToLoad = "odnako.org/authors";
 
 	private ActivityMain act;
-	//	private boolean twoPane;
 
 	private int position = 0;
 
@@ -283,7 +282,7 @@ public class FragmentAllAuthors extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			int newPosition = intent.getIntExtra("position", 0);
-			Log.d(LOG + categoryToLoad, "setActivatedPosition: " + newPosition);
+//			Log.d(LOG + categoryToLoad, "setActivatedPosition: " + newPosition);
 			setActivatedPosition(newPosition);
 		}
 	};

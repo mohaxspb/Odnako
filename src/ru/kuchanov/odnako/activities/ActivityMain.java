@@ -17,11 +17,13 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
@@ -267,7 +269,13 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 			case PAGER_TYPE_CATEGORIES:
-			//TODO
+				//TODO
+				PagerAdapterAllCategories categoriesPagerAdapter = new PagerAdapterAllCategories(
+				act.getSupportFragmentManager(), this);
+				this.artsListPager.setAdapter(categoriesPagerAdapter);
+				listener = new PagerListenerAllCategories(this, categoriesPagerAdapter.getAllCategoriesList());
+				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
@@ -290,21 +298,10 @@ public class ActivityMain extends ActivityBase
 		//adMob
 		this.AddAds();
 
-		//restore search
-		//		this.supportInvalidateOptionsMenu();
-		//		this.getSupportActionBar().invalidateOptionsMenu();
-		//		if (this.searchText != null)
-		//		{
-		//			MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
-		//			searchMenuItem.expandActionView();
-		//			SearchView sv = (SearchView) searchMenuItem.getActionView();
-		//			sv.setQuery(this.searchText, false);
-		//		}
 		if (this.getSearchText() != null)
 		{
 			this.queryToSave = this.getSearchText();
 		}
-
 	}
 
 	private void saveAllCatListsSelectedArtPosition(Bundle b)
@@ -363,7 +360,6 @@ public class ActivityMain extends ActivityBase
 		switch (pagerType)
 		{
 			case PAGER_TYPE_MENU:
-
 			break;
 			default:
 				this.setGroupChildPosition(-1, -1);
@@ -375,12 +371,8 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		Log.e(LOG, "onResume");
+		//		Log.e(LOG, "onResume");
 		super.onResume();
-
-		//restore search
-		//		this.supportInvalidateOptionsMenu();
-
 	}
 
 	@Override
@@ -411,7 +403,7 @@ public class ActivityMain extends ActivityBase
 		outState.putBoolean(KEY_IS_KEYBOARD_OPENED, isKeyboardOpened);
 
 		//allAuthors list
-		//		outState TODO implement Parcelable to Author and Category and Article to store them through standart methods
+		//outState TODO implement Parcelable to Author and Category and Article to store them through standart methods
 	}
 
 	@Override
@@ -426,7 +418,6 @@ public class ActivityMain extends ActivityBase
 
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener()
 		{
-
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item)
 			{
@@ -472,49 +463,40 @@ public class ActivityMain extends ActivityBase
 				{
 					return true;
 				}
-				//				Log.e(LOG, "onQueryTextChange newText: '" + newText + "'");
 				switch (pagerType)
 				{
 					case PAGER_TYPE_MENU:
+						//this is interesting way:
+						String intentAction = (currentCategoryPosition == 3) ? CatData.getMenuLinks(act)[3]
+						: (currentCategoryPosition == 13) ? CatData.getMenuLinks(act)[13] : null;
+						intentAction = intentAction + "_set_filter";
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);
-							Intent intentToListFrag = new Intent(CatData.getMenuLinks(act)[3]
-							+ "_set_filter");
+							Intent intentToListFrag = new Intent(intentAction);
 							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 						}
 						else
 						{
 							setSearchText(newText);
 							queryToSave = getSearchText();
-							Intent intentToListFrag = new Intent(CatData.getMenuLinks(act)[3]
-							+ "_set_filter");
+							Intent intentToListFrag = new Intent(intentAction);
 							intentToListFrag.putExtra("filter_text", newText);
 							LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 						}
 					break;
 					case PAGER_TYPE_AUTHORS:
-						//TODO
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);
 							//initialyse allAuthorsList with default authors list
-							//							ArrayList<Author> filteredList = new ArrayList<Author>(getAllAuthorsList());
-							//update allAuthorsAdapter of left pager
-							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
-							PagerAdapterAllAuthors adapter = new PagerAdapterAllAuthors(act
-							.getSupportFragmentManager(), (ActivityMain) act);
-							//							adapter.updateData(filteredList);
+							PagerAdapterAllAuthors adapter = new PagerAdapterAllAuthors(
+							act.getSupportFragmentManager(), (ActivityMain) act);
 							artsListPager.setAdapter(adapter);
 							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
 							.getAllAuthorsList());
 							artsListPager.setOnPageChangeListener(listener);
-							//							artsListPager.setCurrentItem(positionInLeftPager);
-							//try notify pager that item selected if it's 0 item
-							//							if (positionInLeftPager == 0)
-							//							{
 							listener.onPageSelected(0);
-							//							}
 						}
 						else
 						{
@@ -533,7 +515,6 @@ public class ActivityMain extends ActivityBase
 								}
 							}
 							//update allAuthorsAdapter of left pager
-							//							((PagerAdapterAuthorsLists) artsListPager.getAdapter()).updateData(filteredList);
 							PagerAdapterAllAuthors adapter = new PagerAdapterAllAuthors(act
 							.getSupportFragmentManager(), (ActivityMain) act);
 							adapter.updateData(filteredList);
@@ -541,26 +522,58 @@ public class ActivityMain extends ActivityBase
 							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
 							.getAllAuthorsList());
 							artsListPager.setOnPageChangeListener(listener);
-							//							artsListPager.setCurrentItem(positionInLeftPager);
-							//try notify pager that item selected if it's 0 item
-							//							if (positionInLeftPager == 0)
-							//							{
 							listener.onPageSelected(0);
-							//							}
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
-					//TODO
+						//TODO
+						if (TextUtils.isEmpty(newText))
+						{
+							setSearchText(null);
+							//initialyse allAuthorsList with default authors list
+							PagerAdapterAllCategories adapter = new PagerAdapterAllCategories(
+							act.getSupportFragmentManager(), (ActivityMain) act);
+							artsListPager.setAdapter(adapter);
+							OnPageChangeListener listener = new PagerListenerAllCategories((ActivityMain) act, adapter
+							.getAllCategoriesList());
+							artsListPager.setOnPageChangeListener(listener);
+							listener.onPageSelected(0);
+						}
+						else
+						{
+							setSearchText(newText);
+							queryToSave = getSearchText();
+							//initialyse allAuthorsList
+							ArrayList<Category> filteredList = new ArrayList<Category>();
+							//filter it
+							for (int i = 0; i < getAllCategoriesList().size(); i++)
+							{
+								Category item = getAllCategoriesList().get(i);
+								if (item.getTitle().toLowerCase(new Locale("RU_ru"))
+								.contains(newText.toLowerCase(new Locale("RU_ru"))))
+								{
+									filteredList.add(item);
+								}
+							}
+							//update allCategoriesAdapter of left pager
+							PagerAdapterAllCategories adapter = new PagerAdapterAllCategories(act
+							.getSupportFragmentManager(), (ActivityMain) act);
+							adapter.updateData(filteredList);
+							artsListPager.setAdapter(adapter);
+							OnPageChangeListener listener = new PagerListenerAllCategories((ActivityMain) act, adapter
+							.getAllCategoriesList());
+							artsListPager.setOnPageChangeListener(listener);
+							listener.onPageSelected(0);
+						}
 					break;
 				}
-
 				return true;
 			}
 
 			@Override
 			public boolean onQueryTextSubmit(String query)
 			{
-				//				System.out.println("onQueryTextSubmit");
+				//Log.d(LOG, "onQueryTextSubmit");
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 

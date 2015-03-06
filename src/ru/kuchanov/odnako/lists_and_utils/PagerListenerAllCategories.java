@@ -19,13 +19,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeListener
 {
-	private final static String LOG = PagerListenerAllCategories.class.getSimpleName() + "/";
+	final static String LOG = PagerListenerAllCategories.class.getSimpleName() + "/";
 
 	private ActivityMain act;
 
@@ -73,8 +72,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 	@Override
 	public void onPageSelected(int position)
 	{
-		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
-
+//		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
 		if (isInRightPager)
 		{
 			//is in right (MenuPager, 3 position)
@@ -92,7 +90,6 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 		else
 		{
 			//is in left, so it isn't MenuPager
-
 			//update currentCategoryPosition
 			this.act.setCurentCategoryPosition(position);
 			this.currentCategoryPosition = position;

@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -53,11 +52,9 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		setTitleDrawerItemToolbarTopImgETC(position);
 
-		String[] allCatsLinks = CatData.getMenuLinks(act);
-
 		if (twoPane)
 		{
-
+			String[] menuLinks = CatData.getMenuLinks(act);
 			if (currentCategoryPosition == 3)
 			{
 				//show all authors adapters
@@ -67,8 +64,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
 				pagerRight.setOnPageChangeListener(listener);
-				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				Log.e(LOG, "selectedArtPosition: " + curPos);
+				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
+//				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -86,8 +83,8 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				OnPageChangeListener listener = new PagerListenerAllCategories(act,
 				pagerRightAdapter.getAllCategoriesList());
 				pagerRight.setOnPageChangeListener(listener);
-				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
-				Log.e(LOG, "selectedArtPosition: " + curPos);
+				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
+//				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -104,7 +101,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(this.act, categoryForRightPager);
 				pagerRight.setOnPageChangeListener(listener);
-				int curPos = act.getAllCatListsSelectedArtPosition().get(allCatsLinks[currentCategoryPosition]);
+				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -160,6 +157,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			else
 			{
 				search.setVisible(false);
+				search.collapseActionView();
 				refresh.setVisible(true);
 			}
 		}
