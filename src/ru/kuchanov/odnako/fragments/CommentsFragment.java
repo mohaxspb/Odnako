@@ -19,7 +19,7 @@ import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -152,10 +152,10 @@ public class CommentsFragment extends Fragment
 		art_img.setLayoutParams(params);
 		art_img.setPadding(5, 5, 5, 5);
 
-		ImageLoader imageLoader = MyUniversalImageLoader.get(act);
+		ImageLoader imageLoader = MyUIL.get(act);
 		if(this.pref.getString("theme", "dark").equals("dark"))
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, art_img, MyUniversalImageLoader.getDarkOptions());
+			imageLoader.displayImage(this.curArtInfo.img_art, art_img, MyUIL.getDarkOptions());
 		}
 		else
 		{

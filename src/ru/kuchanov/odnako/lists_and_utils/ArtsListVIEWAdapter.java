@@ -13,7 +13,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.FragmentArtsListView;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -71,7 +71,7 @@ implements Filterable
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
-		imageLoader = MyUniversalImageLoader.get(act);
+		imageLoader = MyUIL.get(act);
 	}
 
 	public void setArgs(FragmentArtsListView artsListFrag, ListView artsListView)
@@ -263,7 +263,7 @@ implements Filterable
 					if (this.pref.getString("theme", "dark").equals("dark"))
 					{
 						imageLoader.displayImage(HDimgURL, holderMain.art_img,
-						MyUniversalImageLoader.getDarkOptions(),
+						MyUIL.getDarkOptions(),
 						new ImageLoadingListener()
 						{
 							@Override
@@ -289,7 +289,7 @@ implements Filterable
 							{
 								String newURL = imageUri.replace("/450_240/", "/120_72/");
 								imageLoader.displayImage(newURL, holderMain.art_img,
-								MyUniversalImageLoader.getDarkOptions());
+								MyUIL.getDarkOptions());
 							}
 						}, new ImageLoadingProgressListener()
 						{
@@ -302,7 +302,7 @@ implements Filterable
 					}
 					else
 					{
-						imageLoader.displayImage(HDimgURL, holderMain.art_img, MyUniversalImageLoader.getLightOptions(),
+						imageLoader.displayImage(HDimgURL, holderMain.art_img, MyUIL.getLightOptions(),
 						new ImageLoadingListener()
 						{
 							@Override
@@ -328,7 +328,7 @@ implements Filterable
 							{
 								String newURL = imageUri.replace("/450_240/", "/120_72/");
 								imageLoader.displayImage(newURL, holderMain.art_img,
-								MyUniversalImageLoader.getLightOptions());
+								MyUIL.getLightOptions());
 							}
 						}, new ImageLoadingProgressListener()
 						{
@@ -436,7 +436,7 @@ implements Filterable
 					if (this.pref.getString("theme", "dark").equals("dark"))
 					{
 						imageLoader.displayImage(p.img_art, holderMain.author_img,
-						MyUniversalImageLoader.getDarkOptions());
+						MyUIL.getDarkOptions());
 					}
 					else
 					{

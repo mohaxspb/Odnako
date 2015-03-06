@@ -22,8 +22,9 @@ import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +59,8 @@ public class FragmentArtsListRecycler extends Fragment
 {
 	private static String LOG = FragmentArtsListRecycler.class.getSimpleName() + "/";
 
+	ImageLoader imgLoader;
+
 	private int pageToLoad = 1;
 
 	private SwipeRefreshLayout swipeRef;
@@ -90,6 +93,7 @@ public class FragmentArtsListRecycler extends Fragment
 		super.onCreate(savedInstanceState);
 
 		this.act = (ActivityMain) this.getActivity();
+		this.imgLoader = MyUIL.get(act);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		Bundle fromArgs = this.getArguments();
@@ -141,7 +145,7 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-//			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
+			//			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
 			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
 			if (isCurrentlyLoading)
 			{
@@ -209,6 +213,8 @@ public class FragmentArtsListRecycler extends Fragment
 			boolean isDisplayed = false;
 			int pagerType = act.getPagerType();
 			int currentCategoryPosition = act.getCurentCategoryPosition();
+			ViewPager pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
+			ViewPager pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
 			switch (pagerType)
 			{
 				case ActivityMain.PAGER_TYPE_MENU:
@@ -223,7 +229,7 @@ public class FragmentArtsListRecycler extends Fragment
 					{
 						if (currentCategoryPosition == 3)
 						{
-							ViewPager pagerRight = (ViewPager) act.findViewById(R.id.pager_right);
+
 							PagerAdapterAllAuthors allAuthorsAdapter = (PagerAdapterAllAuthors) pagerRight
 							.getAdapter();
 							List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
@@ -242,6 +248,20 @@ public class FragmentArtsListRecycler extends Fragment
 						else if (currentCategoryPosition == 13)
 						{
 							//TODO
+							PagerAdapterAllCategories allCategoriesAdapter = (PagerAdapterAllCategories) pagerRight
+							.getAdapter();
+							List<String> alllCategoriesUrls = allCategoriesAdapter.getAllCategoriesURLsList();
+							int selectedArtPosOfAlllCategoriesFrag = act.getAllCatListsSelectedArtPosition().get(
+							allMenuLinks[3]);
+							if (categoryToLoad.equals(alllCategoriesUrls.get(selectedArtPosOfAlllCategoriesFrag)))
+							{
+								//so it's currently displayed fragment
+								isDisplayed = true;
+							}
+							else
+							{
+								isDisplayed = false;
+							}
 						}
 					}
 					else
@@ -250,10 +270,8 @@ public class FragmentArtsListRecycler extends Fragment
 					}
 				break;
 				case ActivityMain.PAGER_TYPE_AUTHORS:
-					ViewPager pagerLeft = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAllAuthors allAuthorsAdapter = (PagerAdapterAllAuthors) pagerLeft.getAdapter();
 					List<String> allAuthorsUrls = allAuthorsAdapter.getAllAuthorsURLsList();
-
 					if (categoryToLoad.equals(allAuthorsUrls.get(currentCategoryPosition)) && isInLeftPager)
 					{
 						//so it's currently displayed fragment
@@ -265,7 +283,18 @@ public class FragmentArtsListRecycler extends Fragment
 					}
 				break;
 				case ActivityMain.PAGER_TYPE_CATEGORIES:
-				//TODO
+					//TODO
+					PagerAdapterAllCategories allCategoriesAdapter = (PagerAdapterAllCategories) pagerLeft.getAdapter();
+					List<String> allCategoriesUrls = allCategoriesAdapter.getAllCategoriesURLsList();
+					if (categoryToLoad.equals(allCategoriesUrls.get(currentCategoryPosition)) && isInLeftPager)
+					{
+						//so it's currently displayed fragment
+						isDisplayed = true;
+					}
+					else
+					{
+						isDisplayed = false;
+					}
 				break;
 				case ActivityMain.PAGER_TYPE_SINGLE:
 					//it's the only one fragment, so isDisplayed is always true
@@ -487,7 +516,6 @@ public class FragmentArtsListRecycler extends Fragment
 			//nothing to do;
 			break;
 		}
-
 	}
 
 	@Override
@@ -518,19 +546,41 @@ public class FragmentArtsListRecycler extends Fragment
 		String defPackage = act.getPackageName();
 		String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
 		String[] categoriesUrls = act.getResources().getStringArray(R.array.categories_links);
+		boolean findImgFile = false;
 
-		for (int i = 0; i < categoriesUrls.length; i++)
+		for (int i = 0; i < categoriesUrls.length && !findImgFile; i++)
 		{
 			if (this.categoryToLoad.equals(categoriesUrls[i]))
 			{
+				findImgFile = true;
 				String fullResName = catImgsFilesNames[i];
 				String resName = fullResName.substring(0, fullResName.length() - 4);
 				int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-				ImageLoader imgLoader = MyUniversalImageLoader.get(act);
-				imgLoader.displayImage("drawable://" + resId, topImg,
-				MyUniversalImageLoader.getTransparentBackgroundOptions(this.act));
+				imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
 				break;
 			}
+		}
+		if (!findImgFile)
+		{
+			catImgsFilesNames = CatData.getAllTagsImgsFILEnames(act);
+			categoriesUrls = CatData.getAllTagsLinks(act);
+			for (int i = 0; i < categoriesUrls.length && !findImgFile; i++)
+			{
+				if (this.categoryToLoad.equals(categoriesUrls[i]))
+				{
+					findImgFile = true;
+					String fullResName = catImgsFilesNames[i];
+					String resName = fullResName.substring(0, fullResName.length() - 4);
+					int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
+					imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
+					break;
+				}
+			}
+		}
+		if (!findImgFile)
+		{
+			int resId = R.drawable.odnako;
+			imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
 		}
 		this.topImg.setY(topImgCoord);
 
@@ -585,7 +635,7 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 		else
 		{
-			Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
+			//Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
 			this.artsList.setAdapter(artsListAdapter);
 

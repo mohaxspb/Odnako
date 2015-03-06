@@ -14,7 +14,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -381,10 +381,10 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				{
 //					holderMain.left.setImageDrawable(drawableAuthor);
 					//get and display author's avatar
-					ImageLoader imageLoader = MyUniversalImageLoader.get(act);
+					ImageLoader imageLoader = MyUIL.get(act);
 					DataBaseHelper helper=new DataBaseHelper(act);
 					String imageUri=Author.getAvatarUrlByName(helper, drawerItemTitle);
-					imageLoader.displayImage(imageUri, holderMain.left, MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
+					imageLoader.displayImage(imageUri, holderMain.left, MyUIL.getTransparentBackgroundROUNDOptions(act));
 				}
 
 			break;

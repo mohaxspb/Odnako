@@ -13,7 +13,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -78,7 +78,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
-		imageLoader = MyUniversalImageLoader.get(act);
+		imageLoader = MyUIL.get(act);
 	}
 
 	@Override
@@ -133,11 +133,11 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 		final DisplayImageOptions options;
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			options = MyUniversalImageLoader.getDarkOptions();
+			options = MyUIL.getDarkOptions();
 		}
 		else
 		{
-			options = MyUniversalImageLoader.getLightOptions();
+			options = MyUIL.getLightOptions();
 		}
 
 		switch (getItemViewType(position))
@@ -333,7 +333,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						holderMain.author_img.setLayoutParams(params);
 
 						this.imageLoader.displayImage(p.img_art, holderMain.author_img,
-						MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
+						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
 					else if (!p.img_author.equals("empty"))
 					{
@@ -343,7 +343,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						holderMain.author_img.setLayoutParams(params);
 
 						this.imageLoader.displayImage(p.img_author, holderMain.author_img,
-						MyUniversalImageLoader.getTransparentBackgroundROUNDOptions(act));
+						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
 					else
 					{

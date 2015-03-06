@@ -10,7 +10,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.fragments.FragmentAllCategories;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -61,7 +61,7 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
-		imageLoader = MyUniversalImageLoader.get(act);
+		imageLoader = MyUIL.get(act);
 		this.allCategoriesInfoList = (ArrayList<Category>) act.getAllCategoriesList();
 		this.orig = this.allCategoriesInfoList;
 
@@ -183,7 +183,7 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 				}
 				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
-					imageLoader.displayImage(link, holderMain.categoryImg, MyUniversalImageLoader.getDarkOptions());
+					imageLoader.displayImage(link, holderMain.categoryImg, MyUIL.getDarkOptions());
 				}
 				else
 				{

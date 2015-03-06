@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -109,7 +109,7 @@ public class CommentDialogFragment extends DialogFragment
 		commText.setMovementMethod(LinkMovementMethod.getInstance());
 
 		// FLAG
-		ImageLoader imageLoader = MyUniversalImageLoader.get(act);
+		ImageLoader imageLoader = MyUIL.get(act);
 		imageLoader.displayImage(this.curCommentInfo.flag, flag);
 		//end of FLAG
 

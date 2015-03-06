@@ -82,7 +82,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 
 			this.act.getAllCatListsSelectedArtPosition().put(allCategoriesUrls.get(position), position);
 
-			this.toolbarRight.setTitle(this.allCategoriesUrls.get(position));
+			this.toolbarRight.setTitle(this.allCategories.get(position).getTitle());
 
 			//notify allCategories frag about author selected
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[13] + "art_position");

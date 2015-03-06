@@ -23,7 +23,11 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
 
-public class MyUniversalImageLoader
+/**
+ * Helper for UniversalImageLoader library
+ * <a href="https://github.com/nostra13/Android-Universal-Image-Loader">Link to GitHub</a>
+ */
+public class MyUIL
 {
 
 	public static ImageLoader get(ActionBarActivity act)

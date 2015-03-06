@@ -6,7 +6,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.CommentDialogFragment;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -165,7 +165,7 @@ public class CommentsListAdapter extends ArrayAdapter<CommentInfo> implements Fi
 
 				// FLAG
 
-				ImageLoader imageLoader = MyUniversalImageLoader.get(act);
+				ImageLoader imageLoader = MyUIL.get(act);
 				imageLoader.displayImage(p.flag, holderMain.flag);
 				//end of FLAG
 

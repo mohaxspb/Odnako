@@ -10,7 +10,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.MyUniversalImageLoader;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -63,7 +63,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
-		imageLoader = MyUniversalImageLoader.get(act);
+		imageLoader = MyUIL.get(act);
 		this.allAuthrsInfoList = (ArrayList<Author>) act.getAllAuthorsList();
 		//XXX
 		this.orig = this.allAuthrsInfoList;
@@ -213,7 +213,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				if (this.pref.getString("theme", "dark").equals("dark"))
 				{
 					imageLoader.displayImage(p.getAvatar(), holderMain.author_img,
-					MyUniversalImageLoader.getDarkOptions());
+					MyUIL.getDarkOptions());
 				}
 				else
 				{

@@ -58,7 +58,7 @@ public class ActivityMain extends ActivityBase
 	public final static int PAGER_TYPE_CATEGORIES = 2;
 	public final static int PAGER_TYPE_SINGLE = 3;
 
-	private final static String PAGER_TYPE_KEY = "pager type key";
+	private final static String KEY_PAGER_TYPE = "pager type key";
 	private int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
@@ -103,6 +103,7 @@ public class ActivityMain extends ActivityBase
 	 * item) item in list. Only in twoPane mode.
 	 */
 	private HashMap<String, Integer> allCatListsSelectedArtPosition;
+	private final static String KEY_ALL_SELECTED_POSITIONS = "allCatListsSelectedArtPosition";
 
 	private String queryToSave;
 	private boolean isKeyboardOpened = false;
@@ -139,9 +140,7 @@ public class ActivityMain extends ActivityBase
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
-			this.pagerType = savedInstanceState.getInt(PAGER_TYPE_KEY);
-
-			//			this.restoreAllCatArtsInfo(savedInstanceState);
+			this.pagerType = savedInstanceState.getInt(KEY_PAGER_TYPE);
 
 			this.restoreGroupChildPosition(savedInstanceState);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
@@ -179,8 +178,6 @@ public class ActivityMain extends ActivityBase
 		if (this.allCatListsSelectedArtPosition == null)
 		{
 			ArrayList<String> allCatAndAutURLs = new ArrayList<String>();
-
-			//			DataBaseHelper h = new DataBaseHelper(act);
 			try
 			{
 				allCatAndAutURLs = h.getAllCatAndAutUrls();
@@ -197,6 +194,10 @@ public class ActivityMain extends ActivityBase
 			{
 				this.allCatListsSelectedArtPosition.put(allCatAndAutURLs.get(i), 0);
 			}
+			//also we must add allAuthors(3) & allCategories(13)
+			String[] allMenuLinks = CatData.getMenuLinks(act);
+			this.allCatListsSelectedArtPosition.put(allMenuLinks[3], 0);
+			this.allCatListsSelectedArtPosition.put(allMenuLinks[13], 0);
 		}
 
 		//set coords of topImg and toolbar if they are null (first launch without any state)
@@ -308,14 +309,14 @@ public class ActivityMain extends ActivityBase
 
 	private void saveAllCatListsSelectedArtPosition(Bundle b)
 	{
-		b.putSerializable("allCatListsSelectedArtPosition", allCatListsSelectedArtPosition);
+		b.putSerializable(KEY_ALL_SELECTED_POSITIONS, allCatListsSelectedArtPosition);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void restoreAllCatListsSelectedArtPosition(Bundle b)
 	{
 		this.allCatListsSelectedArtPosition = (HashMap<String, Integer>) b
-		.getSerializable("allCatListsSelectedArtPosition");
+		.getSerializable(KEY_ALL_SELECTED_POSITIONS);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -392,7 +393,7 @@ public class ActivityMain extends ActivityBase
 		outState.putInt("curentCategoryPosition", getCurentCategoryPosition());
 		outState.putString("currentCategory", this.getCurrentCategory());
 
-		outState.putInt(PAGER_TYPE_KEY, getPagerType());
+		outState.putInt(KEY_PAGER_TYPE, getPagerType());
 
 		//save toolbar and topImg Y coord
 		saveAllCatToolbartopImgYCoord(outState);
