@@ -10,11 +10,6 @@
     card_view:cardCornerRadius="3dp"
     card_view:cardElevation="3dp" >
 
-    <!--
-    card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="5dp" >
-    -->
-
     <LinearLayout
         android:id="@+id/art_card_main_lin"
         android:layout_width="match_parent"

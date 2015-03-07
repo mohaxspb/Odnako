@@ -126,7 +126,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				Log.d(LOG + catToLoad, DBRezult);
+//				Log.d(LOG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -164,10 +164,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			//if pageToLoad!=1 we load from bottom
-			Log.d(LOG, "LOAD FROM BOTTOM!");
+//			Log.d(LOG, "LOAD FROM BOTTOM!");
 			DBActions dbActions = new DBActions(this, this.getHelper());
 			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-			Log.d(LOG, dBRezult);
+//			Log.d(LOG, dBRezult);
 
 			switch (dBRezult)
 			{
@@ -202,7 +202,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+//		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 
 		//TODO check quontity and allAuthors situation
 		//So, we can have MAX quint of tasks=3 (cur pager frag +left and right)
@@ -242,7 +242,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		Log.d(LOG + categoryToLoad, "sendDownloadedData");
+//		Log.d(LOG + categoryToLoad, "sendDownloadedData");
 		//find and remove finished task from list
 		for (int i = 0; i < this.currentTasks.size(); i++)
 		{
@@ -299,7 +299,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
+//		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
@@ -421,7 +421,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
-		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+//		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
 
 		Intent intent = new Intent(categoryToLoad);
 

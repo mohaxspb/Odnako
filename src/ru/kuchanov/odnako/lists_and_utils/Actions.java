@@ -53,7 +53,7 @@ public class Actions
 			boolean twoPane = pref.getBoolean("twoPane", false);
 			if (twoPane)
 			{
-				if (act.getClass().getSimpleName().equals("ActivityMain"))
+				if (act instanceof ActivityMain)
 				{
 					final ActivityMain mainActivity = (ActivityMain) act;
 					//check if we show allAuthors frag
@@ -162,6 +162,14 @@ public class Actions
 			{
 				//if not twoPane
 				//TODO check if it ActivityMain and show AllAuthors pager or start activity with it
+				if (act instanceof ActivityMain)
+				{
+					
+				}
+				else
+				{
+					//TODO
+				}
 			}
 		}
 		else
