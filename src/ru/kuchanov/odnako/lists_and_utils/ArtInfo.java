@@ -566,16 +566,6 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
-		//		private String[] AllInfo = new String[17];
-
-		//		public String url, title, img_art, authorBlogUrl, authorName;
-
-		//		public String preview, pubDate = "empty";
-
-		//		public int numOfComments, numOfSharings = 0;
-
-		//		public String artText, authorDescr, tegs_main, tegs_all, share_quont, to_read_main, to_read_more,
-		//		img_author = "empty";
 		dest.writeString(url);
 		dest.writeString(title);
 		dest.writeString(img_art);
@@ -640,5 +630,4 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 			return new ArtInfo[size];
 		}
 	};
-
 }

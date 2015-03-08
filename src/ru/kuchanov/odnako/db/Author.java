@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Date;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -20,7 +23,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * lastArticleDate, firstArticleURL
  */
 @DatabaseTable(tableName = "author")
-public class Author implements Comparable<Author>
+public class Author implements Comparable<Author>, Parcelable
 {
 	public final static String ID_FIELD_NAME = "id";
 	public final static String URL_FIELD_NAME = "blog_url";
@@ -370,4 +373,55 @@ public class Author implements Comparable<Author>
 		}
 	}
 
+	//////PARCEL implementation
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		dest.writeInt(id);
+		dest.writeString(blog_url);
+		dest.writeString(name);
+		dest.writeString(description);
+		dest.writeString(who);
+		dest.writeString(avatar);
+		dest.writeString(avatarBig);
+		dest.writeLong(refreshed.getTime());
+		dest.writeLong(lastArticleDate.getTime());
+		dest.writeString(firstArticleURL);
+	}
+
+	private Author(Parcel in)
+	{
+		id = in.readInt();
+		blog_url = in.readString();
+		name = in.readString();
+		description = in.readString();
+		who = in.readString();
+		avatar = in.readString();
+		avatarBig = in.readString();
+		refreshed = new Date(in.readLong());
+		lastArticleDate = new Date(in.readLong());
+		firstArticleURL = in.readString();
+	}
+
+	public static final Parcelable.Creator<Author> CREATOR = new Parcelable.Creator<Author>()
+	{
+
+		@Override
+		public Author createFromParcel(Parcel source)
+		{
+			return new Author(source);
+		}
+
+		@Override
+		public Author[] newArray(int size)
+		{
+			return new Author[size];
+		}
+	};
 }

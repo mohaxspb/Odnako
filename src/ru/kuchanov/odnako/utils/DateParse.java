@@ -47,7 +47,6 @@ public class DateParse
 				d = dateFormatArr[i].parse(stringDate);
 				//here set year, month, day
 				//TODO
-				.
 			} catch (ParseException e)
 			{
 

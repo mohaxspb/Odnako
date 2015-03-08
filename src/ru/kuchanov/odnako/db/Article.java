@@ -16,6 +16,8 @@ import java.util.Date;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.DateParse;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
@@ -29,7 +31,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * tegs_all, share_quont, to_read_main, to_read_more, img_author, author
  */
 @DatabaseTable(tableName = "article")
-public class Article
+public class Article implements Parcelable
 {
 	private static final String LOG = Article.class.getSimpleName();
 
@@ -99,6 +101,9 @@ public class Article
 	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
 	private Author author;
 
+	/**
+	 * we need empty constructor for OrmLite
+	 */
 	public Article()
 	{
 
@@ -637,4 +642,81 @@ public class Article
 	{
 		return this.getAsStringArray()[1];
 	}
+	
+//////PARCEL implementation
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		dest.writeString(url);
+		dest.writeString(title);
+		dest.writeString(img_art);
+		dest.writeString(authorBlogUrl);
+		dest.writeString(authorName);
+
+		dest.writeString(preview);
+		dest.writeLong(pubDate.getTime());
+
+		dest.writeInt(numOfComments);
+		dest.writeInt(numOfSharings);
+
+		dest.writeString(artText);
+		dest.writeString(authorDescr);
+		dest.writeString(tegs_main);
+		dest.writeString(tegs_all);
+		dest.writeString(share_quont);
+		dest.writeString(to_read_main);
+		dest.writeString(to_read_more);
+		dest.writeString(img_author);
+		
+		dest.writeLong(refreshed.getTime());
+		dest.writeParcelable(author, flags);
+	}
+
+	private Article(Parcel in)
+	{
+		this.url = in.readString();
+		this.title = in.readString();
+		this.img_art = in.readString();
+		this.authorBlogUrl = in.readString();
+		this.authorName = in.readString();
+
+		this.preview = in.readString();
+		this.pubDate = new Date(in.readLong());
+
+		this.numOfComments = in.readInt();
+		this.numOfSharings = in.readInt();
+		this.artText = in.readString();
+		this.authorDescr = in.readString();
+		this.tegs_main = in.readString();
+		this.tegs_all = in.readString();
+		this.share_quont = in.readString();
+		this.to_read_main = in.readString();
+		this.to_read_more = in.readString();
+		this.img_author = in.readString();
+		
+		refreshed=new Date(in.readLong());
+		author=(Author)in.readParcelable(Author.class.getClassLoader());
+	}
+
+	public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>()
+	{
+
+		@Override
+		public Article createFromParcel(Parcel source)
+		{
+			return new Article(source);
+		}
+
+		@Override
+		public Article[] newArray(int size)
+		{
+			return new Article[size];
+		}
+	};
 }
