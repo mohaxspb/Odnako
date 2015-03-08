@@ -107,7 +107,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		} catch (Exception e)
 		{
 			Log.e(LOG + categoryToLoad, "Catched Exception: " + e.toString());
-			if (e.toString().equals(e.getClass().getName()+": "+Const.Error.CYRILLIC_ERROR))
+			if (e.toString().equals(e.getClass().getName() + ": " + Const.Error.CYRILLIC_ERROR))
 			{
 				this.cyrillicError = true;
 			}
@@ -118,7 +118,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	protected void onPostExecute(ArrayList<ArtInfo> output)
 	{
-		//Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
+		Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
+
 		//check internet
 		if (output != null)
 		{

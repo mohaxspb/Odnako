@@ -199,7 +199,17 @@ public class HtmlHelper
 				info[3] = author1[0].getAttributeByName("href");
 				info[4] = Html.fromHtml(author1[0].getAttributeByName("title")).toString();
 			}
-			allArtsInfo.add(new ArtInfo(info));
+			ArtInfo a = new ArtInfo(info);
+			try
+			{
+				TagNode element4 = element2.findElementByAttValue("class", "m-news-date", true, true);
+				a.pubDate = element4.getText().toString().replaceAll(" ", "");
+			} catch (Exception e)
+			{
+
+			}
+
+			allArtsInfo.add(a);
 		}
 		//TODO Check here situation when we parse last page of category/ author and get 30 arts
 		//if so we can't setInitial arts URL in DBActions, so we can get access to DB here

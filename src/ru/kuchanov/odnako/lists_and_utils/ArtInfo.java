@@ -12,15 +12,13 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 
 public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 {
-	public static final String KEY_CURENT_ART="curArtInfo";
-	public static final String KEY_ALL_ART_INFO="allArtInfo";
-	
-	
-	static String LOG_TAG = ArtInfo.class.getSimpleName() + "/";
+	public static final String KEY_CURENT_ART = "curArtInfo";
+	public static final String KEY_ALL_ART_INFO = "allArtInfo";
+
+	static String LOG = ArtInfo.class.getSimpleName() + "/";
 
 	private String[] allInfo = new String[17];
 
@@ -266,6 +264,28 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 
 	public String[] getArtInfoAsStringArray()
 	{
+		allInfo = new String[17];
+		
+		this.allInfo[0] = url;
+		this.allInfo[1] = title;
+		this.allInfo[2] = img_art;
+		this.allInfo[3] = authorBlogUrl;
+		this.allInfo[4] = authorName;
+
+		this.allInfo[5] = preview;
+		this.allInfo[6] = pubDate;
+
+		this.allInfo[7] = String.valueOf(numOfComments);
+		this.allInfo[8] = String.valueOf(numOfSharings);
+		this.allInfo[9] = this.artText;
+		this.allInfo[10] = this.authorDescr;
+		this.allInfo[11] = this.tegs_main;
+		this.allInfo[12] = this.tegs_all;
+		this.allInfo[13] = this.share_quont;
+		this.allInfo[14] = this.to_read_main;
+		this.allInfo[15] = this.to_read_more;
+		this.allInfo[16] = this.img_author;
+		
 		return this.allInfo;
 	}
 
@@ -383,82 +403,6 @@ public class ArtInfo implements Comparable<ArtInfo>, Parcelable
 
 			this.dates = dates;
 		}
-	}
-
-	public static void writeAllArtsInfoToBundle(Bundle b, ArrayList<ArtInfo> allArtsInfo, ArtInfo curArtInfo)
-	{
-		//save allArtsInfo
-		if (allArtsInfo != null)
-		{
-			for (int i = 0; i < allArtsInfo.size(); i++)
-			{
-				if (i < 10)
-				{
-					b.putStringArray("allArtsInfo_0" + String.valueOf(i), allArtsInfo.get(i)
-					.getArtInfoAsStringArray());
-				}
-				else
-				{
-					b.putStringArray("allArtsInfo_" + String.valueOf(i), allArtsInfo.get(i)
-					.getArtInfoAsStringArray());
-				}
-			}
-		}
-		else
-		{
-			//			System.out.println("onSaveInstanceState. allArtsInfo=null");
-			Log.e(LOG_TAG, "allArtsInfo=null");
-		}
-		//save curArtInfo
-		if (curArtInfo != null)
-		{
-			b.putStringArray("curArtInfo", curArtInfo.getArtInfoAsStringArray());
-		}
-		else
-		{
-			//			System.out.println("ArticleFragment: onSaveInstanceState. curArtInfo=null");
-		}
-	}
-
-	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b, String caller)
-	//	public static ArrayList<ArtInfo> restoreAllArtsInfoFromBundle(Bundle b)
-	{
-		ArrayList<ArtInfo> allArtsInfo = null;
-		if (b.containsKey("allArtsInfo_00"))
-		{
-			//restore AllArtsInfo
-			allArtsInfo = new ArrayList<ArtInfo>();
-			Set<String> keySet = b.keySet();
-			ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-			Collections.sort(keySetSortedArrList);
-			for (int i = 0; i < keySetSortedArrList.size(); i++)
-			{
-				if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-				{
-					if (i < 10)
-					{
-						allArtsInfo.add(new ArtInfo(b.getStringArray("allArtsInfo_0"
-						+ String.valueOf(i))));
-					}
-					else
-					{
-						allArtsInfo.add(new ArtInfo(b.getStringArray("allArtsInfo_"
-						+ String.valueOf(i))));
-					}
-
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-		else
-		{
-			Log.e(LOG_TAG + caller, "b.containsKey('allArtsInfo_00')=false");
-		}
-
-		return allArtsInfo;
 	}
 
 	public static ArtInfo getDefaultArtInfo()

@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -35,6 +36,7 @@ public class Article
 	public final static String ID_FIELD_NAME = "id";
 	public final static String AUTHOR_FIELD_NAME = "author";
 	public final static String URL_FIELD_NAME = "url";
+	public final static String FIELD_NAME_PUB_DATE = "pubDate";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -57,7 +59,7 @@ public class Article
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String preview;
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
+	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = FIELD_NAME_PUB_DATE)
 	private Date pubDate;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
@@ -567,8 +569,8 @@ public class Article
 				{
 					e.printStackTrace();
 				}
-				//crate Article obj to pass it to DB
-				/* Article art */existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
+				//create Article obj to pass it to DB
+				existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
 				System.currentTimeMillis()), aut);
 				//set author image URL for articles
 				if (aut != null)
@@ -584,12 +586,35 @@ public class Article
 					Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 					Log.e(LOG, existingArt.getTitle() + " error while INSERT");
 				}
+			}//article do not exists
+			else
+			{
+				//check if date of existing ==0
+				if(existingArt.getPubDate().getTime()==0 && !a.pubDate.equals("empty"))
+				{
+					Article.updatePubDate(h, existingArt.getId(), DateParse.parse(a.pubDate));
+				}
 			}
 
 			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
 		}
 //		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 		return updatedData;
+	}
+
+	public static void updatePubDate(DataBaseHelper h, int articleId, Date d)
+	{
+		UpdateBuilder<Article, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArticle().updateBuilder();
+			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_NAME_PUB_DATE, d);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**

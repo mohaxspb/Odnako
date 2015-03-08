@@ -41,7 +41,7 @@ import android.widget.TextView;
 
 public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-	final static String TAG = ArtsListAdapter.class.getSimpleName();
+	final static String LOG = ArtsListAdapter.class.getSimpleName();
 
 	private static final int HEADER = 0;
 	private static final int ARTICLE = 1;
@@ -263,7 +263,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					}
 					else
 					{
-						holderMain.date.setText("date is empty; Must hide on relize");
+//						holderMain.date.setText("date is empty; Must hide on relize");
+						holderMain.date.setText(null);
 						holderMain.date.setTextSize(19 * scaleFactor);
 					}
 					////End of Date
