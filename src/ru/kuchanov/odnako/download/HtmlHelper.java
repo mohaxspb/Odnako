@@ -1,11 +1,9 @@
 package ru.kuchanov.odnako.download;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import org.apache.http.client.methods.HttpGet;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
@@ -13,6 +11,7 @@ import org.htmlcleaner.TagNode;
 import android.text.Html;
 import android.util.Log;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 public class HtmlHelper
@@ -28,32 +27,41 @@ public class HtmlHelper
 
 	HtmlCleaner cleaner;
 
-	public HttpGet get;
-
 	//	public static int NUM_OF_ARTS_ON_CUR_PAGE;
 
-	public HtmlHelper(URL htmlPage) throws IOException
+	//	public HtmlHelper(URL htmlPage) throws IOException
+	public HtmlHelper(String htmlPage) throws Exception
 	{
-		this.url = htmlPage.toString();
+		String subDomain = htmlPage.substring(htmlPage.indexOf("://") + 3, htmlPage.indexOf("."));
+		String regularExpression = "^[а-яА-ЯёЁ]+$";
+		if (subDomain.matches(regularExpression))
+		{
+			String encoded = URLEncoder.encode(subDomain, "utf-8");
+			url = htmlPage;
+			url = url.replace(subDomain, encoded);
+			// throw error here and FUCK it!
+			throw new Exception(Const.Error.CYRILLIC_ERROR);
+		}
+		else
+		{
+			url = URLDecoder.decode(htmlPage, "utf-8");
+		}
 
 		try
 		{
 			cleaner = new HtmlCleaner();
-			rootNode = cleaner.clean(htmlPage);
+			rootNode = cleaner.clean(new URL(url));
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
 			Log.e(TAG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
-		} catch (FileNotFoundException e)
-		{
-			Log.e(TAG, "FileNotFoundException at HtmlHelper");
-			Log.e(TAG, e.getMessage());
 		}
 	}
 
 	public boolean isAuthor()
 	{
+
 		String attrValue = "description";
 		String attrName = "itemprop";
 		TagNode tag = this.rootNode.findElementByAttValue(attrName, attrValue, true, false);

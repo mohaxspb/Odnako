@@ -1,13 +1,10 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
-
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 
 public class ParseForAllCategoriesImages extends AsyncTask<String, Integer, String>
 {
-
 	ActionBarActivity act;
 	
 	String catUrl;
@@ -25,7 +22,7 @@ public class ParseForAllCategoriesImages extends AsyncTask<String, Integer, Stri
 		try
 		{
 			catUrl=url[0];
-			HtmlHelper hh = new HtmlHelper(new URL(url[0]));
+			HtmlHelper hh = new HtmlHelper(url[0]);
 			output=hh.getCategoryImage();
 		} catch (Exception e)
 		{

@@ -1,7 +1,5 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
-
 import ru.kuchanov.odnako.R;
 
 import android.os.AsyncTask;
@@ -29,7 +27,7 @@ public class UpdateAllAuthorsInfo extends AsyncTask<Void, Integer, String[][]>
 			{
 				try
 				{
-					HtmlHelper hh = new HtmlHelper(new URL(allAuthorsUrls[i]));
+					HtmlHelper hh = new HtmlHelper(allAuthorsUrls[i]);
 
 					output[0][i] = hh.getAuthorsDescription();
 					output[1][i] = hh.getAuthorsBigImg();

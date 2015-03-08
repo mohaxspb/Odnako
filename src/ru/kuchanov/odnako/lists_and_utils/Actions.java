@@ -161,11 +161,62 @@ public class Actions
 			else
 			{
 				//if not twoPane
-				//TODO check if it ActivityMain and show AllAuthors pager or start activity with it
+				//check if it ActivityMain and show AllAuthors pager or start activity with it
 				if (act instanceof ActivityMain)
 				{
-					
-				}
+					ActivityMain mainActivity = (ActivityMain) act;
+					//we must show authors list.
+					//we can switch here if we have him in autList or not
+					//if so we can show arts list in allAuthor frag or not
+					ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
+					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
+					act.getSupportFragmentManager(), mainActivity);
+					boolean weFindIt = false;
+					int position = 0;
+					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
+					{
+						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
+						{
+							weFindIt = true;
+							position = i;
+							break;
+						}
+					}
+					if (weFindIt)
+					{
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
+						mainActivity.setCurentCategoryPosition(position);
+
+						leftPager.setAdapter(pagerAllAut);
+						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut
+						.getAllAuthorsList());
+						leftPager.setOnPageChangeListener(listener);
+						leftPager.setCurrentItem(position);
+						if (position == 0)
+						{
+							listener.onPageSelected(0);
+						}
+					}//we find author, so show it in AllAuthors pager
+					else
+					{
+						//we can't find this author in DB, so show it in singleCategoryPager
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
+						mainActivity.setCurentCategoryPosition(0);
+						mainActivity.setCurrentCategory(authorBlogUrl);
+
+						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+						authorBlogUrl));
+						OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+						leftPager.setOnPageChangeListener(listener);
+						leftPager.setCurrentItem(0);
+
+						//try notify pager that item selected if it's 0 item
+						if (leftPager.getCurrentItem() == 0)
+						{
+							listener.onPageSelected(0);
+						}
+					}//can't find author in DB, so show SinglePager
+				}//if ActivityMain
 				else
 				{
 					//TODO
@@ -214,7 +265,7 @@ public class Actions
 					}
 					else
 					{
-						//else we must show authors list.
+						//else we must show categories list.
 						//we can switch here if we have him in autList or not
 						//if so we can show arts list in allAuthor frag or not
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
@@ -279,6 +330,68 @@ public class Actions
 			{
 				//if not twoPane
 				//TODO check if it ActivityMain and show AllAuthors pager or start activity with it
+				if (act instanceof ActivityMain)
+				{
+					ActivityMain mainActivity = (ActivityMain) act;
+					//we must show categories list.
+					//we can switch here if we have him in autList or not
+					//if so we can show arts list in allAuthor frag or not
+					ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
+					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
+					act.getSupportFragmentManager(), mainActivity);
+					boolean weFindIt = false;
+					int position = 0;
+					for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
+					{
+						String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
+						.get(i)
+						.getUrl());
+						if (categoryUrl.equals(curCatUrl))
+						{
+							weFindIt = true;
+							position = i;
+							break;
+						}
+					}
+					if (weFindIt)
+					{
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_CATEGORIES);
+						mainActivity.setCurentCategoryPosition(position);
+
+						leftPager.setAdapter(pagerAllCat);
+						OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity, pagerAllCat
+						.getAllCategoriesList());
+						leftPager.setOnPageChangeListener(listener);
+						leftPager.setCurrentItem(position);
+						if (position == 0)
+						{
+							listener.onPageSelected(0);
+						}
+					}
+					else
+					{
+						//we can't find this author in DB, so show it in singleCategoryPager
+						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_SINGLE);
+						mainActivity.setCurentCategoryPosition(0);
+						mainActivity.setCurrentCategory(categoryUrl);
+
+						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
+						categoryUrl));
+						OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+						leftPager.setOnPageChangeListener(listener);
+						leftPager.setCurrentItem(0);
+
+						//try notify pager that item selected if it's 0 item
+						if (leftPager.getCurrentItem() == 0)
+						{
+							listener.onPageSelected(0);
+						}
+					}
+				}//if (act instanceof ActivityMain)
+				else
+				{
+
+				}
 			}
 		}
 		else

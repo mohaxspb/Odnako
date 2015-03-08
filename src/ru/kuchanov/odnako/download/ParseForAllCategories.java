@@ -1,6 +1,5 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 import android.os.AsyncTask;
@@ -22,7 +21,7 @@ public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<
 		ArrayList<ArrayList<String>> output = null;
 		try
 		{
-			HtmlHelper hh = new HtmlHelper(new URL(url[0]));
+			HtmlHelper hh = new HtmlHelper(url[0]);
 			output=hh.getAllCategoriesAsList();
 		} catch (Exception e)
 		{

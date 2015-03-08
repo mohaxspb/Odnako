@@ -1,6 +1,5 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
 import java.util.ArrayList;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -21,7 +20,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 		ArrayList<ArrayList<String>> output = null;
 		try
 		{
-			HtmlHelper hh = new HtmlHelper(new URL("http://odnako.org/authors/"));
+			HtmlHelper hh = new HtmlHelper("http://odnako.org/authors/");
 			output = hh.getAllAuthorsAsList();
 		} catch (Exception e)
 		{

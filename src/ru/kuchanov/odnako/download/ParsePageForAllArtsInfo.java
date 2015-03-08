@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -25,7 +24,7 @@ import android.util.Log;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
 {
-	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName()+"/";
+	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName() + "/";
 
 	AllArtsInfoCallback callback;
 
@@ -39,6 +38,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 	DataBaseHelper h;
 
 	public HttpGet get;
+
+	private boolean cyrillicError = false;
 
 	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback,
 	DataBaseHelper h)
@@ -79,10 +80,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 		try
 		{
-			HtmlHelper hh = new HtmlHelper(new URL(link));
-			///////
-			this.get = hh.get;
-			//////////
+			//			HtmlHelper hh = new HtmlHelper(new URL(link));
+			HtmlHelper hh = new HtmlHelper(link);
 			if (hh.isAuthor())
 			{
 				output = hh.getAllArtsInfoFromAUTHORPage();
@@ -107,7 +106,11 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			}
 		} catch (Exception e)
 		{
-			Log.e(LOG + categoryToLoad, "Catched Exception: " + e.getClass().getSimpleName());
+			Log.e(LOG + categoryToLoad, "Catched Exception: " + e.toString());
+			if (e.toString().equals(e.getClass().getName()+": "+Const.Error.CYRILLIC_ERROR))
+			{
+				this.cyrillicError = true;
+			}
 			e.printStackTrace();
 		}
 		return output;
@@ -124,8 +127,17 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//NO internet
 		else
 		{
-			callback.onError(Const.Error.CONNECTION_ERROR, this.getCategoryToLoad(), this.page);
-			Log.e(LOG + categoryToLoad, "Ошибка соединения. Проверьте соединение с интернетом");
+			if (this.cyrillicError)
+			{
+				callback.onError(Const.Error.CYRILLIC_ERROR, this.getCategoryToLoad(), this.page);
+				Log.e(LOG + categoryToLoad, Const.Error.CYRILLIC_ERROR);
+			}
+			else
+			{
+				callback.onError(Const.Error.CONNECTION_ERROR, this.getCategoryToLoad(), this.page);
+				Log.e(LOG + categoryToLoad, Const.Error.CONNECTION_ERROR);
+			}
+
 		}
 	}// Событие по окончанию парсинга
 

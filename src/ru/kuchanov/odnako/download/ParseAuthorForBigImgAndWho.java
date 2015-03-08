@@ -1,7 +1,5 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
-
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 
@@ -27,7 +25,7 @@ public class ParseAuthorForBigImgAndWho extends AsyncTask<Void, Integer, String[
 		{
 			try
 			{
-				HtmlHelper hh = new HtmlHelper(new URL(allAuthorsUrls[i]));
+				HtmlHelper hh = new HtmlHelper(allAuthorsUrls[i]);
 
 				output[0][i] = hh.getAuthorsDescription();
 				output[1][i] = hh.getAuthorsBigImg();
