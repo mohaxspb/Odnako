@@ -258,7 +258,6 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
 							popup.show();
 						}
-
 					});
 					////End of popUp menu in cardView
 

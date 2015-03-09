@@ -74,6 +74,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		artFrag.setArguments(b);
 
 		return artFrag;
+		//<item name="android:itemBackground">@drawable/selectable_background_light</item>
 	}
 
 	@Override

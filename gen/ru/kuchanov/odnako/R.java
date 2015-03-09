@@ -2531,17 +2531,18 @@ containing a value of this type.
         public static final int odnako=0x7f0200ac;
         public static final int powered_by_google_dark=0x7f0200ad;
         public static final int powered_by_google_light=0x7f0200ae;
-        public static final int selectable_background=0x7f0200af;
-        public static final int social_facebook=0x7f0200b0;
-        public static final int social_google=0x7f0200b1;
-        public static final int social_livejournal=0x7f0200b2;
-        public static final int social_odnoklassniki=0x7f0200b3;
-        public static final int social_twitter=0x7f0200b4;
-        public static final int social_vkontakte=0x7f0200b5;
-        public static final int spinner_default_holo_dark_am=0x7f0200b6;
-        public static final int spinner_default_holo_light_am=0x7f0200b7;
-        public static final int top_img_cover_dark=0x7f0200b8;
-        public static final int top_img_cover_light=0x7f0200b9;
+        public static final int selectable_background_dark=0x7f0200af;
+        public static final int selectable_background_light=0x7f0200b0;
+        public static final int social_facebook=0x7f0200b1;
+        public static final int social_google=0x7f0200b2;
+        public static final int social_livejournal=0x7f0200b3;
+        public static final int social_odnoklassniki=0x7f0200b4;
+        public static final int social_twitter=0x7f0200b5;
+        public static final int social_vkontakte=0x7f0200b6;
+        public static final int spinner_default_holo_dark_am=0x7f0200b7;
+        public static final int spinner_default_holo_light_am=0x7f0200b8;
+        public static final int top_img_cover_dark=0x7f0200b9;
+        public static final int top_img_cover_light=0x7f0200ba;
     }
     public static final class id {
         public static final int action_bar=0x7f0c0045;
@@ -3253,9 +3254,9 @@ containing a value of this type.
  <item name="suggestionRowLayout">...</item> 
          */
         public static final int DarkSearchViewStyle=0x7f0900f4;
-        public static final int OdnakoDropDownListView=0x7f0900f6;
+        public static final int OdnakoDropDownListViewDark=0x7f0900f6;
         public static final int OdnakoDropDownListViewLight=0x7f0900f9;
-        public static final int OdnakoPopupMenu=0x7f0900f5;
+        public static final int OdnakoPopupMenuDark=0x7f0900f5;
         public static final int OdnakoPopupMenuLight=0x7f0900f8;
         public static final int Platform_AppCompat=0x7f0900cc;
         public static final int Platform_AppCompat_Dialog=0x7f0900ce;
@@ -3348,6 +3349,8 @@ containing a value of this type.
         public static final int Theme_IAPTheme=0x7f0900ee;
         /**  <style name="AppBaseTheme" parent="android:Theme.Light"></style> 
  Odnako custom dark theme with material_grey_colors 
+ <item name="android:itemBackground">@drawable/selectable_background</item> 
+ <item name="android:itemBackground">@color/material_grey_800</item> 
          */
         public static final int ThemeDark=0x7f0900f3;
         public static final int ThemeDarkPreference=0x7f0900fb;
