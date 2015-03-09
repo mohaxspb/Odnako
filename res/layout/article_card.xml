@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -20,103 +21,115 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/art_card_top_lin"
+            <ru.kuchanov.odnako.utils.MaterialRippleLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <!-- art img if is; Othervise - has zero height -->
-
-                <ImageView
-                    android:id="@+id/art_card_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:contentDescription="@string/hello_world"
-                    android:scaleType="fitXY" />
-                <!-- title and date; settings button -->
+                app:mrl_rippleColor="?colorPrimaryDark"
+                app:mrl_rippleDelayClick="false"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="true" >
 
                 <LinearLayout
+                    android:id="@+id/art_card_top_lin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal" >
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:id="@+id/art_card_title_date_lin"
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:id="@+id/art_card_title_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/title"
-                            android:textColor="?android:textColorPrimary"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/art_card_date_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/date"
-                            android:textColor="?android:textColorSecondary" />
-                    </LinearLayout>
+                    <!-- art img if is; Othervise - has zero height -->
 
                     <ImageView
-                        android:id="@+id/art_card_settings"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="5dp"
+                        android:id="@+id/art_card_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
                         android:contentDescription="@string/hello_world"
-                        android:scaleType="fitXY"
-                        android:src="?overflowIcon" />
+                        android:scaleType="fitXY" />
+                    <!-- title and date; settings button -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:id="@+id/art_card_title_date_lin"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/art_card_title_tv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title"
+                                android:textColor="?android:textColorPrimary"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/art_card_date_tv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/date"
+                                android:textColor="?android:textColorSecondary" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/art_card_settings"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_margin="5dp"
+                            android:contentDescription="@string/hello_world"
+                            android:scaleType="fitXY"
+                            android:src="?overflowIcon" />
+                    </LinearLayout>
+
+                    <!-- preview -->
+
+                    <TextView
+                        android:id="@+id/art_card_preview_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/preview"
+                        android:textColor="?android:textColorPrimary" />
                 </LinearLayout>
-
-                <!-- preview -->
-
-                <TextView
-                    android:id="@+id/art_card_preview_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="@string/preview"
-                    android:textColor="?android:textColorPrimary" />
-            </LinearLayout>
-
+            </ru.kuchanov.odnako.utils.MaterialRippleLayout>
             <!-- authors name and img if is. Othervise - zero height -->
 
-            <LinearLayout
-                android:id="@+id/art_card_author_lin"
+            <ru.kuchanov.odnako.utils.MaterialRippleLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal" >
+                app:mrl_rippleColor="?colorPrimaryDark"
+                app:mrl_rippleDelayClick="false"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="true" >
 
-                <ImageView
-                    android:id="@+id/art_card_author_img"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_margin="5dp"
-                    android:contentDescription="@string/hello_world"
-                    android:scaleType="fitXY" />
+                <LinearLayout
+                    android:id="@+id/art_card_author_lin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/author_name"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:text="@string/name"
-                    android:textColor="?android:textColorPrimary" />
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/art_card_author_img"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_margin="5dp"
+                        android:contentDescription="@string/hello_world"
+                        android:scaleType="fitXY" />
 
-            <!-- <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/blue" >
-            </View> -->
+                    <TextView
+                        android:id="@+id/author_name"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/name"
+                        android:textColor="?android:textColorPrimary" />
+                </LinearLayout>
+            </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+
             <!-- bottom panel with share btn, save&read icons , comments btn -->
 
             <LinearLayout

@@ -2,49 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:layout_centerInParent="true"
     android:baselineAligned="true" >
 
     <ImageView
         android:id="@+id/drawer_header"
-        android:src="@drawable/agr_dummy" 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/img"
         android:scaleType="fitXY"
-        android:contentDescription="@string/img"/>
+        android:src="@drawable/agr_dummy" />
 
     <ImageView
         android:id="@+id/ava_img"
-        android:src="@drawable/ic_person_grey600_48dp"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:scaleType="fitXY"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:contentDescription="@string/img" />
+        android:contentDescription="@string/img"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_person_grey600_48dp" />
 
     <TextView
         android:id="@+id/email"
-        android:layout_alignParentBottom="true"
-        android:textSize="17sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/email" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/email"
+        android:textSize="17sp" />
+
     <TextView
         android:id="@+id/name"
-        android:textSize="17sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="4dp"
-        android:layout_above="@id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fio" />
+        android:layout_above="@id/email"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/fio"
+        android:textSize="17sp" />
 
-    
-
-        <!-- 
-        
-        "
-         -->
 </RelativeLayout>

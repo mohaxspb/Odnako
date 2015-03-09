@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- for rippleEffect -->
+    <!-- <color name="rippelColor">#3949AB</color> -->
+    <color name="transparent">#00FFFFFF</color>
 
     <color name="my_color_dark">#ff33B5E5</color>
     <color name="my_color_light">#ff355689</color>

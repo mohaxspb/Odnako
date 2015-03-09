@@ -68,7 +68,7 @@ public final class R {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int aboutIcon=0x7f0100ef;
+        public static final int aboutIcon=0x7f0100fb;
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -329,37 +329,37 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int arrowDownIcon=0x7f0100e5;
+        public static final int arrowDownIcon=0x7f0100f1;
         /**  arrows 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int arrowLeftIcon=0x7f0100e2;
+        public static final int arrowLeftIcon=0x7f0100ee;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int arrowRightIcon=0x7f0100e3;
+        public static final int arrowRightIcon=0x7f0100ef;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int arrowUpIcon=0x7f0100e4;
+        public static final int arrowUpIcon=0x7f0100f0;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int asListIcon=0x7f0100ea;
+        public static final int asListIcon=0x7f0100f6;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int authorIcon=0x7f0100e7;
+        public static final int authorIcon=0x7f0100f3;
         /**  more 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int authorsIcon=0x7f0100e6;
+        public static final int authorsIcon=0x7f0100f2;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int authorsMoreIcon=0x7f0100e8;
+        public static final int authorsMoreIcon=0x7f0100f4;
         /**  Specifies a background drawable for the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -581,7 +581,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int categoriesMoreIcon=0x7f0100ec;
+        public static final int categoriesMoreIcon=0x7f0100f8;
         /** 
         Whether or not this view should have a circular clip applied
         
@@ -713,7 +713,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int commentsIcon=0x7f0100df;
+        public static final int commentsIcon=0x7f0100eb;
         /**  Commit icon shown in the query suggestion row 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -825,7 +825,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int coverTopToBottom=0x7f0100f7;
+        public static final int coverTopToBottom=0x7f010103;
         /**  Specifies a layout for custom navigation. Overrides navigationMode. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -887,7 +887,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int downloadIcon=0x7f0100e9;
+        public static final int downloadIcon=0x7f0100f5;
         /**  The total size of the drawable 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -968,7 +968,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int folderIcon=0x7f0100f2;
+        public static final int folderIcon=0x7f0100fe;
         /**  Fragment mode 
          <p>Must be one of the following constant values.</p>
 <table>
@@ -1193,7 +1193,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int mailToMeIcon=0x7f0100f5;
+        public static final int mailToMeIcon=0x7f010101;
         /** <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -1211,11 +1211,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int marketDOWNLOADEDIcon=0x7f0100f1;
+        public static final int marketDOWNLOADEDIcon=0x7f0100fd;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int marketDownlodIcon=0x7f0100f0;
+        public static final int marketDownlodIcon=0x7f0100fc;
         /**  Masked wallet details background 
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1299,6 +1299,108 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int middleBarArrowSize=0x7f0100a9;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleAlpha=0x7f0100dd;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleBackground=0x7f0100e1;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleColor=0x7f0100da;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleDelayClick=0x7f0100e2;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleDimension=0x7f0100db;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleDuration=0x7f0100de;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleFadeDuration=0x7f0100df;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleHover=0x7f0100e0;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleInAdapter=0x7f0100e4;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleOverlay=0x7f0100dc;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_ripplePersistent=0x7f0100e3;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mrl_rippleRoundedCorners=0x7f0100e5;
         /**  Text to set as the content description for the navigation button
              located at the start of the toolbar. 
          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
@@ -1331,11 +1433,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int openInBrowserIcon=0x7f0100f4;
+        public static final int openInBrowserIcon=0x7f010100;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int overflowIcon=0x7f0100dc;
+        public static final int overflowIcon=0x7f0100e8;
         /**  Whether the popup window should overlap its anchor view. 
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
@@ -1458,7 +1560,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int refreshIcon=0x7f0100de;
+        public static final int refreshIcon=0x7f0100ea;
         /**  Search icon 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1467,7 +1569,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int searchIconOdnako=0x7f0100e1;
+        public static final int searchIconOdnako=0x7f0100ed;
         /**  Style for the search query widget. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1490,15 +1592,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
-        public static final int selectorColor=0x7f0100da;
+        public static final int selectorColor=0x7f0100e6;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int settingsIcon=0x7f0100dd;
+        public static final int settingsIcon=0x7f0100e9;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int shareIcon=0x7f0100e0;
+        public static final int shareIcon=0x7f0100ec;
         /**  How this item should display in the Action Bar, if present. 
          <p>Must be one or more (separated by '|') of the following constant values.</p>
 <table>
@@ -1599,7 +1701,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int subjectIcon=0x7f0100eb;
+        public static final int subjectIcon=0x7f0100f7;
         /**  Background for the section containing the action (e.g. voice search) 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1663,11 +1765,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int systemSettingsIcon=0x7f0100ee;
+        public static final int systemSettingsIcon=0x7f0100fa;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int tabletIcon=0x7f0100f6;
+        public static final int tabletIcon=0x7f010102;
         /**  Present the text in ALL CAPS. This may use a small-caps form when available. 
          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1714,7 +1816,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int textSizeIcon=0x7f0100f3;
+        public static final int textSizeIcon=0x7f0100ff;
         /**  Specifies a theme override for a view. When a theme override is set, the
              view will be inflated using a {@link android.content.Context} themed with
              the specified resource. During XML inflation, any child views under the
@@ -1726,7 +1828,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int themeIcon=0x7f0100db;
+        public static final int themeIcon=0x7f0100e7;
         /**  The thickness (stroke size) for the bar paint 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -1840,7 +1942,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int topImgCover=0x7f0100f8;
+        public static final int topImgCover=0x7f010104;
         /**  Drawable to use as the "track" that the switch thumb slides within. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1913,7 +2015,7 @@ containing a value of this type.
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int vibrationIcon=0x7f0100ed;
+        public static final int vibrationIcon=0x7f0100f9;
         /**  Voice button icon 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -2044,27 +2146,27 @@ containing a value of this type.
         public static final int isTablet=0x7f0a0006;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f070079;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f07007a;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f07007a;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f07007b;
         public static final int abc_input_method_navigation_guard=0x7f070007;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f07007b;
-        public static final int abc_primary_text_disable_only_material_light=0x7f07007c;
-        public static final int abc_primary_text_material_dark=0x7f07007d;
-        public static final int abc_primary_text_material_light=0x7f07007e;
-        public static final int abc_search_url_text=0x7f07007f;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f07007c;
+        public static final int abc_primary_text_disable_only_material_light=0x7f07007d;
+        public static final int abc_primary_text_material_dark=0x7f07007e;
+        public static final int abc_primary_text_material_light=0x7f07007f;
+        public static final int abc_search_url_text=0x7f070080;
         public static final int abc_search_url_text_normal=0x7f070004;
         public static final int abc_search_url_text_pressed=0x7f070006;
         public static final int abc_search_url_text_selected=0x7f070005;
-        public static final int abc_secondary_text_material_dark=0x7f070080;
-        public static final int abc_secondary_text_material_light=0x7f070081;
+        public static final int abc_secondary_text_material_dark=0x7f070081;
+        public static final int abc_secondary_text_material_light=0x7f070082;
         public static final int accent_material_dark=0x7f070013;
         public static final int accent_material_light=0x7f070012;
         public static final int background_floating_material_dark=0x7f07000a;
         public static final int background_floating_material_light=0x7f07000b;
         public static final int background_material_dark=0x7f070008;
         public static final int background_material_light=0x7f070009;
-        public static final int black=0x7f070050;
-        public static final int blue=0x7f070052;
+        public static final int black=0x7f070051;
+        public static final int blue=0x7f070053;
         /**  White 50% 
          */
         public static final int bright_foreground_disabled_material_dark=0x7f07001a;
@@ -2101,14 +2203,14 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f07003b;
         public static final int common_signin_btn_light_text_focused=0x7f07003c;
         public static final int common_signin_btn_light_text_pressed=0x7f07003a;
-        public static final int common_signin_btn_text_dark=0x7f070082;
-        public static final int common_signin_btn_text_light=0x7f070083;
-        public static final int cur_theme=0x7f070051;
+        public static final int common_signin_btn_text_dark=0x7f070083;
+        public static final int common_signin_btn_text_light=0x7f070084;
+        public static final int cur_theme=0x7f070052;
         public static final int dim_foreground_disabled_material_dark=0x7f070020;
         public static final int dim_foreground_disabled_material_light=0x7f070021;
         public static final int dim_foreground_material_dark=0x7f07001e;
         public static final int dim_foreground_material_light=0x7f07001f;
-        public static final int green=0x7f070054;
+        public static final int green=0x7f070055;
         /**  TODO: This is 40% alpha on the default accent color. 
          */
         public static final int highlighted_text_material_dark=0x7f070024;
@@ -2124,51 +2226,51 @@ containing a value of this type.
         public static final int material_blue_grey_950=0x7f070034;
         public static final int material_deep_teal_200=0x7f070030;
         public static final int material_deep_teal_500=0x7f070031;
-        public static final int material_grey_100=0x7f07005f;
-        public static final int material_grey_200=0x7f07005e;
-        public static final int material_grey_300=0x7f07005c;
-        public static final int material_grey_300_transparent=0x7f07005d;
-        public static final int material_grey_400=0x7f07005b;
-        public static final int material_grey_50=0x7f070060;
-        public static final int material_grey_500=0x7f07005a;
-        public static final int material_grey_600=0x7f070059;
-        public static final int material_grey_700=0x7f070058;
-        public static final int material_grey_800=0x7f070057;
+        public static final int material_grey_100=0x7f070060;
+        public static final int material_grey_200=0x7f07005f;
+        public static final int material_grey_300=0x7f07005d;
+        public static final int material_grey_300_transparent=0x7f07005e;
+        public static final int material_grey_400=0x7f07005c;
+        public static final int material_grey_50=0x7f070061;
+        public static final int material_grey_500=0x7f07005b;
+        public static final int material_grey_600=0x7f07005a;
+        public static final int material_grey_700=0x7f070059;
+        public static final int material_grey_800=0x7f070058;
         /**  material_grey_colors 
          */
-        public static final int material_grey_900=0x7f070055;
-        public static final int material_grey_900_transparent=0x7f070056;
-        public static final int material_indigo_100=0x7f070062;
-        public static final int material_indigo_200=0x7f070063;
-        public static final int material_indigo_300=0x7f070064;
-        public static final int material_indigo_300_transparent=0x7f070065;
-        public static final int material_indigo_400=0x7f070066;
+        public static final int material_grey_900=0x7f070056;
+        public static final int material_grey_900_transparent=0x7f070057;
+        public static final int material_indigo_100=0x7f070063;
+        public static final int material_indigo_200=0x7f070064;
+        public static final int material_indigo_300=0x7f070065;
+        public static final int material_indigo_300_transparent=0x7f070066;
+        public static final int material_indigo_400=0x7f070067;
         /**  material_indigo_colors 
          */
-        public static final int material_indigo_50=0x7f070061;
-        public static final int material_indigo_500=0x7f070067;
-        public static final int material_indigo_600=0x7f070068;
-        public static final int material_indigo_700=0x7f070069;
-        public static final int material_indigo_800=0x7f07006a;
-        public static final int material_indigo_900=0x7f07006b;
-        public static final int material_indigo_900_transparent=0x7f07006c;
-        public static final int material_red_100=0x7f07006e;
-        public static final int material_red_200=0x7f07006f;
-        public static final int material_red_300=0x7f070070;
-        public static final int material_red_300_transparent=0x7f070071;
-        public static final int material_red_400=0x7f070072;
+        public static final int material_indigo_50=0x7f070062;
+        public static final int material_indigo_500=0x7f070068;
+        public static final int material_indigo_600=0x7f070069;
+        public static final int material_indigo_700=0x7f07006a;
+        public static final int material_indigo_800=0x7f07006b;
+        public static final int material_indigo_900=0x7f07006c;
+        public static final int material_indigo_900_transparent=0x7f07006d;
+        public static final int material_red_100=0x7f07006f;
+        public static final int material_red_200=0x7f070070;
+        public static final int material_red_300=0x7f070071;
+        public static final int material_red_300_transparent=0x7f070072;
+        public static final int material_red_400=0x7f070073;
         /**  material_red_colors 
          */
-        public static final int material_red_50=0x7f07006d;
-        public static final int material_red_500=0x7f070073;
-        public static final int material_red_600=0x7f070074;
-        public static final int material_red_700=0x7f070075;
-        public static final int material_red_800=0x7f070076;
-        public static final int material_red_900=0x7f070077;
-        public static final int material_red_900_transparent=0x7f070078;
-        public static final int my_color_dark=0x7f07004c;
-        public static final int my_color_light=0x7f07004d;
-        public static final int odnako=0x7f07004e;
+        public static final int material_red_50=0x7f07006e;
+        public static final int material_red_500=0x7f070074;
+        public static final int material_red_600=0x7f070075;
+        public static final int material_red_700=0x7f070076;
+        public static final int material_red_800=0x7f070077;
+        public static final int material_red_900=0x7f070078;
+        public static final int material_red_900_transparent=0x7f070079;
+        public static final int my_color_dark=0x7f07004d;
+        public static final int my_color_light=0x7f07004e;
+        public static final int odnako=0x7f07004f;
         public static final int primary_dark_material_dark=0x7f07000e;
         public static final int primary_dark_material_light=0x7f07000f;
         public static final int primary_material_dark=0x7f07000c;
@@ -2181,7 +2283,7 @@ containing a value of this type.
         /**  26% of default values 
          */
         public static final int primary_text_disabled_material_light=0x7f07002c;
-        public static final int red=0x7f070053;
+        public static final int red=0x7f070054;
         public static final int ripple_material_dark=0x7f070010;
         public static final int ripple_material_light=0x7f070011;
         public static final int secondary_text_default_material_dark=0x7f07002b;
@@ -2190,6 +2292,10 @@ containing a value of this type.
         public static final int secondary_text_disabled_material_light=0x7f07002d;
         public static final int switch_thumb_normal_material_dark=0x7f070016;
         public static final int switch_thumb_normal_material_light=0x7f070017;
+        /**  for rippleEffect 
+ <color name="rippelColor">#3949AB</color> 
+         */
+        public static final int transparent=0x7f07004c;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f070044;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -2208,9 +2314,9 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f070046;
         public static final int wallet_holo_blue_light=0x7f07004a;
         public static final int wallet_link_text_light=0x7f07004b;
-        public static final int wallet_primary_text_holo_light=0x7f070084;
-        public static final int wallet_secondary_text_holo_dark=0x7f070085;
-        public static final int white=0x7f07004f;
+        public static final int wallet_primary_text_holo_light=0x7f070085;
+        public static final int wallet_secondary_text_holo_dark=0x7f070086;
+        public static final int white=0x7f070050;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -3349,7 +3455,6 @@ containing a value of this type.
         public static final int Theme_IAPTheme=0x7f0900ee;
         /**  <style name="AppBaseTheme" parent="android:Theme.Light"></style> 
  Odnako custom dark theme with material_grey_colors 
- <item name="android:itemBackground">@drawable/selectable_background</item> 
  <item name="android:itemBackground">@color/material_grey_800</item> 
          */
         public static final int ThemeDark=0x7f0900f3;
@@ -4478,11 +4583,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name ru.kuchanov.odnako:textAllCaps
         */
         public static final int CompatTextView_textAllCaps = 0;
-        /** 
-    <declare-styleable name="cardBackGroundColor">
-        <attr name="customAttr" format="color" />
-    </declare-styleable>
-    
+        /** Attributes that can be used with a CustomTheme.
            <p>Includes the following attributes:</p>
            <table>
            <colgroup align="left" />
@@ -5263,6 +5364,217 @@ containing a value of this type.
           @attr name ru.kuchanov.odnako:zOrderOnTop
         */
         public static final int MapAttrs_zOrderOnTop = 14;
+        /**  for rippleView 
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleAlpha ru.kuchanov.odnako:mrl_rippleAlpha}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleBackground ru.kuchanov.odnako:mrl_rippleBackground}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleColor ru.kuchanov.odnako:mrl_rippleColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleDelayClick ru.kuchanov.odnako:mrl_rippleDelayClick}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleDimension ru.kuchanov.odnako:mrl_rippleDimension}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleDuration ru.kuchanov.odnako:mrl_rippleDuration}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleFadeDuration ru.kuchanov.odnako:mrl_rippleFadeDuration}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleHover ru.kuchanov.odnako:mrl_rippleHover}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleInAdapter ru.kuchanov.odnako:mrl_rippleInAdapter}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleOverlay ru.kuchanov.odnako:mrl_rippleOverlay}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_ripplePersistent ru.kuchanov.odnako:mrl_ripplePersistent}</code></td><td></td></tr>
+           <tr><td><code>{@link #MaterialRippleLayout_mrl_rippleRoundedCorners ru.kuchanov.odnako:mrl_rippleRoundedCorners}</code></td><td></td></tr>
+           </table>
+           @see #MaterialRippleLayout_mrl_rippleAlpha
+           @see #MaterialRippleLayout_mrl_rippleBackground
+           @see #MaterialRippleLayout_mrl_rippleColor
+           @see #MaterialRippleLayout_mrl_rippleDelayClick
+           @see #MaterialRippleLayout_mrl_rippleDimension
+           @see #MaterialRippleLayout_mrl_rippleDuration
+           @see #MaterialRippleLayout_mrl_rippleFadeDuration
+           @see #MaterialRippleLayout_mrl_rippleHover
+           @see #MaterialRippleLayout_mrl_rippleInAdapter
+           @see #MaterialRippleLayout_mrl_rippleOverlay
+           @see #MaterialRippleLayout_mrl_ripplePersistent
+           @see #MaterialRippleLayout_mrl_rippleRoundedCorners
+         */
+        public static final int[] MaterialRippleLayout = {
+            0x7f0100da, 0x7f0100db, 0x7f0100dc, 0x7f0100dd,
+            0x7f0100de, 0x7f0100df, 0x7f0100e0, 0x7f0100e1,
+            0x7f0100e2, 0x7f0100e3, 0x7f0100e4, 0x7f0100e5
+        };
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleAlpha}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleAlpha
+        */
+        public static final int MaterialRippleLayout_mrl_rippleAlpha = 3;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleBackground}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleBackground
+        */
+        public static final int MaterialRippleLayout_mrl_rippleBackground = 7;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleColor}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleColor
+        */
+        public static final int MaterialRippleLayout_mrl_rippleColor = 0;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleDelayClick}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleDelayClick
+        */
+        public static final int MaterialRippleLayout_mrl_rippleDelayClick = 8;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleDimension}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleDimension
+        */
+        public static final int MaterialRippleLayout_mrl_rippleDimension = 1;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleDuration}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleDuration
+        */
+        public static final int MaterialRippleLayout_mrl_rippleDuration = 4;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleFadeDuration}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleFadeDuration
+        */
+        public static final int MaterialRippleLayout_mrl_rippleFadeDuration = 5;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleHover}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleHover
+        */
+        public static final int MaterialRippleLayout_mrl_rippleHover = 6;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleInAdapter}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleInAdapter
+        */
+        public static final int MaterialRippleLayout_mrl_rippleInAdapter = 10;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleOverlay}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleOverlay
+        */
+        public static final int MaterialRippleLayout_mrl_rippleOverlay = 2;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_ripplePersistent}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_ripplePersistent
+        */
+        public static final int MaterialRippleLayout_mrl_ripplePersistent = 9;
+        /**
+          <p>This symbol is the offset where the {@link ru.kuchanov.odnako.R.attr#mrl_rippleRoundedCorners}
+          attribute's value can be found in the {@link #MaterialRippleLayout} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name ru.kuchanov.odnako:mrl_rippleRoundedCorners
+        */
+        public static final int MaterialRippleLayout_mrl_rippleRoundedCorners = 11;
         /**  Base attributes that are available to all groups. 
            <p>Includes the following attributes:</p>
            <table>
