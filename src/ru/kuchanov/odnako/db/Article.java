@@ -33,7 +33,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Article implements Parcelable
 {
 	private static final String LOG = Article.class.getSimpleName();
-	
+
 	public static final String KEY_CURENT_ART = "curArtInfo";
 	public static final String KEY_ALL_ART_INFO = "allArtInfo";
 
@@ -48,55 +48,55 @@ public class Article implements Parcelable
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
 	private String url;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
-	private String title;
+	@DatabaseField(dataType = DataType.STRING)
+	private String title = "empty";;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String imgArt;
+	@DatabaseField(dataType = DataType.STRING)
+	private String imgArt = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String authorBlogUrl;
+	@DatabaseField(dataType = DataType.STRING)
+	private String authorBlogUrl = "empty";;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String authorName;
+	@DatabaseField(dataType = DataType.STRING)
+	private String authorName = "empty";;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String preview;
+	@DatabaseField(dataType = DataType.STRING)
+	private String preview = "empty";;
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = FIELD_NAME_PUB_DATE)
-	private Date pubDate;
+	@DatabaseField(dataType = DataType.DATE, columnName = FIELD_NAME_PUB_DATE)
+	private Date pubDate=new Date(0);
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
+	@DatabaseField(dataType = DataType.DATE)
 	private Date refreshed = new Date(0);
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = true)
+	@DatabaseField(dataType = DataType.INTEGER)
 	private int numOfComments = 0;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = true)
+	@DatabaseField(dataType = DataType.INTEGER)
 	private int numOfSharings = 0;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String artText = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String authorDescr = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String tegs_main = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String tegs_all = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String share_quont = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String to_read_main = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String to_read_more = "empty";
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
+	@DatabaseField(dataType = DataType.STRING)
 	private String img_author = "empty";
 
 	//foreignKeys
@@ -778,7 +778,8 @@ public class Article implements Parcelable
 		{
 			return new Article[size];
 		}
-	};	
+	};
+
 	/////////////////////////////
 	public String[] getAllTegsArr()
 	{
@@ -796,7 +797,7 @@ public class Article implements Parcelable
 
 		return allTegsArr;
 	}
-	
+
 	public AlsoToRead getAlsoByTheme()
 	{
 		AlsoToRead alsoToRead;
@@ -852,7 +853,7 @@ public class Article implements Parcelable
 
 		return alsoToRead;
 	}
-	
+
 	public class AlsoToRead
 	{
 		public String[] urls;
@@ -868,5 +869,5 @@ public class Article implements Parcelable
 			this.dates = dates;
 		}
 	}
-	
+
 }
