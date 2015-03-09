@@ -13,6 +13,7 @@ import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
@@ -410,7 +411,7 @@ public class Actions
 		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
 	}
 
-	public static void showComments(ArrayList<ArtInfo> allArtsInfo, int position, ActionBarActivity act)
+	public static void showComments(ArrayList<Article> allArtsInfo, int position, ActionBarActivity act)
 	{
 		Toast.makeText(act, "comments!", Toast.LENGTH_SHORT).show();
 
@@ -456,7 +457,7 @@ public class Actions
 		}
 	}
 
-	public static void showArticle(ArrayList<ArtInfo> allArtsInfo, int positionOfArticle, final ActionBarActivity act)
+	public static void showArticle(ArrayList<Article> allArtsInfo, int positionOfArticle, final ActionBarActivity act)
 	{
 		Log.d(LOG, "showArticle!");
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -491,7 +492,7 @@ public class Actions
 					boolean weFindIt = false;
 					int positionInLeftPager = 0;
 					String authorBlogUrl = Author
-					.getURLwithoutSlashAtTheEnd(allArtsInfo.get(positionOfArticle).authorBlogUrl);
+					.getURLwithoutSlashAtTheEnd(allArtsInfo.get(positionOfArticle).getAuthorBlogUrl());
 					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
 					{
 						String authorUrlFromAdapter = Author

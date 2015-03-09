@@ -8,7 +8,7 @@ package ru.kuchanov.odnako.fragments.callbacks;
 
 import java.util.ArrayList;
 
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.db.Article;
 
 public interface AllArtsInfoCallback
 {
@@ -19,7 +19,7 @@ public interface AllArtsInfoCallback
 	 * @param categoryToLoad category on site from where we get data
 	 * @param pageToLoad number of page, that contains each 30 arts
 	 */
-	public void sendDownloadedData(ArrayList<ArtInfo> someResult, String categoryToLoad, int pageToLoad);
+	public void sendDownloadedData(ArrayList<Article> someResult, String categoryToLoad, int pageToLoad);
 	
 	/**
 	 * We use it to say user, that we have some error in asynkTask.

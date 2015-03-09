@@ -102,7 +102,7 @@ public class DBActions
 			{
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
-				ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
+				ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -152,7 +152,7 @@ public class DBActions
 			{
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
-				ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
+				ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -225,7 +225,7 @@ public class DBActions
 				{
 					//if we have 30, so we pass 30 to fragment
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
-					ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+					ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
 					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
@@ -250,7 +250,7 @@ public class DBActions
 						if (firstArtInCatURL.equals(lastInListArtsUrl))
 						{
 							//so it is real end of all arts in category and we can send arts to frag
-							ArrayList<ArtInfo> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+							ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
 							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -324,7 +324,7 @@ public class DBActions
 				{
 					//if we have 30, so we pass 30 to fragment
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
-					ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
+					ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
 					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -350,7 +350,7 @@ public class DBActions
 						if (firstArtInAutURL.equals(lastInListArtsUrl))
 						{
 							//so it is real end of all arts in Author and we can send arts to frag
-							ArrayList<ArtInfo> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
+							ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), allArts);
 							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -368,7 +368,7 @@ public class DBActions
 		}//this is author
 	}//askDBFromBottom
 
-	public String[] writeArtsToDBFromTop(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad)
+	public String[] writeArtsToDBFromTop(ArrayList<Article> dataFromWeb, String categoryToLoad)
 	{
 		//from top
 		//check if there are arts of given category
@@ -393,7 +393,7 @@ public class DBActions
 
 				for (int i = 0; i < dataFromWeb.size(); i++)
 				{
-					if (dataFromWeb.get(i).url.equals(topArtUrl))
+					if (dataFromWeb.get(i).getUrl().equals(topArtUrl))
 					{
 						//check if there is no new arts
 						if (i == 0)
@@ -411,7 +411,7 @@ public class DBActions
 							first30FromTop.get(first30FromTop.size() - 1).getArticleId());
 
 							if ((dataFromWeb.size() == first30FromTop.size()) &&
-							(dataFromWeb.get(dataFromWeb.size() - 1).url.equals(lastInFirst30Url)))
+							(dataFromWeb.get(dataFromWeb.size() - 1).getUrl().equals(lastInFirst30Url)))
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
@@ -428,7 +428,7 @@ public class DBActions
 								int newQuont = 0;
 								for (int u = 0; u < dataFromWeb.size(); u++)
 								{
-									String loadedArtsURL = dataFromWeb.get(u).url;
+									String loadedArtsURL = dataFromWeb.get(u).getUrl();
 									boolean notMatched = false;
 									for (int y = 0; y < first30FromTop.size() && notMatched==false; y++)
 									{
@@ -470,7 +470,7 @@ public class DBActions
 								dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//and update def quont on page - new qount prev URL by last of gained
 								ArtCatTable.updatePreviousArt(getHelper(), firstArtOfNextPageId,
-								dataFromWeb.get(dataFromWeb.size() - 1).url);
+								dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
 								//Finally write new rows!
 								ArtCatTable.write(getHelper(), dataToWrite);
 
@@ -558,7 +558,7 @@ public class DBActions
 
 				for (int i = 0; i < dataFromWeb.size(); i++)
 				{
-					if (dataFromWeb.get(i).url.equals(topArtUrl))
+					if (dataFromWeb.get(i).getUrl().equals(topArtUrl))
 					{
 						//check if there is no new arts
 						if (i == 0)
@@ -574,7 +574,7 @@ public class DBActions
 							String lastInFirst30Url = Article.getArticleUrlById(getHelper(),
 							first30FromTop.get(first30FromTop.size() - 1).getArticleId());
 							if (dataFromWeb.size() == first30FromTop.size() &&
-							dataFromWeb.get(dataFromWeb.size() - 1).url.equals(lastInFirst30Url))
+							dataFromWeb.get(dataFromWeb.size() - 1).getUrl().equals(lastInFirst30Url))
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
@@ -592,7 +592,7 @@ public class DBActions
 								for (int u = 0; u < dataFromWeb.size(); u++)
 								{
 									boolean notMatched = false;
-									String loadedArtsURL = dataFromWeb.get(u).url;
+									String loadedArtsURL = dataFromWeb.get(u).getUrl();
 									for (int y = 0; y < first30FromTop.size() && notMatched==false; y++)
 									{
 										
@@ -633,7 +633,7 @@ public class DBActions
 								dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
 								//and update def quont on page - new qount prev URL by last of gained
 								ArtAutTable.updatePreviousArt(getHelper(), firstArtOfNextPageId,
-								dataFromWeb.get(dataFromWeb.size() - 1).url);
+								dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
 								//Finally write new rows!
 								ArtAutTable.write(getHelper(), dataToWrite);
 
@@ -702,7 +702,7 @@ public class DBActions
 		}//this is author
 	}
 
-	public String[] writeArtsToDBFromBottom(ArrayList<ArtInfo> dataFromWeb, String categoryToLoad, int pageToLoad)
+	public String[] writeArtsToDBFromBottom(ArrayList<Article> dataFromWeb, String categoryToLoad, int pageToLoad)
 	{
 		//from bottom
 		if (Category.isCategory(this.getHelper(), categoryToLoad))
@@ -728,20 +728,20 @@ public class DBActions
 			{
 				//check matching loadedData url with first in dBarts
 				String firstInDBArtsUrl = Article.getArticleUrlById(getHelper(), dBarts.get(0).getArticleId());
-				if (dataFromWeb.get(0).url.equals(firstInDBArtsUrl))
+				if (dataFromWeb.get(0).getUrl().equals(firstInDBArtsUrl))
 				{
 					//matched! So there are no lag published arts
 					//now we can write new arts after last in DB
 					ArtCatTable lastInDB = dBarts.get(dBarts.size() - 1);
 					//so we'll have to update lastInDBArt by real next.
-					ArtCatTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(dBarts.size()).url);
+					ArtCatTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(dBarts.size()).getUrl());
 
 					//then we must match each art with all artCat, that have no previousArtUrl
 					//get list of all artCat without previous art
 					List<ArtCatTable> withoutPrev = ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(),
 					categoryId);
 					//we must match only with new arts, no with all
-					List<ArtInfo> newArtInfo = dataFromWeb.subList(dBarts.size(), dataFromWeb.size());
+					List<Article> newArtInfo = dataFromWeb.subList(dBarts.size(), dataFromWeb.size());
 					if (withoutPrev != null)
 					{
 						for (int i = 0; i < newArtInfo.size(); i++)
@@ -751,7 +751,7 @@ public class DBActions
 								//get url of checking ArtCat entry
 								String url = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
 								.getArticleId());
-								if (newArtInfo.get(i).url.equals(url))
+								if (newArtInfo.get(i).getUrl().equals(url))
 								{
 									//matched! So we write only previous of matched (without matched)
 									if (i == 0)
@@ -767,7 +767,7 @@ public class DBActions
 									{
 										//there ARE new real arts, so write them all!
 										//and update entry, that matched, by previousArtUrl
-										List<ArtInfo> subListArtInfo = newArtInfo.subList(0, i - 1);
+										List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
 										List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
 										this.getHelper(), subListArtInfo, categoryId);
 										//set prevArtUrl for first entry
@@ -776,7 +776,7 @@ public class DBActions
 										dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
 										//update previousArtUrl for matched ArtCat row
 										int id = withoutPrev.get(u).getId();
-										String prevArtUrlToUpdate = subListArtInfo.get(i).url;
+										String prevArtUrlToUpdate = subListArtInfo.get(i).getUrl();
 										ArtCatTable.updatePreviousArt(getHelper(), id, prevArtUrlToUpdate);
 										//setNextArtsURL for last in new arts list, cause we can't do it in ArtCat method
 										String nextArtUrl = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
@@ -835,7 +835,7 @@ public class DBActions
 				//so we can check if gained arts matched with arts on previous page
 				//if we have match it's pub lag, so start load from top!
 				//else - just write arts to db
-				String artsUrlToMatch = dataFromWeb.get(0).url;
+				String artsUrlToMatch = dataFromWeb.get(0).getUrl();
 				for (int i = 0; i < allArtCatList.size(); i++)
 				{
 					String prevUrlToMatch = Article.getArticleUrlById(getHelper(), allArtCatList.get(i).getArticleId());
@@ -848,14 +848,14 @@ public class DBActions
 				//TODO this is same as previous block. Refactor it!
 				ArtCatTable lastInDB = allArtCatList.get(allArtCatList.size() - 1);
 				//so we'll have to update lastInDBArt by real next.
-				ArtCatTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(0).url);
+				ArtCatTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(0).getUrl());
 
 				//then we must match each art with all artCat, that have no previousArtUrl
 				//get list of all artCat without previous art
 				List<ArtCatTable> withoutPrev = ArtCatTable.getAllRowsWithoutPrevArt(this.getHelper(),
 				categoryId);
 				//we must match only with new arts, not with all
-				List<ArtInfo> newArtInfo = dataFromWeb;
+				List<Article> newArtInfo = dataFromWeb;
 				if (withoutPrev != null)
 				{
 					for (int i = 0; i < newArtInfo.size(); i++)
@@ -865,7 +865,7 @@ public class DBActions
 							//get url of checking ArtCat entry
 							String url = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
 							.getArticleId());
-							if (newArtInfo.get(i).url.equals(url))
+							if (newArtInfo.get(i).getUrl().equals(url))
 							{
 								//matched! So we write only previous of matched (without matched)
 								if (i == 0)
@@ -881,7 +881,7 @@ public class DBActions
 								{
 									//there ARE new real arts, so write them all!
 									//and update entry, that matched, by previousArtUrl
-									List<ArtInfo> subListArtInfo = newArtInfo.subList(0, i - 1);
+									List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
 									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
 									this.getHelper(), subListArtInfo, categoryId);
 									//set prevArtUrl for first entry
@@ -890,7 +890,7 @@ public class DBActions
 									dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
 									//update previousArtUrl for matched ArtCat row
 									int id = withoutPrev.get(u).getId();
-									String prevArtUrlToUpdate = subListArtInfo.get(i).url;
+									String prevArtUrlToUpdate = subListArtInfo.get(i).getUrl();
 									ArtCatTable.updatePreviousArt(getHelper(), id, prevArtUrlToUpdate);
 									//setNextArtsURL for last in new arts list, cause we can't do it in ArtCat method
 									String nextArtUrl = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
@@ -961,20 +961,20 @@ public class DBActions
 			{
 				//check matching loadedData url with first in dBarts
 				String firstInDBArtsUrl = Article.getArticleUrlById(getHelper(), dBarts.get(0).getArticleId());
-				if (dataFromWeb.get(0).url.equals(firstInDBArtsUrl))
+				if (dataFromWeb.get(0).getUrl().equals(firstInDBArtsUrl))
 				{
 					//matched! So there are no lag published arts
 					//now we can write new arts after last in DB
 					ArtAutTable lastInDB = dBarts.get(dBarts.size() - 1);
 					//so we'll have to update lastInDBArt by real next.
-					ArtAutTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(dBarts.size()).url);
+					ArtAutTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(dBarts.size()).getUrl());
 
 					//then we must match each art with all artAut, that have no previousArtUrl
 					//get list of all artAut without previous art
 					List<ArtAutTable> withoutPrev = ArtAutTable.getAllRowsWithoutPrevArt(this.getHelper(),
 					authorId);
 					//we must match only with new arts, no with all
-					List<ArtInfo> newArtInfo = dataFromWeb.subList(dBarts.size(), dataFromWeb.size());
+					List<Article> newArtInfo = dataFromWeb.subList(dBarts.size(), dataFromWeb.size());
 					if (withoutPrev != null)
 					{
 						for (int i = 0; i < newArtInfo.size(); i++)
@@ -984,7 +984,7 @@ public class DBActions
 								//get url of checking ArtAut entry
 								String url = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
 								.getArticleId());
-								if (newArtInfo.get(i).url.equals(url))
+								if (newArtInfo.get(i).getUrl().equals(url))
 								{
 									//matched! So we write only previous of matched (without matched)
 									if (i == 0)
@@ -1000,7 +1000,7 @@ public class DBActions
 									{
 										//there ARE new real arts, so write them all!
 										//and update entry, that matched, by previousArtUrl
-										List<ArtInfo> subListArtInfo = newArtInfo.subList(0, i - 1);
+										List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
 										List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
 										this.getHelper(), subListArtInfo, authorId);
 										//set prevArtUrl for first entry
@@ -1009,7 +1009,7 @@ public class DBActions
 										dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
 										//update previousArtUrl for matched ArtAut row
 										int id = withoutPrev.get(u).getId();
-										String prevArtUrlToUpdate = subListArtInfo.get(i).url;
+										String prevArtUrlToUpdate = subListArtInfo.get(i).getUrl();
 										ArtAutTable.updatePreviousArt(getHelper(), id, prevArtUrlToUpdate);
 										//setNextArtsURL for last in new arts list, cause we can't do it in ArtAut method
 										String nextArtUrl = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
@@ -1068,7 +1068,7 @@ public class DBActions
 				//so we can check if gained arts matched with arts on previous page
 				//if we have match it's pub lag, so start load from top!
 				//else - just write arts to db
-				String artsUrlToMatch = dataFromWeb.get(0).url;
+				String artsUrlToMatch = dataFromWeb.get(0).getUrl();
 				for (int i = 0; i < allArtAutList.size(); i++)
 				{
 					String prevUrlToMatch = Article.getArticleUrlById(getHelper(), allArtAutList.get(i).getArticleId());
@@ -1081,14 +1081,14 @@ public class DBActions
 				//TODO this is same as previous block. Refactor it!
 				ArtAutTable lastInDB = allArtAutList.get(allArtAutList.size() - 1);
 				//so we'll have to update lastInDBArt by real next.
-				ArtAutTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(0).url);
+				ArtAutTable.updateNextArt(getHelper(), lastInDB.getId(), dataFromWeb.get(0).getUrl());
 
 				//then we must match each art with all artAut, that have no previousArtUrl
 				//get list of all artAut without previous art
 				List<ArtAutTable> withoutPrev = ArtAutTable.getAllRowsWithoutPrevArt(this.getHelper(),
 				authorId);
 				//we must match only with new arts, not with all
-				List<ArtInfo> newArtInfo = dataFromWeb;
+				List<Article> newArtInfo = dataFromWeb;
 				if (withoutPrev != null)
 				{
 					for (int i = 0; i < newArtInfo.size(); i++)
@@ -1098,7 +1098,7 @@ public class DBActions
 							//get url of checking ArtAut entry
 							String url = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)
 							.getArticleId());
-							if (newArtInfo.get(i).url.equals(url))
+							if (newArtInfo.get(i).getUrl().equals(url))
 							{
 								//matched! So we write only previous of matched (without matched)
 								if (i == 0)
@@ -1114,7 +1114,7 @@ public class DBActions
 								{
 									//there ARE new real arts, so write them all!
 									//and update entry, that matched, by previousArtUrl
-									List<ArtInfo> subListArtInfo = newArtInfo.subList(0, i - 1);
+									List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
 									List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
 									this.getHelper(), subListArtInfo, authorId);
 									//set prevArtUrl for first entry
@@ -1123,7 +1123,7 @@ public class DBActions
 									dataToWrite.get(0).setPreviousArtUrl(prevArtUrl);
 									//update previousArtUrl for matched ArtAut row
 									int id = withoutPrev.get(u).getId();
-									String prevArtUrlToUpdate = subListArtInfo.get(i).url;
+									String prevArtUrlToUpdate = subListArtInfo.get(i).getUrl();
 									ArtAutTable.updatePreviousArt(getHelper(), id, prevArtUrlToUpdate);
 									//setNextArtsURL for last in new arts list, cause we can't do it in ArtAut method
 									String nextArtUrl = Article.getArticleUrlById(getHelper(), withoutPrev.get(u)

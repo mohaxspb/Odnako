@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
@@ -54,8 +55,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 	ImageLoader imageLoader;
 
-	ArrayList<ArtInfo> artsInfo;
-	ArrayList<ArtInfo> orig;
+	ArrayList<Article> artsInfo;
+	ArrayList<Article> orig;
 	SharedPreferences pref;
 
 	boolean twoPane;
@@ -63,7 +64,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 	FragmentArtsListRecycler artsListFrag;
 
-	public ArtsListAdapter(ActionBarActivity act, ArrayList<ArtInfo> artsInfo, RecyclerView artsListView,
+	public ArtsListAdapter(ActionBarActivity act, ArrayList<Article> artsInfo, RecyclerView artsListView,
 	FragmentArtsListRecycler artsListFrag)
 	{
 		this.act = act;
@@ -112,7 +113,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 		return this.artsInfo.size() + header;
 	}
 
-	public ArtInfo getArtInfoByPosition(int position)
+	public Article getArtInfoByPosition(int position)
 	{
 		return this.artsInfo.get(position - 1);
 	}
@@ -150,7 +151,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			break;
 			case (ARTICLE):
 				//catch all cat author frags and return;
-				final ArtInfo p;
+				final Article p;
 				try
 				{
 					p = this.getArtInfoByPosition(position);
@@ -189,12 +190,12 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 					////////
 					// ART_IMG
-					if (!p.img_art.equals("empty") && !p.img_art.contains("/75_75/"))
+					if (!p.getImgArt().equals("empty") && !p.getImgArt().contains("/75_75/"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						params.height = (int) DipToPx.convert(120, act);
 						holderMain.art_img.setLayoutParams(params);
-						String HDimgURL = p.img_art.replace("/120_72/", "/450_240/");
+						String HDimgURL = p.getImgArt().replace("/120_72/", "/450_240/");
 
 						imageLoader.displayImage(HDimgURL, holderMain.art_img, options,
 						new ImageLoadingListener()
@@ -242,7 +243,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					//end of ART_IMG
 
 					//Title of article
-					Spanned spannedContentTitle = Html.fromHtml(p.title);
+					Spanned spannedContentTitle = Html.fromHtml(p.getTitle());
 					holderMain.title.setText(spannedContentTitle);
 
 					holderMain.top_lin_lay.setOnClickListener(new OnClickListener()
@@ -256,14 +257,14 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					holderMain.title.setTextSize(21 * scaleFactor);
 
 					//Date
-					if (!p.pubDate.equals("empty"))
+					if (!p.getPubDate().equals("empty"))
 					{
-						holderMain.date.setText(p.pubDate);
+						holderMain.date.setText(p.getPubDate().toString());
 						holderMain.date.setTextSize(19 * scaleFactor);
 					}
 					else
 					{
-//						holderMain.date.setText("date is empty; Must hide on relize");
+						//						holderMain.date.setText("date is empty; Must hide on relize");
 						holderMain.date.setText(null);
 						holderMain.date.setTextSize(19 * scaleFactor);
 					}
@@ -285,10 +286,10 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 									switch (item.getItemId())
 									{
 										case R.id.mark_as_read:
-											Actions.markAsRead(p.url, act);
+											Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
-											Actions.shareUrl(p.url, act);
+											Actions.shareUrl(p.getUrl(), act);
 											return true;
 										case R.id.show_comments:
 											Actions.showComments(artsInfo, positionInAllArtsInfo, act);
@@ -307,9 +308,9 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					////End of popUp menu in cardView
 
 					//preview
-					if (!p.preview.equals("empty"))
+					if (!p.getPreview().equals("empty"))
 					{
-						Spanned spannedContentPreview = Html.fromHtml(p.preview);
+						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
 						holderMain.preview.setText(spannedContentPreview);
 						holderMain.preview.setTextSize(21 * scaleFactor);
 					}
@@ -326,24 +327,24 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					////end of preview
 
 					//name and image of author
-					if (!p.img_art.equals("empty") && p.img_art.contains("/75_75/"))
+					if (!p.getImgArt().equals("empty") && p.getImgArt().contains("/75_75/"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
 
-						this.imageLoader.displayImage(p.img_art, holderMain.author_img,
+						this.imageLoader.displayImage(p.getImgArt(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
-					else if (!p.img_author.equals("empty"))
+					else if (!p.getImg_author().equals("empty"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
 						params.width = pixels;
 						holderMain.author_img.setLayoutParams(params);
 
-						this.imageLoader.displayImage(p.img_author, holderMain.author_img,
+						this.imageLoader.displayImage(p.getImg_author(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
 					else
@@ -353,12 +354,12 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						params.width = 0;
 						holderMain.author_img.setLayoutParams(params);
 					}
-					if (!p.authorName.equals("empty"))
+					if (!p.getAuthorName().equals("empty"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
 						params.height = LayoutParams.WRAP_CONTENT;
 						params.width = 0;
-						Spanned spannedContent = Html.fromHtml("<b>" + p.authorName + "</b>");
+						Spanned spannedContent = Html.fromHtml("<b>" + p.getAuthorName() + "</b>");
 						holderMain.author_name.setText(spannedContent);
 						holderMain.author_name.setTextSize(21 * scaleFactor);
 					}
@@ -377,7 +378,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						@Override
 						public void onClick(View v)
 						{
-							Actions.showAllAuthorsArticles(p.authorBlogUrl, act);
+							Actions.showAllAuthorsArticles(p.getAuthorBlogUrl(), act);
 						}
 					});
 					//end of name of author
@@ -395,7 +396,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					formatedCategory = formatedCategory.replace(".", "_");
 
 					String formatedLink;
-					formatedLink = p.url.replace("-", "_");
+					formatedLink = p.getUrl().replace("-", "_");
 					formatedLink = formatedLink.replace("/", "_");
 					formatedLink = formatedLink.replace(":", "_");
 					formatedLink = formatedLink.replace(".", "_");
@@ -415,7 +416,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					{
 
 					}
-					if (p.url != null)
+					if (p.getUrl() != null)
 					{
 						if (pref.getString("theme", "dark").equals("dark"))
 						{
@@ -445,7 +446,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					ReadUnreadRegister read = new ReadUnreadRegister(act);
 					//					holderMain.read.setLayoutParams(paramsForIcons);
 
-					if (read.check(p.url))
+					if (read.check(p.getUrl()))
 					{
 						if (pref.getString("theme", "dark").equals("dark"))
 						{
@@ -475,16 +476,16 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					{
 						public void onClick(View v)
 						{
-							Actions.shareUrl(p.url, act);
+							Actions.shareUrl(p.getUrl(), act);
 						}
 					});
-					holderMain.num_of_shares.setText(String.valueOf(p.numOfSharings));
+					holderMain.num_of_shares.setText(String.valueOf(p.getNumOfSharings()));
 					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
 					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)
 						{
-							Actions.shareUrl(p.url, act);
+							Actions.shareUrl(p.getUrl(), act);
 						}
 					});
 					////end of share btn
@@ -498,7 +499,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
 						}
 					});
-					holderMain.num_of_comms.setText(String.valueOf(p.numOfComments));
+					holderMain.num_of_comms.setText(String.valueOf(p.getNumOfComments()));
 					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
 					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
 					{

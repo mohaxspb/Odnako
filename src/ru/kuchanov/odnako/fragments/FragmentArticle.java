@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -70,10 +71,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private CardView alsoByThemeCard;
 	private CardView alsoToReadCard;
 
-	private ArtInfo curArtInfo;
+	private Article curArtInfo;
 //	position in all art arr; need to show next/previous arts
 	private int position;
-	ArrayList<ArtInfo> allArtsInfo;
+	ArrayList<Article> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
 	
@@ -137,7 +138,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			if (this.curArtInfo.artText == null || this.curArtInfo.artText.equals("empty"))
+			if (this.curArtInfo.getArtText() == null || this.curArtInfo.getArtText().equals("empty"))
 			{
 				//load...
 				this.swipeRef.setRefreshing(true);
@@ -162,7 +163,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					@Override
 					public void onClick(View v)
 					{
-						Actions.shareUrl(curArtInfo.url, act);
+						Actions.shareUrl(curArtInfo.getUrl(), act);
 					}
 				});
 				this.commentsBottomBtn.setOnClickListener(new OnClickListener()
@@ -298,7 +299,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAlsoByTheme()
 	{
-		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoByTheme();
+		Article.AlsoToRead alsoToRead = this.curArtInfo.getAlsoByTheme();
 		//for test
 		//		String[] s1 = new String[] { "title", "title" };
 		//		String[] s2 = new String[] { "title", "title" };
@@ -324,7 +325,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAlsoToRead()
 	{
-		ArtInfo.AlsoToRead alsoToRead = this.curArtInfo.getAlsoToReadMore();
+		Article.AlsoToRead alsoToRead = this.curArtInfo.getAlsoToReadMore();
 		//for test
 		//		String[] s1 = new String[] { "title", "title", "title" };
 		//		String[] s2 = new String[] { "url", "url", "url" };
@@ -379,21 +380,21 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		//removing tags field if it's empty
-		if (this.curArtInfo.tegs_main.equals("empty") || this.curArtInfo.tegs_main.equals(""))
+		if (this.curArtInfo.getTegs_main().equals("empty") || this.curArtInfo.getTegs_main().equals(""))
 		{
 			this.artTagsMainTV.setText(null);
 			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
 		}
 		else
 		{
-			this.artTagsMainTV.setText(this.curArtInfo.tegs_main);
+			this.artTagsMainTV.setText(this.curArtInfo.getTegs_main());
 			this.artTagsMainTV.setLayoutParams(normalParams);
 		}
 		//set descr of author btn
 		//set descrTV height to 0 by default
 		this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
 
-		if (this.curArtInfo.authorDescr.equals("empty") || this.curArtInfo.authorDescr.equals(""))
+		if (this.curArtInfo.getAuthorDescr().equals("empty") || this.curArtInfo.getAuthorDescr().equals(""))
 		{
 			this.artAuthorDescriptionTV.setText(null);
 			this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
@@ -402,7 +403,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			this.artAuthorDescriptionTV.setText(this.curArtInfo.authorDescr);
+			this.artAuthorDescriptionTV.setText(this.curArtInfo.getAuthorDescr());
 			//restore size
 			//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
 			//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
@@ -433,7 +434,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		}
 		//set allArsList OnClick
-		if (this.curArtInfo.authorBlogUrl.equals("empty") || this.curArtInfo.authorBlogUrl.equals(""))
+		if (this.curArtInfo.getAuthorBlogUrl().equals("empty") || this.curArtInfo.getAuthorBlogUrl().equals(""))
 		{
 			this.artAuthorArticlesIV.setOnClickListener(null);
 			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
@@ -447,7 +448,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				@Override
 				public void onClick(View v)
 				{
-					Actions.showAllAuthorsArticles(curArtInfo.authorBlogUrl, act);
+					Actions.showAllAuthorsArticles(curArtInfo.getAuthorBlogUrl(), act);
 				}
 			});
 		}
@@ -520,18 +521,18 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//set text, tegs, authoe etc
 	private void fillFielsdsWithInfo(View rootView)
 	{
-		this.artTextView.setText(this.curArtInfo.artText);
+		this.artTextView.setText(this.curArtInfo.getArtText());
 
-		this.artTitleTV.setText(this.curArtInfo.title);
-		this.artAuthorTV.setText(this.curArtInfo.authorName);
-		this.artAuthorDescriptionTV.setText(this.curArtInfo.authorDescr);
-		this.artDateTV.setText(this.curArtInfo.pubDate);
-		this.artTagsMainTV.setText(this.curArtInfo.tegs_main);
+		this.artTitleTV.setText(this.curArtInfo.getTitle());
+		this.artAuthorTV.setText(this.curArtInfo.getAuthorName());
+		this.artAuthorDescriptionTV.setText(this.curArtInfo.getAuthorDescr());
+		this.artDateTV.setText(this.curArtInfo.getPubDate().toString());
+		this.artTagsMainTV.setText(this.curArtInfo.getTegs_main());
 
 		//down images
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV, MyUIL.getDarkOptions());
+			imageLoader.displayImage(this.curArtInfo.getImgArt(), this.artAuthorIV, MyUIL.getDarkOptions());
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
@@ -540,7 +541,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, this.artAuthorIV);
+			imageLoader.displayImage(this.curArtInfo.getImgArt(), this.artAuthorIV);
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_grey600_48dp);
 			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
@@ -676,7 +677,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	}
 
 	@Override
-	public void update(ArrayList<ArtInfo> allArtInfo)
+	public void update(ArrayList<Article> allArtInfo)
 	{
 		this.curArtInfo = allArtInfo.get(getPosition());
 		this.checkCurArtInfo(null);

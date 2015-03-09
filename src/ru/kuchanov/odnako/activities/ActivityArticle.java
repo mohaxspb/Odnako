@@ -125,7 +125,7 @@ public class ActivityArticle extends ActivityBase
 				return true;
 			case R.id.share:
 //				Actions.shareUrl(this.curArtInfo.url, this.act);
-				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).url, this.act);
+				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));

@@ -53,10 +53,10 @@ public class Author implements Comparable<Author>, Parcelable
 	private String avatarBig;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
-	private Date refreshed;
+	private Date refreshed = new Date(0);
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
-	private Date lastArticleDate;
+	private Date lastArticleDate = new Date(0);
 
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,

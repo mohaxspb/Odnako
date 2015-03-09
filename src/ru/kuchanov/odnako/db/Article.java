@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.lists_and_utils.ArtInfo.AlsoToRead;
 import ru.kuchanov.odnako.utils.DateParse;
 
 import android.os.Parcel;
@@ -50,7 +51,7 @@ public class Article implements Parcelable
 	private String title;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String img_art;
+	private String imgArt;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String authorBlogUrl;
@@ -74,28 +75,28 @@ public class Article implements Parcelable
 	private int numOfSharings = 0;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String artText;
+	private String artText = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String authorDescr;
+	private String authorDescr = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String tegs_main;
+	private String tegs_main = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String tegs_all;
+	private String tegs_all = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String share_quont;
+	private String share_quont = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String to_read_main;
+	private String to_read_main = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String to_read_more;
+	private String to_read_more = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
-	private String img_author;
+	private String img_author = "empty";
 
 	//foreignKeys
 	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
@@ -125,7 +126,7 @@ public class Article implements Parcelable
 	{
 		this.url = artInfoArr[0];
 		this.title = artInfoArr[1];
-		this.img_art = artInfoArr[2];
+		this.imgArt = artInfoArr[2];
 		this.authorBlogUrl = artInfoArr[3];
 		this.authorName = artInfoArr[4];
 
@@ -209,14 +210,14 @@ public class Article implements Parcelable
 		this.title = title;
 	}
 
-	public String getImg_art()
+	public String getImgArt()
 	{
-		return img_art;
+		return imgArt;
 	}
 
-	public void setImg_art(String img_art)
+	public void setImgArt(String imgArt)
 	{
-		this.img_art = img_art;
+		this.imgArt = imgArt;
 	}
 
 	public String getAuthorBlogUrl()
@@ -391,7 +392,7 @@ public class Article implements Parcelable
 
 		allInfo[0] = url;
 		allInfo[1] = title;
-		allInfo[2] = img_art;
+		allInfo[2] = imgArt;
 		allInfo[3] = authorBlogUrl;
 		allInfo[4] = authorName;
 
@@ -426,7 +427,7 @@ public class Article implements Parcelable
 		allInfo[0] = String.valueOf(id);
 		allInfo[1] = url;
 		allInfo[2] = title;
-		allInfo[3] = img_art;
+		allInfo[3] = imgArt;
 		allInfo[4] = authorBlogUrl;
 		allInfo[5] = authorName;
 
@@ -550,20 +551,20 @@ public class Article implements Parcelable
 		return art;
 	}
 
-	public static ArrayList<ArtInfo> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
+	public static ArrayList<Article> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<Article> data)
 	{
-		ArrayList<ArtInfo> updatedData = new ArrayList<ArtInfo>();
+		ArrayList<Article> updatedData = new ArrayList<Article>();
 
 		int quontOfWrittenArticles = 0;
 
 		Article existingArt;
-		for (ArtInfo a : data)
+		for (Article a : data)
 		{
 			//check if there is no already existing arts in DB by queryForURL
 			existingArt = Article.getArticleByURL(h, a.url);
 			if (existingArt == null)
 			{
-				//get author obj if it is in ArtInfo and Author table
+				//get author obj if it is in Article and Author table
 				Author aut = null;
 				try
 				{
@@ -575,8 +576,10 @@ public class Article implements Parcelable
 					e.printStackTrace();
 				}
 				//create Article obj to pass it to DB
-				existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
-				System.currentTimeMillis()), aut);
+				existingArt = a;
+
+				existingArt.setRefreshed(new Date(System.currentTimeMillis()));
+				existingArt.setAuthor(aut);
 				//set author image URL for articles
 				if (aut != null)
 				{
@@ -584,7 +587,7 @@ public class Article implements Parcelable
 				}
 				try
 				{
-					h.getDaoArticle().create(existingArt);
+					updatedData.add(h.getDaoArticle().createIfNotExists(existingArt));//.create(existingArt);
 					quontOfWrittenArticles++;
 				} catch (SQLException e)
 				{
@@ -595,17 +598,73 @@ public class Article implements Parcelable
 			else
 			{
 				//check if date of existing ==0
-				if(existingArt.getPubDate().getTime()==0 && !a.pubDate.equals("empty"))
+				if (existingArt.getPubDate().getTime() == 0 && a.pubDate.getTime() != 0)
 				{
-					Article.updatePubDate(h, existingArt.getId(), DateParse.parse(a.pubDate));
+					Article.updatePubDate(h, existingArt.getId(), a.pubDate);
 				}
+				updatedData.add(existingArt);
 			}
-
-			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
 		}
-//		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+		//		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 		return updatedData;
 	}
+
+	//	public static ArrayList<ArtInfo> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
+	//	{
+	//		ArrayList<ArtInfo> updatedData = new ArrayList<ArtInfo>();
+	//
+	//		int quontOfWrittenArticles = 0;
+	//
+	//		Article existingArt;
+	//		for (ArtInfo a : data)
+	//		{
+	//			//check if there is no already existing arts in DB by queryForURL
+	//			existingArt = Article.getArticleByURL(h, a.url);
+	//			if (existingArt == null)
+	//			{
+	//				//get author obj if it is in ArtInfo and Author table
+	//				Author aut = null;
+	//				try
+	//				{
+	//					aut = h.getDaoAuthor().queryBuilder().where()
+	//					.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(a.authorBlogUrl)).queryForFirst();
+	//
+	//				} catch (SQLException e)
+	//				{
+	//					e.printStackTrace();
+	//				}
+	//				//create Article obj to pass it to DB
+	//				existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
+	//				System.currentTimeMillis()), aut);
+	//				//set author image URL for articles
+	//				if (aut != null)
+	//				{
+	//					existingArt.setImg_author(aut.getAvatar());
+	//				}
+	//				try
+	//				{
+	//					h.getDaoArticle().create(existingArt);
+	//					quontOfWrittenArticles++;
+	//				} catch (SQLException e)
+	//				{
+	//					Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+	//					Log.e(LOG, existingArt.getTitle() + " error while INSERT");
+	//				}
+	//			}//article do not exists
+	//			else
+	//			{
+	//				//check if date of existing ==0
+	//				if(existingArt.getPubDate().getTime()==0 && !a.pubDate.equals("empty"))
+	//				{
+	//					Article.updatePubDate(h, existingArt.getId(), DateParse.parse(a.pubDate));
+	//				}
+	//			}
+	//
+	//			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
+	//		}
+	////		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+	//		return updatedData;
+	//	}
 
 	public static void updatePubDate(DataBaseHelper h, int articleId, Date d)
 	{
@@ -642,8 +701,8 @@ public class Article implements Parcelable
 	{
 		return this.getAsStringArray()[1];
 	}
-	
-//////PARCEL implementation
+
+	//////PARCEL implementation
 	@Override
 	public int describeContents()
 	{
@@ -655,7 +714,7 @@ public class Article implements Parcelable
 	{
 		dest.writeString(url);
 		dest.writeString(title);
-		dest.writeString(img_art);
+		dest.writeString(imgArt);
 		dest.writeString(authorBlogUrl);
 		dest.writeString(authorName);
 
@@ -673,7 +732,7 @@ public class Article implements Parcelable
 		dest.writeString(to_read_main);
 		dest.writeString(to_read_more);
 		dest.writeString(img_author);
-		
+
 		dest.writeLong(refreshed.getTime());
 		dest.writeParcelable(author, flags);
 	}
@@ -682,7 +741,7 @@ public class Article implements Parcelable
 	{
 		this.url = in.readString();
 		this.title = in.readString();
-		this.img_art = in.readString();
+		this.imgArt = in.readString();
 		this.authorBlogUrl = in.readString();
 		this.authorName = in.readString();
 
@@ -699,9 +758,9 @@ public class Article implements Parcelable
 		this.to_read_main = in.readString();
 		this.to_read_more = in.readString();
 		this.img_author = in.readString();
-		
-		refreshed=new Date(in.readLong());
-		author=(Author)in.readParcelable(Author.class.getClassLoader());
+
+		refreshed = new Date(in.readLong());
+		author = (Author) in.readParcelable(Author.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>()
@@ -718,5 +777,95 @@ public class Article implements Parcelable
 		{
 			return new Article[size];
 		}
-	};
+	};	
+	/////////////////////////////
+	public String[] getAllTegsArr()
+	{
+		String[] allTegsArr;
+
+		if (!this.tegs_all.equals("empty"))
+		{
+			allTegsArr = this.tegs_all.split(" !!!! ");
+		}
+		else
+		{
+			//System.out.println("AllTegs var is empty!");
+			allTegsArr = null;
+		}
+
+		return allTegsArr;
+	}
+	
+	public AlsoToRead getAlsoByTheme()
+	{
+		AlsoToRead alsoToRead;
+		String[] allInfo;
+
+		if (!this.to_read_main.equals("empty"))
+		{
+			allInfo = this.to_read_main.split(" !!!! ");
+			String[] titles = new String[allInfo.length / 3];
+			String[] urls = new String[allInfo.length / 3];
+			String[] dates = new String[allInfo.length / 3];
+			for (int i = 0; i < allInfo.length / 3; i++)
+			{
+				titles[i] = allInfo[0 + i * 3];
+				urls[i] = allInfo[1 + i * 3];
+				dates[i] = allInfo[2 + i * 3];
+			}
+			alsoToRead = new AlsoToRead(titles, urls, dates);
+		}
+		else
+		{
+			//			System.out.println("alsoToRead (to_read_main) var is empty!");
+			alsoToRead = null;
+		}
+
+		return alsoToRead;
+	}
+
+	public AlsoToRead getAlsoToReadMore()
+	{
+		AlsoToRead alsoToRead;
+		String[] allInfo;
+
+		if (!this.to_read_more.equals("empty"))
+		{
+			allInfo = this.to_read_more.split(" !!!! ");
+			String[] titles = new String[allInfo.length / 3];
+			String[] urls = new String[allInfo.length / 3];
+			String[] dates = new String[allInfo.length / 3];
+			for (int i = 0; i < allInfo.length / 3; i++)
+			{
+				titles[i] = allInfo[0 + i * 3];
+				urls[i] = allInfo[1 + i * 3];
+				dates[i] = allInfo[2 + i * 3];
+			}
+			alsoToRead = new AlsoToRead(titles, urls, dates);
+		}
+		else
+		{
+			//			System.out.println("alsoToRead (to_read_more) var is empty!");
+			alsoToRead = null;
+		}
+
+		return alsoToRead;
+	}
+	
+	public class AlsoToRead
+	{
+		public String[] urls;
+		public String[] titles;
+
+		public String[] dates;
+
+		public AlsoToRead(String[] urls, String[] titles, String[] dates)
+		{
+			this.urls = urls;
+			this.titles = titles;
+
+			this.dates = dates;
+		}
+	}
+	
 }

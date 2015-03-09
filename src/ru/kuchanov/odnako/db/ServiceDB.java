@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -126,7 +127,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-//				Log.d(LOG + catToLoad, DBRezult);
+				//				Log.d(LOG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{
@@ -164,10 +165,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			//if pageToLoad!=1 we load from bottom
-//			Log.d(LOG, "LOAD FROM BOTTOM!");
+			//			Log.d(LOG, "LOAD FROM BOTTOM!");
 			DBActions dbActions = new DBActions(this, this.getHelper());
 			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-//			Log.d(LOG, dBRezult);
+			//			Log.d(LOG, dBRezult);
 
 			switch (dBRezult)
 			{
@@ -202,7 +203,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
-//		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+		//		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 
 		//TODO check quontity and allAuthors situation
 		//So, we can have MAX quint of tasks=3 (cur pager frag +left and right)
@@ -240,9 +241,22 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	}
 
 	@Override
-	public void sendDownloadedData(ArrayList<ArtInfo> dataToSend, String categoryToLoad, int pageToLoad)
+	public void sendDownloadedData(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-//		Log.d(LOG + categoryToLoad, "sendDownloadedData");
+		//		Log.d(LOG + categoryToLoad, "sendDownloadedData");
+
+		if (Looper.myLooper() == Looper.getMainLooper())
+		{
+			Log.e(
+			LOG,
+			"Looper.myLooper() == Looper.getMainLooper(): "
+			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+		}
+		else
+		{
+			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
+		}
+
 		//find and remove finished task from list
 		for (int i = 0; i < this.currentTasks.size(); i++)
 		{
@@ -257,7 +271,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (dataToSend.size() == 0)
 		{
 			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
-			dataToSend.add(new ArtInfo(artInfoArr));
+			Article a = new Article();
+			a.setTitle("Ни одной статьи не обнаружено.");
+			dataToSend.add(a);
 			resultMessage = new String[] { Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY, null };
 		}
 		else
@@ -273,13 +289,13 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				if (Category.isCategory(this.getHelper(), categoryToLoad))
 				{
 					int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);
-					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).url;
+					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).getUrl();
 					Category.setInitialArtsUrl(this.getHelper(), categoryId, initialArtsUrl);
 				}
 				else
 				{
 					int authorId = Author.getAuthorIdByURL(getHelper(), categoryToLoad);
-					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).url;
+					String initialArtsUrl = dataToSend.get(dataToSend.size() - 1).getUrl();
 					Author.setInitialArtsUrl(this.getHelper(), authorId, initialArtsUrl);
 				}
 			}
@@ -299,7 +315,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				pageToLoad);
 			}
 		}
-//		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
+		//		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
 		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 	}
 
@@ -418,10 +434,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	 * @param categoryToLoad
 	 * @param pageToLoad
 	 */
-	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<ArtInfo> dataToSend,
+	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<Article> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
-//		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+		//Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
 
 		Intent intent = new Intent(categoryToLoad);
 

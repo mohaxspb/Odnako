@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -81,7 +82,7 @@ public class FragmentArtsListRecycler extends Fragment
 	private SharedPreferences pref;
 
 	private String categoryToLoad;
-	private ArrayList<ArtInfo> allArtsInfo;
+	private ArrayList<Article> allArtsInfo;
 	//TODO check if we need it
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
@@ -187,11 +188,10 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG + categoryToLoad, "artSelectedReceiver onReceive called");
+			//Log.i(LOG + categoryToLoad, "artSelectedReceiver onReceive called");
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
-			//			topImg.setY(0 - topImg.getHeight());
 			artsListAdapter.notifyDataSetChanged();
 		}
 	};
@@ -300,17 +300,17 @@ public class FragmentArtsListRecycler extends Fragment
 					//it's the only one fragment, so isDisplayed is always true
 					isDisplayed = true;
 					//try setting title to toolbar
-					ArrayList<ArtInfo> allArts = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+					ArrayList<Article> allArts = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 					Toolbar toolbar = (Toolbar) act.findViewById(toolbarId);
 					if (allArts != null)
 					{
-						if (allArts.get(0).authorName.equals("empty"))
+						if (allArts.get(0).getAuthorName().equals("empty"))
 						{
 							toolbar.setTitle(categoryToLoad);
 						}
 						else
 						{
-							toolbar.setTitle(allArts.get(0).authorName);
+							toolbar.setTitle(allArts.get(0).getAuthorName());
 						}
 					}
 					else
@@ -375,9 +375,10 @@ public class FragmentArtsListRecycler extends Fragment
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 					allArtsInfo = null;
-					ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
-					def
-					.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
+					ArrayList<Article> def = new ArrayList<Article>();
+					Article a=new Article();
+					a.setTitle("Статьи загружаются, подождите пожалуйста");
+					def.add(a);
 					allArtsInfo = def;
 					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 					pageToLoad = 1;
@@ -437,7 +438,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 	private void updateAdapter(Intent intent, int page)
 	{
-		ArrayList<ArtInfo> newAllArtsInfo;
+		ArrayList<Article> newAllArtsInfo;
 		newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
 
 		if (newAllArtsInfo != null)
@@ -449,11 +450,11 @@ public class FragmentArtsListRecycler extends Fragment
 			allArtsInfo.addAll(newAllArtsInfo);
 			artsListAdapter.notifyDataSetChanged();
 
-			((ActivityBase) act).updateAllCatArtsInfo(categoryToLoad, allArtsInfo);
+			((ActivityBase) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 		}
 		else
 		{
-			System.out.println("ArrayList<ArtInfo> someResult=NULL!!!");
+			System.out.println("ArrayList<Article> someResult=NULL!!!");
 		}
 	}
 
@@ -572,7 +573,8 @@ public class FragmentArtsListRecycler extends Fragment
 					String fullResName = catImgsFilesNames[i];
 					String resName = fullResName.substring(0, fullResName.length() - 4);
 					int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-					imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
+					imgLoader.displayImage("drawable://" + resId, topImg,
+					MyUIL.getTransparentBackgroundOptions(this.act));
 					break;
 				}
 			}
@@ -620,13 +622,15 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 
 		if (this.allArtsInfo == null
-		|| this.allArtsInfo.get(0).title.equals("Статьи загружаются, подождите пожалуйста"))
+		|| this.allArtsInfo.get(0).getTitle().equals("Статьи загружаются, подождите пожалуйста"))
 		{
 			//Log.i(categoryToLoad, "this.allArtsInfo=NULL");
 			this.getAllArtsInfo(false);
 
-			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
-			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
+			ArrayList<Article> def = new ArrayList<Article>();
+			Article a=new Article();
+			a.setTitle("Статьи загружаются, подождите пожалуйста");
+			def.add(a);
 			this.allArtsInfo = def;
 
 			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);

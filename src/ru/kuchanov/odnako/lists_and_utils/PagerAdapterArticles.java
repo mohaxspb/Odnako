@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragArtUPD;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 {
 	static String LOG_TAG = PagerAdapterArticles.class.getSimpleName() + "/";
 
-	ArrayList<ArtInfo> allArtsInfo;
+	ArrayList<Article> allArtsInfo;
 
 	String category;
 
@@ -56,8 +57,10 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, null);
 			b.putParcelable(ArtInfo.KEY_CURENT_ART, null);
 
-			ArrayList<ArtInfo> def = new ArrayList<ArtInfo>();
-			def.add(new ArtInfo("empty", "Статьи загружаются, подождите пожалуйста", "empty", "empty", "empty"));
+			ArrayList<Article> def = new ArrayList<Article>();
+			Article a=new Article();
+			a.setTitle("Статьи загружаются, подождите пожалуйста");
+//			def.add(new ArtInfo("empty", , "empty", "empty", "empty"));
 			this.allArtsInfo = def;
 		}
 		else

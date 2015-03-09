@@ -435,14 +435,14 @@ public class ArtCatTable
 	 * @param dBObjects
 	 * @return
 	 */
-	public static ArrayList<ArtInfo> getArtInfoListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
+	public static ArrayList<Article> getArtInfoListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
 	{
-		ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+		ArrayList<Article> data = new ArrayList<Article>();
 		for (ArtCatTable a : dBObjects)
 		{
 			Article art = Article.getArticleById(h, a.getArticleId());
-			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
-			data.add(artInfoObj);
+//			Article artInfoObj = new ArtInfo(art.getAsStringArray());
+			data.add(art);
 		}
 		return data;
 	}
@@ -454,19 +454,19 @@ public class ArtCatTable
 	 * @param categoryId
 	 * @return list of ArtCatTable made from ArtInfo list
 	 */
-	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<Article> artToWrite,
 	int categoryId)
 	{
 		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
 		for (int u = 0; u < artToWrite.size(); u++)
 		{
 			//get Article id by url
-			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+			int articleId = artToWrite.get(u).getId();
 			//get next Article url by asking gained from web list
 			String nextArtUrl = null;
 			try
 			{
-				nextArtUrl = artToWrite.get(u + 1).url;
+				nextArtUrl = artToWrite.get(u + 1).getUrl();
 			} catch (Exception e)
 			{
 
@@ -475,7 +475,7 @@ public class ArtCatTable
 			String previousArtUrl = null;
 			try
 			{
-				previousArtUrl = artToWrite.get(u - 1).url;
+				previousArtUrl = artToWrite.get(u - 1).getUrl();
 			} catch (Exception e)
 			{
 
@@ -484,6 +484,36 @@ public class ArtCatTable
 		}
 		return artCatTableList;
 	}
+//	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+//	int categoryId)
+//	{
+//		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
+//		for (int u = 0; u < artToWrite.size(); u++)
+//		{
+//			//get Article id by url
+//			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+//			//get next Article url by asking gained from web list
+//			String nextArtUrl = null;
+//			try
+//			{
+//				nextArtUrl = artToWrite.get(u + 1).url;
+//			} catch (Exception e)
+//			{
+//
+//			}
+//			//get previous Article url by asking gained from web list
+//			String previousArtUrl = null;
+//			try
+//			{
+//				previousArtUrl = artToWrite.get(u - 1).url;
+//			} catch (Exception e)
+//			{
+//
+//			}
+//			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
+//		}
+//		return artCatTableList;
+//	}
 
 	/**
 	 * Get's ids of given list and delete by them;

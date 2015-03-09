@@ -8,12 +8,11 @@ package ru.kuchanov.odnako.fragments;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
@@ -46,8 +45,8 @@ public class CommentsFragment extends Fragment
 	private SharedPreferences pref;
 	boolean twoPane;
 
-	ArtInfo curArtInfo;
-	ArrayList<ArtInfo> allArtsInfo;
+	Article curArtInfo;
+	ArrayList<Article> allArtsInfo;
 
 	int position;
 
@@ -117,7 +116,7 @@ public class CommentsFragment extends Fragment
 		ViewGroup top_lin_lay = (ViewGroup) vg.findViewById(R.id.art_card_top_lin_lay);
 
 		//Title of article
-		Spanned spannedContentTitle = Html.fromHtml(this.curArtInfo.title);
+		Spanned spannedContentTitle = Html.fromHtml(this.curArtInfo.getTitle());
 		title.setText(spannedContentTitle);
 		top_lin_lay.setOnClickListener(new OnClickListener()
 		{
@@ -132,7 +131,7 @@ public class CommentsFragment extends Fragment
 		title.setTextSize(21 * scaleFactor);
 
 		//preview
-		Spanned spannedContentPreview = Html.fromHtml(this.curArtInfo.preview);
+		Spanned spannedContentPreview = Html.fromHtml(this.curArtInfo.getPreview());
 		preview.setText(spannedContentPreview);
 		preview.setOnClickListener(new OnClickListener()
 		{
@@ -155,11 +154,11 @@ public class CommentsFragment extends Fragment
 		ImageLoader imageLoader = MyUIL.get(act);
 		if(this.pref.getString("theme", "dark").equals("dark"))
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, art_img, MyUIL.getDarkOptions());
+			imageLoader.displayImage(this.curArtInfo.getImgArt(), art_img, MyUIL.getDarkOptions());
 		}
 		else
 		{
-			imageLoader.displayImage(this.curArtInfo.img_art, art_img);
+			imageLoader.displayImage(this.curArtInfo.getImgArt(), art_img);
 		}
 		
 		//end of ART_IMG
@@ -177,7 +176,7 @@ public class CommentsFragment extends Fragment
 		formatedCategory = formatedCategory.replace(".", "_");
 
 		String formatedLink;
-		formatedLink = this.curArtInfo.url.replace("-", "_");
+		formatedLink = this.curArtInfo.getUrl().replace("-", "_");
 		formatedLink = formatedLink.replace("/", "_");
 		formatedLink = formatedLink.replace(":", "_");
 		formatedLink = formatedLink.replace(".", "_");
@@ -197,7 +196,7 @@ public class CommentsFragment extends Fragment
 		{
 
 		}
-		if (this.curArtInfo.url != null)
+		if (this.curArtInfo.getUrl() != null)
 		{
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
@@ -227,7 +226,7 @@ public class CommentsFragment extends Fragment
 		read.setScaleType(ScaleType.FIT_XY);
 		read.setLayoutParams(paramsForIcons);
 
-		if (readReg.check(this.curArtInfo.url))
+		if (readReg.check(this.curArtInfo.getUrl()))
 		{
 			if (pref.getString("theme", "dark").equals("dark"))
 			{
@@ -264,14 +263,14 @@ public class CommentsFragment extends Fragment
 		settings.setLayoutParams(zeroParams);
 
 		//name of author
-		if (!this.curArtInfo.authorName.equals("default"))
+		if (!this.curArtInfo.getAuthorName().equals("default"))
 		{
-			Spanned spannedContent = Html.fromHtml("<b>" + this.curArtInfo.authorName + "</b>");
+			Spanned spannedContent = Html.fromHtml("<b>" + this.curArtInfo.getAuthorName() + "</b>");
 			author_name.setText(spannedContent);
 
 		}
-		else if (this.curArtInfo.authorName.equals("default") || this.curArtInfo.authorName.equals("")
-		|| this.curArtInfo.authorName.equals("empty"))
+		else if (this.curArtInfo.getAuthorName().equals("default") || this.curArtInfo.getAuthorName().equals("")
+		|| this.curArtInfo.getAuthorName().equals("empty"))
 		{
 			author_name.setText(null);
 		}
@@ -283,13 +282,13 @@ public class CommentsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				Actions.showAllAuthorsArticles(curArtInfo.authorBlogUrl, act);
+				Actions.showAllAuthorsArticles(curArtInfo.getAuthorBlogUrl(), act);
 			}
 		});
 		//end of name of author
 
 		//Date
-		date.setText(this.curArtInfo.pubDate);
+		date.setText(this.curArtInfo.getPubDate().toString());
 		author_name.setTextSize(21 * scaleFactor);
 		////End of Date
 
@@ -327,34 +326,10 @@ public class CommentsFragment extends Fragment
 
 	private void restoreState(Bundle state)
 	{
-		this.curArtInfo = new ArtInfo(state.getStringArray("curArtInfo"));
+		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
 		this.position = state.getInt("position");
 		//restore AllArtsInfo
-		this.allArtsInfo = new ArrayList<ArtInfo>();
-		Set<String> keySet = state.keySet();
-		ArrayList<String> keySetSortedArrList = new ArrayList<String>(keySet);
-		Collections.sort(keySetSortedArrList);
-		for (int i = 0; i < keySetSortedArrList.size(); i++)
-		{
-			if (keySetSortedArrList.get(i).startsWith("allArtsInfo_"))
-			{
-				if (i < 10)
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_0"
-					+ String.valueOf(i))));
-				}
-				else
-				{
-					this.allArtsInfo.add(new ArtInfo(state.getStringArray("allArtsInfo_"
-					+ String.valueOf(i))));
-				}
-
-			}
-			else
-			{
-				break;
-			}
-		}
+		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
 	}
 
 }

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
+
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
@@ -12,7 +14,8 @@ import android.text.Html;
 import android.util.Log;
 
 import ru.kuchanov.odnako.Const;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.utils.DateParse;
 
 public class HtmlHelper
 {
@@ -138,9 +141,9 @@ public class HtmlHelper
 		return allAuthorsAsList;
 	}
 
-	public ArrayList<ArtInfo> getAllArtsInfoFromPage()
+	public ArrayList<Article> getAllArtsInfoFromPage()
 	{
-		ArrayList<ArtInfo> allArtsInfo = new ArrayList<ArtInfo>();
+		ArrayList<Article> allArtsInfo = new ArrayList<Article>();
 
 		TagNode[] liElements = null;
 		TagNode[] allArtsUl = null;
@@ -159,7 +162,7 @@ public class HtmlHelper
 
 		for (int i = 0; i < liElements.length; i++)
 		{
-			String[] info = new String[5];
+			Article a = new Article();
 
 			TagNode element = liElements[i];
 			TagNode element1 = element.findElementByAttValue("class", "m-news-info", true, true);
@@ -171,12 +174,13 @@ public class HtmlHelper
 			TagNode author = element.findElementByAttValue("class", "m-news-author-wrap", true, false);
 			TagNode[] author1 = author.getElementsByName("a", true);
 
-			info[0] = element3.getAttributeByName("href").toString();
-			info[1] = Html.fromHtml(element3.getAttributeByName("title").toString()).toString();
+			a.setUrl(element3.getAttributeByName("href").toString());
+			a.setTitle(Html.fromHtml(element3.getAttributeByName("title").toString()).toString());
 
+			//here we can check if it's author or article image
 			if (imgEl.length == 0)
 			{
-				info[2] = "empty";
+				a.setImgArt("empty");
 			}
 			else
 			{
@@ -185,28 +189,29 @@ public class HtmlHelper
 				{
 					imgSrc = DOMAIN_MAIN + imgSrc;
 				}
-				info[2] = imgSrc;
+				a.setImgArt(imgSrc);
 			}
 			if (author1.length == 0)
 			{
 				//blogURL
-				info[3] = "empty";
+				a.setAuthorBlogUrl("empty");
 				//name
-				info[4] = "empty";
+				a.setAuthorName("empty");
 			}
 			else
 			{
-				info[3] = author1[0].getAttributeByName("href");
-				info[4] = Html.fromHtml(author1[0].getAttributeByName("title")).toString();
+				//blogURL
+				a.setAuthorBlogUrl(author1[0].getAttributeByName("href"));
+				//name
+				a.setAuthorName(Html.fromHtml(author1[0].getAttributeByName("title")).toString());
 			}
-			ArtInfo a = new ArtInfo(info);
 			try
 			{
 				TagNode element4 = element2.findElementByAttValue("class", "m-news-date", true, true);
-				a.pubDate = element4.getText().toString().replaceAll(" ", "");
+				a.setPubDate(DateParse.parse(element4.getText().toString().replaceAll(" ", "")));
 			} catch (Exception e)
 			{
-
+				a.setPubDate(new Date(0));
 			}
 
 			allArtsInfo.add(a);
@@ -291,9 +296,9 @@ public class HtmlHelper
 		return bigImg;
 	}
 
-	public ArrayList<ArtInfo> getAllArtsInfoFromAUTHORPage()
+	public ArrayList<Article> getAllArtsInfoFromAUTHORPage()
 	{
-		ArrayList<ArtInfo> allArtsInfo = new ArrayList<ArtInfo>();
+		ArrayList<Article> allArtsInfo = new ArrayList<Article>();
 
 		TagNode[] liElements = null;
 		TagNode[] allArtsUl = null;
@@ -312,7 +317,7 @@ public class HtmlHelper
 
 		for (int i = 0; i < liElements.length; i++)
 		{
-			String[] info = new String[5];
+			Article a = new Article();
 
 			TagNode element = liElements[i];
 			TagNode element1 = element.findElementByAttValue("class", "m-news-info", true, true);
@@ -321,41 +326,49 @@ public class HtmlHelper
 
 			TagNode imgEl = element.findElementByName("img", true);
 
-			info[0] = element3.getAttributeByName("href").toString();
-			info[1] = Html.fromHtml(element3.getAttributeByName("title").toString()).toString();
+			a.setUrl(element3.getAttributeByName("href").toString());
+			a.setTitle(Html.fromHtml(element3.getAttributeByName("title").toString()).toString());
 
 			if (imgEl == null)
 			{
-				info[2] = "empty";
+				a.setImgArt("empty");
 			}
 			else
 			{
 				String imgSrc = imgEl.getAttributeByName("src").toString();
 				if (imgSrc.isEmpty())
 				{
-					info[2] = "empty";
+					a.setImgArt("empty");
 				}
 				else
 				{
 					if (imgSrc.startsWith("/i/"))
 					{
 						imgSrc = DOMAIN_MAIN + imgSrc;
-						info[2] = imgSrc;
+						a.setImgArt(imgSrc);
 					}
 					else
 					{
-						info[2] = imgSrc;
+						a.setImgArt(imgSrc);
 					}
 				}
 			}
-			//			Log.d(tag, "info[2]: '" + info[2]+"'");
 
 			//blogURL
-			info[3] = url.substring(0, this.url.indexOf("/page-"));
+			a.setAuthorBlogUrl(url.substring(0, this.url.indexOf("/page-")));
 			//name
-			info[4] = rootNode.findElementByName("h1", true).getText().toString();
+			a.setAuthorName(rootNode.findElementByName("h1", true).getText().toString());
 
-			allArtsInfo.add(new ArtInfo(info));
+			try
+			{
+				TagNode element4 = element2.findElementByAttValue("class", "m-news-date", true, true);
+				a.setPubDate(DateParse.parse(element4.getText().toString().replaceAll(" ", "")));
+			} catch (Exception e)
+			{
+				a.setPubDate(new Date(0));
+			}
+
+			allArtsInfo.add(a);
 		}
 		//TODO Check here situation when we parse last page of category/ author and get 30 arts
 		//if so we can't setInitial arts URL in DBActions, so we can get access to DB here

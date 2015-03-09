@@ -12,17 +12,17 @@ import java.util.Date;
 import org.apache.http.client.methods.HttpGet;
 
 import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<ArtInfo>>
+public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Article>>
 {
 	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName() + "/";
 
@@ -59,10 +59,10 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		this.link = link;
 	}
 
-	protected ArrayList<ArtInfo> doInBackground(Void... arg)
+	protected ArrayList<Article> doInBackground(Void... arg)
 	{
 		//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
-		ArrayList<ArtInfo> output = null;
+		ArrayList<Article> output = null;
 		String link;
 		if (this.getCategoryToLoad().startsWith("http://"))
 		{
@@ -116,7 +116,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		return output;
 	}
 
-	protected void onPostExecute(ArrayList<ArtInfo> output)
+	protected void onPostExecute(ArrayList<Article> output)
 	{
 		Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
 

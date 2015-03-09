@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
@@ -72,7 +73,7 @@ public class ActivityBase extends ActionBarActivity
 	 * map with lists of articles info for all categories and authors, witch
 	 * keys gets from BD
 	 */
-	HashMap<String, ArrayList<ArtInfo>> allCatArtsInfo;
+	HashMap<String, ArrayList<Article>> allCatArtsInfo;
 
 	/**
 	 * List of all authors from DB
@@ -90,7 +91,7 @@ public class ActivityBase extends ActionBarActivity
 	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
 	private int curArtPosition = 0;
-	protected ArrayList<ArtInfo> curAllArtsInfo = null;
+	protected ArrayList<Article> curAllArtsInfo = null;
 
 	protected int backPressedQ;
 	
@@ -297,15 +298,15 @@ public class ActivityBase extends ActionBarActivity
 		this.restoreAllCatArtsInfo(state);
 	}
 
-	public HashMap<String, ArrayList<ArtInfo>> getAllCatArtsInfo()
+	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
 	{
 		return this.allCatArtsInfo;
 	}
 
-	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-	{
-		this.allCatArtsInfo.put(category, newData);
-	}
+//	public void updateAllCatArtsInfo(String category, ArrayList<Article> newData)
+//	{
+//		this.allCatArtsInfo.put(category, newData);
+//	}
 
 	public int getCurentCategoryPosition()
 	{
@@ -315,7 +316,7 @@ public class ActivityBase extends ActionBarActivity
 	@SuppressWarnings("unchecked")
 	protected void restoreAllCatArtsInfo(Bundle b)
 	{
-		this.allCatArtsInfo = (HashMap<String, ArrayList<ArtInfo>>) b.getSerializable("all_cats_art_info");
+		this.allCatArtsInfo = (HashMap<String, ArrayList<Article>>) b.getSerializable("all_cats_art_info");
 	}
 
 	protected void saveAllCatArtsInfo(Bundle b)

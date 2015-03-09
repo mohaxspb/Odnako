@@ -369,14 +369,14 @@ public class ArtAutTable
 	 * @param dBObjects
 	 * @return
 	 */
-	public static ArrayList<ArtInfo> getArtInfoListFromArtAutList(DataBaseHelper h, List<ArtAutTable> dBObjects)
+	public static ArrayList<Article> getArtInfoListFromArtAutList(DataBaseHelper h, List<ArtAutTable> dBObjects)
 	{
-		ArrayList<ArtInfo> data = new ArrayList<ArtInfo>();
+		ArrayList<Article> data = new ArrayList<Article>();
 		for (ArtAutTable a : dBObjects)
 		{
 			Article art = Article.getArticleById(h, a.getArticleId());
-			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
-			data.add(artInfoObj);
+//			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
+			data.add(art);
 		}
 		return data;
 	}
@@ -388,19 +388,19 @@ public class ArtAutTable
 	 * @param authorId
 	 * @return list of ArtCatTable made from ArtInfo list
 	 */
-	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<Article> artToWrite,
 	int authorId)
 	{
 		List<ArtAutTable> artAutTableList = new ArrayList<ArtAutTable>();
 		for (int u = 0; u < artToWrite.size(); u++)
 		{
 			//get Article id by url
-			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+			int articleId = artToWrite.get(u).getId();
 			//get next Article url by asking gained from web list
 			String nextArtUrl = null;
 			try
 			{
-				nextArtUrl = artToWrite.get(u + 1).url;
+				nextArtUrl = artToWrite.get(u + 1).getUrl();
 			} catch (Exception e)
 			{
 
@@ -409,7 +409,7 @@ public class ArtAutTable
 			String previousArtUrl = null;
 			try
 			{
-				previousArtUrl = artToWrite.get(u - 1).url;
+				previousArtUrl = artToWrite.get(u - 1).getUrl();
 			} catch (Exception e)
 			{
 
@@ -418,6 +418,36 @@ public class ArtAutTable
 		}
 		return artAutTableList;
 	}
+//	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+//	int authorId)
+//	{
+//		List<ArtAutTable> artAutTableList = new ArrayList<ArtAutTable>();
+//		for (int u = 0; u < artToWrite.size(); u++)
+//		{
+//			//get Article id by url
+//			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+//			//get next Article url by asking gained from web list
+//			String nextArtUrl = null;
+//			try
+//			{
+//				nextArtUrl = artToWrite.get(u + 1).url;
+//			} catch (Exception e)
+//			{
+//
+//			}
+//			//get previous Article url by asking gained from web list
+//			String previousArtUrl = null;
+//			try
+//			{
+//				previousArtUrl = artToWrite.get(u - 1).url;
+//			} catch (Exception e)
+//			{
+//
+//			}
+//			artAutTableList.add(new ArtAutTable(null, articleId, authorId, nextArtUrl, previousArtUrl));
+//		}
+//		return artAutTableList;
+//	}
 	
 	/**
 	 * 

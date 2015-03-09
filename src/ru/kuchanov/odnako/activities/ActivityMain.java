@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
@@ -160,7 +162,7 @@ public class ActivityMain extends ActivityBase
 		if (this.allCatArtsInfo == null)
 		{
 			//			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
-			this.allCatArtsInfo = new HashMap<String, ArrayList<ArtInfo>>();
+			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
 		}
 
 		//get all Authors and categories from DB
@@ -371,8 +373,18 @@ public class ActivityMain extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		//		Log.e(LOG, "onResume");
+		//Log.e(LOG, "onResume");
 		super.onResume();
+
+		if (Looper.myLooper() == Looper.getMainLooper())
+		{
+			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): "+String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+		}
+		else
+		{
+			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
+		}
+
 	}
 
 	@Override
@@ -415,7 +427,7 @@ public class ActivityMain extends ActivityBase
 		///searchView setting
 		final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) searchMenuItem.getActionView();
-		
+
 		final MenuItem refresh = menu.findItem(R.id.refresh);
 		final MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 
@@ -430,7 +442,7 @@ public class ActivityMain extends ActivityBase
 					queryToSave = new StringBuffer(getSearchText()).toString();
 				}
 				isKeyboardOpened = true;
-				
+
 				allSettings.setVisible(false);
 				refresh.setVisible(false);
 				return true;
@@ -657,9 +669,9 @@ public class ActivityMain extends ActivityBase
 			//if expanded
 			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
-//				settingsAll.setVisible(false);
-//				refresh.setVisible(false);
-//				search.setVisible(true);
+				//				settingsAll.setVisible(false);
+				//				refresh.setVisible(false);
+				//				search.setVisible(true);
 				//setvisibility depending on category
 				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
@@ -694,9 +706,9 @@ public class ActivityMain extends ActivityBase
 			else
 			{
 				//searchView is collapsed
-//				settingsAll.setVisible(true);
-//				refresh.setVisible(true);
-//				search.setVisible(true);
+				//				settingsAll.setVisible(true);
+				//				refresh.setVisible(true);
+				//				search.setVisible(true);
 				//setvisibility depending on category
 				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
@@ -820,10 +832,10 @@ public class ActivityMain extends ActivityBase
 		this.allCatToolbarTopImgYCoord.put(category, coords);
 	}
 
-	public void updateAllCatArtsInfo(String category, ArrayList<ArtInfo> newData)
-	{
-		this.allCatArtsInfo.put(category, newData);
-	}
+//	public void updateAllCatArtsInfo(String category, ArrayList<Article> newData)
+//	{
+//		this.allCatArtsInfo.put(category, newData);
+//	}
 
 	@Override
 	public void setCurentCategoryPosition(int curentCategoryPosition)

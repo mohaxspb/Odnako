@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.CommentsFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,13 +22,13 @@ public class CommentsViewPagerAdapter extends FragmentStatePagerAdapter
 {
 	ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo;
 	
-	ArrayList<ArtInfo> allArtsInfo;
+	ArrayList<Article> allArtsInfo;
 
 	ActionBarActivity act;
 	SharedPreferences pref;
 	boolean twoPane;
 
-	public CommentsViewPagerAdapter(FragmentManager fm, ArrayList<ArtInfo> allArtsInfo, ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo,
+	public CommentsViewPagerAdapter(FragmentManager fm, ArrayList<Article> allArtsInfo, ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo,
 	ActionBarActivity act)
 	{
 		super(fm);
