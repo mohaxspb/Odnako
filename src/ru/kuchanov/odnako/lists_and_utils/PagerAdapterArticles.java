@@ -54,8 +54,8 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		Bundle b = new Bundle();
 		if (this.allArtsInfo == null)
 		{
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, null);
-			b.putParcelable(ArtInfo.KEY_CURENT_ART, null);
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, null);
+			b.putParcelable(Article.KEY_CURENT_ART, null);
 
 			ArrayList<Article> def = new ArrayList<Article>();
 			Article a=new Article();
@@ -65,8 +65,8 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		}
 		else
 		{
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, this.allArtsInfo);
-			b.putParcelable(ArtInfo.KEY_CURENT_ART, this.allArtsInfo.get(position));
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, this.allArtsInfo);
+			b.putParcelable(Article.KEY_CURENT_ART, this.allArtsInfo.get(position));
 		}
 
 		b.putInt("position", position);

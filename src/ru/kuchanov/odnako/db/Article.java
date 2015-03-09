@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo.AlsoToRead;
 import ru.kuchanov.odnako.utils.DateParse;
 
 import android.os.Parcel;
@@ -35,6 +33,9 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Article implements Parcelable
 {
 	private static final String LOG = Article.class.getSimpleName();
+	
+	public static final String KEY_CURENT_ART = "curArtInfo";
+	public static final String KEY_ALL_ART_INFO = "allArtInfo";
 
 	public final static String ID_FIELD_NAME = "id";
 	public final static String AUTHOR_FIELD_NAME = "author";

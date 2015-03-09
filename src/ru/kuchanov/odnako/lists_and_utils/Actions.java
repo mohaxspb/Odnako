@@ -450,7 +450,7 @@ public class Actions
 			Intent intent = new Intent(act, ActivityComments.class);
 			Bundle b = new Bundle();
 			b.putInt("position", position);
-			b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 			b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 			intent.putExtras(b);
 			act.startActivity(intent);
@@ -597,7 +597,7 @@ public class Actions
 				Intent intent = new Intent(act, ActivityArticle.class);
 				Bundle b = new Bundle();
 				b.putInt("position", positionOfArticle);
-				b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+				b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 				b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 				intent.putExtras(b);
 

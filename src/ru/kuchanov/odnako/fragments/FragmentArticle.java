@@ -13,7 +13,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Activity;
 import android.content.Context;
@@ -665,15 +664,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		outState.putInt("position", this.getPosition());
-		outState.putParcelable(ArtInfo.KEY_CURENT_ART, curArtInfo);
-		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+		outState.putParcelable(Article.KEY_CURENT_ART, curArtInfo);
+		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 	}
 
 	private void restoreState(Bundle state)
 	{
-		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
+		this.curArtInfo = state.getParcelable(Article.KEY_CURENT_ART);
 		this.setPosition(state.getInt("position"));
-		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+		this.allArtsInfo = state.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 	}
 
 	@Override

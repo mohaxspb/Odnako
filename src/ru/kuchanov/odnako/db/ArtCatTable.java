@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
-
 import android.util.Log;
 
 import com.j256.ormlite.field.DataType;

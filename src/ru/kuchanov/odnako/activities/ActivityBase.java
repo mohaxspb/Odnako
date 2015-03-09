@@ -14,7 +14,6 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -292,7 +291,7 @@ public class ActivityBase extends ActionBarActivity
 	protected void restoreState(Bundle state)
 	{
 		this.setCurArtPosition(state.getInt("position"));
-		this.curAllArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+		this.curAllArtsInfo = state.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
 		Log.e(LOG_TAG + "/restoreState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
 		this.restoreAllCatArtsInfo(state);

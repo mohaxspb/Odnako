@@ -46,7 +46,7 @@ public class CommentsViewPagerAdapter extends FragmentStatePagerAdapter
 		// TODO setposition in List
 		CommentsFragment commrag = new CommentsFragment();
 		Bundle b = new Bundle();
-		b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+		b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 		b.putInt("position", position);
 		commrag.setArguments(b);
 

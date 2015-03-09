@@ -19,7 +19,6 @@ import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
@@ -112,7 +111,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
 			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
-			this.allArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+			this.allArtsInfo = savedInstanceState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
 		}
 		else
@@ -300,7 +299,7 @@ public class FragmentArtsListRecycler extends Fragment
 					//it's the only one fragment, so isDisplayed is always true
 					isDisplayed = true;
 					//try setting title to toolbar
-					ArrayList<Article> allArts = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+					ArrayList<Article> allArts = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
 					Toolbar toolbar = (Toolbar) act.findViewById(toolbarId);
 					if (allArts != null)
 					{
@@ -439,7 +438,7 @@ public class FragmentArtsListRecycler extends Fragment
 	private void updateAdapter(Intent intent, int page)
 	{
 		ArrayList<Article> newAllArtsInfo;
-		newAllArtsInfo = intent.getParcelableArrayListExtra(ArtInfo.KEY_ALL_ART_INFO);
+		newAllArtsInfo = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
 
 		if (newAllArtsInfo != null)
 		{
@@ -732,7 +731,7 @@ public class FragmentArtsListRecycler extends Fragment
 		outState.putInt("pageToLoad", this.pageToLoad);
 
 		outState.putInt("position", this.position);
-		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, allArtsInfo);
+		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 		//		outState.putParcelable(ArtInfo.KEY_CURENT_ART, allArtsInfo.get(position));
 
 		//		outState.putBoolean(KEY_IS_LOADING, isLoading);

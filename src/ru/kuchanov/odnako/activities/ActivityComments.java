@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.ZoomOutPageTransformer;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsViewPagerAdapter;
 import android.content.Intent;
@@ -170,7 +170,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 	{
 		super.onSaveInstanceState(outState);
 
-		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, curAllArtsInfo);
+		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
 		this.saveGroupChildPosition(outState);
 	}
 

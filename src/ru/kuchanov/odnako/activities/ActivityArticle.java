@@ -8,8 +8,8 @@ package ru.kuchanov.odnako.activities;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.ZoomOutPageTransformer;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -175,7 +175,7 @@ public class ActivityArticle extends ActivityBase
 
 		//save allArtsInfo
 //		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
-		outState.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, curAllArtsInfo);
+		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
 
 	}
 

@@ -18,7 +18,6 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 
 import android.app.Service;
 import android.content.Context;
@@ -270,7 +269,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		String[] resultMessage;
 		if (dataToSend.size() == 0)
 		{
-			String[] artInfoArr = new String[] { "empty", "Ни одной статьи не обнаружено.", "empty", "empty", "empty" };
 			Article a = new Article();
 			a.setTitle("Ни одной статьи не обнаружено.");
 			dataToSend.add(a);
@@ -444,7 +442,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Bundle b = new Bundle();
 		b.putStringArray(Msg.MSG, resultMessage);
 		b.putInt("pageToLoad", pageToLoad);
-		b.putParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO, dataToSend);
+		b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, dataToSend);
 		intent.putExtras(b);
 
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);

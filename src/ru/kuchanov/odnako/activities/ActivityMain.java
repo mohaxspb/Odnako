@@ -17,7 +17,6 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
@@ -141,7 +140,7 @@ public class ActivityMain extends ActivityBase
 		if (savedInstanceState != null)
 		{
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
-			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
 			this.pagerType = savedInstanceState.getInt(KEY_PAGER_TYPE);

@@ -15,7 +15,6 @@ import java.util.List;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import android.content.Context;
 import android.util.Log;
 

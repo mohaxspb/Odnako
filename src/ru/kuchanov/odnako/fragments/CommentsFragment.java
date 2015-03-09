@@ -16,7 +16,6 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.CommentsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtInfo;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Activity;
@@ -326,10 +325,10 @@ public class CommentsFragment extends Fragment
 
 	private void restoreState(Bundle state)
 	{
-		this.curArtInfo = state.getParcelable(ArtInfo.KEY_CURENT_ART);
+		this.curArtInfo = state.getParcelable(Article.KEY_CURENT_ART);
 		this.position = state.getInt("position");
 		//restore AllArtsInfo
-		this.allArtsInfo = state.getParcelableArrayList(ArtInfo.KEY_ALL_ART_INFO);
+		this.allArtsInfo = state.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 	}
 
 }
