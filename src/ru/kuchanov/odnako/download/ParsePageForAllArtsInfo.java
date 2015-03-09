@@ -20,6 +20,7 @@ import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Article>>
@@ -61,7 +62,15 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	protected ArrayList<Article> doInBackground(Void... arg)
 	{
-		//		System.out.println("ParsePageForAllArtsInfo: doInBackground");
+		//System.out.println("ParsePageForAllArtsInfo: doInBackground");
+		if (Looper.myLooper() == Looper.getMainLooper())
+		{
+			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): "+String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+		}
+		else
+		{
+			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
+		}
 		ArrayList<Article> output = null;
 		String link;
 		if (this.getCategoryToLoad().startsWith("http://"))

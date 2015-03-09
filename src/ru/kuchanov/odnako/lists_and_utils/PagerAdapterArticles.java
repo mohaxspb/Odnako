@@ -36,8 +36,8 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		this.category = category;
 		this.act = act;
 
-//		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
-		this.notifyDataSetChanged();
+		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
+//		this.notifyDataSetChanged();
 	}
 
 	@Override

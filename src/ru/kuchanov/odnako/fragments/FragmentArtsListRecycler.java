@@ -632,14 +632,14 @@ public class FragmentArtsListRecycler extends Fragment
 			def.add(a);
 			this.allArtsInfo = def;
 
-			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, artsList, this);
+			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, this);
 			this.artsList.setAdapter(artsListAdapter);
 
 		}
 		else
 		{
 			//Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
-			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, artsList, this);
+			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, this);
 			this.artsList.setAdapter(artsListAdapter);
 
 			this.artsListAdapter.notifyDataSetChanged();

@@ -383,7 +383,6 @@ public class ActivityMain extends ActivityBase
 		{
 			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
 		}
-
 	}
 
 	@Override

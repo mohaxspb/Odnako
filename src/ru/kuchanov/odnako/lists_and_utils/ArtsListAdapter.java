@@ -15,7 +15,6 @@ import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.MyUIL;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -46,32 +45,23 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 	private static final int HEADER = 0;
 	private static final int ARTICLE = 1;
-	private static final int FOOTER = 2;
 
-	ActionBarActivity act;
-	LayoutInflater lInflater;
+	private ActionBarActivity act;
 
-	RecyclerView artsListView;
+	private ImageLoader imageLoader;
 
-	ImageLoader imageLoader;
+	private ArrayList<Article> artsInfo;
+	private SharedPreferences pref;
 
-	ArrayList<Article> artsInfo;
-	ArrayList<Article> orig;
-	SharedPreferences pref;
+	private boolean twoPane;
+	private boolean isInLeftPager;
 
-	boolean twoPane;
-	boolean isInLeftPager;
+	private FragmentArtsListRecycler artsListFrag;
 
-	FragmentArtsListRecycler artsListFrag;
-
-	public ArtsListAdapter(ActionBarActivity act, ArrayList<Article> artsInfo, RecyclerView artsListView,
-	FragmentArtsListRecycler artsListFrag)
+	public ArtsListAdapter(ActionBarActivity act, ArrayList<Article> artsInfo, FragmentArtsListRecycler artsListFrag)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
-		lInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		this.artsListView = artsListView;
 
 		this.artsListFrag = artsListFrag;
 		this.isInLeftPager = this.artsListFrag.isInLeftPager();
@@ -144,9 +134,6 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
-
-			break;
-			case (FOOTER):
 
 			break;
 			case (ARTICLE):
