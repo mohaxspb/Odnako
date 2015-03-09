@@ -59,7 +59,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 	@Override
 	public void onPageSelected(int position)
 	{
-//		Log.e(LOG, "toolbar.getTitle(): "+toolbar.getTitle());
+		Log.d(LOG, "onPageSelected in articlePager; position: " + position);
 		//on MainActivity it can we shown ONLY in tablet mode
 		//else it's ActivityArticle!
 		if (this.twoPane)
@@ -71,7 +71,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			toolbar.getBackground().setAlpha(255);
 
 			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/" + artCommsPager.getAdapter().getCount());
-			Log.d(LOG, "onPageSelected in articlePager; position: " + position);
 
 			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 

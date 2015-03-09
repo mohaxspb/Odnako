@@ -36,13 +36,14 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		this.category = category;
 		this.act = act;
 
-		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
+//		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
+		this.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public void notifyDataSetChanged()
 	{
-		//Log.e(LOG_TAG + category, "notifyDataSetChanged called");
+//		Log.e(LOG_TAG + category, "notifyDataSetChanged called");
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 		super.notifyDataSetChanged();
 	}
@@ -58,10 +59,10 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 			b.putParcelable(Article.KEY_CURENT_ART, null);
 
 			ArrayList<Article> def = new ArrayList<Article>();
-			Article a=new Article();
+			Article a = new Article();
 			a.setTitle("Статьи загружаются, подождите пожалуйста");
-//			def.add(new ArtInfo("empty", , "empty", "empty", "empty"));
 			this.allArtsInfo = def;
+			this.notifyDataSetChanged();
 		}
 		else
 		{
@@ -109,10 +110,10 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 					try
 					{
 						((FragArtUPD) object).update(this.allArtsInfo);
-					}
-					catch(NullPointerException e)
+					} catch (NullPointerException e)
 					{
-						Log.e(LOG_TAG, "CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETXHANGED!!!");
+						Log.e(LOG_TAG,
+						"CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETXHANGED!!!");
 						e.printStackTrace();
 						return POSITION_NONE;
 					}

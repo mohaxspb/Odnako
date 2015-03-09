@@ -203,6 +203,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
 		//		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
+		
+		if (Looper.myLooper() == Looper.getMainLooper())
+		{
+			Log.e(
+			LOG+"startDownLoad",
+			"Looper.myLooper() == Looper.getMainLooper(): "
+			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+		}
 
 		//TODO check quontity and allAuthors situation
 		//So, we can have MAX quint of tasks=3 (cur pager frag +left and right)
