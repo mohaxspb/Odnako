@@ -2,6 +2,9 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -208,7 +211,101 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					//Date
 					if (p.getPubDate().getTime() != 0)
 					{
-						holderMain.date.setText(p.getPubDate().toString());
+						//extract date
+						Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+03:00"), new Locale("ru"));
+						cal.setTime(p.getPubDate());
+						String h = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+						if (h.length() != 2)
+						{
+							h = "0" + h;
+						}
+						String minute = String.valueOf(cal.get(Calendar.MINUTE));
+						if (minute.length() != 2)
+						{
+							minute = "0" + minute;
+						}
+						if(h.equals("00") && minute.equals("00"))
+						{
+							h="";
+							minute="";
+						}
+						String d = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+						if (d.length() != 2)
+						{
+							d = "0" + d;
+						}
+						
+						String month = String.valueOf(cal.get(Calendar.MONTH)+1);
+						if (month.length() != 2)
+						{
+							month = "0" + month;
+						}
+						String y = String.valueOf(cal.get(Calendar.YEAR));
+						Calendar calNow = Calendar.getInstance();
+
+						String dateToShow = h + minute + d + month + y;
+
+						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR))
+						{
+							y = "";
+							if(h.equals(""))
+							{
+								dateToShow = d + "/" + month;
+							}
+							else
+							{
+								dateToShow = h + ":" + minute + " " + d + "/" + month;
+							}
+							holderMain.date.setText(dateToShow);
+						}
+						else
+						{
+							if(h.equals(""))
+							{
+								dateToShow = d + "/" + month + "/" + y;
+							}
+							else
+							{
+								dateToShow = h + ":" + minute + " " + d + "/" + month + "/" + y;
+							}
+							holderMain.date.setText(dateToShow);
+						}
+						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
+						&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
+						&& cal.get(Calendar.DAY_OF_MONTH) == calNow.get(Calendar.DAY_OF_MONTH))
+						{
+							d = "";
+							month = "";
+							y = "";
+							if(h.equals(""))
+							{
+								dateToShow = "<font color='green'>Сегодня</font>";
+							}
+							else
+							{
+								dateToShow = "<font color='green'>Сегодня</font> в " + h + ":" + minute;
+							}
+							holderMain.date.setText(Html.fromHtml(dateToShow), TextView.BufferType.SPANNABLE);
+						}
+						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
+						&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
+						&& (calNow.get(Calendar.DAY_OF_MONTH) - cal.get(Calendar.DAY_OF_MONTH) == 1))
+						{
+							d = "";
+							month = "";
+							y = "";
+							if(h.equals(""))
+							{
+								dateToShow = "<font color='blue'>Вчера</font>";
+							}
+							else
+							{
+								dateToShow = "<font color='blue'>Вчера</font> в " + h + ":" + minute;
+							}
+							
+							holderMain.date.setText(Html.fromHtml(dateToShow), TextView.BufferType.SPANNABLE);
+						}
+
 						holderMain.date.setTextSize(19 * scaleFactor);
 						LayoutParams params = (LayoutParams) holderMain.date.getLayoutParams();
 						params.height = LayoutParams.WRAP_CONTENT;

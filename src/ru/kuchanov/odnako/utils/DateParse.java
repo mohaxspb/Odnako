@@ -9,8 +9,10 @@ package ru.kuchanov.odnako.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import android.util.Log;
 
@@ -47,6 +49,46 @@ public class DateParse
 				d = dateFormatArr[i].parse(stringDate);
 				//here set year, month, day
 				//TODO
+				//create calendar with curent Y, M, D and MOSCOW TZ
+				Calendar calNow = Calendar.getInstance(TimeZone.getTimeZone("GMT+03:00"), new Locale("ru"));
+				calNow.set(calNow.get(Calendar.YEAR), calNow.get(Calendar.MONTH),
+				calNow.get(Calendar.DAY_OF_MONTH));
+				//create calendar with given date
+				Calendar calGiven = Calendar.getInstance();
+				calGiven.setTime(d);
+				switch (i)
+				{
+					case 0:
+					//set only time zone
+					break;
+					case 1:
+					//set only locale
+					break;
+					case 2:
+						//set Year, month and day and TimeZone
+						//set to calendar with given date Y, M, D and TZ from calendar above
+						calGiven.set(calNow.get(Calendar.YEAR), calNow.get(Calendar.MONTH),
+						calNow.get(Calendar.DAY_OF_MONTH));
+						calGiven.setTimeZone(calNow.getTimeZone());
+						//finally set new date
+						d.setTime(calGiven.getTimeInMillis());
+					break;
+					case 3:
+						//set year and timeZone
+						//set to calendar with given date Y and TZ from calendar above
+						calGiven.set(Calendar.YEAR, calNow.get(Calendar.YEAR));
+						calGiven.setTimeZone(calNow.getTimeZone());
+						//finally set new date
+						d.setTime(calGiven.getTimeInMillis());
+					break;
+					case 4:
+						//set timeZone
+						//set to calendar with given date TZ from calendar above
+						calGiven.setTimeZone(calNow.getTimeZone());
+						//finally set new date
+						d.setTime(calGiven.getTimeInMillis());
+					break;
+				}
 			} catch (ParseException e)
 			{
 

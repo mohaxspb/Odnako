@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -202,15 +201,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 
 	private void startDownLoad(String catToLoad, int pageToLoad)
 	{
-		//		Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
-		
-		if (Looper.myLooper() == Looper.getMainLooper())
-		{
-			Log.e(
-			LOG+"startDownLoad",
-			"Looper.myLooper() == Looper.getMainLooper(): "
-			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
-		}
+		//Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 
 		//TODO check quontity and allAuthors situation
 		//So, we can have MAX quint of tasks=3 (cur pager frag +left and right)
@@ -250,28 +241,14 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void sendDownloadedData(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		//		Log.d(LOG + categoryToLoad, "sendDownloadedData");
-
-		if (Looper.myLooper() == Looper.getMainLooper())
-		{
-			Log.e(
-			LOG,
-			"Looper.myLooper() == Looper.getMainLooper(): "
-			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
-		}
-		else
-		{
-			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
-		}
-
+		//Log.d(LOG + categoryToLoad, "sendDownloadedData");
 		//find and remove finished task from list
 		for (int i = 0; i < this.currentTasks.size(); i++)
 		{
 			if (categoryToLoad.equals(this.currentTasks.get(i).getCategoryToLoad())
 			&& pageToLoad == this.currentTasks.get(i).getPageToLoad())
 			{
-				/* ParsePageForAllArtsInfo taskToRemove = */this.currentTasks.remove(i);
-				//				taskToRemove = null;
+				this.currentTasks.remove(i);
 			}
 		}
 		String[] resultMessage;
@@ -319,6 +296,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				resultMessage = new DBActions(this, this.getHelper()).writeArtsToDBFromBottom(dataToSend,
 				categoryToLoad,
 				pageToLoad);
+				Log.d(LOG + categoryToLoad, resultMessage[0]);
 			}
 		}
 		//		Log.d(LOG + "sendDownloadedData", resultMessage[0]/* +"/"+resultMessage[1] */);
