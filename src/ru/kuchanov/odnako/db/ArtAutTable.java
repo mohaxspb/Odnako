@@ -14,9 +14,7 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -373,7 +371,7 @@ public class ArtAutTable
 		for (ArtAutTable a : dBObjects)
 		{
 			Article art = Article.getArticleById(h, a.getArticleId());
-//			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
+			//			ArtInfo artInfoObj = new ArtInfo(art.getAsStringArray());
 			data.add(art);
 		}
 		return data;
@@ -416,37 +414,38 @@ public class ArtAutTable
 		}
 		return artAutTableList;
 	}
-//	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
-//	int authorId)
-//	{
-//		List<ArtAutTable> artAutTableList = new ArrayList<ArtAutTable>();
-//		for (int u = 0; u < artToWrite.size(); u++)
-//		{
-//			//get Article id by url
-//			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
-//			//get next Article url by asking gained from web list
-//			String nextArtUrl = null;
-//			try
-//			{
-//				nextArtUrl = artToWrite.get(u + 1).url;
-//			} catch (Exception e)
-//			{
-//
-//			}
-//			//get previous Article url by asking gained from web list
-//			String previousArtUrl = null;
-//			try
-//			{
-//				previousArtUrl = artToWrite.get(u - 1).url;
-//			} catch (Exception e)
-//			{
-//
-//			}
-//			artAutTableList.add(new ArtAutTable(null, articleId, authorId, nextArtUrl, previousArtUrl));
-//		}
-//		return artAutTableList;
-//	}
-	
+
+	//	public static List<ArtAutTable> getArtAutListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
+	//	int authorId)
+	//	{
+	//		List<ArtAutTable> artAutTableList = new ArrayList<ArtAutTable>();
+	//		for (int u = 0; u < artToWrite.size(); u++)
+	//		{
+	//			//get Article id by url
+	//			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
+	//			//get next Article url by asking gained from web list
+	//			String nextArtUrl = null;
+	//			try
+	//			{
+	//				nextArtUrl = artToWrite.get(u + 1).url;
+	//			} catch (Exception e)
+	//			{
+	//
+	//			}
+	//			//get previous Article url by asking gained from web list
+	//			String previousArtUrl = null;
+	//			try
+	//			{
+	//				previousArtUrl = artToWrite.get(u - 1).url;
+	//			} catch (Exception e)
+	//			{
+	//
+	//			}
+	//			artAutTableList.add(new ArtAutTable(null, articleId, authorId, nextArtUrl, previousArtUrl));
+	//		}
+	//		return artAutTableList;
+	//	}
+
 	/**
 	 * 
 	 * @param h
@@ -481,7 +480,7 @@ public class ArtAutTable
 			}
 		}
 	}
-	
+
 	/**
 	 * Get's ids of given list and delete by them;
 	 * 
@@ -492,17 +491,18 @@ public class ArtAutTable
 	{
 		try
 		{
-			DeleteBuilder<ArtAutTable, Integer> dB = h.getDaoArtAutTable().deleteBuilder();
-			Where<ArtAutTable, Integer> where = dB.where();
-			for (int i = 0; i < rowsToDelete.size(); i++)
-			{
-				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
-				if (i != rowsToDelete.size() - 1)
-				{
-					where.and();
-				}
-			}
-			dB.delete();
+			h.getDaoArtAutTable().delete(rowsToDelete);
+			//			DeleteBuilder<ArtAutTable, Integer> dB = h.getDaoArtAutTable().deleteBuilder();
+			//			Where<ArtAutTable, Integer> where = dB.where();
+			//			for (int i = 0; i < rowsToDelete.size(); i++)
+			//			{
+			//				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
+			//				if (i != rowsToDelete.size() - 1)
+			//				{
+			//					where.and();
+			//				}
+			//			}
+			//			dB.delete();
 		} catch (SQLException e)
 		{
 			Log.e(LOG, "error while deleting");
@@ -533,4 +533,24 @@ public class ArtAutTable
 		return arrStr1;
 	}
 
+	/**
+	 * return found rows or empty list on exception or if can't find
+	 * 
+	 * @param h
+	 * @param authorId
+	 * @return
+	 */
+	public static List<ArtAutTable> getAllRowsByCategoryId(DataBaseHelper h, int authorId)
+	{
+		List<ArtAutTable> objs = new ArrayList<ArtAutTable>();
+		try
+		{
+			objs = h.getDaoArtAutTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, authorId).query();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			objs = new ArrayList<ArtAutTable>();
+		}
+		return objs;
+	}
 }

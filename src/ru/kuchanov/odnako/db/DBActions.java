@@ -101,7 +101,7 @@ public class DBActions
 			{
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
-				ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), dataFromDBToSend);
+				ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(getHelper(), dataFromDBToSend);
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
 				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -224,7 +224,7 @@ public class DBActions
 				{
 					//if we have 30, so we pass 30 to fragment
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
-					ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+					ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(getHelper(), allArts);
 					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
@@ -249,7 +249,7 @@ public class DBActions
 						if (firstArtInCatURL.equals(lastInListArtsUrl))
 						{
 							//so it is real end of all arts in category and we can send arts to frag
-							ArrayList<Article> data = ArtCatTable.getArtInfoListFromArtCatList(getHelper(), allArts);
+							ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(getHelper(), allArts);
 							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
@@ -291,7 +291,7 @@ public class DBActions
 			//else we load them from web
 			if (allArts == null)
 			{
-//				String initialAutArtUrl = Category.getFirstArticleURLById(getHelper(), authorId);
+				//				String initialAutArtUrl = Category.getFirstArticleURLById(getHelper(), authorId);
 				String initialAutArtUrl = Author.getFirstArticleURLById(getHelper(), authorId);
 				if (initialAutArtUrl != null)
 				{
@@ -405,7 +405,7 @@ public class DBActions
 							//and, of course their quont must be equal (in case of <30 arts at all
 							List<ArtCatTable> first30FromTop = ArtCatTable.getListFromTop(getHelper(), categoryId,
 							1);
-							
+
 							String lastInFirst30Url = Article.getArticleUrlById(getHelper(),
 							first30FromTop.get(first30FromTop.size() - 1).getArticleId());
 
@@ -429,7 +429,7 @@ public class DBActions
 								{
 									String loadedArtsURL = dataFromWeb.get(u).getUrl();
 									boolean notMatched = false;
-									for (int y = 0; y < first30FromTop.size() && notMatched==false; y++)
+									for (int y = 0; y < first30FromTop.size() && notMatched == false; y++)
 									{
 										int artCatArtsID = first30FromTop.get(y).getArticleId();
 										String DBArtsURL = Article.getArticleUrlById(getHelper(), artCatArtsID);
@@ -463,7 +463,7 @@ public class DBActions
 								ArtCatTable.delete(getHelper(),
 								first30FromTop.subList(0, first30FromTop.size() - newQuont));
 								//create ArtCat list from ArtInfo
-								List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+								List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(
 								getHelper(), dataFromWeb, categoryId);
 								//set nextArt of it's last to def quont on page - new qount URL
 								dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
@@ -482,7 +482,7 @@ public class DBActions
 							////new<30 => write them to DB with prev/next art URL; change IS_TOP to null for old Top Art
 							//and set isTop to TRUE to first of loaded list
 							//We must push not whole list, but only part of it!
-							List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+							List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArticleList(
 							this.getHelper(), dataFromWeb.subList(0, i), categoryId);
 							//update isTop to null for old entry
 							ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
@@ -509,7 +509,7 @@ public class DBActions
 						{
 							//new>30 => write them to DB with prev/next art URL; change IS_TOP to null and
 							//set TRUE to first of given list
-							List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+							List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArticleList(
 							this.getHelper(), dataFromWeb, categoryId);
 							//update isTop to null for old entry
 							ArtCatTable.updateIsTop(getHelper(), topArtCat.getId(), null);
@@ -527,13 +527,13 @@ public class DBActions
 			{
 				//there are no arts of given category in ArtCatTable, so just write them!
 				//I mean write all arts from someResult List<ArtInfo>, that we gained from web
-				List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
+				List<ArtCatTable> artCatDataToWrite = ArtCatTable.getArtCatListFromArticleList(this.getHelper(),
 				dataFromWeb, categoryId);
 				//set IS_TOP to true for first in list
 				artCatDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtCatTable
 				ArtCatTable.write(getHelper(), artCatDataToWrite);
-//				return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
+				//				return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 				return new String[] { Msg.NO_NEW, null };
 			}
 		}
@@ -592,9 +592,9 @@ public class DBActions
 								{
 									boolean notMatched = false;
 									String loadedArtsURL = dataFromWeb.get(u).getUrl();
-									for (int y = 0; y < first30FromTop.size() && notMatched==false; y++)
+									for (int y = 0; y < first30FromTop.size() && notMatched == false; y++)
 									{
-										
+
 										int artAutArtsID = first30FromTop.get(y).getArticleId();
 										String DBArtsURL = Article.getArticleUrlById(getHelper(), artAutArtsID);
 										if (loadedArtsURL.equals(DBArtsURL))
@@ -695,7 +695,7 @@ public class DBActions
 				artAutDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtAutTable
 				ArtAutTable.write(getHelper(), artAutDataToWrite);
-//				return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
+				//				return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 				return new String[] { Msg.NO_NEW, null };
 			}
 		}//this is author
@@ -767,7 +767,7 @@ public class DBActions
 										//there ARE new real arts, so write them all!
 										//and update entry, that matched, by previousArtUrl
 										List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
-										List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+										List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(
 										this.getHelper(), subListArtInfo, categoryId);
 										//set prevArtUrl for first entry
 										String prevArtUrl = Article.getArticleUrlById(getHelper(),
@@ -792,7 +792,7 @@ public class DBActions
 									if (i == newArtInfo.size() - 1 - 1 && u == withoutPrev.size() - 1)
 									{
 										//if we can't find any, we simply write all artCats
-										List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+										List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(
 										this.getHelper(), newArtInfo, categoryId);
 										//set prevArtUrl for first entry
 										String prevArtUrl = Article.getArticleUrlById(getHelper(),
@@ -812,7 +812,7 @@ public class DBActions
 					{
 						//there are no arts without missing prev art, so
 						//just write them all!!!11 ARGHHH!!!
-						List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
+						List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(this.getHelper(),
 						newArtInfo, categoryId);
 						//set prevArtUrl for first entry
 						String prevArtUrl = Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
@@ -825,6 +825,10 @@ public class DBActions
 				else
 				{
 					//first not matched, so it's publishing lag, so we'll load from top
+					//but firstly we'll delete all category arts
+					//to prevent hardcoding to solve all posible situations
+					List<ArtCatTable> rowsToDelete = ArtCatTable.getAllRowsByCategoryId(getHelper(), categoryId);
+					ArtCatTable.delete(getHelper(), rowsToDelete);
 					return new String[] { Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION, null };
 				}
 			}
@@ -841,6 +845,10 @@ public class DBActions
 					if (artsUrlToMatch.equals(prevUrlToMatch))
 					{
 						//matched! So it's publishing lag, so start download from top!
+						//but firstly we'll delete all category arts
+						//to prevent hardcoding to solve all posible situations
+						List<ArtCatTable> rowsToDelete = ArtCatTable.getAllRowsByCategoryId(getHelper(), categoryId);
+						ArtCatTable.delete(getHelper(), rowsToDelete);
 						return new String[] { Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION, null };
 					}
 				}
@@ -881,7 +889,7 @@ public class DBActions
 									//there ARE new real arts, so write them all!
 									//and update entry, that matched, by previousArtUrl
 									List<Article> subListArtInfo = newArtInfo.subList(0, i - 1);
-									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(
 									this.getHelper(), subListArtInfo, categoryId);
 									//set prevArtUrl for first entry
 									String prevArtUrl = Article.getArticleUrlById(getHelper(),
@@ -906,7 +914,7 @@ public class DBActions
 								if (i == newArtInfo.size() - 1 - 1 && u == withoutPrev.size() - 1)
 								{
 									//if we can't find any, we simply write all artCats
-									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(
+									List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(
 									this.getHelper(), newArtInfo, categoryId);
 									//set prevArtUrl for first entry
 									String prevArtUrl = Article.getArticleUrlById(getHelper(),
@@ -926,7 +934,7 @@ public class DBActions
 				{
 					//there are no arts without missing prev art, so
 					//just write them all!!!11 ARGHHH!!!
-					List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArtInfoList(this.getHelper(),
+					List<ArtCatTable> dataToWrite = ArtCatTable.getArtCatListFromArticleList(this.getHelper(),
 					newArtInfo, categoryId);
 					//set prevArtUrl for first entry
 					String prevArtUrl = Article.getArticleUrlById(getHelper(), lastArtCat.getArticleId());
@@ -1058,6 +1066,10 @@ public class DBActions
 				else
 				{
 					//first not matched, so it's publishing lag, so we'll load from top
+					//but firstly we'll delete all category arts
+					//to prevent hardcoding to solve all posible situations
+					List<ArtAutTable> rowsToDelete = ArtAutTable.getAllRowsByCategoryId(getHelper(), authorId);
+					ArtAutTable.delete(getHelper(), rowsToDelete);
 					return new String[] { Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION, null };
 				}
 			}
@@ -1074,6 +1086,10 @@ public class DBActions
 					if (artsUrlToMatch.equals(prevUrlToMatch))
 					{
 						//matched! So it's publishing lag, so start download from top!
+						//but firstly we'll delete all category arts
+						//to prevent hardcoding to solve all posible situations
+						List<ArtAutTable> rowsToDelete = ArtAutTable.getAllRowsByCategoryId(getHelper(), authorId);
+						ArtAutTable.delete(getHelper(), rowsToDelete);
 						return new String[] { Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION, null };
 					}
 				}

@@ -14,9 +14,7 @@ import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -422,7 +420,6 @@ public class ArtCatTable
 		{
 			//			e.printStackTrace();
 		}
-
 		return allRowsWithoutPrevArt;
 	}
 
@@ -433,13 +430,12 @@ public class ArtCatTable
 	 * @param dBObjects
 	 * @return
 	 */
-	public static ArrayList<Article> getArtInfoListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
+	public static ArrayList<Article> getArticleListFromArtCatList(DataBaseHelper h, List<ArtCatTable> dBObjects)
 	{
 		ArrayList<Article> data = new ArrayList<Article>();
 		for (ArtCatTable a : dBObjects)
 		{
 			Article art = Article.getArticleById(h, a.getArticleId());
-//			Article artInfoObj = new ArtInfo(art.getAsStringArray());
 			data.add(art);
 		}
 		return data;
@@ -452,7 +448,7 @@ public class ArtCatTable
 	 * @param categoryId
 	 * @return list of ArtCatTable made from ArtInfo list
 	 */
-	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<Article> artToWrite,
+	public static List<ArtCatTable> getArtCatListFromArticleList(DataBaseHelper h, List<Article> artToWrite,
 	int categoryId)
 	{
 		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
@@ -482,36 +478,27 @@ public class ArtCatTable
 		}
 		return artCatTableList;
 	}
-//	public static List<ArtCatTable> getArtCatListFromArtInfoList(DataBaseHelper h, List<ArtInfo> artToWrite,
-//	int categoryId)
-//	{
-//		List<ArtCatTable> artCatTableList = new ArrayList<ArtCatTable>();
-//		for (int u = 0; u < artToWrite.size(); u++)
-//		{
-//			//get Article id by url
-//			int articleId = Article.getArticleIdByURL(h, artToWrite.get(u).url);
-//			//get next Article url by asking gained from web list
-//			String nextArtUrl = null;
-//			try
-//			{
-//				nextArtUrl = artToWrite.get(u + 1).url;
-//			} catch (Exception e)
-//			{
-//
-//			}
-//			//get previous Article url by asking gained from web list
-//			String previousArtUrl = null;
-//			try
-//			{
-//				previousArtUrl = artToWrite.get(u - 1).url;
-//			} catch (Exception e)
-//			{
-//
-//			}
-//			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
-//		}
-//		return artCatTableList;
-//	}
+
+	/**
+	 * Searches through DB for artCatTable rows with given id
+	 * 
+	 * @param h
+	 * @param categoryId
+	 * @return List<ArtCatTable> or empty list on SQLException or if can't find
+	 */
+	public static List<ArtCatTable> getAllRowsByCategoryId(DataBaseHelper h, int categoryId)
+	{
+		List<ArtCatTable> objs;//new ArrayList<ArtCatTable>();
+		try
+		{
+			objs = h.getDaoArtCatTable().queryBuilder().where().eq(CATEGORY_ID_FIELD_NAME, categoryId).query();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			objs =new ArrayList<ArtCatTable>();
+		}
+		return objs;
+	}
 
 	/**
 	 * Get's ids of given list and delete by them;
@@ -523,17 +510,18 @@ public class ArtCatTable
 	{
 		try
 		{
-			DeleteBuilder<ArtCatTable, Integer> dB = h.getDaoArtCatTable().deleteBuilder();
-			Where<ArtCatTable, Integer> where = dB.where();
-			for (int i = 0; i < rowsToDelete.size(); i++)
-			{
-				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
-				if (i != rowsToDelete.size() - 1)
-				{
-					where.and();
-				}
-			}
-			dB.delete();
+			h.getDaoArtCatTable().delete(rowsToDelete);
+//			DeleteBuilder<ArtCatTable, Integer> dB = h.getDaoArtCatTable().deleteBuilder();
+//			Where<ArtCatTable, Integer> where = dB.where();
+//			for (int i = 0; i < rowsToDelete.size(); i++)
+//			{
+//				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
+//				if (i != rowsToDelete.size() - 1)
+//				{
+//					where.and();
+//				}
+//			}
+//			dB.delete();
 		} catch (SQLException e)
 		{
 			Log.e(LOG, "error while deleting");

@@ -371,18 +371,19 @@ public class FragmentArtsListRecycler extends Fragment
 						Toast.makeText(act, "Синхронизирую базу данных. Загружаю новые статьи", Toast.LENGTH_SHORT)
 						.show();
 					}
+					pageToLoad = 1;
+					getAllArtsInfo(true);
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 					allArtsInfo = null;
 					ArrayList<Article> def = new ArrayList<Article>();
-					Article a=new Article();
+					Article a = new Article();
 					a.setTitle("Статьи загружаются, подождите пожалуйста");
 					def.add(a);
 					allArtsInfo = def;
 					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
-					pageToLoad = 1;
 					artsList.getAdapter().notifyDataSetChanged();
-					getAllArtsInfo(true);
+					
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
 					Log.e(LOG + categoryToLoad, "Ни одной статьи не обнаружено!");
@@ -627,7 +628,7 @@ public class FragmentArtsListRecycler extends Fragment
 			this.getAllArtsInfo(false);
 
 			ArrayList<Article> def = new ArrayList<Article>();
-			Article a=new Article();
+			Article a = new Article();
 			a.setTitle("Статьи загружаются, подождите пожалуйста");
 			def.add(a);
 			this.allArtsInfo = def;
