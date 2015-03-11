@@ -379,14 +379,14 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		//removing tags field if it's empty
-		if (this.curArtInfo.getTegs_main().equals("empty") || this.curArtInfo.getTegs_main().equals(""))
+		if (this.curArtInfo.getTegsMain().equals("empty") || this.curArtInfo.getTegsMain().equals(""))
 		{
 			this.artTagsMainTV.setText(null);
 			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
 		}
 		else
 		{
-			this.artTagsMainTV.setText(this.curArtInfo.getTegs_main());
+			this.artTagsMainTV.setText(this.curArtInfo.getTegsMain());
 			this.artTagsMainTV.setLayoutParams(normalParams);
 		}
 		//set descr of author btn
@@ -526,7 +526,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.artAuthorTV.setText(this.curArtInfo.getAuthorName());
 		this.artAuthorDescriptionTV.setText(this.curArtInfo.getAuthorDescr());
 		this.artDateTV.setText(this.curArtInfo.getPubDate().toString());
-		this.artTagsMainTV.setText(this.curArtInfo.getTegs_main());
+		this.artTagsMainTV.setText(this.curArtInfo.getTegsMain());
 
 		//down images
 		if (this.pref.getString("theme", "dark").equals("dark"))

@@ -105,6 +105,11 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/service_db" />
         <service
+            android:name="ru.kuchanov.odnako.db.ServiceRSS"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_rss" />
+        <service
             android:name="ru.kuchanov.odnako.utils.OverScreenService"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"

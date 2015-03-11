@@ -23,7 +23,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -262,7 +261,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			//here we'll write gained arts to Article table 
-			dataToSend = Article.writeArtInfoToArticleTable(getHelper(), dataToSend);
+			dataToSend = Article.writeArticleToArticleTable(getHelper(), dataToSend);
 
 			//here if we recive less then 30 arts (const quont of arts on page)
 			//we KNOW that last of them is initial art in category (author)
@@ -422,23 +421,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	String categoryToLoad, int pageToLoad)
 	{
 		//Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
-
 		Intent intent = new Intent(categoryToLoad);
-
-		Bundle b = new Bundle();
-		b.putStringArray(Msg.MSG, resultMessage);
-		b.putInt("pageToLoad", pageToLoad);
-		b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, dataToSend);
-		intent.putExtras(b);
-
+		intent.putExtra(Msg.MSG, resultMessage);
+		intent.putExtra("pageToLoad", pageToLoad);
+		intent.putExtra(Article.KEY_ALL_ART_INFO, dataToSend);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 	}
 }
-
-//Log.d(LOG_TAG,
-//			cal.get(Calendar.YEAR) + "." + cal.get(Calendar.MONTH) + "." + cal.get(Calendar.DAY_OF_MONTH) + "."
-//			+ cal.get(Calendar.HOUR_OF_DAY) + "." + cal.get(Calendar.MINUTE));
-//			Log.d(LOG_TAG, cal.getTime().toString());
-//			Log.d(LOG_TAG,
-//			cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("ru"))
-//			+ " " + cal.get(Calendar.YEAR));

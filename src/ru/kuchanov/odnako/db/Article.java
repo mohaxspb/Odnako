@@ -41,6 +41,7 @@ public class Article implements Parcelable
 	public final static String AUTHOR_FIELD_NAME = "author";
 	public final static String URL_FIELD_NAME = "url";
 	public final static String FIELD_NAME_PUB_DATE = "pubDate";
+	public final static String FIELD_NAME_PREVIEW = "preview";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -60,11 +61,11 @@ public class Article implements Parcelable
 	@DatabaseField(dataType = DataType.STRING)
 	private String authorName = "empty";;
 
-	@DatabaseField(dataType = DataType.STRING)
+	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_NAME_PREVIEW)
 	private String preview = "empty";;
 
 	@DatabaseField(dataType = DataType.DATE, columnName = FIELD_NAME_PUB_DATE)
-	private Date pubDate=new Date(0);
+	private Date pubDate = new Date(0);
 
 	@DatabaseField(dataType = DataType.DATE)
 	private Date refreshed = new Date(0);
@@ -82,22 +83,22 @@ public class Article implements Parcelable
 	private String authorDescr = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String tegs_main = "empty";
+	private String tegsMain = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String tegs_all = "empty";
+	private String tegsAll = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String share_quont = "empty";
+	private String shareQuont = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String to_read_main = "empty";
+	private String toReadMain = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String to_read_more = "empty";
+	private String toReadMore = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String img_author = "empty";
+	private String imgAuthor = "empty";
 
 	//foreignKeys
 	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
@@ -141,12 +142,12 @@ public class Article implements Parcelable
 		this.numOfSharings = Integer.parseInt(artInfoArr[8]);
 		this.artText = artInfoArr[9];
 		this.authorDescr = artInfoArr[10];
-		this.tegs_main = artInfoArr[11];
-		this.tegs_all = artInfoArr[12];
-		this.share_quont = artInfoArr[13];
-		this.to_read_main = artInfoArr[14];
-		this.to_read_more = artInfoArr[15];
-		this.img_author = artInfoArr[16];
+		this.tegsMain = artInfoArr[11];
+		this.tegsAll = artInfoArr[12];
+		this.shareQuont = artInfoArr[13];
+		this.toReadMain = artInfoArr[14];
+		this.toReadMore = artInfoArr[15];
+		this.imgAuthor = artInfoArr[16];
 
 		//refreshed date
 		//set it only if we have not null or "empty" artText value
@@ -185,11 +186,6 @@ public class Article implements Parcelable
 	{
 		return id;
 	}
-
-	//	public void setId(int id)
-	//	{
-	//		this.id = id;
-	//	}
 
 	public String getUrl()
 	{
@@ -311,64 +307,64 @@ public class Article implements Parcelable
 		this.authorDescr = authorDescr;
 	}
 
-	public String getTegs_main()
+	public String getTegsMain()
 	{
-		return tegs_main;
+		return tegsMain;
 	}
 
-	public void setTegs_main(String tegs_main)
+	public void setTegsMain(String tegsMain)
 	{
-		this.tegs_main = tegs_main;
+		this.tegsMain = tegsMain;
 	}
 
-	public String getTegs_all()
+	public String getTegsAll()
 	{
-		return tegs_all;
+		return tegsAll;
 	}
 
-	public void setTegs_all(String tegs_all)
+	public void setTegsAll(String tegsAll)
 	{
-		this.tegs_all = tegs_all;
+		this.tegsAll = tegsAll;
 	}
 
-	public String getShare_quont()
+	public String getShareQuont()
 	{
-		return share_quont;
+		return shareQuont;
 	}
 
-	public void setShare_quont(String share_quont)
+	public void setShareQuont(String shareQuont)
 	{
-		this.share_quont = share_quont;
+		this.shareQuont = shareQuont;
 	}
 
-	public String getTo_read_main()
+	public String getToReadMain()
 	{
-		return to_read_main;
+		return toReadMain;
 	}
 
-	public void setTo_read_main(String to_read_main)
+	public void setToReadMain(String toReadMain)
 	{
-		this.to_read_main = to_read_main;
+		this.toReadMain = toReadMain;
 	}
 
-	public String getTo_read_more()
+	public String getToReadMore()
 	{
-		return to_read_more;
+		return toReadMore;
 	}
 
-	public void setTo_read_more(String to_read_more)
+	public void setToReadMore(String toReadMore)
 	{
-		this.to_read_more = to_read_more;
+		this.toReadMore = toReadMore;
 	}
 
-	public String getImg_author()
+	public String getImgAuthor()
 	{
-		return img_author;
+		return imgAuthor;
 	}
 
-	public void setImg_author(String img_author)
+	public void setImgAuthor(String imgAuthor)
 	{
-		this.img_author = img_author;
+		this.imgAuthor = imgAuthor;
 	}
 
 	public Author getAuthor()
@@ -404,12 +400,12 @@ public class Article implements Parcelable
 		allInfo[8] = String.valueOf(numOfSharings);
 		allInfo[9] = artText;
 		allInfo[10] = authorDescr;
-		allInfo[11] = tegs_main;
-		allInfo[12] = tegs_all;
-		allInfo[13] = share_quont;
-		allInfo[14] = to_read_main;
-		allInfo[15] = to_read_more;
-		allInfo[16] = img_author;
+		allInfo[11] = tegsMain;
+		allInfo[12] = tegsAll;
+		allInfo[13] = shareQuont;
+		allInfo[14] = toReadMain;
+		allInfo[15] = toReadMore;
+		allInfo[16] = imgAuthor;
 
 		return allInfo;
 	}
@@ -441,12 +437,12 @@ public class Article implements Parcelable
 		allInfo[10] = String.valueOf(numOfSharings);
 		allInfo[11] = artText;
 		allInfo[12] = authorDescr;
-		allInfo[13] = tegs_main;
-		allInfo[14] = tegs_all;
-		allInfo[15] = share_quont;
-		allInfo[16] = to_read_main;
-		allInfo[17] = to_read_more;
-		allInfo[18] = img_author;
+		allInfo[13] = tegsMain;
+		allInfo[14] = tegsAll;
+		allInfo[15] = shareQuont;
+		allInfo[16] = toReadMain;
+		allInfo[17] = toReadMore;
+		allInfo[18] = imgAuthor;
 
 		String author;
 		if (this.getAuthor() != null)
@@ -552,7 +548,7 @@ public class Article implements Parcelable
 		return art;
 	}
 
-	public static ArrayList<Article> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<Article> data)
+	public static ArrayList<Article> writeArticleToArticleTable(DataBaseHelper h, ArrayList<Article> data)
 	{
 		ArrayList<Article> updatedData = new ArrayList<Article>();
 
@@ -584,7 +580,7 @@ public class Article implements Parcelable
 				//set author image URL for articles
 				if (aut != null)
 				{
-					existingArt.setImg_author(aut.getAvatar());
+					existingArt.setImgAuthor(aut.getAvatar());
 				}
 				try
 				{
@@ -610,63 +606,6 @@ public class Article implements Parcelable
 		return updatedData;
 	}
 
-	//	public static ArrayList<ArtInfo> writeArtInfoToArticleTable(DataBaseHelper h, ArrayList<ArtInfo> data)
-	//	{
-	//		ArrayList<ArtInfo> updatedData = new ArrayList<ArtInfo>();
-	//
-	//		int quontOfWrittenArticles = 0;
-	//
-	//		Article existingArt;
-	//		for (ArtInfo a : data)
-	//		{
-	//			//check if there is no already existing arts in DB by queryForURL
-	//			existingArt = Article.getArticleByURL(h, a.url);
-	//			if (existingArt == null)
-	//			{
-	//				//get author obj if it is in ArtInfo and Author table
-	//				Author aut = null;
-	//				try
-	//				{
-	//					aut = h.getDaoAuthor().queryBuilder().where()
-	//					.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(a.authorBlogUrl)).queryForFirst();
-	//
-	//				} catch (SQLException e)
-	//				{
-	//					e.printStackTrace();
-	//				}
-	//				//create Article obj to pass it to DB
-	//				existingArt = new Article(a.getArtInfoAsStringArray(), new Date(
-	//				System.currentTimeMillis()), aut);
-	//				//set author image URL for articles
-	//				if (aut != null)
-	//				{
-	//					existingArt.setImg_author(aut.getAvatar());
-	//				}
-	//				try
-	//				{
-	//					h.getDaoArticle().create(existingArt);
-	//					quontOfWrittenArticles++;
-	//				} catch (SQLException e)
-	//				{
-	//					Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
-	//					Log.e(LOG, existingArt.getTitle() + " error while INSERT");
-	//				}
-	//			}//article do not exists
-	//			else
-	//			{
-	//				//check if date of existing ==0
-	//				if(existingArt.getPubDate().getTime()==0 && !a.pubDate.equals("empty"))
-	//				{
-	//					Article.updatePubDate(h, existingArt.getId(), DateParse.parse(a.pubDate));
-	//				}
-	//			}
-	//
-	//			updatedData.add(new ArtInfo(existingArt.getAsStringArray()));
-	//		}
-	////		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
-	//		return updatedData;
-	//	}
-
 	public static void updatePubDate(DataBaseHelper h, int articleId, Date d)
 	{
 		UpdateBuilder<Article, Integer> updateBuilder;
@@ -675,6 +614,21 @@ public class Article implements Parcelable
 			updateBuilder = h.getDaoArticle().updateBuilder();
 			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_PUB_DATE, d);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void updatePreview(DataBaseHelper h, int articleId, String preview)
+	{
+		UpdateBuilder<Article, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArticle().updateBuilder();
+			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_NAME_PREVIEW, preview);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -727,12 +681,12 @@ public class Article implements Parcelable
 
 		dest.writeString(artText);
 		dest.writeString(authorDescr);
-		dest.writeString(tegs_main);
-		dest.writeString(tegs_all);
-		dest.writeString(share_quont);
-		dest.writeString(to_read_main);
-		dest.writeString(to_read_more);
-		dest.writeString(img_author);
+		dest.writeString(tegsMain);
+		dest.writeString(tegsAll);
+		dest.writeString(shareQuont);
+		dest.writeString(toReadMain);
+		dest.writeString(toReadMore);
+		dest.writeString(imgAuthor);
 
 		dest.writeLong(refreshed.getTime());
 		dest.writeParcelable(author, flags);
@@ -753,12 +707,12 @@ public class Article implements Parcelable
 		this.numOfSharings = in.readInt();
 		this.artText = in.readString();
 		this.authorDescr = in.readString();
-		this.tegs_main = in.readString();
-		this.tegs_all = in.readString();
-		this.share_quont = in.readString();
-		this.to_read_main = in.readString();
-		this.to_read_more = in.readString();
-		this.img_author = in.readString();
+		this.tegsMain = in.readString();
+		this.tegsAll = in.readString();
+		this.shareQuont = in.readString();
+		this.toReadMain = in.readString();
+		this.toReadMore = in.readString();
+		this.imgAuthor = in.readString();
 
 		refreshed = new Date(in.readLong());
 		author = (Author) in.readParcelable(Author.class.getClassLoader());
@@ -785,9 +739,9 @@ public class Article implements Parcelable
 	{
 		String[] allTegsArr;
 
-		if (!this.tegs_all.equals("empty"))
+		if (!this.tegsAll.equals("empty"))
 		{
-			allTegsArr = this.tegs_all.split(" !!!! ");
+			allTegsArr = this.tegsAll.split(" !!!! ");
 		}
 		else
 		{
@@ -803,9 +757,9 @@ public class Article implements Parcelable
 		AlsoToRead alsoToRead;
 		String[] allInfo;
 
-		if (!this.to_read_main.equals("empty"))
+		if (!this.toReadMain.equals("empty"))
 		{
-			allInfo = this.to_read_main.split(" !!!! ");
+			allInfo = this.toReadMain.split(" !!!! ");
 			String[] titles = new String[allInfo.length / 3];
 			String[] urls = new String[allInfo.length / 3];
 			String[] dates = new String[allInfo.length / 3];
@@ -831,9 +785,9 @@ public class Article implements Parcelable
 		AlsoToRead alsoToRead;
 		String[] allInfo;
 
-		if (!this.to_read_more.equals("empty"))
+		if (!this.toReadMore.equals("empty"))
 		{
-			allInfo = this.to_read_more.split(" !!!! ");
+			allInfo = this.toReadMore.split(" !!!! ");
 			String[] titles = new String[allInfo.length / 3];
 			String[] urls = new String[allInfo.length / 3];
 			String[] dates = new String[allInfo.length / 3];

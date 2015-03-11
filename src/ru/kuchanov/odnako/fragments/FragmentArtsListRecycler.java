@@ -19,6 +19,7 @@ import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
+import ru.kuchanov.odnako.db.ServiceRSS;
 import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
@@ -138,6 +139,10 @@ public class FragmentArtsListRecycler extends Fragment
 		//reciver for scrolling and highligting selected position
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(categoryIsLoadingReceiver,
 		new IntentFilter(this.getCategoryToLoad() + Const.Action.IS_LOADING));
+
+		//reciver for scrolling and highligting selected position
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverForRSS,
+		new IntentFilter(this.getCategoryToLoad() + "_rss"));
 	}
 
 	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
@@ -195,6 +200,39 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 	};
 
+	private BroadcastReceiver receiverForRSS = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.i(LOG + categoryToLoad, "receiverForRSS onReceive()");
+			ArrayList<Article> rssData = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
+			ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(categoryToLoad);
+			for (Article a : rssData)
+			{
+				boolean findIt = false;
+				for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
+				{
+					Article b = activitiesData.get(i);
+					if (a.getUrl().equals(b.getUrl()))
+					{
+						findIt = true;
+						b.setPreview(a.getPreview());
+						b.setPubDate(a.getPubDate());
+					}
+				}
+			}
+			//after  updating Articles from activities HashMap
+			//we update adapter and right pager
+			artsList.getAdapter().notifyDataSetChanged();
+		}
+	};
+
+	/**
+	 * receives intent with Articles data and updates list, toolbar and toast in
+	 * some cases, based on message from DB. Also, if this is main list
+	 * (odnako.org/blogs) and we load from top it starts loading data from rss
+	 */
 	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
 	{
 		@Override
@@ -336,6 +374,12 @@ public class FragmentArtsListRecycler extends Fragment
 						Toast.makeText(act, "Новых статей не обнаружено!", Toast.LENGTH_SHORT).show();
 					}
 					updateAdapter(intent, page);
+					if (getCategoryToLoad().contains("odnako.org/blogs"))
+					{
+						Intent intentRSS = new Intent(act, ServiceRSS.class);
+						intentRSS.putExtra("categoryToLoad", getCategoryToLoad());
+						act.startService(intentRSS);
+					}
 				break;
 				case (Msg.NEW_QUONT):
 					Log.d(LOG + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
@@ -347,6 +391,12 @@ public class FragmentArtsListRecycler extends Fragment
 						Toast.makeText(act, "Обнаружено " + msg[1] + " новых статей", Toast.LENGTH_SHORT).show();
 					}
 					updateAdapter(intent, page);
+					if (getCategoryToLoad().contains("odnako.org/blogs"))
+					{
+						Intent intentRSS = new Intent(act, ServiceRSS.class);
+						intentRSS.putExtra("categoryToLoad", getCategoryToLoad());
+						act.startService(intentRSS);
+					}
 				break;
 				case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 					Log.d(LOG + categoryToLoad, "Обнаружено " + msg[1] + " новых статей");
@@ -383,7 +433,7 @@ public class FragmentArtsListRecycler extends Fragment
 					allArtsInfo = def;
 					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 					artsList.getAdapter().notifyDataSetChanged();
-					
+
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
 					Log.e(LOG + categoryToLoad, "Ни одной статьи не обнаружено!");
@@ -709,12 +759,10 @@ public class FragmentArtsListRecycler extends Fragment
 
 		Intent intent = new Intent(this.act, ServiceDB.class);
 		intent.setAction(Const.Action.DATA_REQUEST);
-		Bundle b = new Bundle();
-		b.putString("categoryToLoad", this.getCategoryToLoad());
-		b.putInt("pageToLoad", this.pageToLoad);
-		b.putLong("timeStamp", System.currentTimeMillis());
-		b.putBoolean("startDownload", startDownload);
-		intent.putExtras(b);
+		intent.putExtra("categoryToLoad", this.getCategoryToLoad());
+		intent.putExtra("pageToLoad", this.pageToLoad);
+		intent.putExtra("timeStamp", System.currentTimeMillis());
+		intent.putExtra("startDownload", startDownload);
 		this.act.startService(intent);
 	}
 
@@ -779,6 +827,11 @@ public class FragmentArtsListRecycler extends Fragment
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(categoryIsLoadingReceiver);
 			categoryIsLoadingReceiver = null;
+		}
+		if (receiverForRSS != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverForRSS);
+			receiverForRSS = null;
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();

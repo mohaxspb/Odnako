@@ -392,7 +392,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						this.imageLoader.displayImage(p.getImgArt(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
-					else if (!p.getImg_author().equals("empty"))
+					else if (!p.getImgAuthor().equals("empty"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
@@ -400,7 +400,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						params.setMargins(5, 5, 5, 5);
 						holderMain.author_img.setLayoutParams(params);
 
-						this.imageLoader.displayImage(p.getImg_author(), holderMain.author_img,
+						this.imageLoader.displayImage(p.getImgAuthor(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
 					else

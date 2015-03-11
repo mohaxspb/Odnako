@@ -19,7 +19,7 @@ import ru.kuchanov.odnako.utils.DateParse;
 
 public class HtmlHelper
 {
-	private final static String TAG = HtmlHelper.class.getSimpleName();
+	private final static String LOG = HtmlHelper.class.getSimpleName();
 
 	public final static String DOMAIN_MAIN = "http://odnako.org";
 
@@ -58,7 +58,7 @@ public class HtmlHelper
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
-			Log.e(TAG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
+			Log.e(LOG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
 		}
 	}
 
@@ -353,7 +353,6 @@ public class HtmlHelper
 					}
 				}
 			}
-
 			//blogURL
 			a.setAuthorBlogUrl(url.substring(0, this.url.indexOf("/page-")));
 			//name
@@ -367,12 +366,41 @@ public class HtmlHelper
 			{
 				a.setPubDate(new Date(0));
 			}
-
 			allArtsInfo.add(a);
 		}
 		//TODO Check here situation when we parse last page of category/ author and get 30 arts
 		//if so we can't setInitial arts URL in DBActions, so we can get access to DB here
 		//and do it here
 		return allArtsInfo;
+	}
+
+	/**
+	 * from RSS we get URL (for finding articles in DB), and preview with
+	 * pubDate for updating founded arts
+	 * 
+	 * @return List of Article with filled URL, pubDate and preview fields
+	 */
+	public ArrayList<Article> getDataFromRSS()
+	{
+		ArrayList<Article> artsList = new ArrayList<Article>();
+		TagNode[] items = this.rootNode.findElementByName("channel", true).getElementsByName("item", true);
+		for (TagNode t : items)
+		{
+			Article a = new Article();
+			TagNode guid = t.findElementByName("guid", true);
+			a.setUrl(guid.getText().toString());
+			a.setPubDate(DateParse.parse(t.findElementByName("pubDate", true).getText().toString()));
+			TagNode preview = t.findElementByName("description", true);
+			String previewString = Html.fromHtml(preview.getText().toString()).toString();
+			previewString = previewString.substring(previewString.indexOf("justify") + 9);
+			if (previewString.startsWith("<img"))
+			{
+				previewString = previewString.substring(previewString.indexOf(">") + 1);
+			}
+			previewString = previewString.substring(0, previewString.indexOf("<p>"));
+			a.setPreview(previewString);
+			artsList.add(a);
+		}
+		return artsList;
 	}
 }
