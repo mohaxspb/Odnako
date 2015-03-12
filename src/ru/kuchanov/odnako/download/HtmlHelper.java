@@ -11,6 +11,7 @@ import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import ru.kuchanov.odnako.Const;
@@ -29,6 +30,10 @@ public class HtmlHelper
 	private String url;
 
 	HtmlCleaner cleaner;
+
+	//vars for HTMLCleaner methods params
+	private boolean isRecursive = true;
+	private boolean isCaseSensitive = false;
 
 	//	public static int NUM_OF_ARTS_ON_CUR_PAGE;
 
@@ -402,5 +407,93 @@ public class HtmlHelper
 			artsList.add(a);
 		}
 		return artsList;
+	}
+
+	public Article parseArticle()
+	{
+		Article a = new Article();
+		//id, url, title, img_art, authorBlogUrl, authorName, preview, pubDate, 
+		//refreshed, numOfComments, numOfSharings, artText, authorDescr, tegs_main, 
+		//tegs_all, share_quont, to_read_main, to_read_more, img_author, author
+
+		String preview = this.rootNode
+		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive).getText().toString();
+		String title = this.rootNode
+		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getText().toString();
+		//<meta property="og:image" content="http://www.odnako.org/i/335_245/blogs/48584/ekonomisti-dengi-mvf-kievu-ne-pomogut-a-ukrainci-ih-ne-uvidyat-1482-48584.jpg" />
+		String imgArt = this.rootNode
+		.findElementByAttValue("property", "og:image", isRecursive, isCaseSensitive).getAttributeByName("content");
+		imgArt = imgArt.replace("/335_245/", "/450_240/");
+		//<div class="date l-t-right l-right">12 марта 2015</div>
+		Date pubDate = DateParse.parse(this.rootNode
+		.findElementByAttValue("class", "date l-t-right l-right", isRecursive, isCaseSensitive).getText().toString());
+
+		//AUTHOR
+		//<div class="author-teaser clearfix">
+		TagNode author = this.rootNode.findElementByAttValue("class", "author-teaser clearfix", isRecursive,
+		isCaseSensitive);
+		//<div class="image"><img src="/i/36_36/users/103975/103975-1481-103975.jpg" height="36" width="36" alt="Марина Юденич" class="image"></div>
+		TagNode imgDiv = author.findElementByAttValue("class", "image", isRecursive, isCaseSensitive);
+		String imgAuthor = "empty";
+
+		if (imgDiv.hasChildren())
+		{
+			TagNode imgTag = imgDiv.findElementByName("img", isRecursive);
+			if (imgTag != null)
+			{
+				imgAuthor = imgTag.getAttributeByName("src");
+				if (imgAuthor.startsWith("/"))
+				{
+					imgAuthor = DOMAIN_MAIN + imgAuthor;
+				}
+				imgAuthor = imgAuthor.replace("/36_36/", "/75_75/");
+			}
+		}
+		//<div class="name"> <a href="http://marinayudenich.odnako.org/">Марина Юденич</a></div>
+		String authorName = "empty";
+		String authorBlogUrl = "empty";
+		TagNode nameDiv = author.findElementByAttValue("class", "name", isRecursive, isCaseSensitive);
+		if (nameDiv != null)
+		{
+			TagNode aTag = nameDiv.findElementByName("a", isRecursive);
+			authorName = aTag.getText().toString();
+			authorBlogUrl = aTag.getAttributeByName("href");
+		}
+		//author's Description
+		//<div hidden class="author-teaser-expander clearfix">
+		TagNode authorDescrDiv = this.rootNode.findElementByAttValue("class", "author-teaser-expander clearfix",
+		isRecursive, isCaseSensitive);
+		String authorDescr = "empty";
+		if (!TextUtils.isEmpty(authorDescrDiv.getText()))
+		{
+			authorDescr = authorDescrDiv.getText().toString();
+		}
+		//TAGS
+		//main
+		//<div class="biggest-tag l-left">
+		//<div class="m-news-tag-wrap"><a href="http://mirovoykrizis.odnako.org/" title="МИРОВОЙ КРИЗИС" class="m-news-tag">МИРОВОЙ КРИЗИС</a>
+		//</div>
+		TagNode mainTagDiv = this.rootNode.findElementByAttValue("class", "biggest-tag l-left", isRecursive,
+		isCaseSensitive);
+		String tagMain = "empty";
+		if (mainTagDiv.hasChildren())
+		{
+			tagMain = mainTagDiv.getAttributeByName("title");
+		}
+
+		a.setUrl(url);
+		a.setPreview(preview);
+		a.setTitle(title);
+		a.setImgArt(imgArt);
+		a.setPubDate(pubDate);
+		//author
+		a.setAuthorName(authorName);
+		a.setAuthorBlogUrl(authorBlogUrl);
+		a.setImgAuthor(imgAuthor);
+		a.setAuthorDescr(authorDescr);
+		//tags
+		a.setTegsMain(tagMain);
+
+		return a;
 	}
 }

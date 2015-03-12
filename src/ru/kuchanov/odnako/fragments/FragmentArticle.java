@@ -12,20 +12,25 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.utils.MyUIL;
-import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +44,9 @@ import android.widget.TextView;
 
 public class FragmentArticle extends Fragment implements FragArtUPD
 {
+	final static String LOG = FragmentArticle.class.getSimpleName() + "/";
+
+	final public static String ARTICLE_URL = "article_url";
 
 	private ActionBarActivity act;
 	private LayoutInflater inflater;
@@ -70,13 +78,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private CardView alsoByThemeCard;
 	private CardView alsoToReadCard;
 
-	private Article curArtInfo;
-//	position in all art arr; need to show next/previous arts
+	private Article curArticle;
+	//	position in all art arr; need to show next/previous arts
 	private int position;
 	ArrayList<Article> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
-	
+
 	@Override
 	public void onCreate(Bundle savedState)
 	{
@@ -89,21 +97,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		Bundle stateFromArgs = this.getArguments();
 		if (stateFromArgs != null)
 		{
-			this.restoreState(stateFromArgs);
+			this.curArticle = stateFromArgs.getParcelable(Article.KEY_CURENT_ART);
+			this.setPosition(stateFromArgs.getInt("position"));
+			this.allArtsInfo = stateFromArgs.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
-		//		else if (savedState != null)
-		//		{
-		//			this.restoreState(savedState);
-		//		}
-		//		//all is null, so start request for info
-		//		else
-		//		{
-		//			// TODO
-		//			System.out.println("ActivityArticle: all bundles are null, so make request for info");
-		//		}
 		if (savedState != null)
 		{
-			this.restoreState(savedState);
+			this.curArticle = savedState.getParcelable(Article.KEY_CURENT_ART);
+			this.setPosition(savedState.getInt("position"));
+			this.allArtsInfo = savedState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 
 		this.imageLoader = MyUIL.get(act);
@@ -111,7 +113,28 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
 
+		if(this.curArticle!=null)
+		{
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
+			new IntentFilter(this.curArticle.getUrl()));
+		}
 	}
+
+	private BroadcastReceiver articleReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.i(LOG + curArticle.getUrl(), "articleReceiver onReceive");
+			if (!isAdded())
+			{
+				Log.e(LOG + curArticle.getUrl(), "fragment not added! RETURN!");
+				return;
+			}
+			
+			
+		}
+	};
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -130,17 +153,17 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void checkCurArtInfo(Bundle savedInstanceState)
 	{
-		if (this.curArtInfo == null)
+		if (this.curArticle == null)
 		{
 			//load...
-			this.swipeRef.setRefreshing(true);
+//			this.loadArticle(false);
 		}
 		else
 		{
-			if (this.curArtInfo.getArtText() == null || this.curArtInfo.getArtText().equals("empty"))
+			if (this.curArticle.getArtText() == null || this.curArticle.getArtText().equals("empty"))
 			{
 				//load...
-				this.swipeRef.setRefreshing(true);
+				this.loadArticle(false);
 
 				this.fillFielsdsWithInfo(this.getView());
 
@@ -162,7 +185,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					@Override
 					public void onClick(View v)
 					{
-						Actions.shareUrl(curArtInfo.getUrl(), act);
+						Actions.shareUrl(curArticle.getUrl(), act);
 					}
 				});
 				this.commentsBottomBtn.setOnClickListener(new OnClickListener()
@@ -202,6 +225,16 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				}
 			}
 		}
+	}//check cur Article
+
+	private void loadArticle(boolean startDownload)
+	{
+		this.swipeRef.setRefreshing(true);
+
+		Intent intent = new Intent(this.act, ServiceArticle.class);
+		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
+		intent.putExtra("startDownload", startDownload);
+		this.act.startService(intent);
 	}
 
 	private void findViews(View v)
@@ -288,17 +321,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState)
-	{
-		//		System.out.println("ArticleFragment onViewCreated");
-		super.onViewCreated(view, savedInstanceState);
-
-	}
-
 	private void setUpAlsoByTheme()
 	{
-		Article.AlsoToRead alsoToRead = this.curArtInfo.getAlsoByTheme();
+		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoByTheme();
 		//for test
 		//		String[] s1 = new String[] { "title", "title" };
 		//		String[] s2 = new String[] { "title", "title" };
@@ -324,7 +349,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAlsoToRead()
 	{
-		Article.AlsoToRead alsoToRead = this.curArtInfo.getAlsoToReadMore();
+		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoToReadMore();
 		//for test
 		//		String[] s1 = new String[] { "title", "title", "title" };
 		//		String[] s2 = new String[] { "url", "url", "url" };
@@ -379,21 +404,21 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		//removing tags field if it's empty
-		if (this.curArtInfo.getTegsMain().equals("empty") || this.curArtInfo.getTegsMain().equals(""))
+		if (this.curArticle.getTegsMain().equals("empty") || this.curArticle.getTegsMain().equals(""))
 		{
 			this.artTagsMainTV.setText(null);
 			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
 		}
 		else
 		{
-			this.artTagsMainTV.setText(this.curArtInfo.getTegsMain());
+			this.artTagsMainTV.setText(this.curArticle.getTegsMain());
 			this.artTagsMainTV.setLayoutParams(normalParams);
 		}
 		//set descr of author btn
 		//set descrTV height to 0 by default
 		this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
 
-		if (this.curArtInfo.getAuthorDescr().equals("empty") || this.curArtInfo.getAuthorDescr().equals(""))
+		if (this.curArticle.getAuthorDescr().equals("empty") || this.curArticle.getAuthorDescr().equals(""))
 		{
 			this.artAuthorDescriptionTV.setText(null);
 			this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
@@ -402,7 +427,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			this.artAuthorDescriptionTV.setText(this.curArtInfo.getAuthorDescr());
+			this.artAuthorDescriptionTV.setText(this.curArticle.getAuthorDescr());
 			//restore size
 			//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
 			//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
@@ -433,7 +458,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		}
 		//set allArsList OnClick
-		if (this.curArtInfo.getAuthorBlogUrl().equals("empty") || this.curArtInfo.getAuthorBlogUrl().equals(""))
+		if (this.curArticle.getAuthorBlogUrl().equals("empty") || this.curArticle.getAuthorBlogUrl().equals(""))
 		{
 			this.artAuthorArticlesIV.setOnClickListener(null);
 			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
@@ -447,7 +472,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				@Override
 				public void onClick(View v)
 				{
-					Actions.showAllAuthorsArticles(curArtInfo.getAuthorBlogUrl(), act);
+					Actions.showAllAuthorsArticles(curArticle.getAuthorBlogUrl(), act);
 				}
 			});
 		}
@@ -466,7 +491,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//			"art_share_quont_" + String.valueOf(i)));
 		//			shareQ[i].setTextSize(25 * scaleFactor);
 		//		}
-
 	}//setSizeAndTheme
 
 	private void artAuthorDescrBehavior()
@@ -520,31 +544,25 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//set text, tegs, authoe etc
 	private void fillFielsdsWithInfo(View rootView)
 	{
-		this.artTextView.setText(this.curArtInfo.getArtText());
+		this.artTextView.setText(this.curArticle.getArtText());
 
-		this.artTitleTV.setText(this.curArtInfo.getTitle());
-		this.artAuthorTV.setText(this.curArtInfo.getAuthorName());
-		this.artAuthorDescriptionTV.setText(this.curArtInfo.getAuthorDescr());
-		this.artDateTV.setText(this.curArtInfo.getPubDate().toString());
-		this.artTagsMainTV.setText(this.curArtInfo.getTegsMain());
+		this.artTitleTV.setText(this.curArticle.getTitle());
+		this.artAuthorTV.setText(this.curArticle.getAuthorName());
+		this.artAuthorDescriptionTV.setText(this.curArticle.getAuthorDescr());
+		this.artDateTV.setText(this.curArticle.getPubDate().toString());
+		this.artTagsMainTV.setText(this.curArticle.getTegsMain());
 
 		//down images
 		if (this.pref.getString("theme", "dark").equals("dark"))
 		{
-			imageLoader.displayImage(this.curArtInfo.getImgArt(), this.artAuthorIV, MyUIL.getDarkOptions());
-			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_white_48dp, this.artAuthorArticlesIV);
+			imageLoader.displayImage(this.curArticle.getImgArt(), this.artAuthorIV, MyUIL.getDarkOptions());
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
-			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-			//			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
 		}
 		else
 		{
-			imageLoader.displayImage(this.curArtInfo.getImgArt(), this.artAuthorIV);
-			//			imageLoader.displayImage("drawable://" + R.drawable.ic_list_grey600_48dp, this.artAuthorArticlesIV);
+			imageLoader.displayImage(this.curArticle.getImgArt(), this.artAuthorIV);
 			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_grey600_48dp);
-			//			imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-			//			this.artAuthorDescriptionIV);
 			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
 		}
 
@@ -556,7 +574,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAllTegsLayout(View rooView)
 	{
-		String[] allTegs = this.curArtInfo.getAllTegsArr();
+		String[] allTegs = this.curArticle.getAllTegsArr();
 		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
 		if (allTegs != null)
 		{
@@ -639,20 +657,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-	}
-
-	@Override
-	public void onDetach()
-	{
-		//		System.out.println("ArticleFragment onDetach");
-		super.onDetach();
-	}
+	}//setUpAllTagsLayout
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
@@ -664,21 +669,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
 
 		outState.putInt("position", this.getPosition());
-		outState.putParcelable(Article.KEY_CURENT_ART, curArtInfo);
+		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
 		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
-	}
-
-	private void restoreState(Bundle state)
-	{
-		this.curArtInfo = state.getParcelable(Article.KEY_CURENT_ART);
-		this.setPosition(state.getInt("position"));
-		this.allArtsInfo = state.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 	}
 
 	@Override
 	public void update(ArrayList<Article> allArtInfo)
 	{
-		this.curArtInfo = allArtInfo.get(getPosition());
+		this.curArticle = allArtInfo.get(getPosition());
+		if(this.curArticle!=null)
+		{
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
+			new IntentFilter(this.curArticle.getUrl()));
+		}
 		this.checkCurArtInfo(null);
 	}
 

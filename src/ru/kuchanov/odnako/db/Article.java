@@ -11,6 +11,7 @@ package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import ru.kuchanov.odnako.utils.DateParse;
@@ -654,7 +655,8 @@ public class Article implements Parcelable
 	@Override
 	public String toString()
 	{
-		return this.getAsStringArray()[1];
+		//		return this.getAsStringArray()[1];
+		return Arrays.toString(this.getAsStringArray());
 	}
 
 	//////PARCEL implementation

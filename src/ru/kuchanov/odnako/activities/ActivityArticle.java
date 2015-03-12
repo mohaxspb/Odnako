@@ -58,14 +58,11 @@ public class ActivityArticle extends ActivityBase
 			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
 			
 			this.restoreGroupChildPosition(stateFromIntent);
-//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
-//			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
 		}
 		else if (savedInstanceState != null)
 		{
 			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
-//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
 		//all is null, so start request for info
 		else
@@ -121,10 +118,9 @@ public class ActivityArticle extends ActivityBase
 		switch (item.getItemId())
 		{
 			case R.id.comments:
-				Actions.showComments(curAllArtsInfo, getCurArtPosition(), act);//.showComments(allArtsInfo, position, act);
+				Actions.showComments(curAllArtsInfo, getCurArtPosition(), act);
 				return true;
 			case R.id.share:
-//				Actions.shareUrl(this.curArtInfo.url, this.act);
 				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
 				return true;
 			case R.id.action_settings:
@@ -161,20 +157,10 @@ public class ActivityArticle extends ActivityBase
 	}
 
 	@Override
-	protected void onResume()
-	{
-		System.out.println("ActivityArticle onResume");
-		super.onResume();
-	}
-
-	@Override
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		System.out.println("ActivityArticle: onSaveInstanceState");
-
 		//save allArtsInfo
-//		ArtInfo.writeAllArtsInfoToBundle(outState, curAllArtsInfo, curArtInfo);
 		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
 
 	}
@@ -183,8 +169,6 @@ public class ActivityArticle extends ActivityBase
 	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		super.onRestoreInstanceState(savedInstanceState);
-		System.out.println("ActivityArticle onRestoreInstanceState");
-
 		this.restoreState(savedInstanceState);
 	}
 }
