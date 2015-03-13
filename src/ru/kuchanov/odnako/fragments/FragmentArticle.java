@@ -131,6 +131,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				Log.e(LOG + curArticle.getUrl(), "fragment not added! RETURN!");
 				return;
 			}
+			Article a=intent.getParcelableExtra(Article.KEY_CURENT_ART);
 			
 			
 		}

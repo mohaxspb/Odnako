@@ -25,7 +25,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -242,7 +241,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							month = "0" + month;
 						}
 						String y = String.valueOf(cal.get(Calendar.YEAR));
-						Log.e(LOG, p.getTitle()+"/"+y);
+//						Log.e(LOG, p.getTitle()+"/"+y);
 						Calendar calNow = Calendar.getInstance();
 
 						String dateToShow = h + minute + d + month + y;

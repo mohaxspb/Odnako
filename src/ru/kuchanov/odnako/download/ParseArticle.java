@@ -59,7 +59,8 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 //					Article.updatePubDate(h, artInDB.getId(), a.getPubDate());
 //				}
 //			}
-			Log.e(LOG + url, output.toString());
+//			Log.e(LOG + url, output.toString());
+			output.printAllInfo();
 			
 		} catch (Exception e)
 		{

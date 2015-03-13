@@ -9,9 +9,9 @@ package ru.kuchanov.odnako.db;
 //tags for logCat
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import ru.kuchanov.odnako.utils.DateParse;
@@ -51,19 +51,19 @@ public class Article implements Parcelable
 	private String url;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String title = "empty";;
+	private String title = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
 	private String imgArt = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String authorBlogUrl = "empty";;
+	private String authorBlogUrl = "empty";
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String authorName = "empty";;
+	private String authorName = "empty";
 
 	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_NAME_PREVIEW)
-	private String preview = "empty";;
+	private String preview = "empty";
 
 	@DatabaseField(dataType = DataType.DATE, columnName = FIELD_NAME_PUB_DATE)
 	private Date pubDate = new Date(0);
@@ -655,8 +655,36 @@ public class Article implements Parcelable
 	@Override
 	public String toString()
 	{
-		//		return this.getAsStringArray()[1];
-		return Arrays.toString(this.getAsStringArray());
+		return this.getTitle();
+	}
+
+	public void printAllInfo()
+	{
+		//XXX
+		Log.i(LOG, "PRINT_ALL_INFO");
+		//		for(String s: this.getAsStringArrayWithAuthorIdIfIs())
+		//		{
+		//			Log.e(this.artText.get, s);
+		//		}
+		Field[] f = this.getClass().getDeclaredFields();//.getFields();//
+		for (int i = 0; i < f.length; i++)
+		{
+			try
+			{
+				Log.e(f[i].getName(), f[i].get(this).toString());
+			} catch (IllegalAccessException e)
+			{
+				e.printStackTrace();
+			} catch (IllegalArgumentException e)
+			{
+				e.printStackTrace();
+			}
+			catch (NullPointerException e)
+			{
+				Log.e(f[i].getName(), "THIS FIELD IS NULL!");
+//				e.printStackTrace();
+			}
+		}
 	}
 
 	//////PARCEL implementation
