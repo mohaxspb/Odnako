@@ -6,14 +6,12 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
-//tags for logCat
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL)
-
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.utils.DateParse;
 
 import android.os.Parcel;
@@ -35,6 +33,8 @@ public class Article implements Parcelable
 {
 	private static final String LOG = Article.class.getSimpleName();
 
+	public static final String DIVIDER = " !!!! ";
+
 	public static final String KEY_CURENT_ART = "curArtInfo";
 	public static final String KEY_ALL_ART_INFO = "allArtInfo";
 
@@ -51,19 +51,19 @@ public class Article implements Parcelable
 	private String url;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String title = "empty";
+	private String title = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String imgArt = "empty";
+	private String imgArt = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String authorBlogUrl = "empty";
+	private String authorBlogUrl = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String authorName = "empty";
+	private String authorName = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_NAME_PREVIEW)
-	private String preview = "empty";
+	private String preview = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.DATE, columnName = FIELD_NAME_PUB_DATE)
 	private Date pubDate = new Date(0);
@@ -78,28 +78,28 @@ public class Article implements Parcelable
 	private int numOfSharings = 0;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String artText = "empty";
+	private String artText = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String authorDescr = "empty";
+	private String authorDescr = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String tegsMain = "empty";
+	private String tegsMain = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String tegsAll = "empty";
+	private String tegsAll = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String shareQuont = "empty";
+	private String shareQuont = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String toReadMain = "empty";
+	private String toReadMain = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String toReadMore = "empty";
+	private String toReadMore = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String imgAuthor = "empty";
+	private String imgAuthor = Const.EMPTY_STRING;
 
 	//foreignKeys
 	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
@@ -151,11 +151,11 @@ public class Article implements Parcelable
 		this.imgAuthor = artInfoArr[16];
 
 		//refreshed date
-		//set it only if we have not null or "empty" artText value
+		//set it only if we have not null or Const.EMPTY_STRING artText value
 		//and, ofcours not null given Date refreshed
 		if (this.artText != null)
 		{
-			if (!this.artText.equals("empty"))
+			if (!this.artText.equals(Const.EMPTY_STRING))
 			{
 				if (refreshed != null)
 				{
@@ -313,7 +313,7 @@ public class Article implements Parcelable
 		return tegsMain;
 	}
 
-	public void setTegsMain(String tegsMain)
+	public void setTagsMain(String tegsMain)
 	{
 		this.tegsMain = tegsMain;
 	}
@@ -603,7 +603,7 @@ public class Article implements Parcelable
 				updatedData.add(existingArt);
 			}
 		}
-		//		Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
+		//Log.i(LOG, "quontOfWrittenArticles: " + String.valueOf(quontOfWrittenArticles));
 		return updatedData;
 	}
 
@@ -662,27 +662,35 @@ public class Article implements Parcelable
 	{
 		//XXX
 		Log.i(LOG, "PRINT_ALL_INFO");
-		//		for(String s: this.getAsStringArrayWithAuthorIdIfIs())
-		//		{
-		//			Log.e(this.artText.get, s);
-		//		}
-		Field[] f = this.getClass().getDeclaredFields();//.getFields();//
+		Field[] f = this.getClass().getDeclaredFields();
 		for (int i = 0; i < f.length; i++)
 		{
 			try
 			{
-				Log.e(f[i].getName(), f[i].get(this).toString());
+				if (!f[i].getName().equals("id"))
+				{
+					if(!f[i].getName().equals("artText"))
+					{
+						Log.e(f[i].getName(), f[i].get(this).toString());
+					}
+					else
+					{
+						Log.e(f[i].getName(), f[i].get(this).toString().substring(0, 100));
+					}
+				}
 			} catch (IllegalAccessException e)
 			{
-				e.printStackTrace();
+				Log.e("printAllInfo", "IllegalAccessException");
 			} catch (IllegalArgumentException e)
 			{
-				e.printStackTrace();
-			}
-			catch (NullPointerException e)
+				Log.e("printAllInfo", "IllegalArgumentException");
+			} catch (NullPointerException e)
 			{
 				Log.e(f[i].getName(), "THIS FIELD IS NULL!");
-//				e.printStackTrace();
+			}
+			catch (Exception e)
+			{
+				Log.d("printAllInfo", "WE CATCH E IN PRINT: "+e.toString());
 			}
 		}
 	}
@@ -765,20 +773,18 @@ public class Article implements Parcelable
 	};
 
 	/////////////////////////////
-	public String[] getAllTegsArr()
+	public String[] getAllTagsArr()
 	{
 		String[] allTegsArr;
-
-		if (!this.tegsAll.equals("empty"))
+		if (!this.tegsAll.equals(Const.EMPTY_STRING))
 		{
-			allTegsArr = this.tegsAll.split(" !!!! ");
+			allTegsArr = this.tegsAll.split(DIVIDER);
 		}
 		else
 		{
 			//System.out.println("AllTegs var is empty!");
 			allTegsArr = null;
 		}
-
 		return allTegsArr;
 	}
 
@@ -787,9 +793,9 @@ public class Article implements Parcelable
 		AlsoToRead alsoToRead;
 		String[] allInfo;
 
-		if (!this.toReadMain.equals("empty"))
+		if (!this.toReadMain.equals(Const.EMPTY_STRING))
 		{
-			allInfo = this.toReadMain.split(" !!!! ");
+			allInfo = this.toReadMain.split(DIVIDER);
 			String[] titles = new String[allInfo.length / 3];
 			String[] urls = new String[allInfo.length / 3];
 			String[] dates = new String[allInfo.length / 3];
@@ -806,7 +812,6 @@ public class Article implements Parcelable
 			//			System.out.println("alsoToRead (to_read_main) var is empty!");
 			alsoToRead = null;
 		}
-
 		return alsoToRead;
 	}
 
@@ -815,9 +820,9 @@ public class Article implements Parcelable
 		AlsoToRead alsoToRead;
 		String[] allInfo;
 
-		if (!this.toReadMore.equals("empty"))
+		if (!this.toReadMore.equals(Const.EMPTY_STRING))
 		{
-			allInfo = this.toReadMore.split(" !!!! ");
+			allInfo = this.toReadMore.split(DIVIDER);
 			String[] titles = new String[allInfo.length / 3];
 			String[] urls = new String[allInfo.length / 3];
 			String[] dates = new String[allInfo.length / 3];
@@ -834,7 +839,6 @@ public class Article implements Parcelable
 			//			System.out.println("alsoToRead (to_read_more) var is empty!");
 			alsoToRead = null;
 		}
-
 		return alsoToRead;
 	}
 
@@ -842,16 +846,39 @@ public class Article implements Parcelable
 	{
 		public String[] urls;
 		public String[] titles;
-
 		public String[] dates;
 
 		public AlsoToRead(String[] urls, String[] titles, String[] dates)
 		{
 			this.urls = urls;
 			this.titles = titles;
-
 			this.dates = dates;
 		}
 	}
 
+	public class Tag
+	{
+		public String url = Const.EMPTY_STRING;
+		public String title = Const.EMPTY_STRING;
+
+		public Tag(String url, String title)
+		{
+			this.url = url;
+			this.title = title;
+		}
+	}
+
+	public ArrayList<Tag> getTags(String parsedTags)
+	{
+		ArrayList<Tag> tags = new ArrayList<Tag>();
+		if (!parsedTags.equals(Const.EMPTY_STRING))
+		{
+			String[] arr = parsedTags.split(DIVIDER);
+			for (int i = 0; i < arr.length / 2; i++)
+			{
+				tags.add(new Tag(arr[i * 2], arr[1 + i * 2]));
+			}
+		}
+		return tags;
+	}
 }

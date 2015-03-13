@@ -132,8 +132,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				return;
 			}
 			Article a=intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			
-			
+			a.printAllInfo();			
 		}
 	};
 
@@ -575,7 +574,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAllTegsLayout(View rooView)
 	{
-		String[] allTegs = this.curArticle.getAllTegsArr();
+		String[] allTegs = this.curArticle.getAllTagsArr();
 		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
 		if (allTegs != null)
 		{

@@ -60,7 +60,7 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 //				}
 //			}
 //			Log.e(LOG + url, output.toString());
-			output.printAllInfo();
+//			output.printAllInfo();
 			
 		} catch (Exception e)
 		{
@@ -76,7 +76,7 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 		if (output != null)
 		{
 			Intent intent = new Intent(url);
-			intent.putExtra(Article.KEY_ALL_ART_INFO, output);
+			intent.putExtra(Article.KEY_CURENT_ART, output);
 			LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 		}
 		//NO internet

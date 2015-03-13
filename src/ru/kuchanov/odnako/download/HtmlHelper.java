@@ -417,9 +417,11 @@ public class HtmlHelper
 		//tegs_all, share_quont, to_read_main, to_read_more, img_author, author
 
 		String preview = this.rootNode
-		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive).getText().toString();
+		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
+		.getAttributeByName("content");
+		Log.e(LOG, "preview is: " + preview);
 		String title = this.rootNode
-		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getText().toString();
+		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getAttributeByName("content");
 		//<meta property="og:image" content="http://www.odnako.org/i/335_245/blogs/48584/ekonomisti-dengi-mvf-kievu-ne-pomogut-a-ukrainci-ih-ne-uvidyat-1482-48584.jpg" />
 		String imgArt = this.rootNode
 		.findElementByAttValue("property", "og:image", isRecursive, isCaseSensitive).getAttributeByName("content");
@@ -435,7 +437,6 @@ public class HtmlHelper
 		//<div class="image"><img src="/i/36_36/users/103975/103975-1481-103975.jpg" height="36" width="36" alt="Марина Юденич" class="image"></div>
 		TagNode imgDiv = author.findElementByAttValue("class", "image", isRecursive, isCaseSensitive);
 		String imgAuthor = "empty";
-
 		if (imgDiv.hasChildren())
 		{
 			TagNode imgTag = imgDiv.findElementByName("img", isRecursive);
@@ -478,21 +479,33 @@ public class HtmlHelper
 		String tagMain = "empty";
 		if (mainTagDiv.hasChildren())
 		{
-			tagMain = mainTagDiv.getAttributeByName("title");
+			TagNode aTag = mainTagDiv.findElementByName("a", isRecursive);
+			tagMain = aTag.getAttributeByName("href");
+			tagMain = tagMain.concat(Article.DIVIDER);
+			tagMain = tagMain.concat(aTag.getAttributeByName("title"));
 		}
+
+		//article TEXT
+		//post-content l-post-text-offset break l-white clearfix outlined-hard-bot
+		String artText = this.rootNode
+		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
+		isRecursive, isCaseSensitive).getText().toString();
 
 		a.setUrl(url);
 		a.setPreview(preview);
 		a.setTitle(title);
 		a.setImgArt(imgArt);
 		a.setPubDate(pubDate);
+		a.setRefreshed(new Date(System.currentTimeMillis()));
 		//author
 		a.setAuthorName(authorName);
 		a.setAuthorBlogUrl(authorBlogUrl);
 		a.setImgAuthor(imgAuthor);
 		a.setAuthorDescr(authorDescr);
 		//tags
-		a.setTegsMain(tagMain);
+		a.setTagsMain(tagMain);
+		//artText
+		a.setArtText(artText);
 
 		return a;
 	}

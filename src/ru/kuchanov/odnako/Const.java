@@ -8,6 +8,7 @@ package ru.kuchanov.odnako;
 
 public class Const
 {
+	public static final String EMPTY_STRING = "empty";
 
 	public static class Action
 	{
