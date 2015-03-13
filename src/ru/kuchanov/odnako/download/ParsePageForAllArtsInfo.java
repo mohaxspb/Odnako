@@ -127,7 +127,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	protected void onPostExecute(ArrayList<Article> output)
 	{
-		Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
+		//Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
 
 		//check internet
 		if (output != null)

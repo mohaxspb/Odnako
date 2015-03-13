@@ -6,16 +6,14 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.download;
 
-import java.util.ArrayList;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.ServiceArticle;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class ParseArticle extends AsyncTask<Void, Void,Article>
@@ -29,7 +27,7 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 	public ParseArticle(Context ctx, String url, DataBaseHelper h)
 	{
 		this.ctx = ctx;
-		this.url = url;
+		this.setUrl(url);
 		this.h = h;
 	}
 
@@ -37,13 +35,13 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 	{
 		Article output = null;
 		String link;
-		if (this.url.startsWith("http://"))
+		if (this.getUrl().startsWith("http://"))
 		{
-			link = this.url;
+			link = this.getUrl();
 		}
 		else
 		{
-			link = "http://" + this.url;
+			link = "http://" + this.getUrl();
 		}
 
 		try
@@ -64,7 +62,7 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 			
 		} catch (Exception e)
 		{
-			Log.e(LOG + url, "Catched Exception: " + e.toString());
+			Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
 		return output;
@@ -75,22 +73,30 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 		//check internet
 		if (output != null)
 		{
-			Intent intent = new Intent(url);
-			intent.putExtra(Article.KEY_CURENT_ART, output);
-			LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+			ServiceArticle.sendDownloadedData(ctx, output, url);
 		}
 		//NO internet
 		else
 		{
-			//do noting, because this data isn't critical
-			Log.e(LOG + url, Const.Error.CONNECTION_ERROR);
+			ServiceArticle.sendErrorMsg(ctx, url, Const.Error.CONNECTION_ERROR);
+			Log.e(LOG + getUrl(), Const.Error.CONNECTION_ERROR);
 		}
 	}// Событие по окончанию парсинга
 
 	@Override
 	protected void onCancelled()
 	{
-		Log.d(LOG + url, String.format("onCancelled"));
+		Log.d(LOG + getUrl(), String.format("onCancelled"));
 		super.onCancelled();
+	}
+
+	public String getUrl()
+	{
+		return url;
+	}
+
+	public void setUrl(String url)
+	{
+		this.url = url;
 	}
 }

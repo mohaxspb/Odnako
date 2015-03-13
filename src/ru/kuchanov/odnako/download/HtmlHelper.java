@@ -419,7 +419,6 @@ public class HtmlHelper
 		String preview = this.rootNode
 		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
 		.getAttributeByName("content");
-		Log.e(LOG, "preview is: " + preview);
 		String title = this.rootNode
 		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getAttributeByName("content");
 		//<meta property="og:image" content="http://www.odnako.org/i/335_245/blogs/48584/ekonomisti-dengi-mvf-kievu-ne-pomogut-a-ukrainci-ih-ne-uvidyat-1482-48584.jpg" />

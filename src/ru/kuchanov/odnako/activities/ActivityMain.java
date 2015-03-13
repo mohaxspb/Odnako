@@ -32,7 +32,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
@@ -374,15 +373,6 @@ public class ActivityMain extends ActivityBase
 	{
 		//Log.e(LOG, "onResume");
 		super.onResume();
-
-		if (Looper.myLooper() == Looper.getMainLooper())
-		{
-			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): "+String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
-		}
-		else
-		{
-			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
-		}
 	}
 
 	@Override
@@ -976,51 +966,4 @@ public class ActivityMain extends ActivityBase
 			break;
 		}
 	}
-
-	//	//test listener to arriving soft keyboard
-	//	private void setKeyBoardArrivingListener()
-	//	{
-	//		/*
-	//		Somewhere else in your code
-	//		*/
-	//		//TODO switch by twoPane mode
-	//		DrawerLayout mainLayout = (DrawerLayout) findViewById(R.layout.activity_main_large); // You must use your root layout
-	//		InputMethodManager im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
-	//
-	//		/*
-	//		Instantiate and pass a callback
-	//		*/
-	//		SoftKeyboard softKeyboard;
-	//		softKeyboard = new SoftKeyboard(mainLayout, im);
-	//		softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
-	//		{
-	//
-	//		    @Override
-	//		    public void onSoftKeyboardHide() 
-	//		    {
-	//		        // Code here
-	//		        new Handler(Looper.getMainLooper()).post(new Runnable() {
-	//		                @Override
-	//		                public void run() {
-	//		                    // Code here will run in UI thread
-	//		                    //...
-	//		                }
-	//		            });
-	//		    }
-	//
-	//		    @Override
-	//		    public void onSoftKeyboardShow() 
-	//		    {
-	//		        // Code here
-	//		        new Handler(Looper.getMainLooper()).post(new Runnable() {
-	//		                @Override
-	//		                public void run() {
-	//		                    // Code here will run in UI thread
-	//		                   // ...
-	//		                }
-	//		            });
-	//
-	//		    }   
-	//		});
-	//	}
 }

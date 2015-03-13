@@ -75,32 +75,26 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			Log.e(LOG, "intent=null!!! WTF?!");
 			return super.onStartCommand(intent, flags, startId);
 		}
-		else
+		String action = intent.getAction();
+		catToLoad = intent.getStringExtra("categoryToLoad");
+		pageToLoad = intent.getIntExtra("pageToLoad", 1);
+		if (action.equals(Const.Action.IS_LOADING))
 		{
-			String action = intent.getAction();
-			//Log.e(LOG, "intent.getAction(): "+intent.getAction());
-			catToLoad = intent.getStringExtra("categoryToLoad");
-			pageToLoad = intent.getIntExtra("pageToLoad", 1);
-			if (action.equals(Const.Action.IS_LOADING))
+			for (ParsePageForAllArtsInfo a : this.currentTasks)
 			{
-				for (ParsePageForAllArtsInfo a : this.currentTasks)
+				if (catToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
+				&& (a.getStatus() == AsyncTask.Status.RUNNING))
 				{
-					if (catToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
-					&& (a.getStatus() == AsyncTask.Status.RUNNING))
-					{
-						Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
-						intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
-						LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-						//						Log.e(LOG + catToLoad, "isLoading == true");
-						return super.onStartCommand(intent, flags, startId);
-					}
+					Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
+					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+					return super.onStartCommand(intent, flags, startId);
 				}
-				Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
-				intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
-				LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-				//				Log.e(LOG + catToLoad, "isLoading == false");
-				return super.onStartCommand(intent, flags, startId);
 			}
+			Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+			return super.onStartCommand(intent, flags, startId);
 		}
 
 		//get startDownload flag

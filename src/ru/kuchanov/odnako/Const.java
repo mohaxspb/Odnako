@@ -25,6 +25,7 @@ public class Const
 	public static class Error
 	{
 		public static final String CONNECTION_ERROR = "Ошибка соединения. Проверьте соединение с интернетом";
+		public static final String CANCELLED_ERROR = "Загрузка прервана";
 		public static final String CYRILLIC_ERROR = "Ошибка сайта из-за кириллицы в адресе. Загрузить невозможно и разработчик приложения тут не при чём(";
 	}
 }

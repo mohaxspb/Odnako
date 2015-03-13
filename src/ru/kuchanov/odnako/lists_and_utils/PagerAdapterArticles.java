@@ -74,7 +74,6 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		artFrag.setArguments(b);
 
 		return artFrag;
-		//<item name="android:itemBackground">@drawable/selectable_background_light</item>
 	}
 
 	@Override
@@ -114,7 +113,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 					} catch (NullPointerException e)
 					{
 						Log.e(LOG_TAG,
-						"CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETXHANGED!!!");
+						"CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETCHANGED!!!");
 						e.printStackTrace();
 						return POSITION_NONE;
 					}

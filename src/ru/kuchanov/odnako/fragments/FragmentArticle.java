@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.ServiceArticle;
@@ -113,12 +114,34 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
 
-		if(this.curArticle!=null)
+		if (this.curArticle != null)
 		{
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
+
+			//reciver for loading status
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(categoryIsLoadingReceiver,
+			new IntentFilter(curArticle.getUrl() + Const.Action.IS_LOADING));
 		}
 	}
+
+	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			//Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
+			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
+			if (isCurrentlyLoading)
+			{
+				swipeRef.setRefreshing(true);
+			}
+			else
+			{
+				swipeRef.setRefreshing(false);
+			}
+		}
+	};
 
 	private BroadcastReceiver articleReceiver = new BroadcastReceiver()
 	{
@@ -131,8 +154,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				Log.e(LOG + curArticle.getUrl(), "fragment not added! RETURN!");
 				return;
 			}
-			Article a=intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			a.printAllInfo();			
+			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			Log.i(LOG, a.getTitle() + " have been loaded");
+			curArticle=a;
+			checkCurArtInfo(null);
 		}
 	};
 
@@ -156,11 +181,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		if (this.curArticle == null)
 		{
 			//load...
-//			this.loadArticle(false);
+			//			this.loadArticle(false);
+			this.swipeRef.setRefreshing(true);
 		}
 		else
 		{
-			if (this.curArticle.getArtText() == null || this.curArticle.getArtText().equals("empty"))
+			if (/* this.curArticle.getArtText() == null || */this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 			{
 				//load...
 				this.loadArticle(false);
@@ -231,7 +257,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		this.swipeRef.setRefreshing(true);
 
+		//		Intent intent = new Intent(this.act, ServiceArticle.class);
+		//		intent.setAction(Const.Action.IS_LOADING);
+		//		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
+		//		this.act.startService(intent);
+
 		Intent intent = new Intent(this.act, ServiceArticle.class);
+		intent.setAction(Const.Action.DATA_REQUEST);
 		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
 		intent.putExtra("startDownload", startDownload);
 		this.act.startService(intent);
@@ -677,11 +709,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	public void update(ArrayList<Article> allArtInfo)
 	{
 		this.curArticle = allArtInfo.get(getPosition());
-		if(this.curArticle!=null)
-		{
-			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
-			new IntentFilter(this.curArticle.getUrl()));
-		}
+		//Log.i(LOG + curArticle.getUrl(), "update called");
+		LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
+		new IntentFilter(this.curArticle.getUrl()));
 		this.checkCurArtInfo(null);
 	}
 
@@ -693,5 +724,23 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	public void setPosition(int position)
 	{
 		this.position = position;
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		if (articleReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
+			articleReceiver = null;
+		}
+		if (categoryIsLoadingReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(categoryIsLoadingReceiver);
+			categoryIsLoadingReceiver = null;
+		}
+		// Must always call the super method at the end.
+		super.onDestroy();
 	}
 }
