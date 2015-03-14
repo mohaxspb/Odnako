@@ -36,7 +36,6 @@
                     android:orientation="vertical" >
 
                     <!-- art img if is; Othervise - has zero height -->
-
                     <ImageView
                         android:id="@+id/art_card_img"
                         android:layout_width="match_parent"

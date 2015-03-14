@@ -98,7 +98,7 @@ public class CommentsFragment extends Fragment
 
 	private void addHeader(LayoutInflater inflater)
 	{
-		View vg = inflater.inflate(R.layout.arts_list_card_view, commentsListView, false);
+		View vg = inflater.inflate(R.layout.article_card_art_frag, commentsListView, false);
 
 		TextView title = (TextView) vg.findViewById(R.id.art_card_title_tv);
 		TextView author_name = (TextView) vg.findViewById(R.id.author_name);

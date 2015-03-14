@@ -80,7 +80,7 @@ public class DateParse
 						calGiven.setTimeZone(calNow.getTimeZone());
 						//finally set new date
 						d.setTime(calGiven.getTimeInMillis());
-//						Log.e(LOG, "case 2 in DateParse, dd/MM/yy: " + calGiven.toString());
+					//						Log.e(LOG, "case 2 in DateParse, dd/MM/yy: " + calGiven.toString());
 					break;
 				}
 			} catch (ParseException e)
@@ -96,4 +96,105 @@ public class DateParse
 		return d;
 	}
 
+	/**
+	 * formats date to string depending on curent time. I.e. there can be green
+	 * "today + hh:mm" or blue "yesterday + hh:mm". Also we show year only if it isn't
+	 * current; And we do not show hours and minutes if they are 00:00
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String formatDateByCurTime(Date date)
+	{
+		//extract date
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+03:00"), new Locale("ru"));
+		cal.setTime(date);
+		String h = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+		if (h.length() != 2)
+		{
+			h = "0" + h;
+		}
+		String minute = String.valueOf(cal.get(Calendar.MINUTE));
+		if (minute.length() != 2)
+		{
+			minute = "0" + minute;
+		}
+		if (h.equals("00") && minute.equals("00"))
+		{
+			h = "";
+			minute = "";
+		}
+		String d = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+		if (d.length() != 2)
+		{
+			d = "0" + d;
+		}
+
+		String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
+		if (month.length() != 2)
+		{
+			month = "0" + month;
+		}
+		String y = String.valueOf(cal.get(Calendar.YEAR));
+		Calendar calNow = Calendar.getInstance();
+
+		String dateToShow = h + minute + d + month + y;
+
+		if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR))
+		{
+			y = "";
+			if (h.equals(""))
+			{
+				dateToShow = d + "/" + month;
+			}
+			else
+			{
+				dateToShow = h + ":" + minute + " " + d + "/" + month;
+			}
+		}
+		else
+		{
+			if (h.equals(""))
+			{
+				dateToShow = d + "/" + month + "/" + y;
+			}
+			else
+			{
+				dateToShow = h + ":" + minute + " " + d + "/" + month + "/" + y;
+			}
+		}
+		if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
+		&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
+		&& cal.get(Calendar.DAY_OF_MONTH) == calNow.get(Calendar.DAY_OF_MONTH))
+		{
+			d = "";
+			month = "";
+			y = "";
+			if (h.equals(""))
+			{
+				dateToShow = "<font color='green'>Сегодня</font>";
+			}
+			else
+			{
+				dateToShow = "<font color='green'>Сегодня</font> в " + h + ":" + minute;
+			}
+		}
+		if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
+		&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
+		&& (calNow.get(Calendar.DAY_OF_MONTH) - cal.get(Calendar.DAY_OF_MONTH) == 1))
+		{
+			d = "";
+			month = "";
+			y = "";
+			if (h.equals(""))
+			{
+				dateToShow = "<font color='blue'>Вчера</font>";
+			}
+			else
+			{
+				dateToShow = "<font color='blue'>Вчера</font> в " + h + ":" + minute;
+			}
+		}
+		return dateToShow;
+	}
 }

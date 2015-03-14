@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
@@ -15,6 +16,9 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
+import ru.kuchanov.odnako.utils.DateParse;
+import ru.kuchanov.odnako.utils.DipToPx;
+import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +34,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -61,16 +66,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private ScrollView scroll;
 	SwipeRefreshLayout swipeRef;
 
+	private ImageView artImageIV;
+
 	private TextView artTitleTV;
+	private TextView artDateTV;
+	
+	private ViewGroup authorLayout;
 	private TextView artAuthorTV;
 	private TextView artAuthorDescriptionTV;
-
-	private TextView artDateTV;
-	private TextView artTagsMainTV;
-
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
 	private ImageView artAuthorArticlesIV;
+	
+	private TextView artTagsMainTV;	
 
 	private LinearLayout bottomPanel;
 	private CardView shareCard;
@@ -85,6 +93,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	ArrayList<Article> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
+
+	private DisplayImageOptions options;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -113,6 +123,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
+
+		if (this.pref.getString("theme", "dark").equals("dark"))
+		{
+			options = MyUIL.getDarkOptions();
+		}
+		else
+		{
+			options = MyUIL.getLightOptions();
+		}
 
 		if (this.curArticle != null)
 		{
@@ -156,7 +175,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 			Log.i(LOG, a.getTitle() + " have been loaded");
-			curArticle=a;
+			curArticle = a;
 			checkCurArtInfo(null);
 		}
 	};
@@ -191,7 +210,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//load...
 				this.loadArticle(false);
 
-				this.fillFielsdsWithInfo(this.getView());
+				this.fillFielsdsWithInfo();
 
 				//setting size of Images and text
 				this.setSizeAndTheme();
@@ -225,7 +244,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				});
 
 				//				this.fillFielsdsWithInfo(v);
-				this.fillFielsdsWithInfo(this.getView());
+				this.fillFielsdsWithInfo();
 
 				//setting size of Images and text
 				this.setSizeAndTheme();
@@ -296,11 +315,14 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		});
 
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
-		//		this.artTextView.setText(R.string.version_history);
 
 		this.scroll = (ScrollView) v.findViewById(R.id.art_scroll);
 
+		this.artImageIV = (ImageView) v.findViewById(R.id.art_card_img);
+
 		this.artTitleTV = (TextView) v.findViewById(R.id.art_title);
+		
+		this.authorLayout=(ViewGroup) v.findViewById(R.id.art_author_lin);
 		this.artAuthorTV = (TextView) v.findViewById(R.id.art_author);
 		this.artAuthorDescriptionTV = (TextView) v.findViewById(R.id.art_author_description);
 
@@ -424,12 +446,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 		LayoutParams params = new LayoutParams(pixels, pixels);
 
-		int iconPxels = (int) (50 * scaleFactor * scale + 0.5f);
-		LayoutParams iconsParams = new LayoutParams(iconPxels, iconPxels);
+//		int iconPxels = (int) (50 * scaleFactor * scale + 0.5f);
+//		LayoutParams iconsParams = new LayoutParams(iconPxels, iconPxels);
 
 		this.artAuthorIV.setLayoutParams(params);
-		this.artAuthorArticlesIV.setLayoutParams(iconsParams);
-		this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
+		this.artAuthorArticlesIV.setLayoutParams(params);
+		this.artAuthorDescriptionIV.setLayoutParams(params);
 
 		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
 		LayoutParams zeroAllParams = new LayoutParams(0, 0);
@@ -461,21 +483,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.artAuthorDescriptionTV.setText(this.curArticle.getAuthorDescr());
 			//restore size
-			//			this.artAuthorDescriptionIV.setPadding(5, 5, 5, 5);
-			//			this.artAuthorDescriptionIV.setScaleType(ScaleType.FIT_XY);
-			this.artAuthorDescriptionIV.setLayoutParams(iconsParams);
-			if (this.pref.getString("theme", "dark").equals("dark"))
-			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_white_48dp,
-				//				artAuthorDescriptionIV);
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
-			}
-			else
-			{
-				//				imageLoader.displayImage("drawable://" + R.drawable.ic_keyboard_arrow_down_grey600_48dp,
-				//				artAuthorDescriptionIV);
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
-			}
+			this.artAuthorDescriptionIV.setLayoutParams(params);
 
 			this.artAuthorDescriptionIV.setOnClickListener(new OnClickListener()
 			{
@@ -497,7 +505,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			this.artAuthorArticlesIV.setLayoutParams(iconsParams);
+			this.artAuthorArticlesIV.setLayoutParams(params);
 			this.artAuthorArticlesIV.setOnClickListener(new OnClickListener()
 			{
 
@@ -573,38 +581,90 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		return result;
 	}
 
-	//set text, tegs, authoe etc
-	private void fillFielsdsWithInfo(View rootView)
+	//set text, tegs, author etc
+	private void fillFielsdsWithInfo(/* View rootView */)
 	{
-		this.artTextView.setText(this.curArticle.getArtText());
+		//variables for scaling text and icons and images from settings
+		String scaleFactorString = pref.getString("scale", "1");
+		float scaleFactor = Float.valueOf(scaleFactorString);
 
-		this.artTitleTV.setText(this.curArticle.getTitle());
-		this.artAuthorTV.setText(this.curArticle.getAuthorName());
-		this.artAuthorDescriptionTV.setText(this.curArticle.getAuthorDescr());
-		this.artDateTV.setText(this.curArticle.getPubDate().toString());
-		this.artTagsMainTV.setText(this.curArticle.getTegsMain());
-
-		//down images
-		if (this.pref.getString("theme", "dark").equals("dark"))
+		final float scale = act.getResources().getDisplayMetrics().density;
+		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
+		////End of variables for scaling text and icons and images from settings
+		
+		// ART_IMG
+		if (!curArticle.getImgArt().equals("empty") && !curArticle.getImgArt().contains("/75_75/"))
 		{
-			imageLoader.displayImage(this.curArticle.getImgArt(), this.artAuthorIV, MyUIL.getDarkOptions());
-			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_white_48dp);
-			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
+			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
+			params.height = (int) DipToPx.convert(120, act);
+			this.artImageIV.setLayoutParams(params);
+			String HDimgURL = this.curArticle.getImgArt().replace("/120_72/", "/450_240/");
+
+			imageLoader.displayImage(HDimgURL, this.artImageIV, options, new ImgLoadListenerBigSmall(
+			imageLoader, options, this.artImageIV));
 		}
 		else
 		{
-			imageLoader.displayImage(this.curArticle.getImgArt(), this.artAuthorIV);
-			this.artAuthorArticlesIV.setImageResource(R.drawable.ic_list_grey600_48dp);
-			this.artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
+			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
+			params.height = 0;
+			this.artImageIV.setLayoutParams(params);
 		}
+		//end of ART_IMG
 
+		this.artTextView.setText(this.curArticle.getArtText());
+
+		this.artTitleTV.setText(Html.fromHtml(this.curArticle.getTitle()));
+		
+		String dateToShow = DateParse.formatDateByCurTime(this.curArticle.getPubDate());
+		this.artDateTV.setText(Html.fromHtml(dateToShow));
+		this.artTagsMainTV.setText(this.curArticle.getTegsMain());
+
+		//AUTHOR
+		if(!this.curArticle.getAuthorName().equals(Const.EMPTY_STRING))
+		{
+			LayoutParams p = (LayoutParams) this.authorLayout.getLayoutParams();
+			p.height = LayoutParams.MATCH_PARENT;
+			p.width = LayoutParams.MATCH_PARENT;
+			p.setMargins(0, 0, 0, 0);
+			this.authorLayout.setLayoutParams(p);
+			
+			this.artAuthorTV.setText(this.curArticle.getAuthorName());
+			this.artAuthorDescriptionTV.setText(Html.fromHtml(this.curArticle.getAuthorDescr()));
+			if (!this.curArticle.getImgAuthor().equals(Const.EMPTY_STRING))
+			{
+				LayoutParams params = (LayoutParams) this.artAuthorIV.getLayoutParams();
+				params.height = pixels;
+				params.width = pixels;
+				params.setMargins(5, 5, 5, 5);
+				this.artAuthorIV.setLayoutParams(params);
+
+				this.imageLoader.displayImage(this.curArticle.getImgAuthor(), this.artAuthorIV,
+				MyUIL.getTransparentBackgroundROUNDOptions(act));
+			}
+			else
+			{
+				LayoutParams params = (LayoutParams) this.artAuthorIV.getLayoutParams();
+				params.height = 0;
+				params.width = 0;
+				params.setMargins(0, 0, 0, 0);
+				this.artAuthorIV.setLayoutParams(params);
+			}
+		}
+		else
+		{
+			LayoutParams params = (LayoutParams) this.authorLayout.getLayoutParams();
+			params.height = 0;
+			params.width = 0;
+			params.setMargins(0, 0, 0, 0);
+			this.authorLayout.setLayoutParams(params);
+		}
 		//fill bottom
-		this.setUpAllTegsLayout(rootView);
+		this.setUpAllTegsLayout();
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}
 
-	private void setUpAllTegsLayout(View rooView)
+	private void setUpAllTegsLayout()
 	{
 		String[] allTegs = this.curArticle.getAllTagsArr();
 		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
@@ -629,7 +689,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				width = displayMetrics.widthPixels;
 			}
 
-			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
+			//			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
+			int vPad = this.getView().getPaddingLeft() + this.getView().getPaddingRight();
 			int bPad = this.bottomPanel.getPaddingLeft() + this.bottomPanel.getPaddingRight();
 			int cPad = this.allTegsCard.getPaddingLeft() + this.allTegsCard.getPaddingRight();
 			int minusPaddings = vPad + bPad + cPad;
@@ -725,7 +786,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		this.position = position;
 	}
-	
+
 	@Override
 	public void onDestroy()
 	{

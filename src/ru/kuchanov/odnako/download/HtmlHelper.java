@@ -421,10 +421,20 @@ public class HtmlHelper
 		.getAttributeByName("content");
 		String title = this.rootNode
 		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getAttributeByName("content");
+		//IMAGE
 		//<meta property="og:image" content="http://www.odnako.org/i/335_245/blogs/48584/ekonomisti-dengi-mvf-kievu-ne-pomogut-a-ukrainci-ih-ne-uvidyat-1482-48584.jpg" />
+		//there can be "/blogs/" for article image; "/users/" for author ava and "/img/" for empty
 		String imgArt = this.rootNode
 		.findElementByAttValue("property", "og:image", isRecursive, isCaseSensitive).getAttributeByName("content");
-		imgArt = imgArt.replace("/335_245/", "/450_240/");
+		if (imgArt.contains("/blogs/"))
+		{
+			imgArt = imgArt.replace("/335_245/", "/450_240/");
+		}
+		else
+		{
+			imgArt = Const.EMPTY_STRING;
+		}
+
 		//<div class="date l-t-right l-right">12 марта 2015</div>
 		Date pubDate = DateParse.parse(this.rootNode
 		.findElementByAttValue("class", "date l-t-right l-right", isRecursive, isCaseSensitive).getText().toString());

@@ -34,6 +34,7 @@
         <item name="commentsIcon">@drawable/ic_forum_white_48dp</item>
         <item name="shareIcon">@drawable/ic_share_white_48dp</item>
         <item name="searchIconOdnako">@drawable/ic_search_white_48dp</item>
+        <item name="default_image">@drawable/ic_crop_original_white_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_white_48dp</item>
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_white_48dp</item>
@@ -133,6 +134,7 @@
         <item name="commentsIcon">@drawable/ic_forum_grey600_48dp</item>
         <item name="shareIcon">@drawable/ic_share_grey600_48dp</item>
         <item name="searchIconOdnako">@drawable/ic_search_grey600_48dp</item>
+        <item name="default_image">@drawable/ic_crop_original_grey600_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_grey600_48dp</item>
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_grey600_48dp</item>

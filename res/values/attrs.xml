@@ -28,6 +28,7 @@
     <attr name="commentsIcon" format="reference" />
     <attr name="shareIcon" format="reference" />
     <attr name="searchIconOdnako" format="reference" />
+    <attr name="default_image" format="reference" />
     <!-- arrows -->
     <attr name="arrowLeftIcon" format="reference" />
     <attr name="arrowRightIcon" format="reference" />

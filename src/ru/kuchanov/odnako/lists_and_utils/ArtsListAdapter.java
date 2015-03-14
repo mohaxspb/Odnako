@@ -2,16 +2,15 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
+import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.ReadUnreadRegister;
@@ -176,7 +175,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 					////////
 					// ART_IMG
-					if (!p.getImgArt().equals("empty") && !p.getImgArt().contains("/75_75/"))
+					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						params.height = (int) DipToPx.convert(120, act);
@@ -211,100 +210,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					//Date
 					if (p.getPubDate().getTime() != 0)
 					{
-						//extract date
-						Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+03:00"), new Locale("ru"));
-						cal.setTime(p.getPubDate());
-						String h = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
-						if (h.length() != 2)
-						{
-							h = "0" + h;
-						}
-						String minute = String.valueOf(cal.get(Calendar.MINUTE));
-						if (minute.length() != 2)
-						{
-							minute = "0" + minute;
-						}
-						if(h.equals("00") && minute.equals("00"))
-						{
-							h="";
-							minute="";
-						}
-						String d = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-						if (d.length() != 2)
-						{
-							d = "0" + d;
-						}
-						
-						String month = String.valueOf(cal.get(Calendar.MONTH)+1);
-						if (month.length() != 2)
-						{
-							month = "0" + month;
-						}
-						String y = String.valueOf(cal.get(Calendar.YEAR));
-//						Log.e(LOG, p.getTitle()+"/"+y);
-						Calendar calNow = Calendar.getInstance();
-
-						String dateToShow = h + minute + d + month + y;
-
-						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR))
-						{
-							y = "";
-							if(h.equals(""))
-							{
-								dateToShow = d + "/" + month;
-							}
-							else
-							{
-								dateToShow = h + ":" + minute + " " + d + "/" + month;
-							}
-							holderMain.date.setText(dateToShow);
-						}
-						else
-						{
-							if(h.equals(""))
-							{
-								dateToShow = d + "/" + month + "/" + y;
-							}
-							else
-							{
-								dateToShow = h + ":" + minute + " " + d + "/" + month + "/" + y;
-							}
-							holderMain.date.setText(dateToShow);
-						}
-						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
-						&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
-						&& cal.get(Calendar.DAY_OF_MONTH) == calNow.get(Calendar.DAY_OF_MONTH))
-						{
-							d = "";
-							month = "";
-							y = "";
-							if(h.equals(""))
-							{
-								dateToShow = "<font color='green'>Сегодня</font>";
-							}
-							else
-							{
-								dateToShow = "<font color='green'>Сегодня</font> в " + h + ":" + minute;
-							}
-							holderMain.date.setText(Html.fromHtml(dateToShow), TextView.BufferType.SPANNABLE);
-						}
-						if (cal.get(Calendar.YEAR) == calNow.get(Calendar.YEAR)
-						&& cal.get(Calendar.MONTH) == calNow.get(Calendar.MONTH)
-						&& (calNow.get(Calendar.DAY_OF_MONTH) - cal.get(Calendar.DAY_OF_MONTH) == 1))
-						{
-							d = "";
-							month = "";
-							y = "";
-							if(h.equals(""))
-							{
-								dateToShow = "<font color='blue'>Вчера</font>";
-							}
-							else
-							{
-								dateToShow = "<font color='blue'>Вчера</font> в " + h + ":" + minute;
-							}
-							holderMain.date.setText(Html.fromHtml(dateToShow), TextView.BufferType.SPANNABLE);
-						}
+						String dateToShow = DateParse.formatDateByCurTime(p.getPubDate());
+						holderMain.date.setText(Html.fromHtml(dateToShow), TextView.BufferType.SPANNABLE);
 
 						holderMain.date.setTextSize(19 * scaleFactor);
 						LayoutParams params = (LayoutParams) holderMain.date.getLayoutParams();
@@ -313,7 +220,6 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					}
 					else
 					{
-						//holderMain.date.setText("date is empty; Must hide on relize");
 						holderMain.date.setText(null);
 						holderMain.date.setTextSize(19 * scaleFactor);
 						LayoutParams params = (LayoutParams) holderMain.date.getLayoutParams();
@@ -359,7 +265,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					////End of popUp menu in cardView
 
 					//preview
-					if (!p.getPreview().equals("empty"))
+					if (!p.getPreview().equals(Const.EMPTY_STRING))
 					{
 						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
 						holderMain.preview.setText(spannedContentPreview);
@@ -381,7 +287,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					////end of preview
 
 					//name and image of author
-					if (!p.getImgArt().equals("empty") && p.getImgArt().contains("/75_75/"))
+					if (!p.getImgArt().equals(Const.EMPTY_STRING) && p.getImgArt().contains("/75_75/"))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
@@ -392,7 +298,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						this.imageLoader.displayImage(p.getImgArt(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
-					else if (!p.getImgAuthor().equals("empty"))
+					else if (!p.getImgAuthor().equals(Const.EMPTY_STRING))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
@@ -411,7 +317,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						params.setMargins(0, 0, 0, 0);
 						holderMain.author_img.setLayoutParams(params);
 					}
-					if (!p.getAuthorName().equals("empty"))
+					if (!p.getAuthorName().equals(Const.EMPTY_STRING))
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_name.getLayoutParams();
 						params.height = LayoutParams.WRAP_CONTENT;
@@ -681,10 +587,4 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
 		}
 	}
-
-	///////
-	//	public ArrayList<ArtInfo> getAllArtsInfo()
-	//	{
-	//		return this.artsInfo;
-	//	}
 }

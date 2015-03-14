@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?cardBackGroundColor"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="5dp" >
+
+    <LinearLayout
+        android:id="@+id/art_card_main_lin_lay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ru.kuchanov.odnako.utils.MaterialRippleLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mrl_rippleColor="?colorPrimaryDark"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true" >
+
+            <LinearLayout
+                android:id="@+id/art_card_top_lin_lay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <!-- art img if is; Othervise - has zero height -->
+
+                <ImageView
+                    android:id="@+id/art_card_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:contentDescription="@string/hello_world"
+                    android:scaleType="fitXY" />
+                <!-- title and date -->
+
+                <TextView
+                    android:id="@+id/art_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/loading"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pub_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="17sp" />
+            </LinearLayout>
+        </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+        <!-- end of Top_li_lay -->
+
+        <LinearLayout
+            android:id="@+id/art_author_lin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <ru.kuchanov.odnako.utils.MaterialRippleLayout
+                android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                
+                app:mrl_rippleColor="?colorPrimaryDark"
+                app:mrl_rippleDelayClick="false"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="true" >
+
+                <LinearLayout
+                    android:id="@+id/author_arts_lin"
+                    android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/art_author_img"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/hello_world"
+                        android:padding="5dp"
+                        android:src="?default_image" />
+
+                    <TextView
+                        android:id="@+id/art_author"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="21sp" />
+
+                    <ImageView
+                        android:id="@+id/art_author_all_arts_btn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right"
+                        android:contentDescription="@string/hello_world"
+                        android:padding="5dp"
+                        android:src="?authorIcon" />
+                </LinearLayout>
+            </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+
+            <ImageView
+                android:id="@+id/art_author_description_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:contentDescription="@string/hello_world"
+                android:padding="5dp"
+                android:src="?arrowDownIcon" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/art_author_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="21sp" />
+
+        <TextView
+            android:id="@+id/art_tags_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/tegs"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="21sp" />
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
