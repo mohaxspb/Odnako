@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
@@ -58,6 +60,11 @@ public class HtmlHelper
 		try
 		{
 			cleaner = new HtmlCleaner();
+			CleanerProperties props = cleaner.getProperties();
+			props.setAllowHtmlInsideAttributes(false);
+			props.setAllowMultiWordAttributes(true);
+			props.setRecognizeUnicodeChars(true);
+			props.setOmitComments(true);
 			rootNode = cleaner.clean(new URL(url));
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
@@ -496,9 +503,31 @@ public class HtmlHelper
 
 		//article TEXT
 		//post-content l-post-text-offset break l-white clearfix outlined-hard-bot
-		String artText = this.rootNode
+		TagNode articlesTextTagNode = this.rootNode
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
-		isRecursive, isCaseSensitive).getText().toString();
+		isRecursive, isCaseSensitive);
+		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();//.getAllElements(isRecursive);
+
+		for (int i = 0; i < artTextTagNodeChildren.length; i++)
+		{
+			if (artTextTagNodeChildren[i].getName().equals("aside"))
+			{
+				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
+			}
+		}
+		for (int i = 0; i < articlesTextTagNode.getAllElements(isRecursive).length; i++)
+		{
+			if (articlesTextTagNode.getAllElements(isRecursive)[i].getName().equals("strong"))
+			{
+				String innerHtml=this.cleaner.getInnerHtml(articlesTextTagNode.getAllElements(isRecursive)[i]);
+				TagNode boldTag=new TagNode("b");
+				boldTag.addChild(new ContentNode(innerHtml));
+				articlesTextTagNode.insertChildAfter(articlesTextTagNode.getAllElements(isRecursive)[i], boldTag);
+				articlesTextTagNode.removeChild(articlesTextTagNode.getAllElements(isRecursive)[i]);
+			}
+		}
+		
+		String artText = this.cleaner.getInnerHtml(articlesTextTagNode);//articlesTextTagNode.getText().toString();
 
 		a.setUrl(url);
 		a.setPreview(preview);

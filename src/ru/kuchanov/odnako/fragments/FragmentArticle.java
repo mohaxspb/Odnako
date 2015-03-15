@@ -8,6 +8,9 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -458,7 +461,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		//removing tags field if it's empty
-		if (this.curArticle.getTegsMain().equals("empty") || this.curArticle.getTegsMain().equals(""))
+		if (this.curArticle.getTegsMain().equals(Const.EMPTY_STRING) || this.curArticle.getTegsMain().equals(""))
 		{
 			this.artTagsMainTV.setText(null);
 			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
@@ -472,7 +475,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//set descrTV height to 0 by default
 		this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
 
-		if (this.curArticle.getAuthorDescr().equals("empty") || this.curArticle.getAuthorDescr().equals(""))
+		if (this.curArticle.getAuthorDescr().equals(Const.EMPTY_STRING) || this.curArticle.getAuthorDescr().equals(""))
 		{
 			this.artAuthorDescriptionTV.setText(null);
 			this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
@@ -498,7 +501,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		}
 		//set allArsList OnClick
-		if (this.curArticle.getAuthorBlogUrl().equals("empty") || this.curArticle.getAuthorBlogUrl().equals(""))
+		if (this.curArticle.getAuthorBlogUrl().equals(Const.EMPTY_STRING) || this.curArticle.getAuthorBlogUrl().equals(""))
 		{
 			this.artAuthorArticlesIV.setOnClickListener(null);
 			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
@@ -593,7 +596,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		////End of variables for scaling text and icons and images from settings
 		
 		// ART_IMG
-		if (!curArticle.getImgArt().equals("empty") && !curArticle.getImgArt().contains("/75_75/"))
+		if (!curArticle.getImgArt().equals(Const.EMPTY_STRING) && !curArticle.getImgArt().contains("/75_75/"))
 		{
 			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
 			params.height = (int) DipToPx.convert(120, act);
@@ -611,7 +614,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		//end of ART_IMG
 
-		this.artTextView.setText(this.curArticle.getArtText());
+		this.setArticlesText();
+//		this.artTextView.setText(Html.fromHtml(this.curArticle.getArtText()));
 
 		this.artTitleTV.setText(Html.fromHtml(this.curArticle.getTitle()));
 		
@@ -662,6 +666,50 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.setUpAllTegsLayout();
 		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
+	}
+
+	private void setArticlesText()
+	{
+		ViewGroup artTvParent=(ViewGroup) this.artTextView.getParent();
+		HtmlCleaner cleaner=new HtmlCleaner();
+		TagNode[] allChildTags=cleaner.clean(this.curArticle.getArtText()).getChildTags();//.getAllElements(true);
+		for(int i=0; i<allChildTags.length; i++)
+		{
+			TagNode curTag=allChildTags[i];
+			Log.e("curTag", curTag.getName());
+			if(curTag.getName().equals("input"))
+			{
+				//TODO create IV
+				//we must here create 2 new TagNodes with text before and after img or input node
+				String tagHtml=cleaner.getInnerHtml(curTag);
+				String subStrStartsWithInput=tagHtml.substring(tagHtml.indexOf("<input "));
+				String subStrWithInput=subStrStartsWithInput.substring(0, subStrStartsWithInput.indexOf(">"));
+				Log.e("INPUT", subStrWithInput);
+				tagHtml=tagHtml.replaceFirst(subStrWithInput, Article.DIVIDER);
+				String[] dividedTag=tagHtml.split(Article.DIVIDER);
+			}
+			else
+			{
+				//check if it has input or img as child
+				for(int u=0; u<curTag.getChildTags().length; u++)
+				{
+					TagNode nextTag=curTag.getChildTags()[u];
+					Log.e("nextTag", nextTag.getName());
+					if(nextTag.getName().equals("input"))
+					{
+						//TODO create IV
+						//we must here create 2 new TagNodes with text before and after img or input node
+						String tagHtml=cleaner.getInnerHtml(curTag);
+						String subStrStartsWithInput=tagHtml.substring(tagHtml.indexOf("<input "));
+						String subStrWithInput=subStrStartsWithInput.substring(0, subStrStartsWithInput.indexOf(">"));
+						Log.e("INPUT", subStrWithInput);
+						tagHtml=tagHtml.replaceFirst(subStrWithInput, Article.DIVIDER);
+						String[] dividedTag=tagHtml.split(Article.DIVIDER);
+					}
+				}
+			}
+		}
+//		artTvParent.add
 	}
 
 	private void setUpAllTegsLayout()
