@@ -403,6 +403,7 @@
         <item><![CDATA[agr_dummy.jpg]]></item>
     </string-array>
     <string-array name="all_authors_names">
+        <item><![CDATA[_Юрий Кучанов]]></item>
         <item><![CDATA[Станислав Бескаравайный]]></item>
         <item><![CDATA[Семён Уралов, Иван Зацарин]]></item>
         <item><![CDATA[Ярослав Евтихиев]]></item>
@@ -417,7 +418,7 @@
         <item><![CDATA[Гагик (Тер) Арутюнян]]></item>
         <item><![CDATA[Анатолий Аббасов]]></item>
         <item><![CDATA[Павел Агапов]]></item>
-        <item><![CDATA[Olga A. Agarkova]]></item>
+        <!-- <item><![CDATA[Olga A. Agarkova]]></item> -->
         <item><![CDATA[Артём Акопян]]></item>
         <item><![CDATA[Борис Александровский]]></item>
         <item><![CDATA[Григорий Андреев]]></item>
@@ -758,6 +759,7 @@
         <item><![CDATA[Евгений Ячменцев]]></item>
     </string-array>
     <string-array name="all_authors_urls">
+        <item><![CDATA[http://yuriykuchanov.odnako.org]]></item>
         <item><![CDATA[http://neukazano132.odnako.org]]></item>
         <item><![CDATA[http://urzac.odnako.org]]></item>
         <item><![CDATA[http://evtihievyaroslavpetrovich.odnako.org]]></item>
@@ -772,7 +774,7 @@
         <item><![CDATA[http://gagikterarutyunyan.odnako.org]]></item>
         <item><![CDATA[http://abbasovanatoliy.odnako.org]]></item>
         <item><![CDATA[http://pavelagapov.odnako.org]]></item>
-        <item><![CDATA[http://olgaaagarkova.odnako.org]]></item>
+        <!-- <item><![CDATA[http://olgaaagarkova.odnako.org]]></item> -->
         <item><![CDATA[http://akopian.odnako.org]]></item>
         <item><![CDATA[http://odessit.odnako.org]]></item>
         <item><![CDATA[http://17872.odnako.org]]></item>
@@ -1114,6 +1116,7 @@
     </string-array>
     <!-- imgs -->
     <string-array name="all_authors_imgs">
+        <item><![CDATA[/i/75_75/users/7160/7160-1481-7160.jpg]]></item>
         <item><![CDATA[/i/75_75/users/132/132-1481-132.jpg]]></item>
         <item><![CDATA[/i/75_75/users/105783/105783-1481-105783.jpg]]></item>
         <item><![CDATA[/i/75_75/users/15877/15877-1481-15877.jpg]]></item>
@@ -1128,7 +1131,7 @@
         <item><![CDATA[/i/75_75/users/110784/110784-1481-110784.jpg]]></item>
         <item><![CDATA[/i/75_75/users/27958/27958-1481-27958.jpg]]></item>
         <item><![CDATA[/i/75_75/users/4427/4427-1481-4427.jpg]]></item>
-        <item><![CDATA[/i/75_75/users/9759/9759-1481-9759.jpg]]></item>
+        <!-- <item><![CDATA[/i/75_75/users/9759/9759-1481-9759.jpg]]></item> -->
         <item><![CDATA[/i/75_75/users/15537/15537-1481-15537.jpg]]></item>
         <item><![CDATA[/i/75_75/users/4821/4821-1481-4821.jpg]]></item>
         <item><![CDATA[/i/75_75/users/17872/17872-1481-17872.jpg]]></item>
@@ -1469,6 +1472,7 @@
         <item><![CDATA[/i/75_75/users/26767/26767-1481-26767.jpg]]></item>
     </string-array>
     <string-array name="all_authors_big_imgs">
+        <item><![CDATA[http://odnako.org/i/335_245/users/7160/7160-1481-7160.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/132/132-1481-132.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/105783/105783-1481-105783.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/15877/15877-1481-15877.jpg]]></item>
@@ -1483,7 +1487,7 @@
         <item><![CDATA[http://odnako.org/i/335_245/users/110784/110784-1481-110784.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/27958/27958-1481-27958.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/4427/4427-1481-4427.jpg]]></item>
-        <item><![CDATA[http://odnako.org/i/335_245/users/9759/9759-1481-9759.jpg]]></item>
+        <!-- <item><![CDATA[http://odnako.org/i/335_245/users/9759/9759-1481-9759.jpg]]></item> -->
         <item><![CDATA[http://odnako.org/i/335_245/users/15537/15537-1481-15537.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/4821/4821-1481-4821.jpg]]></item>
         <item><![CDATA[http://odnako.org/i/335_245/users/17872/17872-1481-17872.jpg]]></item>
@@ -1826,6 +1830,7 @@
 
     <!-- descriptions -->
     <string-array name="all_authors_descriptions">
+        <item><![CDATA[Создатель приложения "Однако" для Android]]></item>
         <item><![CDATA[доцент]]></item>
         <item><![CDATA[empty]]></item>
         <item><![CDATA[Менеджер]]></item>
@@ -1840,7 +1845,7 @@
         <item><![CDATA[empty]]></item>
         <item><![CDATA[empty]]></item>
         <item><![CDATA[empty]]></item>
-        <item><![CDATA[empty]]></item>
+        <!-- <item><![CDATA[empty]]></item> -->
         <item><![CDATA[empty]]></item>
         <item><![CDATA[empty]]></item>
         <item><![CDATA[empty]]></item>
@@ -2182,6 +2187,9 @@
     </string-array>
     <string-array name="all_authors_who">
         <item>
+<![CDATA[<p>Рождён в Ленинграде в 1987, окончил географический ф-тет СПбГУ. Участник арктических экспедиций, в т.ч. международных. Создатель приложения &quot;Однако&quot; для Android (https://play.google.com/store/apps/details?id=ru.kuchanov.odnako)</p>]]>
+        </item>
+        <item>
 <![CDATA[<p>Год рождения - 1978. Страна проживания - Украина, г. Днепропетровск. Образование - высшее. Страничка в ЖЖ - http://beskarss217891.livejournal.com/ Страничка на Самиздате - http://samlib.ru/b/beskarawajnyj_stanislaw_sergeewich/</p>
 ]]>
         </item>
@@ -2236,10 +2244,10 @@
 <![CDATA[<p>Родился в Кировограде. Учился в Днепропетровске. Работает в Киеве. Социолог, аналитик.</p>
 ]]>
         </item>
-        <item>
+        <!-- <item>
 <![CDATA[Родилась в 1978 году в городе Волгограде в стране СССР на планете Земля. 
 ]]>
-        </item>
+        </item> -->
         <item>
 <![CDATA[<p>Политконсультант, публицист. Родился в Ленинграде в 1977 году.</p>
 ]]>

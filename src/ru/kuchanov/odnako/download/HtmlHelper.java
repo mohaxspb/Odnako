@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.htmlcleaner.CleanerProperties;
-import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
@@ -506,7 +505,7 @@ public class HtmlHelper
 		TagNode articlesTextTagNode = this.rootNode
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
 		isRecursive, isCaseSensitive);
-		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();//.getAllElements(isRecursive);
+		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();
 
 		for (int i = 0; i < artTextTagNodeChildren.length; i++)
 		{
@@ -515,19 +514,10 @@ public class HtmlHelper
 				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
 			}
 		}
-		for (int i = 0; i < articlesTextTagNode.getAllElements(isRecursive).length; i++)
-		{
-			if (articlesTextTagNode.getAllElements(isRecursive)[i].getName().equals("strong"))
-			{
-				String innerHtml=this.cleaner.getInnerHtml(articlesTextTagNode.getAllElements(isRecursive)[i]);
-				TagNode boldTag=new TagNode("b");
-				boldTag.addChild(new ContentNode(innerHtml));
-				articlesTextTagNode.insertChildAfter(articlesTextTagNode.getAllElements(isRecursive)[i], boldTag);
-				articlesTextTagNode.removeChild(articlesTextTagNode.getAllElements(isRecursive)[i]);
-			}
-		}
-		
-		String artText = this.cleaner.getInnerHtml(articlesTextTagNode);//articlesTextTagNode.getText().toString();
+
+		String artText = this.cleaner.getInnerHtml(articlesTextTagNode);
+		artText = artText.replaceAll("<br />", "<br>").replaceAll("<br/>", "<br>").replaceAll("<strong>", "<b>")
+		.replaceAll("</strong>", "</b>");
 
 		a.setUrl(url);
 		a.setPreview(preview);
@@ -546,5 +536,10 @@ public class HtmlHelper
 		a.setArtText(artText);
 
 		return a;
+	}
+
+	public boolean isLoadSuccessfull()
+	{
+		return (this.rootNode == null) ? false : true;
 	}
 }

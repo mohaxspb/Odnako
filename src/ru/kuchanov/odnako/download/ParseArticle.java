@@ -47,7 +47,10 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(link);
-			output = hh.parseArticle();
+			if(hh.isLoadSuccessfull())
+			{
+				output = hh.parseArticle();
+			}
 //			for (Article a : output)
 //			{
 //				Article artInDB = Article.getArticleByURL(h, a.getUrl());
