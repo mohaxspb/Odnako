@@ -25,18 +25,20 @@
 
             <LinearLayout
                 android:id="@+id/articles_text_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <TextView
-                android:id="@+id/art_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?cardBackGroundColor"
-                android:padding="5dp"
-                android:text="@string/article_loading"
-                android:textColor="?android:textColorPrimary" />
-</LinearLayout>
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/art_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?cardBackGroundColor"
+                    android:padding="5dp"
+                    android:text="@string/article_loading"
+                    android:textColor="?android:textColorPrimary" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/art_bottom_panel"
                 android:layout_width="match_parent"

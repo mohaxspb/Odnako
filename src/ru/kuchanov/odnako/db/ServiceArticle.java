@@ -29,7 +29,7 @@ public class ServiceArticle extends Service
 
 	private DataBaseHelper dataBaseHelper;
 	
-	private List<ParseArticle> currentTasks = new ArrayList<ParseArticle>();
+	private static List<ParseArticle> currentTasks = new ArrayList<ParseArticle>();
 
 	private Context ctx;
 
@@ -83,6 +83,7 @@ public class ServiceArticle extends Service
 		{
 			if(a.getUrl().equals(url))
 			{
+				Log.e(LOG, url + " is already running");
 				return;
 			}
 		}
@@ -149,6 +150,21 @@ public class ServiceArticle extends Service
 
 	public static void sendDownloadedData(Context ctx, Article a, String url)
 	{
+//		for(ParseArticle parse:currentTasks)
+		for(int i=0; i<currentTasks.size(); i++)
+		{
+			ParseArticle parse=currentTasks.get(i);
+			if(parse.getUrl().equals(url))
+			{
+				ParseArticle removedParse = currentTasks.remove(i);
+				//test fixing canceling already finished task
+				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
+				{
+					removedParse.cancel(true);
+				}
+				removedParse=null;
+			}
+		}
 		Intent intent = new Intent(url);
 		intent.putExtra(Article.KEY_CURENT_ART, a);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
@@ -156,6 +172,19 @@ public class ServiceArticle extends Service
 
 	public static void sendErrorMsg(Context ctx, String url, String errorMsg)
 	{
+		for(ParseArticle parse:currentTasks)
+		{
+			if(parse.getUrl().equals(url))
+			{
+				ParseArticle removedParse = currentTasks.remove(currentTasks.indexOf(parse));
+				//test fixing canceling already finished task
+				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
+				{
+					removedParse.cancel(true);
+				}
+				removedParse=null;
+			}
+		}
 		Intent intent = new Intent(url);
 		intent.putExtra(Msg.ERROR, errorMsg);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);

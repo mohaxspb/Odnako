@@ -53,6 +53,8 @@
                         android:id="@+id/who"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoLink="web|all"
+                        android:linksClickable="true"
                         android:text="@string/date"
                         android:textColor="?android:textColorSecondary" />
                 </LinearLayout>
@@ -71,8 +73,11 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
+                    android:autoLink="web"
+                    android:linksClickable="true"
                     android:textColor="?android:textColorPrimary" />
-                <ImageView
+
+                <ImageView
                     android:id="@+id/more_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

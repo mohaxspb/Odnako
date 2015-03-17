@@ -40,6 +40,8 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -498,7 +500,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			this.artAuthorDescriptionTV.setText(this.curArticle.getAuthorDescr());
+			this.artAuthorDescriptionTV.setText(Html.fromHtml(this.curArticle.getAuthorDescr()));
 			//restore size
 			this.artAuthorDescriptionIV.setLayoutParams(params);
 
@@ -630,7 +632,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//end of ART_IMG
 
 		this.setArticlesText();
-		//		this.artTextView.setText(Html.fromHtml(this.curArticle.getArtText()));
 
 		this.artTitleTV.setText(Html.fromHtml(this.curArticle.getTitle()));
 
@@ -698,11 +699,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		if (!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 		{
 			articlesTextContainer.removeView(artTextView);
-//			Log.e(LOG, "formatedArticle.getChildTags().length: " + formatedArticle.getChildTags().length);
 			for (int i = 0; i < formatedArticle.getChildTags().length; i++)
 			{
 				TagNode a = formatedArticle.getChildTags()[i];
-//				Log.e(LOG, a.getName());
 				if (a.getName().equals("img"))
 				{
 					ImageView iV = new ImageView(act);
@@ -712,7 +711,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					params.setMargins(5, 5, 5, 5);
 					iV.setLayoutParams(params);
 					articlesTextContainer.addView(iV);
-//					Log.e(LOG, a.getAttributeByName("src"));
 					imageLoader.displayImage(a.getAttributeByName("src"), iV, options);
 				}
 				else
@@ -725,6 +723,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						LinearLayout.LayoutParams.MATCH_PARENT);
 						params.setMargins(5, 5, 5, 5);
 						tV.setLayoutParams(params);
+						
+						tV.setAutoLinkMask(Linkify.ALL);
+						tV.setLinksClickable(true);
+						tV.setMovementMethod(LinkMovementMethod.getInstance());
+						
 						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
 						+ ">"));
 						tV.setTextSize(19);
@@ -737,9 +740,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						tV.append(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
 						+ ">"));
 					}
-				}
-			}
-		}
+				}//if not img tag
+			}//loop trough articles tags
+		}//if Article.getArtText is not empty
 	}
 
 	private void setUpAllTegsLayout()

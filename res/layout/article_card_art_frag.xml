@@ -67,9 +67,8 @@
 
             <ru.kuchanov.odnako.utils.MaterialRippleLayout
                 android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:mrl_rippleColor="?colorPrimaryDark"
                 app:mrl_rippleDelayClick="false"
                 app:mrl_rippleHover="true"
@@ -78,7 +77,7 @@
                 <LinearLayout
                     android:id="@+id/author_arts_lin"
                     android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal" >
 
                     <ImageView
@@ -123,6 +122,8 @@
             android:id="@+id/art_author_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="web|all"
+            android:linksClickable="true"
             android:padding="10dp"
             android:textColor="?android:textColorPrimary"
             android:textSize="21sp" />
