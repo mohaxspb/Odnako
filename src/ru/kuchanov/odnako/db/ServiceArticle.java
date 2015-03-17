@@ -78,16 +78,16 @@ public class ServiceArticle extends Service
 
 	private void startDownLoad(String url)
 	{		
+		//check for url equality and don't start loading if true
+		for(ParseArticle a:this.currentTasks)
+		{
+			if(a.getUrl().equals(url))
+			{
+				return;
+			}
+		}
 		if (this.currentTasks.size() < 4)
 		{
-			//check for url equality and don't start loading if true
-			for(ParseArticle a:this.currentTasks)
-			{
-				if(a.getUrl().equals(url))
-				{
-					return;
-				}
-			}
 			//Everything is OK. Just add it and execute
 			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper());
 			articleParser.execute();
@@ -96,6 +96,7 @@ public class ServiceArticle extends Service
 		}
 		else
 		{
+			
 			//cancel 1-st and add given to the end
 			ParseArticle removedParse = this.currentTasks.remove(0);
 			//test fixing canceling already finished task

@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
-import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
@@ -23,6 +22,7 @@ import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DipToPx;
+import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
@@ -330,7 +330,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 		});
 
-		this.articlesTextContainer=(LinearLayout) v.findViewById(R.id.articles_text_container);
+		this.articlesTextContainer = (LinearLayout) v.findViewById(R.id.articles_text_container);
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
 
 		this.scroll = (ScrollView) v.findViewById(R.id.art_scroll);
@@ -685,7 +685,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setArticlesText()
 	{
-//		ViewGroup artTvParent = (ViewGroup) this.artTextView.getParent();
+		//		ViewGroup artTvParent = (ViewGroup) this.artTextView.getParent();
 		String articleString = this.curArticle.getArtText().replaceAll("<br />", "\n");
 		HtmlCleaner cleaner = new HtmlCleaner();
 		TagNode articleTextTag = cleaner.clean(articleString);//.getChildTags();//.getAllElements(true);
@@ -693,135 +693,53 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//So we only need innerHTML from "body" tag;
 		TagNode[] articlesTags = articleTextTag.findElementByName("body", true).getChildTags();
 
-		TagNode formatedArticle = extractImgTags(articlesTags);
-		//		for (TagNode a : formatedArticle.getChildTagList())
-		//		{
-		//			Log.e(LOG, cleaner.getInnerHtml(a));
-		//		}
-//		String innerHtml = cleaner.getInnerHtml(formatedArticle);
-//		if(formatedArticle.getChildTags().length!=0)
-//		{
-//			String innerHtml = cleaner.getInnerHtml(formatedArticle.getChildTags()[0]);
-//			this.artTextView.setText(Html.fromHtml(innerHtml));
-//			this.artTextView.setText(Html.fromHtml(formatedArticle.getText().toString()));
-//		}
-		if(!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
+		TagNode formatedArticle = HtmlTextFormatting.format(articlesTags);
+
+		if (!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 		{
 			articlesTextContainer.removeView(artTextView);
-			Log.e(LOG, "formatedArticle.getChildTags().length: "+formatedArticle.getChildTags().length);
-			for(TagNode a:formatedArticle.getChildTags())
+//			Log.e(LOG, "formatedArticle.getChildTags().length: " + formatedArticle.getChildTags().length);
+			for (int i = 0; i < formatedArticle.getChildTags().length; i++)
 			{
-				Log.e(LOG, a.getName());
-				if(a.getName().equals("p"))
+				TagNode a = formatedArticle.getChildTags()[i];
+//				Log.e(LOG, a.getName());
+				if (a.getName().equals("img"))
 				{
-					TextView tV=new TextView(act);
-					LinearLayout.LayoutParams params=new LayoutParams(100, 100);//(LayoutParams) tV.getLayoutParams();
-					params.height=LinearLayout.LayoutParams.WRAP_CONTENT;
-					params.width=LinearLayout.LayoutParams.MATCH_PARENT;
-					params.setMargins(5, 5, 5, 5);
-					tV.setLayoutParams(params);
-					tV.setText(Html.fromHtml(a.getText().toString()));
-					tV.setTextSize(19);
-					articlesTextContainer.addView(tV);
-				}
-				else if(a.getName().equals("img"))
-				{
-					ImageView iV=new ImageView(act);
-					LinearLayout.LayoutParams params=new LayoutParams(100, 100);//(LayoutParams) iV.getLayoutParams();
-					params.height=200;
-					params.width=LinearLayout.LayoutParams.MATCH_PARENT;
+					ImageView iV = new ImageView(act);
+					LinearLayout.LayoutParams params = new LayoutParams(100, 100);
+					params.height = 200;
+					params.width = LinearLayout.LayoutParams.MATCH_PARENT;
 					params.setMargins(5, 5, 5, 5);
 					iV.setLayoutParams(params);
 					articlesTextContainer.addView(iV);
+//					Log.e(LOG, a.getAttributeByName("src"));
 					imageLoader.displayImage(a.getAttributeByName("src"), iV, options);
 				}
-			}
-		}		
-	}
-
-	private TagNode extractImgTags(TagNode[] tags)
-	{
-		TagNode formatedArticle = new TagNode("div");
-		HtmlCleaner cleaner = new HtmlCleaner();
-		for (int i = 0; i < tags.length; i++)
-		{
-			TagNode curTag = tags[i];
-			if (curTag.getName().equals("p"))
-			{
-				if (curTag.getChildTags().length != 0)
-				{
-					String tagHtml = cleaner.getInnerHtml(curTag);
-					
-					
-					for (int u = 0; u < curTag.getChildTags().length; u++)
-					{
-						TagNode curInnerTag = curTag.getChildTags()[u];
-						if (curInnerTag.getName().equals("input"))
-						{
-							//we must here create 2 new TagNodes with text before and after img or input node						
-							String subStrStartsWithInput = tagHtml.substring(tagHtml.indexOf("<input "));
-							String subStrWithInput = subStrStartsWithInput.substring(0,
-							subStrStartsWithInput.indexOf(">") + 1);
-//							Log.e("INPUT", subStrWithInput);
-							tagHtml = tagHtml.replaceFirst(subStrWithInput, Article.DIVIDER);
-							String[] dividedTag = tagHtml.split(Article.DIVIDER);
-							//create new p tag with innerHtml of parent p tag from 0 to input tag
-							//check if inputTag is not first in parent
-							if (dividedTag.length != 0)
-							{
-								TagNode firstTag = new TagNode("p");
-								firstTag.addChild(new ContentNode(dividedTag[0]));
-								if (dividedTag.length == 1)
-								{
-									tagHtml = dividedTag[0];
-								}
-								else
-								{
-									tagHtml = dividedTag[1];
-								}
-								//add them to our formated tag
-								formatedArticle.addChild(firstTag);
-							}
-							else
-							{
-								tagHtml = "";
-							}
-							//create img tag with info from input
-							TagNode imgTag = new TagNode("img");
-							imgTag.addAttribute("src", curInnerTag.getAttributeByName("src"));
-							imgTag.addAttribute("style", curInnerTag.getAttributeByName("style"));
-							//add them to our formated tag
-							formatedArticle.addChild(imgTag);
-							//and finally set innerHtml of our parent p tag to second part of our array
-
-						}//if input tag
-							//						else
-						//						{
-						//							TagNode firstTag = new TagNode(curInnerTag.getName());
-						//							firstTag.setAttributes(firstTag.getAttributes());
-						//							firstTag.addChild(new ContentNode(cleaner.getInnerHtml(curInnerTag)));
-						//							formatedArticle.addChild(firstTag);
-						//						}
-						if (u == curTag.getChildTags().length - 1)
-						{
-							TagNode firstTag = new TagNode("p");
-							firstTag.addChild(new ContentNode(tagHtml));
-							formatedArticle.addChild(firstTag);
-						}
-					}//loop of p tag children
-				}//if has children
 				else
 				{
-//					Log.i(LOG, "curTag has no children");
-					formatedArticle.addChild(curTag);
+					//check if previous tag was img and create new TextView, else append text to existing
+					if (i == 0 || (i != 0 && formatedArticle.getChildTags()[i - 1].getName().equals("img")))
+					{
+						TextView tV = new TextView(act);
+						LinearLayout.LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+						LinearLayout.LayoutParams.MATCH_PARENT);
+						params.setMargins(5, 5, 5, 5);
+						tV.setLayoutParams(params);
+						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
+						+ ">"));
+						tV.setTextSize(19);
+						articlesTextContainer.addView(tV);
+					}
+					else
+					{
+						TextView tV = (TextView) articlesTextContainer
+						.getChildAt(articlesTextContainer.getChildCount() - 1);
+						tV.append(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
+						+ ">"));
+					}
 				}
-			}//if tag is p
-			else
-			{
-				formatedArticle.addChild(curTag);
 			}
-		}//loop of articles tags
-		return formatedArticle;
+		}
 	}
 
 	private void setUpAllTegsLayout()
