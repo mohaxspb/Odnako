@@ -6,10 +6,15 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.ZoomOutPageTransformer;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,8 +25,10 @@ import android.view.MenuItem;
 
 public class ActivityArticle extends ActivityBase
 {
-	ViewPager pager;
-	PagerAdapter pagerAdapter;
+	private ViewPager pager;
+	private PagerAdapter pagerAdapter;
+
+	private String categoryToLoad = Const.EMPTY_STRING;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -51,17 +58,27 @@ public class ActivityArticle extends ActivityBase
 		Bundle stateFromIntent = this.getIntent().getExtras();
 		if (stateFromIntent != null)
 		{
-			this.restoreState(stateFromIntent);
-			
-			int[] intArr;
-			intArr=stateFromIntent.getIntArray("groupChildPosition");
-			System.out.println("childGroupPos: " + intArr[0] + "/ " + intArr[1]);
-			
+
+			this.curAllArtsInfo = stateFromIntent.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
+			this.categoryToLoad = stateFromIntent.getString("categoryToLoad");
+			this.setCurArtPosition(stateFromIntent.getInt("position"));
+			this.currentCategoryPosition = stateFromIntent.getInt("curentCategoryPosition");
+
+			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
+			this.allCatArtsInfo.put(categoryToLoad, curAllArtsInfo);
+
 			this.restoreGroupChildPosition(stateFromIntent);
 		}
 		else if (savedInstanceState != null)
 		{
-			this.restoreState(savedInstanceState);
+			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
+			this.setCurArtPosition(savedInstanceState.getInt("position"));
+			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
+
+			this.restoreAllCatArtsInfo(savedInstanceState);
+
+			this.curAllArtsInfo = this.allCatArtsInfo.get(categoryToLoad);
+
 			this.restoreGroupChildPosition(savedInstanceState);
 		}
 		//all is null, so start request for info
@@ -73,10 +90,13 @@ public class ActivityArticle extends ActivityBase
 
 		//drawer settings
 		this.setNavDrawer();
+//		this.setSupportActionBar(toolbar);
+//		this.getSupportActionBar().setAlpha(1.0f);
+		this.toolbar.getBackground().setAlpha(255);
 		////End of drawer settings
 
 		this.pager = (ViewPager) this.findViewById(R.id.article_container);
-//		this.pagerAdapter = new ArticlesPagerAdapter(this.getSupportFragmentManager(), this.curAllArtsInfo, this);
+		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), categoryToLoad, act);
 		this.pager.setAdapter(pagerAdapter);
 		this.pager.setCurrentItem(getCurArtPosition(), true);
 		this.pager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -85,8 +105,8 @@ public class ActivityArticle extends ActivityBase
 		this.AddAds();
 		//end of adMob
 	}
-	
-	/* Called whenever we call supportInvalidateOptionsMenu() */
+
+	/** Called whenever we call supportInvalidateOptionsMenu() */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
@@ -160,15 +180,21 @@ public class ActivityArticle extends ActivityBase
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		//save allArtsInfo
-		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
-
+		//		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
+		outState.putString("categoryToLoad", categoryToLoad);
+		outState.putInt("position", this.getCurArtPosition());
+		outState.putInt("currentCategoryPosition", this.currentCategoryPosition);
+		this.saveAllCatArtsInfo(outState);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		super.onRestoreInstanceState(savedInstanceState);
-		this.restoreState(savedInstanceState);
+		this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
+		this.setCurArtPosition(savedInstanceState.getInt("position"));
+		currentCategoryPosition = savedInstanceState.getInt("currentCategoryPosition");
+		this.restoreAllCatArtsInfo(savedInstanceState);
+
 	}
 }

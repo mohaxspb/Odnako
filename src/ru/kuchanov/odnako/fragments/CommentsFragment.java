@@ -121,7 +121,8 @@ public class CommentsFragment extends Fragment
 		{
 			public void onClick(View v)
 			{
-				Actions.showArticle(allArtsInfo, position, act);
+//				Actions.showArticle(allArtsInfo, position, act);
+				//TODO
 			}
 		});
 
@@ -136,7 +137,8 @@ public class CommentsFragment extends Fragment
 		{
 			public void onClick(View v)
 			{
-				Actions.showArticle(allArtsInfo, position, act);
+//				Actions.showArticle(allArtsInfo, position, act);
+				//TODO
 			}
 		});
 

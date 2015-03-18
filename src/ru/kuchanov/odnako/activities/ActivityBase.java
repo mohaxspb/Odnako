@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -33,7 +35,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -48,7 +49,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ActivityBase extends ActionBarActivity
 {
-	private static final String LOG_TAG = ActivityBase.class.getSimpleName();
+	static final String LOG = ActivityBase.class.getSimpleName();
 	protected ActionBarActivity act;
 	protected boolean twoPane;
 	protected SharedPreferences pref;
@@ -77,12 +78,17 @@ public class ActivityBase extends ActionBarActivity
 	/**
 	 * List of all authors from DB
 	 */
-	private List<Author> allAuthorsList;
-	
+	protected ArrayList<Author> allAuthorsList;
+	protected static final String KEY_ALL_AUTHORS_LIST = "allAuthorsList";
+
 	/**
 	 * List of all categories from DB
 	 */
-	private List<Category> allCategoriesList;
+	protected ArrayList<Category> allCategoriesList;
+	protected static final String KEY_ALL_CATEGORIES_LIST = "allCategoriesList";
+
+	protected ArrayList<String> allCatAndAutURLs;
+	protected static final String KEY_ALL_CAT_AND_AUT_URLS_LIST = "allCatAndAutURLs";
 
 	int currentCategoryPosition = 11;
 	private String currentCategory = "odnako.org/blogs";
@@ -93,7 +99,7 @@ public class ActivityBase extends ActionBarActivity
 	protected ArrayList<Article> curAllArtsInfo = null;
 
 	protected int backPressedQ;
-	
+
 	protected Menu menu;
 	private String searchText;
 
@@ -288,24 +294,10 @@ public class ActivityBase extends ActionBarActivity
 		}
 	}
 
-	protected void restoreState(Bundle state)
-	{
-		this.setCurArtPosition(state.getInt("position"));
-		this.curAllArtsInfo = state.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
-		this.currentCategoryPosition = state.getInt("curentCategoryPosition");
-		Log.e(LOG_TAG + "/restoreState", "getCurentCategoryPosition(): " + getCurentCategoryPosition());
-		this.restoreAllCatArtsInfo(state);
-	}
-
 	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
 	{
 		return this.allCatArtsInfo;
 	}
-
-//	public void updateAllCatArtsInfo(String category, ArrayList<Article> newData)
-//	{
-//		this.allCatArtsInfo.put(category, newData);
-//	}
 
 	public int getCurentCategoryPosition()
 	{
@@ -454,24 +446,49 @@ public class ActivityBase extends ActionBarActivity
 		this.curArtPosition = curArtPosition;
 	}
 
+	/**
+	 * 
+	 * @return all authors from allAuthorsList variable or from DB if it's null
+	 */
 	public List<Author> getAllAuthorsList()
 	{
+		if (this.allAuthorsList == null)
+		{
+			DataBaseHelper h = new DataBaseHelper(this);
+			try
+			{
+				this.allAuthorsList = (ArrayList<Author>) h.getDaoAuthor().queryBuilder()
+				.orderBy(Author.NAME_FIELD_NAME, true).query();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				h.close();
+			}
+		}
 		return allAuthorsList;
-	}
-
-	public void setAllAuthorsList(List<Author> allAuthorsList)
-	{
-		this.allAuthorsList = allAuthorsList;
 	}
 
 	public List<Category> getAllCategoriesList()
 	{
+		if (this.allCategoriesList == null)
+		{
+			DataBaseHelper h = new DataBaseHelper(this);
+			try
+			{
+				this.allCategoriesList = (ArrayList<Category>) h.getDaoCategory().queryBuilder()
+				.orderBy(Category.TITLE_FIELD_NAME, true)
+				.query();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				h.close();
+			}
+		}
 		return allCategoriesList;
-	}
-
-	public void setAllCategoriesList(List<Category> allCategoriesList)
-	{
-		this.allCategoriesList = allCategoriesList;
 	}
 
 	public String getSearchText()
@@ -482,5 +499,24 @@ public class ActivityBase extends ActionBarActivity
 	public void setSearchText(String searchText)
 	{
 		this.searchText = searchText;
+	}
+
+	public ArrayList<String> getAllCatAndAutURLs()
+	{
+		if (this.allCatAndAutURLs == null)
+		{
+			DataBaseHelper h = new DataBaseHelper(this);
+			try
+			{
+				allCatAndAutURLs = h.getAllCatAndAutUrls();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			} finally
+			{
+				h.close();
+			}
+		}
+		return allCatAndAutURLs;
 	}
 }

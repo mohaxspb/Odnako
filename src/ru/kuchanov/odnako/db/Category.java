@@ -9,6 +9,8 @@ package ru.kuchanov.odnako.db;
 import java.sql.SQLException;
 import java.util.Date;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
@@ -21,7 +23,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * "lastArticleDate", "firstArticleURL"
  */
 @DatabaseTable(tableName = "category")
-public class Category
+public class Category implements Parcelable
 {
 	private static final String LOG = Category.class.getSimpleName() + "/";
 
@@ -371,4 +373,56 @@ public class Category
 			e.printStackTrace();
 		}
 	}
+
+	//////PARCEL implementation
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+
+	//"id", "url", "title", "description", "img_url", "img_file_name",
+	//"refreshed", "lastArticleDate", "firstArticleURL"
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		dest.writeInt(id);
+		dest.writeString(url);
+		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(img_url);
+		dest.writeString(img_file_name);
+		dest.writeLong(refreshed.getTime());
+		dest.writeLong(lastArticleDate.getTime());
+		dest.writeString(firstArticleURL);
+	}
+
+	private Category(Parcel in)
+	{
+		id = in.readInt();
+		url = in.readString();
+		title = in.readString();
+		description = in.readString();
+		img_url = in.readString();
+		img_file_name = in.readString();
+		refreshed = new Date(in.readLong());
+		lastArticleDate = new Date(in.readLong());
+		firstArticleURL = in.readString();
+	}
+
+	public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>()
+	{
+
+		@Override
+		public Category createFromParcel(Parcel source)
+		{
+			return new Category(source);
+		}
+
+		@Override
+		public Category[] newArray(int size)
+		{
+			return new Category[size];
+		}
+	};
 }

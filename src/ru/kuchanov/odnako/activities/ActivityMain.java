@@ -6,7 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -144,6 +143,10 @@ public class ActivityMain extends ActivityBase
 			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
 			this.pagerType = savedInstanceState.getInt(KEY_PAGER_TYPE);
 
+			this.allAuthorsList = savedInstanceState.getParcelableArrayList(KEY_ALL_AUTHORS_LIST);
+			this.allCategoriesList = savedInstanceState.getParcelableArrayList(KEY_ALL_CATEGORIES_LIST);
+			this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
+
 			this.restoreGroupChildPosition(savedInstanceState);
 			this.restoreAllCatToolbartopImgYCoord(savedInstanceState);
 			this.restoreAllCatArtsInfo(savedInstanceState);
@@ -159,42 +162,20 @@ public class ActivityMain extends ActivityBase
 		//get artsInfo data from DB
 		if (this.allCatArtsInfo == null)
 		{
-			//			this.allCatArtsInfo = CatData.getAllCatArtsInfoFromDB(System.currentTimeMillis(), act);
 			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
 		}
-
-		//get all Authors and categories from DB
-		DataBaseHelper h = new DataBaseHelper(act);
-		try
-		{
-			this.setAllAuthorsList(h.getDaoAuthor().queryBuilder().orderBy(Author.NAME_FIELD_NAME, true).query());
-			this.setAllCategoriesList(h.getDaoCategory().queryBuilder().orderBy(Category.TITLE_FIELD_NAME, true)
-			.query());
-		} catch (SQLException e)
-		{
-			Log.e(LOG, "Catched exception on gettitg authors and categories from DB on init of ActivityMain");
-			e.printStackTrace();
-		}
+		//get all Authors and categories and their urls from DB if they are null
+		this.getAllAuthorsList();
+		this.getAllCategoriesList();
+		this.getAllCatAndAutURLs();
 
 		//set selected pos for all cats if they are null (first launch without any state)
 		if (this.allCatListsSelectedArtPosition == null)
 		{
-			ArrayList<String> allCatAndAutURLs = new ArrayList<String>();
-			try
-			{
-				allCatAndAutURLs = h.getAllCatAndAutUrls();
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
-			} finally
-			{
-				h.close();
-			}
-
 			this.allCatListsSelectedArtPosition = new HashMap<String, Integer>();
-			for (int i = 0; i < allCatAndAutURLs.size(); i++)
+			for (int i = 0; i < this.getAllCatAndAutURLs().size(); i++)
 			{
-				this.allCatListsSelectedArtPosition.put(allCatAndAutURLs.get(i), 0);
+				this.allCatListsSelectedArtPosition.put(this.getAllCatAndAutURLs().get(i), 0);
 			}
 			//also we must add allAuthors(3) & allCategories(13)
 			String[] allMenuLinks = CatData.getMenuLinks(act);
@@ -402,8 +383,10 @@ public class ActivityMain extends ActivityBase
 		}
 		outState.putBoolean(KEY_IS_KEYBOARD_OPENED, isKeyboardOpened);
 
-		//allAuthors list
-		//outState TODO implement Parcelable to Author and Category and Article to store them through standart methods
+		//allAuthors allCategories and their urls lists
+		outState.putParcelableArrayList(KEY_ALL_AUTHORS_LIST, allAuthorsList);
+		outState.putParcelableArrayList(KEY_ALL_CATEGORIES_LIST, allCategoriesList);
+		outState.putStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST, allCatAndAutURLs);
 	}
 
 	@Override
@@ -819,11 +802,6 @@ public class ActivityMain extends ActivityBase
 	{
 		this.allCatToolbarTopImgYCoord.put(category, coords);
 	}
-
-//	public void updateAllCatArtsInfo(String category, ArrayList<Article> newData)
-//	{
-//		this.allCatArtsInfo.put(category, newData);
-//	}
 
 	@Override
 	public void setCurentCategoryPosition(int curentCategoryPosition)

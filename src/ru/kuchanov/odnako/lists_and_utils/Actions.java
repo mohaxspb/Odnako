@@ -457,7 +457,8 @@ public class Actions
 		}
 	}
 
-	public static void showArticle(ArrayList<Article> allArtsInfo, int positionOfArticle, final ActionBarActivity act)
+	public static void showArticle(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
+	final ActionBarActivity act)
 	{
 		Log.d(LOG, "showArticle!");
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -597,6 +598,7 @@ public class Actions
 				Intent intent = new Intent(act, ActivityArticle.class);
 				Bundle b = new Bundle();
 				b.putInt("position", positionOfArticle);
+				b.putString("categoryToLoad", categoryToLoad);
 				b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 				b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
 				intent.putExtras(b);

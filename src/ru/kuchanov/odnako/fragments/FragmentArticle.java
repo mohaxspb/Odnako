@@ -206,6 +206,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		//find all views
 		this.findViews(v);
+		
+		//setOnScrollListener for ScrollView
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
 		this.checkCurArtInfo(savedInstanceState);

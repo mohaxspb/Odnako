@@ -201,7 +201,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					{
 						public void onClick(View v)
 						{
-							Actions.showArticle(artsInfo, positionInAllArtsInfo, act);
+							Actions.showArticle(artsInfo, positionInAllArtsInfo, artsListFrag.getCategoryToLoad(), act);
 						}
 					});
 

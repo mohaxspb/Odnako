@@ -80,6 +80,11 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 						}
 					}
 				}
+				else
+				{
+					//connection (?) error
+					return null;
+				}
 			}
 			else
 			{
@@ -109,9 +114,6 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 			ServiceArticle.sendErrorMsg(ctx, url, Const.Error.CONNECTION_ERROR);
 			Log.e(LOG + getUrl(), Const.Error.CONNECTION_ERROR);
 		}
-		//DON'T FORGET OF CLOSING DB
-//		h.close();
-//		h = null;
 	}// Событие по окончанию парсинга
 
 	@Override

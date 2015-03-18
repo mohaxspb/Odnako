@@ -58,7 +58,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		if (stateFromIntent != null)
 		{
 			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
-			this.restoreState(stateFromIntent);
+//			this.restoreState(stateFromIntent);
 			this.restoreGroupChildPosition(stateFromIntent);
 
 			System.out.println("childGroupPos: " + this.groupChildPosition[0] + "/ " + this.groupChildPosition[1]);
@@ -66,7 +66,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		}
 		if (savedInstanceState != null)
 		{
-			this.restoreState(savedInstanceState);
+//			this.restoreState(savedInstanceState);
 			this.restoreGroupChildPosition(savedInstanceState);
 			//			((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
 		}
@@ -180,7 +180,7 @@ public class ActivityComments extends ActivityBase//ActionBarActivity
 		super.onRestoreInstanceState(savedInstanceState);
 		System.out.println("ActivityArticle onRestoreInstanceState");
 
-		this.restoreState(savedInstanceState);
+//		this.restoreState(savedInstanceState);
 		this.restoreGroupChildPosition(savedInstanceState);
 	}
 
