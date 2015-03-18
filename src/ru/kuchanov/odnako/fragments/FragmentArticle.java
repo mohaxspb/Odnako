@@ -223,7 +223,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		else
 		{
-			if (/* this.curArticle.getArtText() == null || */this.curArticle.getArtText().equals(Const.EMPTY_STRING))
+			if (this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 			{
 				//load...
 				this.loadArticle(false);
@@ -294,15 +294,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		this.swipeRef.setRefreshing(true);
 
-		//		Intent intent = new Intent(this.act, ServiceArticle.class);
-		//		intent.setAction(Const.Action.IS_LOADING);
-		//		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
-		//		this.act.startService(intent);
-
 		Intent intent = new Intent(this.act, ServiceArticle.class);
 		intent.setAction(Const.Action.DATA_REQUEST);
 		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
 		intent.putExtra("startDownload", startDownload);
+
 		this.act.startService(intent);
 	}
 
@@ -723,11 +719,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						LinearLayout.LayoutParams.MATCH_PARENT);
 						params.setMargins(5, 5, 5, 5);
 						tV.setLayoutParams(params);
-						
+
 						tV.setAutoLinkMask(Linkify.ALL);
 						tV.setLinksClickable(true);
 						tV.setMovementMethod(LinkMovementMethod.getInstance());
-						
+
 						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
 						+ ">"));
 						tV.setTextSize(19);

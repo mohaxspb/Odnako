@@ -9,8 +9,6 @@ package ru.kuchanov.odnako.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseArticle;
@@ -23,12 +21,14 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 public class ServiceArticle extends Service
 {
 	final private static String LOG = ServiceArticle.class.getSimpleName() + "/";
 
 	private DataBaseHelper dataBaseHelper;
-	
+
 	private static List<ParseArticle> currentTasks = new ArrayList<ParseArticle>();
 
 	private Context ctx;
@@ -56,7 +56,7 @@ public class ServiceArticle extends Service
 		url = intent.getStringExtra(FragmentArticle.ARTICLE_URL);
 		if (action.equals(Const.Action.IS_LOADING))
 		{
-			for (ParseArticle a : this.currentTasks)
+			for (ParseArticle a : ServiceArticle.currentTasks)
 			{
 				if (url.equals(a.getUrl()) && (a.getStatus() == AsyncTask.Status.RUNNING))
 				{
@@ -71,35 +71,35 @@ public class ServiceArticle extends Service
 			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
 			return super.onStartCommand(intent, flags, startId);
 		}
-		
+
 		this.startDownLoad(url);
 		return super.onStartCommand(intent, flags, startId);
 	}
 
 	private void startDownLoad(String url)
-	{		
+	{
 		//check for url equality and don't start loading if true
-		for(ParseArticle a:this.currentTasks)
+		for (ParseArticle a : currentTasks)
 		{
-			if(a.getUrl().equals(url))
+			if (a.getUrl().equals(url))
 			{
 				Log.e(LOG, url + " is already running");
 				return;
 			}
 		}
-		if (this.currentTasks.size() < 4)
+		if (currentTasks.size() < 4)
 		{
 			//Everything is OK. Just add it and execute
 			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper());
 			articleParser.execute();
-			this.currentTasks.add(articleParser);
-			Log.e(LOG, "start download article: "+url);
+			currentTasks.add(articleParser);
+			Log.e(LOG, "start download article: " + url);
 		}
 		else
 		{
-			
+
 			//cancel 1-st and add given to the end
-			ParseArticle removedParse = this.currentTasks.remove(0);
+			ParseArticle removedParse = currentTasks.remove(0);
 			//test fixing canceling already finished task
 			if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
 			{
@@ -109,9 +109,51 @@ public class ServiceArticle extends Service
 			}
 			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper());
 			articleParser.execute();
-			this.currentTasks.add(articleParser);
-			Log.e(LOG, "start download article: "+url);
+			currentTasks.add(articleParser);
+			Log.e(LOG, "start download article: " + url);
 		}
+	}
+	
+	public static void sendDownloadedData(Context ctx, Article a, String url)
+	{
+		for (int i = 0; i < currentTasks.size(); i++)
+		{
+			ParseArticle parse = currentTasks.get(i);
+			if (parse.getUrl().equals(url))
+			{
+				ParseArticle removedParse = currentTasks.remove(i);
+				//test fixing canceling already finished task
+				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
+				{
+					removedParse.cancel(true);
+				}
+				removedParse = null;
+			}
+		}
+		Intent intent = new Intent(url);
+		intent.putExtra(Article.KEY_CURENT_ART, a);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
+	}
+
+	public static void sendErrorMsg(Context ctx, String url, String errorMsg)
+	{
+		for (int i = 0; i < currentTasks.size(); i++)
+		{
+			ParseArticle parse = currentTasks.get(i);
+			if (parse.getUrl().equals(url))
+			{
+				ParseArticle removedParse = currentTasks.remove(i);
+				//test fixing canceling already finished task
+				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
+				{
+					removedParse.cancel(true);
+				}
+				removedParse = null;
+			}
+		}
+		Intent intent = new Intent(url);
+		intent.putExtra(Msg.ERROR, errorMsg);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
 	}
 
 	/**
@@ -146,47 +188,5 @@ public class ServiceArticle extends Service
 	public IBinder onBind(Intent intent)
 	{
 		return null;
-	}
-
-	public static void sendDownloadedData(Context ctx, Article a, String url)
-	{
-//		for(ParseArticle parse:currentTasks)
-		for(int i=0; i<currentTasks.size(); i++)
-		{
-			ParseArticle parse=currentTasks.get(i);
-			if(parse.getUrl().equals(url))
-			{
-				ParseArticle removedParse = currentTasks.remove(i);
-				//test fixing canceling already finished task
-				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
-				{
-					removedParse.cancel(true);
-				}
-				removedParse=null;
-			}
-		}
-		Intent intent = new Intent(url);
-		intent.putExtra(Article.KEY_CURENT_ART, a);
-		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
-	}
-
-	public static void sendErrorMsg(Context ctx, String url, String errorMsg)
-	{
-		for(ParseArticle parse:currentTasks)
-		{
-			if(parse.getUrl().equals(url))
-			{
-				ParseArticle removedParse = currentTasks.remove(currentTasks.indexOf(parse));
-				//test fixing canceling already finished task
-				if (removedParse.getStatus() == AsyncTask.Status.RUNNING)
-				{
-					removedParse.cancel(true);
-				}
-				removedParse=null;
-			}
-		}
-		Intent intent = new Intent(url);
-		intent.putExtra(Msg.ERROR, errorMsg);
-		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
-	}
+	}	
 }

@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.download;
 
+import java.util.Date;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
@@ -16,7 +17,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ParseArticle extends AsyncTask<Void, Void,Article>
+public class ParseArticle extends AsyncTask<Void, Void, Article>
 {
 	private final static String LOG = ParseArticle.class.getSimpleName() + "/";
 
@@ -33,7 +34,7 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 
 	protected Article doInBackground(Void... arg)
 	{
-		Article output = null;
+		Article article = null;
 		String link;
 		if (this.getUrl().startsWith("http://"))
 		{
@@ -46,37 +47,61 @@ public class ParseArticle extends AsyncTask<Void, Void,Article>
 
 		try
 		{
-			HtmlHelper hh = new HtmlHelper(link);
-			if(hh.isLoadSuccessfull())
+			//check if we already have article obj with artText!=Const.EMPTY_STRING
+			Article artInDB = null;
+			artInDB = Article.getArticleByURL(h, this.url);
+			if (artInDB == null || artInDB.getArtText().equals(Const.EMPTY_STRING))
 			{
-				output = hh.parseArticle();
+				//start download
+				HtmlHelper hh = new HtmlHelper(link);
+				if (hh.isLoadSuccessfull())
+				{
+					article = hh.parseArticle();
+
+					//here if article with given URL don't exists, we create it.
+					if (artInDB == null)
+					{
+						h.getDaoArticle().create(article);
+					}
+					else
+					{
+						Date downLoadedDate = new Date(article.getPubDate().getTime());
+						Date dBDate = new Date(artInDB.getPubDate().getTime());
+
+						article.setId(artInDB.getId());
+						h.getDaoArticle().update(article);
+						//now we can simply check if downloaded date if bigger then inDB 
+						//and if it's not we must return bigger date to DB entry
+						//This is because downloaded date always bigger then zero date
+						//and always smaller, if inDB date has HH:mm bigger then 00:00
+						if (downLoadedDate.getTime() < dBDate.getTime())
+						{
+							Article.updatePubDate(h, artInDB.getId(), dBDate);
+						}
+					}
+				}
 			}
-//			for (Article a : output)
-//			{
-//				Article artInDB = Article.getArticleByURL(h, a.getUrl());
-//				if (artInDB != null)
-//				{
-//					Article.updatePreview(h, artInDB.getId(), a.getPreview());
-//					Article.updatePubDate(h, artInDB.getId(), a.getPubDate());
-//				}
-//			}
-//			Log.e(LOG + url, output.toString());
-//			output.printAllInfo();
-			
+			else
+			{
+				//send article from DB
+				Log.i(LOG, url + " LOADED FROM DB");
+				article = artInDB;
+			}
+
 		} catch (Exception e)
 		{
 			Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
-		return output;
+		return article;
 	}
 
-	protected void onPostExecute(Article output)
+	protected void onPostExecute(Article article)
 	{
 		//check internet
-		if (output != null)
+		if (article != null)
 		{
-			ServiceArticle.sendDownloadedData(ctx, output, url);
+			ServiceArticle.sendDownloadedData(ctx, article, url);
 		}
 		//NO internet
 		else
