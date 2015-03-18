@@ -264,6 +264,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	@Override
 	public void close()
 	{
+		Log.e(getDatabaseName(), "CLOSED!");
 		super.close();
 		this.daoArtCatTable = null;
 		this.daoArtAutTable = null;

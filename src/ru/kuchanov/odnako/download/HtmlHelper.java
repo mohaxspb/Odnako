@@ -17,6 +17,8 @@ import android.util.Log;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DateParse;
 
 public class HtmlHelper
@@ -415,7 +417,7 @@ public class HtmlHelper
 		return artsList;
 	}
 
-	public Article parseArticle()
+	public Article parseArticle(DataBaseHelper h)
 	{
 		Article a = new Article();
 		//id, url, title, img_art, authorBlogUrl, authorName, preview, pubDate, 
@@ -475,6 +477,13 @@ public class HtmlHelper
 			authorName = aTag.getText().toString();
 			authorBlogUrl = aTag.getAttributeByName("href");
 		}
+		//authors who
+		String authorWho = "empty";
+		TagNode whoDiv = author.findElementByAttValue("class", "who", isRecursive, isCaseSensitive);
+		if (whoDiv != null)
+		{
+			authorWho = whoDiv.getText().toString();
+		}
 		//author's Description
 		//<div hidden class="author-teaser-expander clearfix">
 		TagNode authorDescrDiv = this.rootNode.findElementByAttValue("class", "author-teaser-expander clearfix",
@@ -484,6 +493,18 @@ public class HtmlHelper
 		{
 			authorDescr = authorDescrDiv.getText().toString();
 		}
+		Author aut = null;
+		if (!authorBlogUrl.equals(Const.EMPTY_STRING))
+		{
+			//and set Author obj to Article obj		
+			aut = Author.getAuthorByURL(h, authorBlogUrl);
+			if (aut == null)
+			{
+				aut = new Author(authorBlogUrl, authorName, authorDescr, authorWho, imgAuthor, imgAuthor.replace(
+				"/75_75/", "/335_245/"), new Date(0), new Date(0));
+			}
+		}
+
 		//TAGS
 		//main
 		//<div class="biggest-tag l-left">
@@ -530,11 +551,11 @@ public class HtmlHelper
 		a.setAuthorBlogUrl(authorBlogUrl);
 		a.setImgAuthor(imgAuthor);
 		a.setAuthorDescr(authorDescr);
+		a.setAuthor(aut);
 		//tags
 		a.setTagsMain(tagMain);
 		//artText
 		a.setArtText(artText);
-
 		return a;
 	}
 

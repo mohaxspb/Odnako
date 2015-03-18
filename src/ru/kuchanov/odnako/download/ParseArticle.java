@@ -56,7 +56,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 				HtmlHelper hh = new HtmlHelper(link);
 				if (hh.isLoadSuccessfull())
 				{
-					article = hh.parseArticle();
+					article = hh.parseArticle(h);
 
 					//here if article with given URL don't exists, we create it.
 					if (artInDB == null)
@@ -109,6 +109,9 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 			ServiceArticle.sendErrorMsg(ctx, url, Const.Error.CONNECTION_ERROR);
 			Log.e(LOG + getUrl(), Const.Error.CONNECTION_ERROR);
 		}
+		//DON'T FORGET OF CLOSING DB
+//		h.close();
+//		h = null;
 	}// Событие по окончанию парсинга
 
 	@Override
