@@ -90,6 +90,9 @@ public class ActivityBase extends ActionBarActivity
 	protected ArrayList<String> allCatAndAutURLs;
 	protected static final String KEY_ALL_CAT_AND_AUT_URLS_LIST = "allCatAndAutURLs";
 
+	protected ArrayList<String> allCatAndAutTitles;
+	protected static final String KEY_ALL_CAT_AND_AUT_TITLES_LIST = "allCatAndAutTitles";
+
 	int currentCategoryPosition = 11;
 	private String currentCategory = "odnako.org/blogs";
 
@@ -241,7 +244,6 @@ public class ActivityBase extends ActionBarActivity
 	{
 		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
 		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
-		//		ava.setImageResource(R.drawable.dev_ava);
 		ImageLoader imgLoader = MyUIL.get(act);
 		imgLoader.displayImage("drawable://" + R.drawable.dev_ava, ava,
 		MyUIL.getTransparentBackgroundROUNDOptions(act));
@@ -506,17 +508,20 @@ public class ActivityBase extends ActionBarActivity
 		if (this.allCatAndAutURLs == null)
 		{
 			DataBaseHelper h = new DataBaseHelper(this);
-			try
-			{
-				allCatAndAutURLs = h.getAllCatAndAutUrls();
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
-			} finally
-			{
-				h.close();
-			}
+			allCatAndAutURLs = h.getAllCatAndAutUrls();
+			h.close();
 		}
 		return allCatAndAutURLs;
+	}
+
+	public ArrayList<String> getAllCatAndAutTitles()
+	{
+		if (this.allCatAndAutTitles == null)
+		{
+			DataBaseHelper h = new DataBaseHelper(this);
+			allCatAndAutTitles = h.getAllCatAndAutTitles();
+			h.close();
+		}
+		return allCatAndAutTitles;
 	}
 }

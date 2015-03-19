@@ -200,7 +200,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//		System.out.println("ArticleFragment onCreateView");
+		//System.out.println("ArticleFragment onCreateView");
 		this.inflater = inflater;
 		View v = inflater.inflate(R.layout.fragment_art, container, false);
 
@@ -208,6 +208,18 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.findViews(v);
 		
 		//setOnScrollListener for ScrollView
+//		scroll.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener()
+//		{
+//
+//		    @Override
+//		    public void onScrollChanged() 
+//		    {
+//
+//		        int scrollY = scroll.getScrollY(); //for verticalScrollView
+//		        //DO SOMETHING WITH THE SCROLL COORDINATES
+//
+//		    }
+//		});
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
 		this.checkCurArtInfo(savedInstanceState);
@@ -263,7 +275,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					}
 				});
 
-				//				this.fillFielsdsWithInfo(v);
 				this.fillFielsdsWithInfo();
 
 				//setting size of Images and text

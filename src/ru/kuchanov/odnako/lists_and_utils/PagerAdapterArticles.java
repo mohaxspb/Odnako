@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class PagerAdapterArticles extends FragmentStatePagerAdapter
 {
-	static String LOG_TAG = PagerAdapterArticles.class.getSimpleName() + "/";
+	static String LOG = PagerAdapterArticles.class.getSimpleName() + "/";
 
 	ArrayList<Article> allArtsInfo;
 
@@ -32,7 +32,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 	public PagerAdapterArticles(FragmentManager fm, String category, ActionBarActivity act)
 	{
 		super(fm);
-		Log.i(LOG_TAG + category, "ArticlesPagerAdapter CONSTRUCTOR called");
+		//Log.i(LOG_TAG + category, "PagerAdapterArticles CONSTRUCTOR called");
 		this.category = category;
 		this.act = act;
 
@@ -112,7 +112,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 						((FragArtUPD) object).update(this.allArtsInfo);
 					} catch (NullPointerException e)
 					{
-						Log.e(LOG_TAG,
+						Log.e(LOG,
 						"CATCHED NULLPOINTEREXCEPTION AT ARTICLE FRAG APDATION ON PAGER NOTIFYDATASETCHANGED!!!");
 						e.printStackTrace();
 						return POSITION_NONE;

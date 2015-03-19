@@ -128,7 +128,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		String[] img_files_namesM = ctx.getResources().getStringArray(R.array.categories_imgs_files_names);
 
 		//we loop through urlsM.length-1, because of ALL_CATEGORIES
-		int lengthM = urlsM.length-1;
+		int lengthM = urlsM.length - 1;
 		for (int i = 0; i < lengthM; i++)
 		{
 			try
@@ -280,7 +280,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	 * @param h
 	 * @return
 	 */
-	public ArrayList<String> getAllCatAndAutUrls() throws SQLException
+	public ArrayList<String> getAllCatAndAutUrls()
 	{
 		ArrayList<String> allURLs = new ArrayList<String>();
 
@@ -310,6 +310,44 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		}
 
 		return allURLs;
+	}
+
+	/**
+	 * this method searches trough DB for Categories and Authors and returns
+	 * their titles
+	 * 
+	 * @param h
+	 * @return
+	 */
+	public ArrayList<String> getAllCatAndAutTitles()
+	{
+		ArrayList<String> allTitles = new ArrayList<String>();
+
+		try
+		{
+			List<Category> allCategories = this.getDaoCategory().queryForAll();
+			for (int i = 0; i < allCategories.size(); i++)
+			{
+				allTitles.add(allCategories.get(i).getTitle());
+			}
+
+			List<Author> allAuthors = this.getDaoAuthor().queryForAll();
+			for (int i = 0; i < allAuthors.size(); i++)
+			{
+				allTitles.add(allAuthors.get(i).getName());
+			}
+
+			String[] menuUrls = CatData.getMenuNames(ctx);
+			for (int i = 0; i < menuUrls.length; i++)
+			{
+				allTitles.add(menuUrls[i]);
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return allTitles;
 	}
 
 	/**
