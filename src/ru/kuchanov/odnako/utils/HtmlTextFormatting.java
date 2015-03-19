@@ -26,6 +26,7 @@ public class HtmlTextFormatting
 
 	private static final String ARROW_OPEN = "<";
 	private static final String ARROW_CLOSE = ">";
+	private static final String DOMAIN_NAME = "http://odnako.org";
 
 	private static TagNode formatedArticle;
 	private static String tagHtml;
@@ -132,7 +133,12 @@ public class HtmlTextFormatting
 		}
 		//create img tag with info from input
 		TagNode imgTag = new TagNode("img");
-		imgTag.addAttribute("src", curInnerTag.getAttributeByName("src"));
+		String imgUrl=curInnerTag.getAttributeByName("src");
+		if(imgUrl.startsWith("/"))
+		{
+			imgUrl=DOMAIN_NAME+imgUrl;
+		}
+		imgTag.addAttribute("src", imgUrl);
 		imgTag.addAttribute("style", curInnerTag.getAttributeByName("style"));
 		//add them to our formated tag
 		formatedArticle.addChild(imgTag);

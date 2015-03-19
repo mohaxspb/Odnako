@@ -59,7 +59,7 @@ public class ActivityBase extends ActionBarActivity
 	//Toolbar
 	Toolbar toolbar;
 
-	///drawer
+	//drawer
 	protected DrawerLayout mDrawerLayout;
 	protected ExpandableListView mDrawer;
 	protected ExpListAdapter expAdapter;
@@ -67,7 +67,7 @@ public class ActivityBase extends ActionBarActivity
 	protected ActionBarDrawerToggle mDrawerToggle;
 
 	protected int[] groupChildPosition = new int[] { 1, 7 };
-	///drawer
+	////drawer
 
 	/**
 	 * map with lists of articles info for all categories and authors, witch

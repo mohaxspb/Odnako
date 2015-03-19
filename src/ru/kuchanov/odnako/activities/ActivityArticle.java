@@ -27,6 +27,8 @@ import android.view.MenuItem;
 
 public class ActivityArticle extends ActivityBase
 {
+	static final String LOG = ActivityArticle.class.getSimpleName();
+
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter;
 
@@ -119,6 +121,7 @@ public class ActivityArticle extends ActivityBase
 	public void onResume()
 	{
 		super.onResume();
+		//TODO find why here we have default title of ActionBar;
 		Log.d(LOG, "this.toolbar.getTitle(): " + this.toolbar.getTitle());
 		Log.d(LOG, "this.act.getSupportActionBar().getTitle(): " + this.act.getSupportActionBar().getTitle());
 
