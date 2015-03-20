@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -122,9 +121,6 @@ public class ActivityArticle extends ActivityBase
 	{
 		super.onResume();
 		//TODO find why here we have default title of ActionBar;
-		Log.d(LOG, "this.toolbar.getTitle(): " + this.toolbar.getTitle());
-		Log.d(LOG, "this.act.getSupportActionBar().getTitle(): " + this.act.getSupportActionBar().getTitle());
-
 		ActivityArticle articleActivity = (ActivityArticle) this.act;
 		String categotiesTitle = "";
 
@@ -134,7 +130,7 @@ public class ActivityArticle extends ActivityBase
 			if (s.equals(this.categoryToLoad))
 			{
 				categotiesTitle = articleActivity.getAllCatAndAutTitles().get(i);
-				this.toolbar.setTitle(categotiesTitle + " " + this.getCurArtPosition() + 1 + "/"
+				this.toolbar.setTitle(categotiesTitle + " " + String.valueOf(this.getCurArtPosition() + 1) + "/"
 				+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
 				break;
 			}

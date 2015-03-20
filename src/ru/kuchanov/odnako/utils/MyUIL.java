@@ -74,8 +74,8 @@ public class MyUIL
 		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
+//		.considerExifParams(true)
+//		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
 
@@ -88,8 +88,8 @@ public class MyUIL
 		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
+//		.considerExifParams(true)
+//		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
 

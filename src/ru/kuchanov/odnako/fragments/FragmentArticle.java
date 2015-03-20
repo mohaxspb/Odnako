@@ -6,8 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.util.ArrayList;
-
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
@@ -16,6 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
@@ -30,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -99,7 +97,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private Article curArticle;
 	//	position in all art arr; need to show next/previous arts
 	private int position;
-	ArrayList<Article> allArtsInfo;
+	//	ArrayList<Article> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
 
@@ -109,7 +107,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		//		System.out.println("ArticleFragment onCreate");
+		//Log.i(LOG, "ArticleFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -119,13 +117,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.curArticle = stateFromArgs.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(stateFromArgs.getInt("position"));
-			this.allArtsInfo = stateFromArgs.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
+			//			this.allArtsInfo = stateFromArgs.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 		if (savedState != null)
 		{
 			this.curArticle = savedState.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(savedState.getInt("position"));
-			this.allArtsInfo = savedState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
+			//			this.allArtsInfo = savedState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 
 		this.imageLoader = MyUIL.get(act);
@@ -146,37 +144,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
-
-			//reciver for loading status
-			LocalBroadcastManager.getInstance(this.act).registerReceiver(categoryIsLoadingReceiver,
-			new IntentFilter(curArticle.getUrl() + Const.Action.IS_LOADING));
 		}
 	}
-
-	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			//Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
-			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
-			if (isCurrentlyLoading)
-			{
-				swipeRef.setRefreshing(true);
-			}
-			else
-			{
-				swipeRef.setRefreshing(false);
-			}
-		}
-	};
 
 	private BroadcastReceiver articleReceiver = new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG + curArticle.getUrl(), "articleReceiver onReceive");
+			Log.e(LOG + curArticle.getUrl(), "articleReceiver onReceive");
 			if (!isAdded())
 			{
 				Log.e(LOG + curArticle.getUrl(), "fragment not added! RETURN!");
@@ -191,38 +167,29 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			else
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-				Log.i(LOG, a.getTitle() + " have been loaded");
 				curArticle = a;
+				Log.i(LOG, a.getTitle() + " have been loaded");
+				long beforeTime = System.currentTimeMillis();
+				Log.e(LOG, "start fill fragment with info");
 				checkCurArtInfo(null);
+				Log.e(LOG,
+				"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 			}
 		}
 	};
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		//System.out.println("ArticleFragment onCreateView");
+		//Log.i(LOG, "ArticleFragment onCreateView");
 		this.inflater = inflater;
-		View v = inflater.inflate(R.layout.fragment_art, container, false);
+		View v = this.inflater.inflate(R.layout.fragment_art, container, false);
 
 		//find all views
 		this.findViews(v);
-		
-		//setOnScrollListener for ScrollView
-//		scroll.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener()
-//		{
-//
-//		    @Override
-//		    public void onScrollChanged() 
-//		    {
-//
-//		        int scrollY = scroll.getScrollY(); //for verticalScrollView
-//		        //DO SOMETHING WITH THE SCROLL COORDINATES
-//
-//		    }
-//		});
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
-		this.checkCurArtInfo(savedInstanceState);
+		//		this.checkCurArtInfo(savedInstanceState);
+		this.update(curArticle);
 
 		return v;
 	}
@@ -231,8 +198,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		if (this.curArticle == null)
 		{
-			//load...
-			//			this.loadArticle(false);
+			//show load...
 			this.swipeRef.setRefreshing(true);
 		}
 		else
@@ -241,6 +207,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				//load...
 				this.loadArticle(false);
+				//XXX
+				//				DataBaseHelper h = new DataBaseHelper(act);
+				//				ParseArticle parse = new ParseArticle(act, this.curArticle.getUrl(), h, this);
+				//				parse.execute();
 
 				this.fillFielsdsWithInfo();
 
@@ -271,7 +241,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					@Override
 					public void onClick(View v)
 					{
-						Actions.showComments(allArtsInfo, getPosition(), act);
+						//TODO
+						//						Actions.showComments(allArtsInfo, getPosition(), act);
 					}
 				});
 
@@ -311,7 +282,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		intent.setAction(Const.Action.DATA_REQUEST);
 		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
 		intent.putExtra("startDownload", startDownload);
-
 		this.act.startService(intent);
 	}
 
@@ -340,6 +310,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//TODO
 			}
 		});
+		
+		LinearLayout mainLinLayInScroll=(LinearLayout) v.findViewById(R.id.main_lin_lay_article_frags_scroll);
+		CardView artCard;
+		if (android.os.Build.VERSION.SDK_INT != 16)
+		{
+			artCard=(CardView) this.inflater.inflate(R.layout.article_card_art_frag, mainLinLayInScroll, false);
+		}
+		else
+		{
+			artCard=(CardView) this.inflater.inflate(R.layout.article_card_art_frag_jb, mainLinLayInScroll, false);
+		}		
+		mainLinLayInScroll.addView(artCard, 1);
+		
 
 		this.articlesTextContainer = (LinearLayout) v.findViewById(R.id.articles_text_container);
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
@@ -599,19 +582,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 	}
 
-	public int getIdAssignedByR(Context pContext, String pIdString)
-	{
-		// Get the Context's Resources and Package Name
-		Resources resources = pContext.getResources();
-		String packageName = pContext.getPackageName();
-
-		// Determine the result and return it
-		int result = resources.getIdentifier(pIdString, "id", packageName);
-		return result;
-	}
-
 	//set text, tegs, author etc
-	private void fillFielsdsWithInfo(/* View rootView */)
+	private void fillFielsdsWithInfo()
 	{
 		//variables for scaling text and icons and images from settings
 		String scaleFactorString = pref.getString("scale", "1");
@@ -695,7 +667,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setArticlesText()
 	{
-		//		ViewGroup artTvParent = (ViewGroup) this.artTextView.getParent();
 		String articleString = this.curArticle.getArtText().replaceAll("<br />", "\n");
 		HtmlCleaner cleaner = new HtmlCleaner();
 		TagNode articleTextTag = cleaner.clean(articleString);//.getChildTags();//.getAllElements(true);
@@ -727,7 +698,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					//check if previous tag was img and create new TextView, else append text to existing
 					if (i == 0 || (i != 0 && formatedArticle.getChildTags()[i - 1].getName().equals("img")))
 					{
-						TextView tV = new TextView(act);
+						TextView tV;
+						if (android.os.Build.VERSION.SDK_INT != 16)
+						{
+							tV = new TextView(act);
+						}
+						else
+						{
+							tV = new JBTextView(act);
+						}
 						LinearLayout.LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.MATCH_PARENT);
 						params.setMargins(5, 5, 5, 5);
@@ -744,8 +723,18 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					}
 					else
 					{
-						TextView tV = (TextView) articlesTextContainer
-						.getChildAt(articlesTextContainer.getChildCount() - 1);
+						TextView tV;
+						if (android.os.Build.VERSION.SDK_INT != 16)
+						{
+							tV = (TextView) articlesTextContainer
+							.getChildAt(articlesTextContainer.getChildCount() - 1);
+						}
+						else
+						{
+							tV = (JBTextView) articlesTextContainer
+							.getChildAt(articlesTextContainer.getChildCount() - 1);
+						}
+
 						tV.append(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
 						+ ">"));
 					}
@@ -845,7 +834,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		//		System.out.println("ArticleFragment onSaveInstanceState");
+		//System.out.println("ArticleFragment onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
 		//save scrollView position
@@ -853,18 +842,24 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		outState.putInt("position", this.getPosition());
 		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
-		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
+		//		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 	}
 
 	@Override
-	public void update(ArrayList<Article> allArtInfo)
+	//	public void update(ArrayList<Article> allArtInfo)
+	public void update(Article allArtInfo)
 	{
-		this.curArticle = allArtInfo.get(getPosition());
+		this.curArticle = allArtInfo;//allArtInfo.get(getPosition());
 		//Log.i(LOG + curArticle.getUrl(), "update called");
 		LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 		new IntentFilter(this.curArticle.getUrl()));
-		this.checkCurArtInfo(null);
+
+		long beforeTime = System.currentTimeMillis();
+		Log.e(LOG, "start fill fragment with info");
+		checkCurArtInfo(null);
+		Log.e(LOG,
+		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}
 
 	public int getPosition()
@@ -885,11 +880,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
 			articleReceiver = null;
-		}
-		if (categoryIsLoadingReceiver != null)
-		{
-			LocalBroadcastManager.getInstance(act).unregisterReceiver(categoryIsLoadingReceiver);
-			categoryIsLoadingReceiver = null;
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();

@@ -37,13 +37,13 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		this.act = act;
 
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
-//		this.notifyDataSetChanged();
+		//		this.notifyDataSetChanged();
 	}
 
 	@Override
 	public void notifyDataSetChanged()
 	{
-//		Log.e(LOG_TAG + category, "notifyDataSetChanged called");
+		//		Log.e(LOG_TAG + category, "notifyDataSetChanged called");
 		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
 		super.notifyDataSetChanged();
 	}
@@ -109,7 +109,8 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 				{
 					try
 					{
-						((FragArtUPD) object).update(this.allArtsInfo);
+						FragmentArticle artFrag = (FragmentArticle) object;
+						((FragArtUPD) object).update(this.allArtsInfo.get(artFrag.getPosition()));
 					} catch (NullPointerException e)
 					{
 						Log.e(LOG,

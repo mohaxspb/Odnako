@@ -12,6 +12,7 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.ServiceArticle;
+import ru.kuchanov.odnako.fragments.FragArtUPD;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -25,11 +26,21 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 	private Context ctx;
 	private DataBaseHelper h;
 
+	FragArtUPD f;
+
 	public ParseArticle(Context ctx, String url, DataBaseHelper h)
 	{
 		this.ctx = ctx;
-		this.setUrl(url);
+		this.url = url;
 		this.h = h;
+	}
+
+	public ParseArticle(Context ctx, String url, DataBaseHelper h, FragArtUPD f)
+	{
+		this.ctx = ctx;
+		this.url = url;
+		this.h = h;
+		this.f = f;
 	}
 
 	protected Article doInBackground(Void... arg)
@@ -95,7 +106,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 
 		} catch (Exception e)
 		{
-			Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
+//			Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
 		return article;
@@ -106,7 +117,15 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		//check internet
 		if (article != null)
 		{
-			ServiceArticle.sendDownloadedData(ctx, article, url);
+			if (this.f != null)
+			{
+				this.f.update(article);
+				this.h.close();
+			}
+			else
+			{
+				ServiceArticle.sendDownloadedData(ctx, article, url);
+			}
 		}
 		//NO internet
 		else
@@ -126,10 +145,5 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 	public String getUrl()
 	{
 		return url;
-	}
-
-	public void setUrl(String url)
-	{
-		this.url = url;
 	}
 }

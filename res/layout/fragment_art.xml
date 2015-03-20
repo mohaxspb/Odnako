@@ -12,6 +12,7 @@
         android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/main_lin_lay_article_frags_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -21,7 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
-            <include layout="@layout/article_card_art_frag" />
+            <!-- <include layout="@layout/article_card_art_frag" /> -->
+            <!-- <include layout="article_card_art_frag" /> -->
 
             <LinearLayout
                 android:id="@+id/articles_text_container"

@@ -43,7 +43,6 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	public DataBaseHelper(Context context)
 	{
 		super(context, DATABASE_NAME, null, context.getResources().getInteger(R.integer.db_version));
-
 		this.ctx = context;
 	}
 

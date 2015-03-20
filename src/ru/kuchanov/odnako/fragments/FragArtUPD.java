@@ -6,8 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.util.ArrayList;
-
 import ru.kuchanov.odnako.db.Article;
 
 /**
@@ -20,5 +18,6 @@ public interface FragArtUPD
 	/**
 	 * Interface method for updating FragmentArticle
 	 */
-	public void update(ArrayList<Article> allArtInfo);
+	public void update(Article allArtInfo);
+	//	public void update(ArrayList<Article> allArtInfo);
 }
