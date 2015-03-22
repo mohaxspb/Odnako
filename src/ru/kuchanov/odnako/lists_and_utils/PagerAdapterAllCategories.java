@@ -31,7 +31,13 @@ public class PagerAdapterAllCategories extends FragmentStatePagerAdapter
 	{
 		super(fm);
 		this.act = act;
-		this.allCategories = (ArrayList<Category>) act.getAllCategoriesList();
+		//we can access this from another activity...
+		//yes, I know, that it's bad...
+		//anyway we can check act for null and set Categories list via updateData() method
+		if(act!=null)
+		{
+			this.allCategories = (ArrayList<Category>) act.getAllCategoriesList();
+		}		
 	}
 
 	/**

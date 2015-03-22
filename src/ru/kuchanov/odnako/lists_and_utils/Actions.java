@@ -15,6 +15,7 @@ import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 
@@ -272,21 +273,24 @@ public class Actions
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 						PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 						act.getSupportFragmentManager(), mainActivity);
-						boolean weFindIt = false;
-						int position = 0;
-						for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
-						{
-							String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
-							.get(i)
-							.getUrl());
-							if (categoryUrl.equals(curCatUrl))
-							{
-								weFindIt = true;
-								position = i;
-								break;
-							}
-						}
-						if (weFindIt)
+						//						boolean weFindIt = false;
+						//						int position = 0;
+						//						for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
+						//						{
+						//							String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
+						//							.get(i)
+						//							.getUrl());
+						//							if (categoryUrl.equals(curCatUrl))
+						//							{
+						//								weFindIt = true;
+						//								position = i;
+						//								break;
+						//							}
+						//						}
+						//						if (weFindIt)
+						int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
+						//						if (weFindIt)
+						if (position != -1)
 						{
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_CATEGORIES);
 							mainActivity.setCurentCategoryPosition(position);
@@ -330,7 +334,7 @@ public class Actions
 			else
 			{
 				//if not twoPane
-				//TODO check if it ActivityMain and show AllAuthors pager or start activity with it
+				//TODO check if it's ActivityMain and show AllAuthors pager or start activity with it
 				if (act instanceof ActivityMain)
 				{
 					ActivityMain mainActivity = (ActivityMain) act;
@@ -340,21 +344,23 @@ public class Actions
 					ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 					act.getSupportFragmentManager(), mainActivity);
-					boolean weFindIt = false;
-					int position = 0;
-					for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
-					{
-						String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
-						.get(i)
-						.getUrl());
-						if (categoryUrl.equals(curCatUrl))
-						{
-							weFindIt = true;
-							position = i;
-							break;
-						}
-					}
-					if (weFindIt)
+					//					boolean weFindIt = false;
+					//					int position = 0;
+					//					for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
+					//					{
+					//						String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
+					//						.get(i)
+					//						.getUrl());
+					//						if (categoryUrl.equals(curCatUrl))
+					//						{
+					//							weFindIt = true;
+					//							position = i;
+					//							break;
+					//						}
+					//					}
+					int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
+					//					if (weFindIt)
+					if (position != -1)
 					{
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_CATEGORIES);
 						mainActivity.setCurentCategoryPosition(position);
@@ -391,7 +397,28 @@ public class Actions
 				}//if (act instanceof ActivityMain)
 				else
 				{
+					Intent intent = new Intent(act, ActivityMain.class);
 
+					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
+					act.getSupportFragmentManager(), null);
+					ActivityBase activityBase=(ActivityBase) act;
+					pagerAllCat.updateData((ArrayList<Category>) activityBase.getAllCategoriesList());
+					int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
+					if (position != -1)
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_CATEGORIES);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY_POSITION, position);
+					}
+					else
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, categoryUrl);
+					}
+
+					//set flags to prevent restoring activity from backStack and create really new instance
+					//with given categories number
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					act.startActivity(intent);
 				}
 			}
 		}
@@ -400,6 +427,32 @@ public class Actions
 			System.out.println("p.authorBlogUrl.equals('empty' || ''): WTF?!");
 		}
 	}//showAllCategoriesArticles
+
+	private static int searchForCategoryInDB(PagerAdapterAllCategories pagerAllCat, String categoryUrl)
+	{
+		boolean weFindIt = false;
+		int position = 0;
+		for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
+		{
+			String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
+			.get(i)
+			.getUrl());
+			if (categoryUrl.equals(curCatUrl))
+			{
+				weFindIt = true;
+				position = i;
+				break;
+			}
+		}
+		if (weFindIt)
+		{
+			return position;
+		}
+		else
+		{
+			return -1;
+		}
+	}
 
 	public static void markAsRead(String url, Context ctx)
 	{
@@ -615,4 +668,5 @@ public class Actions
 			//TODO
 		}
 	}
+
 }

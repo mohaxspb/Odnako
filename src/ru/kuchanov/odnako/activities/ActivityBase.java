@@ -97,7 +97,9 @@ public class ActivityBase extends ActionBarActivity
 	protected static final String KEY_ALL_CAT_AND_AUT_TITLES_LIST = "allCatAndAutTitles";
 
 	int currentCategoryPosition = 11;
+	public static final String KEY_CURRENT_CATEGORY_POSITION = "currentCategoryPosition";
 	private String currentCategory = "odnako.org/blogs";
+	public static final String KEY_CURRENT_CATEGORY = "currentCategory";
 
 	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;

@@ -129,17 +129,32 @@ public class ActivityMain extends ActivityBase
 		super.onCreate(savedInstanceState);
 		/////
 		//check intents extras and set pagerType and other params
-		if(this.getIntent().hasExtra(KEY_PAGER_TYPE))
+		if (this.getIntent().hasExtra(KEY_PAGER_TYPE))
 		{
-			this.setPagerType(this.getIntent().getIntExtra(KEY_PAGER_TYPE, PAGER_TYPE_MENU));			
-			int[] groupChild=this.getIntent().getIntArrayExtra(KEY_GROUP_CHILD_POSITION);
-//			this.setGroupChildPosition(groupChild[0], groupChild[1]);
-			this.setCurentCategoryPosition(this.getCurentPositionByGroupChildPosition(groupChild[0], groupChild[1]));
-			
+			this.pagerType=this.getIntent().getIntExtra(KEY_PAGER_TYPE, PAGER_TYPE_MENU);
+			//here we can switch between pagerTypes and set curentCategoryPosition for AuthorsPager and so on
+			switch (this.pagerType)
+			{
+				case PAGER_TYPE_MENU:
+					int[] groupChild = this.getIntent().getIntArrayExtra(KEY_GROUP_CHILD_POSITION);
+					this.setCurentCategoryPosition(this.getCurentPositionByGroupChildPosition(groupChild[0],
+					groupChild[1]));
+				break;
+				case PAGER_TYPE_AUTHORS:
+					this.setCurrentCategory(this.getIntent().getStringExtra(KEY_CURRENT_CATEGORY));
+				break;
+				case PAGER_TYPE_SINGLE:
+					this.setCurrentCategory(this.getIntent().getStringExtra(KEY_CURRENT_CATEGORY));
+				break;
+				case PAGER_TYPE_CATEGORIES:
+					this.setCurentCategoryPosition(this.getIntent().getIntExtra(KEY_CURRENT_CATEGORY_POSITION, 0));
+				break;
+			}
+
 			//set savedInstanceState to null to prevent restoring previous state
-			savedInstanceState=null;
+			savedInstanceState = null;
 		}
-		
+
 		if (savedInstanceState != null)
 		{
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
@@ -245,6 +260,7 @@ public class ActivityMain extends ActivityBase
 				listener = new PagerListenerAllAuthors(this, authorsPagerAdapter.getAllAuthorsList());
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+				this.setGroupChildPosition(-1, -1);
 			break;
 			case PAGER_TYPE_SINGLE:
 				final String singleCategoryUrl = this.getCurrentCategory();
@@ -253,6 +269,7 @@ public class ActivityMain extends ActivityBase
 				listener = new PagerListenerSingleCategory((ActivityMain) act);
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+				this.setGroupChildPosition(-1, -1);
 			break;
 			case PAGER_TYPE_CATEGORIES:
 				//TODO
@@ -262,6 +279,7 @@ public class ActivityMain extends ActivityBase
 				listener = new PagerListenerAllCategories(this, categoriesPagerAdapter.getAllCategoriesList());
 				this.artsListPager.setOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
+				this.setGroupChildPosition(-1, -1);
 			break;
 		}
 		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());

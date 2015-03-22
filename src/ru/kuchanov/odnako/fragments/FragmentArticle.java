@@ -336,10 +336,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.artAuthorDescriptionTV = (TextView) v.findViewById(R.id.art_author_description);
 
 		this.artDateTV = (TextView) v.findViewById(R.id.pub_date);
-		//		this.artTagsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
 
 		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
-		//		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
 		this.artAuthorDescriptionIV = (ImageView) v.findViewById(R.id.art_author_description_btn);
 
 		this.bottomPanel = (LinearLayout) v.findViewById(R.id.art_bottom_panel);
@@ -749,7 +747,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		if (allTagsList.size() != 0)
 		{
-			this.bottomPanel.addView(this.allTagsCard);
+			//for some reason allTagsCard can already have parent view...
+			//so, bedore adding it to bottom panel we remove it from parent...
+			if(allTagsCard.getParent()==null)
+			{
+				this.bottomPanel.addView(this.allTagsCard);
+			}
+			else
+			{
+				return;
+			}
+//			((ViewGroup)allTagsCard.getParent()).removeView(allTagsCard);
+			
+			
 			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
@@ -794,12 +804,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		this.curArticle = allArtInfo;
 		//Log.i(LOG + curArticle.getUrl(), "update called");
-		LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
-		LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
-		new IntentFilter(this.curArticle.getUrl()));
+		if (this.curArticle != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
+			new IntentFilter(this.curArticle.getUrl()));
+		}		
 
 		long beforeTime = System.currentTimeMillis();
-		Log.e(LOG, "start fill fragment with info");
+//		Log.e(LOG, "start fill fragment with info");
 		checkCurArtInfo(null, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
