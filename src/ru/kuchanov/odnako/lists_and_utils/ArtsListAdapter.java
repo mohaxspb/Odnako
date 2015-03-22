@@ -266,23 +266,24 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 					//preview
 					if (!p.getPreview().equals(Const.EMPTY_STRING))
-					{
-						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
-						holderMain.preview.setText(spannedContentPreview);
-						holderMain.preview.setTextSize(21 * scaleFactor);
+					{						
 						LayoutParams params = (LayoutParams) holderMain.preview.getLayoutParams();
 						params.height = LayoutParams.WRAP_CONTENT;
 						params.setMargins(5, 5, 5, 5);
 						holderMain.preview.setLayoutParams(params);
+						holderMain.preview.setTextSize(21 * scaleFactor);
+						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
+						holderMain.preview.setText(spannedContentPreview);
+						
 					}
 					else
-					{
-						holderMain.preview.setText(null);
-						holderMain.preview.setTextSize(21 * scaleFactor);
+					{						
 						LayoutParams params = (LayoutParams) holderMain.preview.getLayoutParams();
 						params.height = 0;
 						params.setMargins(0, 0, 0, 0);
 						holderMain.preview.setLayoutParams(params);
+						holderMain.preview.setText(null);
+						holderMain.preview.setTextSize(21 * scaleFactor);
 					}
 					////end of preview
 

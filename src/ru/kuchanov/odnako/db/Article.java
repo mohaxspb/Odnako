@@ -34,6 +34,7 @@ public class Article implements Parcelable
 	private static final String LOG = Article.class.getSimpleName();
 
 	public static final String DIVIDER = " !!!! ";
+	public static final String DIVIDER_GROUP = " !!__!! ";
 
 	public static final String KEY_CURENT_ART = "curArtInfo";
 	public static final String KEY_ALL_ART_INFO = "allArtInfo";
@@ -88,7 +89,7 @@ public class Article implements Parcelable
 	private String tegsMain = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
-	private String tegsAll = Const.EMPTY_STRING;
+	private String tagsAll = Const.EMPTY_STRING;
 
 	@DatabaseField(dataType = DataType.STRING)
 	private String shareQuont = Const.EMPTY_STRING;
@@ -145,7 +146,7 @@ public class Article implements Parcelable
 		this.artText = artInfoArr[9];
 		this.authorDescr = artInfoArr[10];
 		this.tegsMain = artInfoArr[11];
-		this.tegsAll = artInfoArr[12];
+		this.tagsAll = artInfoArr[12];
 		this.shareQuont = artInfoArr[13];
 		this.toReadMain = artInfoArr[14];
 		this.toReadMore = artInfoArr[15];
@@ -324,14 +325,14 @@ public class Article implements Parcelable
 		this.tegsMain = tegsMain;
 	}
 
-	public String getTegsAll()
+	public String getTagsAll()
 	{
-		return tegsAll;
+		return tagsAll;
 	}
 
-	public void setTegsAll(String tegsAll)
+	public void setTagsAll(String tagsAll)
 	{
-		this.tegsAll = tegsAll;
+		this.tagsAll = tagsAll;
 	}
 
 	public String getShareQuont()
@@ -408,7 +409,7 @@ public class Article implements Parcelable
 		allInfo[9] = artText;
 		allInfo[10] = authorDescr;
 		allInfo[11] = tegsMain;
-		allInfo[12] = tegsAll;
+		allInfo[12] = tagsAll;
 		allInfo[13] = shareQuont;
 		allInfo[14] = toReadMain;
 		allInfo[15] = toReadMore;
@@ -445,7 +446,7 @@ public class Article implements Parcelable
 		allInfo[11] = artText;
 		allInfo[12] = authorDescr;
 		allInfo[13] = tegsMain;
-		allInfo[14] = tegsAll;
+		allInfo[14] = tagsAll;
 		allInfo[15] = shareQuont;
 		allInfo[16] = toReadMain;
 		allInfo[17] = toReadMore;
@@ -740,7 +741,7 @@ public class Article implements Parcelable
 		dest.writeString(artText);
 		dest.writeString(authorDescr);
 		dest.writeString(tegsMain);
-		dest.writeString(tegsAll);
+		dest.writeString(tagsAll);
 		dest.writeString(shareQuont);
 		dest.writeString(toReadMain);
 		dest.writeString(toReadMore);
@@ -766,7 +767,7 @@ public class Article implements Parcelable
 		this.artText = in.readString();
 		this.authorDescr = in.readString();
 		this.tegsMain = in.readString();
-		this.tegsAll = in.readString();
+		this.tagsAll = in.readString();
 		this.shareQuont = in.readString();
 		this.toReadMain = in.readString();
 		this.toReadMore = in.readString();
@@ -796,9 +797,9 @@ public class Article implements Parcelable
 	public String[] getAllTagsArr()
 	{
 		String[] allTegsArr;
-		if (!this.tegsAll.equals(Const.EMPTY_STRING))
+		if (!this.tagsAll.equals(Const.EMPTY_STRING))
 		{
-			allTegsArr = this.tegsAll.split(DIVIDER);
+			allTegsArr = this.tagsAll.split(DIVIDER);
 		}
 		else
 		{
@@ -890,15 +891,26 @@ public class Article implements Parcelable
 
 	public ArrayList<Tag> getTags(String parsedTags)
 	{
+		Log.e(LOG, "parsedTags: "+parsedTags);
 		ArrayList<Tag> tags = new ArrayList<Tag>();
 		if (!parsedTags.equals(Const.EMPTY_STRING))
 		{
-			String[] arr = parsedTags.split(DIVIDER);
-			for (int i = 0; i < arr.length / 2; i++)
+			String[] allTagsArr = parsedTags.split(DIVIDER_GROUP);
+			Log.e(LOG, "allTagsArr.length: "+allTagsArr.length);
+			for (int i = 0; i < allTagsArr.length; i++)
 			{
-				tags.add(new Tag(arr[i * 2], arr[1 + i * 2]));
+				Log.e(LOG, "allTagsArr[i]: "+allTagsArr[i]);
+				String[] curTag = allTagsArr[i].split(DIVIDER);
+				Tag tag = new Tag(curTag[0], curTag[1]);
+				tags.add(tag);
 			}
 		}
+
+		//		String[] arr = parsedTags.split(DIVIDER);
+		//		for (int i = 0; i < arr.length / 2; i++)
+		//		{
+		//			tags.add(new Tag(arr[i * 2], arr[1 + i * 2]));
+		//		}
 		return tags;
 	}
 

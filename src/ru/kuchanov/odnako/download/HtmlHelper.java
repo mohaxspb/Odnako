@@ -527,7 +527,6 @@ public class HtmlHelper
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
 		isRecursive, isCaseSensitive);
 		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();
-
 		for (int i = 0; i < artTextTagNodeChildren.length; i++)
 		{
 			if (artTextTagNodeChildren[i].getName().equals("aside"))
@@ -535,10 +534,38 @@ public class HtmlHelper
 				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
 			}
 		}
-
 		String artText = this.cleaner.getInnerHtml(articlesTextTagNode);
 		artText = artText.replaceAll("<br />", "<br>").replaceAll("<br/>", "<br>").replaceAll("<strong>", "<b>")
 		.replaceAll("</strong>", "</b>");
+		////TEGS ALL
+		//<nav class="m-breadcrumbs m-breadcrumbs-tags">
+		TagNode allTagsElement = this.rootNode.findElementByAttValue("class", "m-breadcrumbs m-breadcrumbs-tags",
+		isRecursive, isCaseSensitive);
+		String allTags = Const.EMPTY_STRING;
+		if (allTagsElement != null)
+		{
+			TagNode[] allTagsArr = allTagsElement.getElementsByName("a", isRecursive);
+			allTags = "";
+			for (int i = 0; i < allTagsArr.length; i++)
+			{
+				Log.e(LOG, "allTags: "+allTags);
+				TagNode aTag = allTagsArr[i];
+				String url = aTag.getAttributeByName("href");
+				String tagTitle = aTag.getAttributeByName("title");
+				allTags = allTags.concat(url);
+				allTags = allTags.concat(Article.DIVIDER);
+				allTags = allTags.concat(tagTitle);
+				//and add group divider if it's not last element
+				if (i != allTagsArr.length - 1)
+				{
+					allTags = allTags.concat(Article.DIVIDER_GROUP);
+				}
+			}
+		}
+		else
+		{
+			Log.e(LOG, "allTagsElement is  null!");
+		}
 
 		a.setUrl(url);
 		a.setPreview(preview);
@@ -556,6 +583,7 @@ public class HtmlHelper
 		a.setTagsMain(tagMain);
 		//artText
 		a.setArtText(artText);
+		a.setTagsAll(allTags);
 		return a;
 	}
 

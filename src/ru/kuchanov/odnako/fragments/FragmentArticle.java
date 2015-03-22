@@ -6,6 +6,8 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
+import java.util.ArrayList;
+
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
@@ -14,8 +16,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
@@ -90,7 +94,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private LinearLayout bottomPanel;
 	private CardView shareCard;
 	private CardView commentsBottomBtn;
-	private CardView allTegsCard;
+	private CardView allTagsCard;
 	private CardView alsoByThemeCard;
 	private CardView alsoToReadCard;
 
@@ -171,7 +175,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				Log.i(LOG, a.getTitle() + " have been loaded");
 				long beforeTime = System.currentTimeMillis();
 				Log.e(LOG, "start fill fragment with info");
-				checkCurArtInfo(null);
+				checkCurArtInfo(null, (ViewGroup) getView());
 				Log.e(LOG,
 				"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 			}
@@ -194,7 +198,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		return v;
 	}
 
-	private void checkCurArtInfo(Bundle savedInstanceState)
+	private void checkCurArtInfo(Bundle savedInstanceState, ViewGroup rootView)
 	{
 		if (this.curArticle == null)
 		{
@@ -310,19 +314,18 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//TODO
 			}
 		});
-		
-		LinearLayout mainLinLayInScroll=(LinearLayout) v.findViewById(R.id.main_lin_lay_article_frags_scroll);
+
+		LinearLayout mainLinLayInScroll = (LinearLayout) v.findViewById(R.id.main_lin_lay_article_frags_scroll);
 		CardView artCard;
 		if (android.os.Build.VERSION.SDK_INT != 16)
 		{
-			artCard=(CardView) this.inflater.inflate(R.layout.article_card_art_frag, mainLinLayInScroll, false);
+			artCard = (CardView) this.inflater.inflate(R.layout.article_card_art_frag, mainLinLayInScroll, false);
 		}
 		else
 		{
-			artCard=(CardView) this.inflater.inflate(R.layout.article_card_art_frag_jb, mainLinLayInScroll, false);
-		}		
+			artCard = (CardView) this.inflater.inflate(R.layout.article_card_art_frag_jb, mainLinLayInScroll, false);
+		}
 		mainLinLayInScroll.addView(artCard, 1);
-		
 
 		this.articlesTextContainer = (LinearLayout) v.findViewById(R.id.articles_text_container);
 		this.artTextView = (TextView) v.findViewById(R.id.art_text);
@@ -381,7 +384,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		this.bottomPanel.addView(this.commentsBottomBtn);
 
-		this.allTegsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
+		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
 		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 	}
@@ -745,88 +748,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setUpAllTegsLayout()
 	{
-		String[] allTegs = this.curArticle.getAllTagsArr();
-		//allTegs = new String[] { "ddddddddddddddddddddhhhhhhhhhhhhhhfdhfjgfjfgdddddddddddddddd", "jhdjsdhjsdh", "jhddddddddddddddddjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh", "jhdjsdhjsdh" };
-		if (allTegs != null)
+		ArrayList<Tag> allTagsList = this.curArticle.getTags(this.curArticle.getTagsAll());
+
+		if (allTagsList.size() != 0)
 		{
-			this.bottomPanel.addView(this.allTegsCard);
-			LinearLayout allTegsLin = (LinearLayout) allTegsCard.findViewById(R.id.all_tegs_lin);
-			LinearLayout firstLin = (LinearLayout) allTegsCard.findViewById(R.id.first_tegs_lin);
-			LayoutInflater inflater = act.getLayoutInflater();
-			int curLinId = 0;
-			LinearLayout curLinLay = firstLin;
-
-			//max width
-			int width;
-			DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
-			if (this.twoPane)
+			this.bottomPanel.addView(this.allTagsCard);
+			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
+			for (int i = 0; i < allTagsList.size(); i++)
 			{
-				width = displayMetrics.widthPixels / 4 * 3;
-			}
-			else
-			{
-				width = displayMetrics.widthPixels;
-			}
-
-			//			int vPad = rooView.getPaddingLeft() + rooView.getPaddingRight();
-			int vPad = this.getView().getPaddingLeft() + this.getView().getPaddingRight();
-			int bPad = this.bottomPanel.getPaddingLeft() + this.bottomPanel.getPaddingRight();
-			int cPad = this.allTegsCard.getPaddingLeft() + this.allTegsCard.getPaddingRight();
-			int minusPaddings = vPad + bPad + cPad;
-			//		System.out.println("width: " + width);
-			//		System.out.println("minusPaddings: "+minusPaddings);
-			width -= minusPaddings;
-			//		System.out.println("minusPaddings: "+minusPaddings);
-			int minHeight = 0;
-			//		System.out.println("width: " + width);
-			//
-			for (int i = 0; i < allTegs.length; i++)
-			{
-
-				CardView c = (CardView) inflater.inflate(R.layout.teg_card, curLinLay, false);
-				TextView tag = (TextView) c.findViewById(R.id.teg_tv);
-				tag.setText(allTegs[i]);
-				curLinLay.addView(c);
-
-				//calculate total linLay width
-				int curLinChildrenWidth = 0;
-
-				for (int u = 0; u < curLinLay.getChildCount(); u++)
-				{
-					curLinLay.getChildAt(u).measure(0, 0);
-					curLinChildrenWidth += curLinLay.getChildAt(u).getMeasuredWidth();
-				}
-				//plus 10*2 (2xpaddings of each tag
-				curLinChildrenWidth += curLinLay.getChildCount() * 10 * 2;
-				if (i == 0)
-				{
-					curLinLay.getChildAt(1).measure(0, 0);
-					minHeight = curLinLay.getChildAt(1).getMeasuredHeight();
-				}
-				//curLinLay.getChildAt(curLinLay.getChildCount()-1).measure(0, 0);
-				int height = curLinLay.getChildAt(curLinLay.getChildCount() - 1).getMeasuredHeight();
-				//check if it's too much
-				//must check not device, but View width
-				//so if it's planshet we must take only 3/4 of device width
-				//			System.out.println("curLinChildrenWidth: " + curLinChildrenWidth+"/ width: " + width);
-				//			System.out.println("height: " + height+"/ minHeight: " + minHeight);
-
-				if (curLinChildrenWidth >= width || height > minHeight)
-				{
-					curLinId++;
-					LinearLayout nextLin = new LinearLayout(act);
-					nextLin.setOrientation(LinearLayout.HORIZONTAL);
-					LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-					nextLin.setLayoutParams(params);
-					nextLin.setId(curLinId);
-
-					//remove previous and add it to next
-					curLinLay.removeView(c);
-					curLinLay = nextLin;
-					curLinLay.addView(c);
-
-					allTegsLin.addView(curLinLay);
-				}
+				Tag tag = allTagsList.get(i);
+				View tagCard = this.inflater.inflate(R.layout.item, flowLay, false);
+				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
+				String scaleFactorString = pref.getString("scale_art", "1");
+				float scaleFactor = Float.valueOf(scaleFactorString);
+				tV.setTextSize(21 * scaleFactor);
+				tV.setText(tag.title);
+				flowLay.addView(tagCard);
 			}
 		}
 	}//setUpAllTagsLayout
@@ -857,7 +794,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		long beforeTime = System.currentTimeMillis();
 		Log.e(LOG, "start fill fragment with info");
-		checkCurArtInfo(null);
+		checkCurArtInfo(null, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}
