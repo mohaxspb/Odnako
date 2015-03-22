@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- for rippleEffect -->
-    <!-- <color name="rippelColor">#3949AB</color> -->
     <color name="transparent">#00FFFFFF</color>
 
-    <color name="my_color_dark">#ff33B5E5</color>
-    <color name="my_color_light">#ff355689</color>
+    <!-- <color name="my_color_dark">#ff33B5E5</color>
+    <color name="my_color_light">#ff355689</color> -->
     <color name="odnako">#ff333333</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
-    <color name="cur_theme">#ff33B5E5</color>
+    <!-- <color name="cur_theme">#ff33B5E5</color> -->
     <color name="blue">#7ecce8</color>
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>

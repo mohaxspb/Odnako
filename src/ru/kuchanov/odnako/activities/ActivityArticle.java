@@ -177,29 +177,16 @@ public class ActivityArticle extends ActivityBase
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
-			case R.id.theme:
-				MenuItem ligthThemeMenuItem = item.getSubMenu().findItem(R.id.theme_ligth);
-				MenuItem darkThemeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
-				String curTheme = pref.getString("theme", "dark");
-				System.out.println(curTheme);
-				if (!curTheme.equals("dark"))
+			case R.id.theme_dark:
+				String theme = pref.getString("theme", "dark");
+				if (theme.equals("dark"))
 				{
-					ligthThemeMenuItem.setChecked(true);
+					this.pref.edit().putString("theme", "light").commit();
 				}
 				else
 				{
-					darkThemeMenuItem.setChecked(true);
+					this.pref.edit().putString("theme", "dark").commit();
 				}
-				return true;
-			case R.id.theme_ligth:
-				this.pref.edit().putString("theme", "ligth").commit();
-				System.out.println("theme_ligth");
-				this.recreate();
-				return true;
-			case R.id.theme_dark:
-				System.out.println("theme_dark");
-				this.pref.edit().putString("theme", "dark").commit();
-
 				this.recreate();
 				return super.onOptionsItemSelected(item);
 			default:

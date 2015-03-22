@@ -23,6 +23,7 @@ import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -47,6 +48,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+@SuppressLint("Registered")
 public class ActivityBase extends ActionBarActivity
 {
 	static final String LOG = ActivityBase.class.getSimpleName();

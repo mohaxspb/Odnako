@@ -87,7 +87,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private TextView artAuthorDescriptionTV;
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
-	private ImageView artAuthorArticlesIV;
+	//	private ImageView artAuthorArticlesIV;
 
 	//	private TextView artTagsMainTV;
 	private FlowLayout artTagsMain;
@@ -193,7 +193,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.findViews(v);
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
-		//		this.checkCurArtInfo(savedInstanceState);
 		this.update(curArticle);
 
 		return v;
@@ -212,16 +211,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				//load...
 				this.loadArticle(false);
-				//XXX
-				//				DataBaseHelper h = new DataBaseHelper(act);
-				//				ParseArticle parse = new ParseArticle(act, this.curArticle.getUrl(), h, this);
-				//				parse.execute();
 
 				this.fillFielsdsWithInfo();
 
 				//setting size of Images and text
 				this.setSizeAndTheme();
-				//End of setting size of Images and text
 			}
 			else
 			{
@@ -345,7 +339,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//		this.artTagsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
 
 		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
-		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
+		//		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
 		this.artAuthorDescriptionIV = (ImageView) v.findViewById(R.id.art_author_description_btn);
 
 		this.bottomPanel = (LinearLayout) v.findViewById(R.id.art_bottom_panel);
@@ -367,17 +361,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel_landscape, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);
-		}
-
-		//setShareIcon
-		ImageView shareIcon = (ImageView) this.shareCard.findViewById(R.id.art_share_all);
-		if (this.pref.getString("theme", "dark").equals("dark"))
-		{
-			shareIcon.setImageResource(R.drawable.ic_share_white_48dp);
-		}
-		else
-		{
-			shareIcon.setImageResource(R.drawable.ic_share_grey600_48dp);
 		}
 
 		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
@@ -466,7 +449,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//		LayoutParams iconsParams = new LayoutParams(iconPxels, iconPxels);
 
 		this.artAuthorIV.setLayoutParams(params);
-		this.artAuthorArticlesIV.setLayoutParams(params);
+		//		this.artAuthorArticlesIV.setLayoutParams(params);
 		this.artAuthorDescriptionIV.setLayoutParams(params);
 
 		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
@@ -511,40 +494,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		}
 		//set allArsList OnClick
-		if (this.curArticle.getAuthorBlogUrl().equals(Const.EMPTY_STRING)
-		|| this.curArticle.getAuthorBlogUrl().equals(""))
+		((View) this.artAuthorIV.getParent()).setOnClickListener(new OnClickListener()
 		{
-			this.artAuthorArticlesIV.setOnClickListener(null);
-			this.artAuthorArticlesIV.setLayoutParams(zeroAllParams);
-		}
-		else
-		{
-			this.artAuthorArticlesIV.setLayoutParams(params);
-			this.artAuthorArticlesIV.setOnClickListener(new OnClickListener()
+
+			@Override
+			public void onClick(View v)
 			{
-
-				@Override
-				public void onClick(View v)
-				{
-					Actions.showAllAuthorsArticles(curArticle.getAuthorBlogUrl(), act);
-				}
-			});
-		}
-
-		//set share panel Size&Theme
-		//		ImageView[] icons = new ImageView[6];
-		//		TextView[] shareQ = new TextView[6];
-		//		for (int i = 0; i < 6; i++)
-		//		{
-		//			icons[i] = (ImageView) this.shareCard.findViewById(this.getIdAssignedByR(act,
-		//			"art_share_" + String.valueOf(i)));
-		//			LayoutParams iconsParamsWithGravityCV = new LayoutParams(iconPxels, iconPxels);
-		//			iconsParamsWithGravityCV.gravity = Gravity.CENTER_VERTICAL;
-		//			icons[i].setLayoutParams(iconsParamsWithGravityCV);
-		//			shareQ[i] = (TextView) this.shareCard.findViewById(this.getIdAssignedByR(act,
-		//			"art_share_quont_" + String.valueOf(i)));
-		//			shareQ[i].setTextSize(25 * scaleFactor);
-		//		}
+				Actions.showAllAuthorsArticles(curArticle.getAuthorBlogUrl(), act);
+			}
+		});
 	}//setSizeAndTheme
 
 	private void artAuthorDescrBehavior()
@@ -677,9 +635,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setArticlesText()
 	{
-		String articleString = this.curArticle.getArtText().replaceAll("<br />", "\n");
+		String articleString = this.curArticle.getArtText();//.replaceAll("<br />", "\n");
 		HtmlCleaner cleaner = new HtmlCleaner();
-		TagNode articleTextTag = cleaner.clean(articleString);//.getChildTags();//.getAllElements(true);
+		TagNode articleTextTag = cleaner.clean(articleString);
 		//it's unexpectable, but this TagNode have "head" and "body" tags...
 		//So we only need innerHTML from "body" tag;
 		TagNode[] articlesTags = articleTextTag.findElementByName("body", true).getChildTags();
@@ -815,7 +773,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//	public void update(ArrayList<Article> allArtInfo)
 	public void update(Article allArtInfo)
 	{
-		this.curArticle = allArtInfo;//allArtInfo.get(getPosition());
+		this.curArticle = allArtInfo;
 		//Log.i(LOG + curArticle.getUrl(), "update called");
 		LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,

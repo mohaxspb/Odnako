@@ -15,18 +15,19 @@
         <item name="android:textColorPrimaryInverse">@color/material_grey_300</item>
         <item name="android:textColorSecondary">@color/material_grey_400</item>
         <item name="actionMenuTextColor">@color/material_grey_400</item>
-        
+
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/material_grey_800</item>
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/material_grey_900</item>
         <item name="colorAccent">@color/material_grey_400</item>
-                
         <item name="actionMenuTextAppearance">@color/material_grey_400</item>
         <item name="android:textColor">@color/material_grey_300</item>
         <item name="searchViewStyle">@style/DarkSearchViewStyle</item>
         <!-- custom attrs -->
-        <item name="cardBackGroundColor">@color/material_grey_800</item>
+        <item name="cardBackGroundColor">@color/material_grey_800</item>        
+        <item name="cardBackGroundColorDark">@color/material_grey_800</item>
+        
         <item name="themeIcon">@drawable/ic_color_lens_white_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_dark</item>
         <item name="settingsIcon">@drawable/ic_settings_white_48dp</item>
@@ -62,11 +63,11 @@
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_dark</item>
-        
+
         <!-- style for dropdown lists, such as context menu -->
         <item name="popupMenuStyle">@style/OdnakoPopupMenuDark</item>
         <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewDark</item>
-       <item name="android:itemBackground">@drawable/selectable_background_dark</item>
+        <item name="android:itemBackground">@drawable/selectable_background_dark</item>
         <!-- <item name="android:itemBackground">@color/material_grey_800</item> -->
     </style>
 
@@ -88,7 +89,7 @@
         <!-- Layout for query suggestion rows -->
         <!-- <item name="suggestionRowLayout">...</item> -->
     </style>
-    
+
     <style name="OdnakoPopupMenuDark" parent="@style/Widget.AppCompat.PopupMenu">
         <item name="android:listSelector">@drawable/selectable_background_dark</item>
         <item name="android:popupBackground">@color/material_grey_800</item>
@@ -109,24 +110,24 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <!--  -->
-        <item name="android:windowBackground">@color/material_grey_300</item>
+        <item name="android:windowBackground">@color/material_grey_200</item>
         <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_800</item>
         <item name="android:textColorPrimaryInverse">@color/material_grey_800</item>
         <item name="actionMenuTextColor">@color/material_grey_800</item>
-        
+
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/material_grey_400</item>
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/material_grey_500</item>
         <item name="colorAccent">@color/material_grey_800</item>
-        
         <item name="android:textColorSecondary">@color/material_grey_700</item>
-        
         <item name="actionMenuTextAppearance">@color/material_grey_800</item>
         <item name="android:textColor">@color/material_grey_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_50</item>
+        <item name="cardBackGroundColorDark">@color/material_grey_200</item>
+        
         <item name="themeIcon">@drawable/ic_color_lens_grey600_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_light</item>
         <item name="settingsIcon">@drawable/ic_settings_grey600_48dp</item>
@@ -163,7 +164,7 @@
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_light</item>
-        
+
         <!-- <item name="popupMenuStyle">@style/OdnakoPopupMenuLight</item> -->
         <item name="popupMenuStyle">@style/OdnakoPopupMenuLight</item>
         <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLight</item>

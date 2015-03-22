@@ -105,14 +105,14 @@
                         android:textColor="?android:textColorPrimary"
                         android:textSize="21sp" />
 
-                    <ImageView
+                   <!--  <ImageView
                         android:id="@+id/art_author_all_arts_btn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="right"
                         android:contentDescription="@string/hello_world"
                         android:padding="5dp"
-                        android:src="?authorIcon" />
+                        android:src="?authorIcon" /> -->
                 </LinearLayout>
             </ru.kuchanov.odnako.utils.MaterialRippleLayout>
 

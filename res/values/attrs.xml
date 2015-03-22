@@ -10,10 +10,12 @@
         <attr name="layout_breakLine" format="boolean" />
         <attr name="layout_horizontalSpacing" format="dimension" />
     </declare-styleable>
-    <!-- FlowLayout -->
-    <declare-styleable name="CustomTheme">
+    <!-- <declare-styleable name="CustomTheme"> -->
         <attr name="cardBackGroundColor" format="reference" />
-    </declare-styleable>
+    <!-- </declare-styleable> -->
+    <!-- <declare-styleable name="CustomTheme"> -->
+        <attr name="cardBackGroundColorDark" format="reference" />
+    <!-- </declare-styleable> -->
     <!-- for rippleView -->
     <declare-styleable name="MaterialRippleLayout">
         <attr name="mrl_rippleColor" format="color" localization="suggested" />

@@ -14,7 +14,7 @@
                 android:orderInCategory="100"
                 android:title="@string/action_settings"
                 app:showAsAction="always"/>
-            <item
+            <!-- <item
                 android:id="@+id/theme"
                 android:icon="?themeIcon"
                 android:orderInCategory="110"
@@ -31,7 +31,17 @@
                             android:title="@string/dark"/>
                     </group>
                 </menu>
-            </item>
+            </item> -->
+            <group
+                android:id="@+id/theme"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/theme_dark"
+                    android:icon="?themeIcon"
+                    android:orderInCategory="220"
+                    android:title="@string/night_mode"
+                    app:showAsAction="always"/>
+            </group>
         </menu>
         
     </item>
