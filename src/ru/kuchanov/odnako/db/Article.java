@@ -891,26 +891,17 @@ public class Article implements Parcelable
 
 	public ArrayList<Tag> getTags(String parsedTags)
 	{
-		Log.e(LOG, "parsedTags: "+parsedTags);
 		ArrayList<Tag> tags = new ArrayList<Tag>();
 		if (!parsedTags.equals(Const.EMPTY_STRING))
 		{
 			String[] allTagsArr = parsedTags.split(DIVIDER_GROUP);
-			Log.e(LOG, "allTagsArr.length: "+allTagsArr.length);
 			for (int i = 0; i < allTagsArr.length; i++)
 			{
-				Log.e(LOG, "allTagsArr[i]: "+allTagsArr[i]);
 				String[] curTag = allTagsArr[i].split(DIVIDER);
 				Tag tag = new Tag(curTag[0], curTag[1]);
 				tags.add(tag);
 			}
 		}
-
-		//		String[] arr = parsedTags.split(DIVIDER);
-		//		for (int i = 0; i < arr.length / 2; i++)
-		//		{
-		//			tags.add(new Tag(arr[i * 2], arr[1 + i * 2]));
-		//		}
 		return tags;
 	}
 

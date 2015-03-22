@@ -512,15 +512,26 @@ public class HtmlHelper
 		//</div>
 		TagNode mainTagDiv = this.rootNode.findElementByAttValue("class", "biggest-tag l-left", isRecursive,
 		isCaseSensitive);
-		String tagMain = "empty";
+		String tagMain = Const.EMPTY_STRING;
 		if (mainTagDiv.hasChildren())
 		{
-			TagNode aTag = mainTagDiv.findElementByName("a", isRecursive);
-			tagMain = aTag.getAttributeByName("href");
-			tagMain = tagMain.concat(Article.DIVIDER);
-			tagMain = tagMain.concat(aTag.getAttributeByName("title"));
+			TagNode[] allTagsArr = mainTagDiv.getElementsByName("a", isRecursive);
+			tagMain = "";
+			for (int i = 0; i < allTagsArr.length; i++)
+			{
+				TagNode aTag = allTagsArr[i];
+				String url = aTag.getAttributeByName("href");
+				String tagTitle = aTag.getAttributeByName("title");
+				tagMain = tagMain.concat(url);
+				tagMain = tagMain.concat(Article.DIVIDER);
+				tagMain = tagMain.concat(tagTitle);
+				//and add group divider if it's not last element
+				if (i != allTagsArr.length - 1)
+				{
+					tagMain = tagMain.concat(Article.DIVIDER_GROUP);
+				}
+			}
 		}
-
 		//article TEXT
 		//post-content l-post-text-offset break l-white clearfix outlined-hard-bot
 		TagNode articlesTextTagNode = this.rootNode
@@ -548,7 +559,6 @@ public class HtmlHelper
 			allTags = "";
 			for (int i = 0; i < allTagsArr.length; i++)
 			{
-				Log.e(LOG, "allTags: "+allTags);
 				TagNode aTag = allTagsArr[i];
 				String url = aTag.getAttributeByName("href");
 				String tagTitle = aTag.getAttributeByName("title");

@@ -89,7 +89,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private ImageView artAuthorDescriptionIV;
 	private ImageView artAuthorArticlesIV;
 
-	private TextView artTagsMainTV;
+	//	private TextView artTagsMainTV;
+	private FlowLayout artTagsMain;
 
 	private LinearLayout bottomPanel;
 	private CardView shareCard;
@@ -341,7 +342,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.artAuthorDescriptionTV = (TextView) v.findViewById(R.id.art_author_description);
 
 		this.artDateTV = (TextView) v.findViewById(R.id.pub_date);
-		this.artTagsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
+		//		this.artTagsMainTV = (TextView) v.findViewById(R.id.art_tags_main);
 
 		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
 		this.artAuthorArticlesIV = (ImageView) v.findViewById(R.id.art_author_all_arts_btn);
@@ -384,6 +385,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		this.bottomPanel.addView(this.commentsBottomBtn);
 
+		this.artTagsMain = (FlowLayout) v.findViewById(R.id.art_tags_main);
 		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
 		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
@@ -453,7 +455,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.artAuthorTV.setTextSize(21 * scaleFactor);
 		this.artAuthorDescriptionTV.setTextSize(21 * scaleFactor);
 		this.artDateTV.setTextSize(17 * scaleFactor);
-		this.artTagsMainTV.setTextSize(21 * scaleFactor);
+		//		this.artTagsMainTV.setTextSize(21 * scaleFactor);
 
 		//images
 		final float scale = getResources().getDisplayMetrics().density;
@@ -469,18 +471,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
 		LayoutParams zeroAllParams = new LayoutParams(0, 0);
-		LayoutParams normalParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		//removing tags field if it's empty
 		if (this.curArticle.getTegsMain().equals(Const.EMPTY_STRING) || this.curArticle.getTegsMain().equals(""))
 		{
-			this.artTagsMainTV.setText(null);
-			this.artTagsMainTV.setLayoutParams(zeroHeightParams);
+			this.artTagsMain.setLayoutParams(zeroHeightParams);
 		}
 		else
 		{
-			this.artTagsMainTV.setText(this.curArticle.getTegsMain());
-			this.artTagsMainTV.setLayoutParams(normalParams);
+			this.setUpMainTags();
 		}
 		//set descr of author btn
 		//set descrTV height to 0 by default
@@ -621,7 +620,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		String dateToShow = DateParse.formatDateByCurTime(this.curArticle.getPubDate());
 		this.artDateTV.setText(Html.fromHtml(dateToShow));
-		this.artTagsMainTV.setText(this.curArticle.getTegsMain());
+		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
+		if (this.curArticle.getTegsMain().equals(Const.EMPTY_STRING) || this.curArticle.getTegsMain().equals(""))
+		{
+			this.artTagsMain.setLayoutParams(zeroHeightParams);
+		}
+		else
+		{
+			this.setUpMainTags();
+		}
 
 		//AUTHOR
 		if (!this.curArticle.getAuthorName().equals(Const.EMPTY_STRING))
@@ -744,6 +751,28 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				}//if not img tag
 			}//loop trough articles tags
 		}//if Article.getArtText is not empty
+	}
+
+	private void setUpMainTags()
+	{
+		this.artTagsMain.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		String scaleFactorString = pref.getString("scale", "1");
+		float scaleFactor = Float.valueOf(scaleFactorString);
+
+		artTagsMain.removeAllViews();
+		ArrayList<Tag> allTagsList = this.curArticle.getTags(this.curArticle.getTegsMain());
+		if (allTagsList.size() != 0)
+		{
+			for (int i = 0; i < allTagsList.size(); i++)
+			{
+				Tag tag = allTagsList.get(i);
+				View tagCard = this.inflater.inflate(R.layout.item, artTagsMain, false);
+				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
+				tV.setTextSize(21 * scaleFactor);
+				tV.setText(tag.title);
+				artTagsMain.addView(tagCard);
+			}
+		}
 	}
 
 	private void setUpAllTegsLayout()

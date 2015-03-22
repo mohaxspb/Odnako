@@ -140,14 +140,24 @@
 
         <!-- <TextView -->
 
-        <ru.kuchanov.odnako.custom.view.JBTextView
+        <!-- <ru.kuchanov.odnako.custom.view.JBTextView
             android:id="@+id/art_tags_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/tegs"
             android:textColor="?android:textColorPrimary"
-            android:textSize="21sp" />
+            android:textSize="21sp" /> -->
+            <ru.kuchanov.odnako.custom.view.FlowLayout
+        android:id="@+id/art_tags_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dip"
+        android:paddingRight="12dip"
+        android:paddingTop="6dip"
+        app:horizontalSpacing="6dip"
+        app:verticalSpacing="12dip" >
+    </ru.kuchanov.odnako.custom.view.FlowLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

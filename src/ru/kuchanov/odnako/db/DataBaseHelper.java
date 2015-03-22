@@ -55,7 +55,6 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	public DataBaseHelper(Context context, String databaseName, CursorFactory factory, int databaseVersion)
 	{
 		super(context, databaseName, null, databaseVersion);
-		// TODO Auto-generated constructor stub
 		this.ctx = context;
 	}
 
@@ -263,7 +262,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 	@Override
 	public void close()
 	{
-		Log.e(getDatabaseName(), "CLOSED!");
+		//Log.e(getDatabaseName(), "CLOSED!");
 		super.close();
 		this.daoArtCatTable = null;
 		this.daoArtAutTable = null;
