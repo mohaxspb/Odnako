@@ -69,6 +69,7 @@ public class ActivityBase extends ActionBarActivity
 	protected ActionBarDrawerToggle mDrawerToggle;
 
 	protected int[] groupChildPosition = new int[] { 1, 7 };
+	public static final String KEY_GROUP_CHILD_POSITION = "groupChildPosition";
 	////drawer
 
 	/**
@@ -277,7 +278,7 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void saveGroupChildPosition(Bundle state)
 	{
-		state.putIntArray("groupChildPosition", groupChildPosition);
+		state.putIntArray(KEY_GROUP_CHILD_POSITION, groupChildPosition);
 	}
 
 	protected void saveCurentCategoryPosition(Bundle state)
@@ -287,9 +288,9 @@ public class ActivityBase extends ActionBarActivity
 
 	protected void restoreGroupChildPosition(Bundle state)
 	{
-		if (state.containsKey("groupChildPosition"))
+		if (state.containsKey(KEY_GROUP_CHILD_POSITION))
 		{
-			this.groupChildPosition = state.getIntArray("groupChildPosition");
+			this.groupChildPosition = state.getIntArray(KEY_GROUP_CHILD_POSITION);
 		}
 		else
 		{

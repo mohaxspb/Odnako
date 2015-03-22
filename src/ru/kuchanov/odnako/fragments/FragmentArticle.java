@@ -723,9 +723,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
-				Tag tag = allTagsList.get(i);
+				final Tag tag = allTagsList.get(i);
 				View tagCard = this.inflater.inflate(R.layout.item, artTagsMain, false);
+					
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
+				tV.setOnClickListener(new OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						Actions.showAllCategoriesArticles(tag.url, act);
+					}
+				});			
 				tV.setTextSize(21 * scaleFactor);
 				tV.setText(tag.title);
 				artTagsMain.addView(tagCard);
@@ -743,9 +753,18 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
-				Tag tag = allTagsList.get(i);
+				final Tag tag = allTagsList.get(i);
 				View tagCard = this.inflater.inflate(R.layout.item, flowLay, false);
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
+				tV.setOnClickListener(new OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						Actions.showAllCategoriesArticles(tag.url, act);
+					}
+				});			
 				String scaleFactorString = pref.getString("scale_art", "1");
 				float scaleFactor = Float.valueOf(scaleFactorString);
 				tV.setTextSize(21 * scaleFactor);

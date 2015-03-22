@@ -1,10 +1,10 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -34,26 +34,27 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
 	{
 		//test
-//		final long groupChildFlatPosition = ExpandableListView.getPackedPositionForChild(groupPosition, childPosition);
-//		final int groupPos1 = ExpandableListView.getPackedPositionGroup(groupChildFlatPosition);//(groupChildFlatPosition);
-//		final int childPos1 = ExpandableListView.getPackedPositionChild(groupChildFlatPosition);
-//		System.out.println("onChildClick_groupPos1: " + groupPos1 + "/ childPos1: " + childPos1);
+		//		final long groupChildFlatPosition = ExpandableListView.getPackedPositionForChild(groupPosition, childPosition);
+		//		final int groupPos1 = ExpandableListView.getPackedPositionGroup(groupChildFlatPosition);//(groupChildFlatPosition);
+		//		final int childPos1 = ExpandableListView.getPackedPositionChild(groupChildFlatPosition);
+		//		System.out.println("onChildClick_groupPos1: " + groupPos1 + "/ childPos1: " + childPos1);
 
 		if (act instanceof ActivityMain)
 		{
 			//TODO check twopane
-			ActivityMain mainActivity=(ActivityMain) this.act;
-			
+			ActivityMain mainActivity = (ActivityMain) this.act;
+
 			//if pagerType isn't MENU we set it to Menu and change pagers
-			if(mainActivity.getPagerType()!=ActivityMain.PAGER_TYPE_MENU)
+			if (mainActivity.getPagerType() != ActivityMain.PAGER_TYPE_MENU)
 			{
 				mainActivity.setPagerType(ActivityMain.PAGER_TYPE_MENU);
-				mainActivity.setPagers(ActivityMain.PAGER_TYPE_MENU, mainActivity.getCurentPositionByGroupChildPosition(groupPosition, childPosition));
+				mainActivity.setPagers(ActivityMain.PAGER_TYPE_MENU,
+				mainActivity.getCurentPositionByGroupChildPosition(groupPosition, childPosition));
 			}
 			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 
 			mainActivity.setGroupChildPosition(groupPosition, childPosition);
-			((ExpListAdapter)mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
+			((ExpListAdapter) mDrawerList.getExpandableListAdapter()).notifyDataSetChanged();
 
 			if (groupPosition == 0)
 			{
@@ -65,7 +66,6 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 			}
 
 			mDrawerLayout.closeDrawer(mDrawerList);
-			// TODO
 		}
 		else
 		{
@@ -73,10 +73,12 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 			mDrawerLayout.closeDrawer(mDrawerList);
 			// TODO
 			Intent intent = new Intent(act, ActivityMain.class);
-			Bundle b = new Bundle();
 			int[] groupChildPosition = new int[] { groupPosition, childPosition };
-			b.putIntArray("groupChildPosition", groupChildPosition);
-			intent.putExtras(b);
+			intent.putExtra(ActivityBase.KEY_GROUP_CHILD_POSITION, groupChildPosition);
+			intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_MENU);
+			//set flags to prevent restoring activity from backStack and create really new instance
+			//with given categories number
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			act.startActivity(intent);
 		}
 

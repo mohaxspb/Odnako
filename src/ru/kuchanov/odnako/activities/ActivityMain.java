@@ -59,7 +59,7 @@ public class ActivityMain extends ActivityBase
 	public final static int PAGER_TYPE_CATEGORIES = 2;
 	public final static int PAGER_TYPE_SINGLE = 3;
 
-	private final static String KEY_PAGER_TYPE = "pager type key";
+	public final static String KEY_PAGER_TYPE = "pager type key";
 	private int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
@@ -68,15 +68,8 @@ public class ActivityMain extends ActivityBase
 
 	//ViewPager and it's adapter for artsLists
 	ViewPager artsListPager;
-	//	PagerAdapter artsListPagerAdapter;
-
-	//art's list top image and it's gradient cover
-	//	ImageView topImgCover;
-	//	ImageView topImg;
 
 	Toolbar toolbarRight;
-
-	//	public ActivityMain act;// = this;
 
 	//curent displayed info
 	//AllArtsList Arrays for author's and categories links
@@ -135,6 +128,18 @@ public class ActivityMain extends ActivityBase
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 		/////
+		//check intents extras and set pagerType and other params
+		if(this.getIntent().hasExtra(KEY_PAGER_TYPE))
+		{
+			this.setPagerType(this.getIntent().getIntExtra(KEY_PAGER_TYPE, PAGER_TYPE_MENU));			
+			int[] groupChild=this.getIntent().getIntArrayExtra(KEY_GROUP_CHILD_POSITION);
+//			this.setGroupChildPosition(groupChild[0], groupChild[1]);
+			this.setCurentCategoryPosition(this.getCurentPositionByGroupChildPosition(groupChild[0], groupChild[1]));
+			
+			//set savedInstanceState to null to prevent restoring previous state
+			savedInstanceState=null;
+		}
+		
 		if (savedInstanceState != null)
 		{
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
