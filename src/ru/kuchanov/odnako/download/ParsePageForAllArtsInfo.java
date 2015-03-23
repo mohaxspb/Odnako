@@ -18,13 +18,10 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Article>>
 {
@@ -120,6 +117,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
 					//TODO create new entry in Category
+					Category c = hh.getCategoryFromHtml();
+					h.getDaoCategory().create(c);
 				}
 			}
 		} catch (Exception e)
@@ -134,15 +133,6 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		return output;
 	}
 
-	class LoadListener
-	{
-		public void processHTML(String html)
-		{
-			Log.e("result", html);
-		}
-	}
-
-	@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
 	protected void onPostExecute(ArrayList<Article> output)
 	{
 		//Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
@@ -155,29 +145,6 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//NO internet
 		else
 		{
-			final WebView webView = new WebView(this.ctx);
-
-			webView.getSettings().setJavaScriptEnabled(true);
-			webView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
-
-			webView.setWebViewClient(new WebViewClient()
-			{
-				@Override
-				public boolean shouldOverrideUrlLoading(WebView view, String url)
-				{
-					return true;
-				}
-
-				public void onPageFinished(WebView view, String url)
-				{
-					view
-					.loadUrl("javascript:window.HTMLOUT.processHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
-				}
-			});
-			this.link="http://about_denpobedi114.odnako.org/page-1/";
-			webView.loadUrl(link);
-			
-
 			if (this.cyrillicError)
 			{
 				callback.onError(Const.Error.CYRILLIC_ERROR, this.getCategoryToLoad(), this.page);

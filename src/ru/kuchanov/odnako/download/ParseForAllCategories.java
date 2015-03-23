@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 
 public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<ArrayList<String>>>
 {
-
 	ActionBarActivity act;
 
 	public ParseForAllCategories(ActionBarActivity act)
@@ -67,8 +66,5 @@ public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<
 		{
 			System.out.println("output=null  So  no internet!");
 		}
-		
-		
 	}
-
 }

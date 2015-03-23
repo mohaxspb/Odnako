@@ -403,7 +403,7 @@
         <item><![CDATA[agr_dummy.jpg]]></item>
     </string-array>
     <string-array name="all_authors_names">
-        <item><![CDATA[_Юрий Кучанов]]></item>
+        <item><![CDATA[Юрий Кучанов]]></item>
         <item><![CDATA[Станислав Бескаравайный]]></item>
         <item><![CDATA[Семён Уралов, Иван Зацарин]]></item>
         <item><![CDATA[Ярослав Евтихиев]]></item>

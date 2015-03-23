@@ -23,11 +23,11 @@ import org.htmlcleaner.TagNode;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.WebView;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DateParse;
 
@@ -48,9 +48,18 @@ public class HtmlHelper
 	private boolean isRecursive = true;
 	private boolean isCaseSensitive = false;
 
-	//	public static int NUM_OF_ARTS_ON_CUR_PAGE;
+	public HtmlHelper(TagNode rootNode)
+	{
+		cleaner = new HtmlCleaner();
+		CleanerProperties props = cleaner.getProperties();
+		props.setAllowHtmlInsideAttributes(false);
+		props.setAllowMultiWordAttributes(true);
+		props.setRecognizeUnicodeChars(true);
+		props.setOmitComments(true);
+		this.rootNode = rootNode;
+		htmlString = cleaner.getInnerHtml(rootNode);
+	}
 
-	//	public HtmlHelper(URL htmlPage) throws IOException
 	public HtmlHelper(String htmlPage) throws Exception
 	{
 		String subDomain = htmlPage.substring(htmlPage.indexOf("://") + 3, htmlPage.indexOf("."));
@@ -67,13 +76,13 @@ public class HtmlHelper
 		{
 			url = URLDecoder.decode(htmlPage, "utf-8");
 		}
-		
-		if(this.url.contains("_"))
+
+		if (this.url.contains("_"))
 		{
-			this.url=this.url.replaceAll("_", "%5F");
-			this.url=this.url.replaceAll("1", "%31");
-			this.url=this.url.replaceAll("4", "%34");
-			this.url=this.url.replaceAll("-", "%2D");
+			this.url = this.url.replaceAll("_", "%5F");
+			this.url = this.url.replaceAll("1", "%31");
+			this.url = this.url.replaceAll("4", "%34");
+			this.url = this.url.replaceAll("-", "%2D");
 		}
 		url = URLDecoder.decode(url, "utf-8");
 
@@ -84,21 +93,21 @@ public class HtmlHelper
 			props.setAllowHtmlInsideAttributes(false);
 			props.setAllowMultiWordAttributes(true);
 			props.setRecognizeUnicodeChars(true);
-			props.setOmitComments(true);			
+			props.setOmitComments(true);
 			rootNode = cleaner.clean(new URL(url));
-//			String htmlStr=connect(url);
-//			rootNode = cleaner.clean(htmlStr);
+			//			String htmlStr=connect(url);
+			//			rootNode = cleaner.clean(htmlStr);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
 			Log.e(LOG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
 		}
-	}	
+	}
 
 	public static String connect(String url)
 	{
-		String result=null;
+		String result = null;
 		HttpClient httpclient = new DefaultHttpClient();
 
 		// Prepare a request object
@@ -183,6 +192,28 @@ public class HtmlHelper
 		}
 	}
 
+	public Category getCategoryFromHtml()
+	{
+		//String url, String title, String description, String img_url,
+		//String img_file_name, Date refreshed, Date lastArticleDate);
+
+		//<meta property="og:title" content="День Победы" />
+		String title = this.rootNode.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive)
+		.getAttributeByName("content");
+		//<meta property="og:url" content="http://about_denpobedi114.odnako.org" />
+		String url = this.rootNode.findElementByAttValue("property", "og:url", isRecursive, isCaseSensitive)
+		.getAttributeByName("content");
+
+		//row news-body clearfix
+		String description = Const.EMPTY_STRING;
+		String img_url = this.getCategoryImage();
+		String img_file_name = Const.EMPTY_STRING;
+		Date refreshed = new Date(System.currentTimeMillis());
+		Date lastArticleDate = new Date(0);
+
+		return new Category(url, title, description, img_url, img_file_name, refreshed, lastArticleDate);
+	}
+
 	ArrayList<ArrayList<String>> getAllCategoriesAsList()
 	{
 		ArrayList<ArrayList<String>> allCategoriesAsList = new ArrayList<ArrayList<String>>();
@@ -251,8 +282,14 @@ public class HtmlHelper
 		TagNode[] liElements = null;
 		TagNode[] allArtsUl = null;
 		String CSSClassname = "news-wrap clearfix clearfix l-3col packery block l-tripple-cols";
+		String CSSClassname2 = "news-wrap clearfix clearfix l-3col packery block l-tripple-cols even";
 
 		allArtsUl = rootNode.getElementsByAttValue("class", CSSClassname, true, false);
+		//in some cases (i.e. while loading via webView) we have another class value
+		if(allArtsUl.length==0)
+		{
+			allArtsUl = rootNode.getElementsByAttValue("class", CSSClassname2, true, false);
+		}
 
 		if (allArtsUl.length > 1)
 		{

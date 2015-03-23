@@ -6,19 +6,26 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +33,10 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback
@@ -156,10 +167,10 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		else
 		{
 			//if pageToLoad!=1 we load from bottom
-			//			Log.d(LOG, "LOAD FROM BOTTOM!");
+			//Log.d(LOG, "LOAD FROM BOTTOM!");
 			DBActions dbActions = new DBActions(this, this.getHelper());
 			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-			//			Log.d(LOG, dBRezult);
+			//Log.d(LOG, dBRezult);
 
 			switch (dBRezult)
 			{
@@ -192,7 +203,63 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	private void startDownLoad(String catToLoad, int pageToLoad)
+	public static void doItMotherfucker(DataBaseHelper h, String categoryToLoad, int pageToLoad,
+	AllArtsInfoCallback callback, String gainedHtml)
+	{
+		Log.d(LOG, "doItMotherfucker called");
+		ArrayList<Article> parsedArticlesList = null;
+
+		HtmlCleaner hc = new HtmlCleaner();
+		TagNode rootNode = hc.clean(gainedHtml);
+		HtmlHelper hh = new HtmlHelper(rootNode);
+
+		if (hh.isAuthor())
+		{
+			parsedArticlesList = hh.getAllArtsInfoFromAUTHORPage();
+
+			//write new Author to DB if it don't exists
+			if (Category.isCategory(h, categoryToLoad) == null)
+			{
+				Author a = new Author(categoryToLoad, hh.getAuthorsName(), hh.getAuthorsDescription(),
+				hh.getAuthorsWho(), hh.getAuthorsImage(), hh.getAuthorsBigImg(), new Date(
+				System.currentTimeMillis()), new Date(0));
+				try
+				{
+					h.getDaoAuthor().create(a);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
+			parsedArticlesList = hh.getAllArtsInfoFromPage();
+			//write new Author if it don't exists
+			if (Category.isCategory(h, categoryToLoad) == null)
+			{
+				Category c = hh.getCategoryFromHtml();
+				try
+				{
+					h.getDaoCategory().create(c);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		if (parsedArticlesList != null)
+		{
+			callback.sendDownloadedData(parsedArticlesList, categoryToLoad, pageToLoad);
+		}
+		else
+		{
+			callback.onError(Const.Error.CONNECTION_ERROR, categoryToLoad, pageToLoad);
+		}
+	}
+
+	@SuppressLint("SetJavaScriptEnabled")
+	private void startDownLoad(final String catToLoad, final int pageToLoad)
 	{
 		//Log.d(LOG, "startDownLoad " + catToLoad + "/page-" + pageToLoad);
 
@@ -202,6 +269,59 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		//next and prev categories and first 2 authors.
 		//And in this case 1-st of these authors is last in queue
 		//so we must catch this situation and sort list of tasks
+
+		//THERE ARE UGLY BUG WITH "_" IN URL...
+		//WE MUST CHECK IF OUR URL HAS IT
+		//AND IF SO LOAD HTML VIA WEBVIEW 
+		//AND THEN PARSE IT
+		//AND WEBVIEW NEEDS UI THREAD
+		if (catToLoad.contains("_"))
+		{
+			final WebView webView = new WebView(this);
+			
+			webView.getSettings().setJavaScriptEnabled(true);
+
+			// intercept calls to console.log
+			webView.setWebChromeClient(new WebChromeClient()
+			{
+				public boolean onConsoleMessage(ConsoleMessage cmsg)
+				{
+					// check secret prefix					
+					if (cmsg.message().startsWith("MAGIC"))
+					{
+						String msg = cmsg.message().substring(5); // strip off prefix
+						/* process HTML */
+						doItMotherfucker(getHelper(), catToLoad, pageToLoad, ServiceDB.this, msg);
+
+						return true;
+					}
+					return false;
+				}
+			});
+
+			// inject the JavaScript on page load
+			webView.setWebViewClient(new WebViewClient()
+			{
+				public void onPageFinished(WebView view, String address)
+				{
+					// have the page spill its guts, with a secret prefix
+					Log.e(LOG, "onPageFinished");
+					view.loadUrl("javascript:console.log('MAGIC'+'<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+				}
+			});
+			String link;
+			if (catToLoad.startsWith("http://"))
+			{
+				link = catToLoad + "/page-" + String.valueOf(pageToLoad) + "/";
+			}
+			else
+			{
+				link = "http://" + catToLoad + "/page-" + String.valueOf(pageToLoad) + "/";
+			}
+			//link="http://about_denpobedi114.odnako.org/page-1/";
+			webView.loadUrl(link);
+			return;
+		}
 
 		if (this.currentTasks.size() < 4)
 		{
@@ -234,7 +354,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 	@Override
 	public void sendDownloadedData(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)
 	{
-		//Log.d(LOG + categoryToLoad, "sendDownloadedData");
+		Log.d(LOG + categoryToLoad, "sendDownloadedData");
 		//find and remove finished task from list
 		for (int i = 0; i < this.currentTasks.size(); i++)
 		{
