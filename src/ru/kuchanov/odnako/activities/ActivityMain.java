@@ -292,7 +292,7 @@ public class ActivityMain extends ActivityBase
 		if (this.twoPane)
 		{
 			toolbar.getBackground().setAlpha(0);
-			toolbarRight.getBackground().setAlpha(0);
+			toolbarRight.getBackground().setAlpha(255);
 		}
 		else
 		{

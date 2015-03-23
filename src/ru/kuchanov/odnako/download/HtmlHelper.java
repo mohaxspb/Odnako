@@ -665,12 +665,18 @@ public class HtmlHelper
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
 		isRecursive, isCaseSensitive);
 		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();
+		ArrayList<TagNode> tagsToRemove=new ArrayList<TagNode>();
 		for (int i = 0; i < artTextTagNodeChildren.length; i++)
 		{
 			if (artTextTagNodeChildren[i].getName().equals("aside"))
 			{
-				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
+//				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
+				tagsToRemove.add(articlesTextTagNode.getChildTags()[i]);
 			}
+		}
+		for(TagNode t: tagsToRemove)
+		{
+			articlesTextTagNode.removeChild(t);
 		}
 		String artText = this.cleaner.getInnerHtml(articlesTextTagNode);
 		artText = artText.replaceAll("<br />", "<br>").replaceAll("<br/>", "<br>").replaceAll("<strong>", "<b>")

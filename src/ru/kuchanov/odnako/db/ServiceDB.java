@@ -278,7 +278,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		if (catToLoad.contains("_"))
 		{
 			final WebView webView = new WebView(this);
-			
+
 			webView.getSettings().setJavaScriptEnabled(true);
 
 			// intercept calls to console.log
@@ -292,7 +292,6 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 						String msg = cmsg.message().substring(5); // strip off prefix
 						/* process HTML */
 						doItMotherfucker(getHelper(), catToLoad, pageToLoad, ServiceDB.this, msg);
-
 						return true;
 					}
 					return false;
@@ -305,8 +304,9 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 				public void onPageFinished(WebView view, String address)
 				{
 					// have the page spill its guts, with a secret prefix
-					Log.e(LOG, "onPageFinished");
-					view.loadUrl("javascript:console.log('MAGIC'+'<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+					//Log.e(LOG, "onPageFinished");
+					view
+					.loadUrl("javascript:console.log('MAGIC'+'<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 				}
 			});
 			String link;
