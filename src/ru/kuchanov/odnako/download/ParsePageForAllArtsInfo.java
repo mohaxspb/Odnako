@@ -18,10 +18,13 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Article>>
 {
@@ -60,17 +63,24 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		this.link = link;
 	}
 
-	protected ArrayList<Article> doInBackground(Void... arg)
+	public void test()
 	{
-		//System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		if (Looper.myLooper() == Looper.getMainLooper())
 		{
-			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): "+String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+			Log.e(
+			LOG,
+			"Looper.myLooper() == Looper.getMainLooper(): "
+			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
 		}
 		else
 		{
 			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
 		}
+	}
+
+	protected ArrayList<Article> doInBackground(Void... arg)
+	{
+		//System.out.println("ParsePageForAllArtsInfo: doInBackground");
 		ArrayList<Article> output = null;
 		String link;
 		if (this.getCategoryToLoad().startsWith("http://"))
@@ -89,7 +99,6 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 		try
 		{
-			//			HtmlHelper hh = new HtmlHelper(new URL(link));
 			HtmlHelper hh = new HtmlHelper(link);
 			if (hh.isAuthor())
 			{
@@ -125,6 +134,15 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		return output;
 	}
 
+	class LoadListener
+	{
+		public void processHTML(String html)
+		{
+			Log.e("result", html);
+		}
+	}
+
+	@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
 	protected void onPostExecute(ArrayList<Article> output)
 	{
 		//Log.d(LOG, "ParseBlogsPageNew: onPostExecute");
@@ -137,6 +155,29 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 		//NO internet
 		else
 		{
+			final WebView webView = new WebView(this.ctx);
+
+			webView.getSettings().setJavaScriptEnabled(true);
+			webView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
+
+			webView.setWebViewClient(new WebViewClient()
+			{
+				@Override
+				public boolean shouldOverrideUrlLoading(WebView view, String url)
+				{
+					return true;
+				}
+
+				public void onPageFinished(WebView view, String url)
+				{
+					view
+					.loadUrl("javascript:window.HTMLOUT.processHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+				}
+			});
+			this.link="http://about_denpobedi114.odnako.org/page-1/";
+			webView.loadUrl(link);
+			
+
 			if (this.cyrillicError)
 			{
 				callback.onError(Const.Error.CYRILLIC_ERROR, this.getCategoryToLoad(), this.page);

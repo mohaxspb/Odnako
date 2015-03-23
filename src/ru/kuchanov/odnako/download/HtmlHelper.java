@@ -23,6 +23,7 @@ import org.htmlcleaner.TagNode;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebView;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
@@ -66,6 +67,15 @@ public class HtmlHelper
 		{
 			url = URLDecoder.decode(htmlPage, "utf-8");
 		}
+		
+		if(this.url.contains("_"))
+		{
+			this.url=this.url.replaceAll("_", "%5F");
+			this.url=this.url.replaceAll("1", "%31");
+			this.url=this.url.replaceAll("4", "%34");
+			this.url=this.url.replaceAll("-", "%2D");
+		}
+		url = URLDecoder.decode(url, "utf-8");
 
 		try
 		{
@@ -77,13 +87,14 @@ public class HtmlHelper
 			props.setOmitComments(true);			
 			rootNode = cleaner.clean(new URL(url));
 //			String htmlStr=connect(url);
+//			rootNode = cleaner.clean(htmlStr);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
 			Log.e(LOG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
 		}
-	}
+	}	
 
 	public static String connect(String url)
 	{
