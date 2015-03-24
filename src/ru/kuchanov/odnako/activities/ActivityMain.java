@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
@@ -29,9 +30,12 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -131,7 +135,7 @@ public class ActivityMain extends ActivityBase
 		//check intents extras and set pagerType and other params
 		if (this.getIntent().hasExtra(KEY_PAGER_TYPE))
 		{
-			this.pagerType=this.getIntent().getIntExtra(KEY_PAGER_TYPE, PAGER_TYPE_MENU);
+			this.pagerType = this.getIntent().getIntExtra(KEY_PAGER_TYPE, PAGER_TYPE_MENU);
 			//here we can switch between pagerTypes and set curentCategoryPosition for AuthorsPager and so on
 			switch (this.pagerType)
 			{
@@ -297,6 +301,27 @@ public class ActivityMain extends ActivityBase
 		else
 		{
 			toolbar.getBackground().setAlpha(0);
+		}
+		
+		//here we check if there is article or comments fragment in fm
+		//and show back btn in right toolbar
+		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
+			//set arrowDownIcon by theme
+			int[] attrs = new int[] { R.attr.arrowBackIcon };
+			TypedArray ta = act.obtainStyledAttributes(attrs);
+			Drawable drawableArrowBack = ta.getDrawable(0);
+			ta.recycle();
+			toolbarRight.setNavigationIcon(drawableArrowBack);
+			toolbarRight.setNavigationOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					toolbarRight.setNavigationIcon(null);
+					act.onBackPressed();
+				}
+			});
 		}
 
 		//adMob
@@ -879,43 +904,50 @@ public class ActivityMain extends ActivityBase
 		if (mDrawerLayout.isDrawerOpen(Gravity.START))
 		{
 			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			return;
 		}
-		else
+		
+		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
-			//check left pagerType
-			//if so - we must show initial state of app
-			//else - check if it's second time of pressing back
-			switch (this.getPagerType())
-			{
-				case PAGER_TYPE_MENU:
-					//else - check if it's second time of pressing back
-					if (this.backPressedQ == 1)
-					{
-						this.backPressedQ = 0;
-						super.onBackPressed();
-						this.finish();
-					}
-					else
-					{
-						this.backPressedQ++;
-						Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
-					}
-				break;
-				//				case PAGER_TYPE_AUTHORS:
-				default:
-					//reset pagerType to MENU
-//					this.setPagerType(PAGER_TYPE_MENU);
-					this.pagerType=PAGER_TYPE_MENU;
+			toolbarRight.setNavigationIcon(null);
+			Fragment artFrag=this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			return;
+		}
+		
+		//check left pagerType
+		//if so - we must show initial state of app
+		//else - check if it's second time of pressing back
+		switch (this.getPagerType())
+		{
+			case PAGER_TYPE_MENU:
+				//else - check if it's second time of pressing back
+				if (this.backPressedQ == 1)
+				{
+					this.backPressedQ = 0;
+					super.onBackPressed();
+					this.finish();
+				}
+				else
+				{
+					this.backPressedQ++;
+					Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+				}
+			break;
+			//				case PAGER_TYPE_AUTHORS:
+			default:
+				//reset pagerType to MENU
+				//					this.setPagerType(PAGER_TYPE_MENU);
+				this.pagerType = PAGER_TYPE_MENU;
 
-					this.setCurentCategoryPosition(11);
-					PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
-					this.getSupportFragmentManager(), act);
-					this.artsListPager.setAdapter(artsListPagerAdapter);
-					this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-					this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
-					this.artsListPager.setCurrentItem(currentCategoryPosition, true);
-				break;
-			}
+				this.setCurentCategoryPosition(11);
+				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
+				this.getSupportFragmentManager(), act);
+				this.artsListPager.setAdapter(artsListPagerAdapter);
+				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
+				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
+			break;
 		}
 
 		//Обнуление счётчика через 5 секунд

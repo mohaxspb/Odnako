@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="?cardBackGroundColor"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="5dp" >
+    app:cardBackgroundColor="?cardBackGroundColorDark"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="5dp" >
 
-    <LinearLayout
+    <ru.kuchanov.odnako.utils.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        app:mrl_rippleColor="?colorPrimaryDark"
+        app:mrl_rippleDelayClick="false"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="true" >
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/main_lin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/title"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="21sp" />
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorSecondary"
-            android:padding="5dp"
-            android:text="@string/date"
-            android:textSize="17sp" />
-    </LinearLayout>
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/title"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/date"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
 
 </android.support.v7.widget.CardView>

@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
@@ -33,14 +34,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -60,7 +65,7 @@ import android.widget.Toast;
 
 public class FragmentArticle extends Fragment implements FragArtUPD
 {
-	final static String LOG = FragmentArticle.class.getSimpleName() + "/";
+	public final static String LOG = FragmentArticle.class.getSimpleName() + "/";
 
 	final public static String ARTICLE_URL = "article_url";
 
@@ -96,7 +101,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private CardView shareCard;
 	private CardView commentsBottomBtn;
 	private CardView allTagsCard;
-//	private CardView alsoByThemeCard;
+	//	private CardView alsoByThemeCard;
 	private CardView alsoToReadCard;
 
 	private Article curArticle;
@@ -121,7 +126,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		if (stateFromArgs != null)
 		{
 			this.curArticle = stateFromArgs.getParcelable(Article.KEY_CURENT_ART);
-			this.setPosition(stateFromArgs.getInt("position"));
+			this.setPosition(stateFromArgs.getInt("position", 0));
 			//			this.allArtsInfo = stateFromArgs.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 		if (savedState != null)
@@ -368,54 +373,77 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		this.artTagsMain = (FlowLayout) v.findViewById(R.id.art_tags_main);
 		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
-//		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
-		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
+		//		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
+		//		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 	}
-
-//	private void setUpAlsoByTheme()
-//	{
-//		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoByTheme();
-//		if (alsoToRead != null)
-//		{
-//			if (alsoByThemeCard.getParent() != null)
-//			{
-//				((ViewGroup) alsoByThemeCard.getParent()).removeView(alsoByThemeCard);
-//			}
-//			this.bottomPanel.addView(this.alsoByThemeCard);
-//			LinearLayout mainLin = (LinearLayout) this.alsoByThemeCard.findViewById(R.id.also_main);
-//			LayoutInflater inflater = act.getLayoutInflater();
-//			for (int i = 0; i < alsoToRead.titles.length; i++)
-//			{
-//				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
-//				TextView title = (TextView) c.findViewById(R.id.title);
-//				title.setText(alsoToRead.titles[i]);
-//				TextView date = (TextView) c.findViewById(R.id.date);
-//				date.setText(alsoToRead.dates[i]);
-//				mainLin.addView(c);
-//			}
-//		}
-//	}
 
 	private void setUpAlsoToRead()
 	{
-		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoToReadMore();
-		//for test
-		//		String[] s1 = new String[] { "title", "title", "title" };
-		//		String[] s2 = new String[] { "url", "url", "url" };
-		//		String[] s3 = new String[] { "date", "date", "date" };
-		//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
+		final Article.AlsoToRead alsoToRead = this.curArticle.getAlsoToReadMore();
 		if (alsoToRead != null)
 		{
-			if (alsoToReadCard.getParent() != null)
+			if (alsoToReadCard != null && alsoToReadCard.getParent() != null)
 			{
 				((ViewGroup) alsoToReadCard.getParent()).removeView(alsoToReadCard);
 			}
+			this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 			this.bottomPanel.addView(this.alsoToReadCard);
 			LinearLayout mainLin = (LinearLayout) this.alsoToReadCard.findViewById(R.id.also_main);
 			LayoutInflater inflater = act.getLayoutInflater();
 			for (int i = 0; i < alsoToRead.titles.length; i++)
 			{
+				final int iterator = i;
+
 				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
+
+				LinearLayout lin = (LinearLayout) c.findViewById(R.id.main_lin);
+
+				lin.setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						//ViewGroup vg=(ViewGroup) act.findViewById(R.id.container_right);
+						Fragment newFragment = new FragmentArticle();
+						Article a = new Article();
+						a.setUrl(alsoToRead.urls[iterator]);
+						a.setTitle(alsoToRead.titles[iterator]);
+						a.setPubDate(DateParse.parse(alsoToRead.dates[iterator]));
+						Bundle b = new Bundle();
+						b.putParcelable(Article.KEY_CURENT_ART, a);
+						newFragment.setArguments(b);
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
+						ft.commit();
+
+						final Toolbar toolbar;
+						if (act instanceof ActivityMain)
+						{
+							toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+						}
+						else
+						{
+							toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+						}
+						//set arrowDownIcon by theme
+						int[] attrs = new int[] { R.attr.arrowBackIcon };
+						TypedArray ta = act.obtainStyledAttributes(attrs);
+						Drawable drawableArrowBack = ta.getDrawable(0);
+						ta.recycle();
+						toolbar.setNavigationIcon(drawableArrowBack);
+						toolbar.setNavigationOnClickListener(new View.OnClickListener()
+						{
+							@Override
+							public void onClick(View v)
+							{
+								toolbar.setNavigationIcon(null);
+								act.onBackPressed();
+							}
+						});
+					}
+				});
+
 				TextView title = (TextView) c.findViewById(R.id.title);
 				title.setText(alsoToRead.titles[i]);
 				TextView date = (TextView) c.findViewById(R.id.date);
@@ -628,7 +656,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		//fill bottom
 		this.setUpAllTegsLayout();
-//		this.setUpAlsoByTheme();
+		//		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}
 

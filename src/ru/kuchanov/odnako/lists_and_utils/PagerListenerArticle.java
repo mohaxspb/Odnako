@@ -84,11 +84,8 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 					break;
 				}
 			}
-//			Log.d(LOG, "this.toolbar.getTitle(): " + this.toolbar.getTitle());
 			this.toolbar.setTitle(categotiesTitle + " " + String.valueOf(position + 1) + "/"
 			+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
-//			Log.d(LOG, "this.toolbar.getTitle(): " + this.toolbar.getTitle());
-//			Log.d(LOG, "this.act.getSupportActionBar().getTitle(): " + this.act.getSupportActionBar().getTitle());
 			articleActivity.setCurArtPosition(position);
 		}
 	}

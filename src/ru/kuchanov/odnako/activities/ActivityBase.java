@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -30,6 +31,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -432,9 +434,17 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
+			if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+			{
+				toolbar.setNavigationIcon(null);
+				Fragment artFrag=this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+				return;
+			}
 			if (mDrawerLayout.isDrawerOpen(Gravity.START))
 			{
 				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+				return;
 			}
 			else
 			{

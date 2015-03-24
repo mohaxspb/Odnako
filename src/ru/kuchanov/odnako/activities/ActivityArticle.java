@@ -13,16 +13,20 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class ActivityArticle extends ActivityBase
 {
@@ -110,6 +114,8 @@ public class ActivityArticle extends ActivityBase
 			listener.onPageSelected(0);
 		}
 		//		listener.onPageSelected(this.getCurArtPosition());
+		
+		
 
 		//adMob
 		this.AddAds();
@@ -134,6 +140,24 @@ public class ActivityArticle extends ActivityBase
 				+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
 				break;
 			}
+		}
+		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
+			//set arrowDownIcon by theme
+			int[] attrs = new int[] { R.attr.arrowBackIcon };
+			TypedArray ta = act.obtainStyledAttributes(attrs);
+			Drawable drawableArrowBack = ta.getDrawable(0);
+			ta.recycle();
+			toolbar.setNavigationIcon(drawableArrowBack);
+			toolbar.setNavigationOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					toolbar.setNavigationIcon(null);
+					act.onBackPressed();
+				}
+			});
 		}
 	}
 

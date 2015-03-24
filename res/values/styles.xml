@@ -41,7 +41,7 @@
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_white_48dp</item>
         <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_white_48dp</item>
         <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_white_48dp</item>
-
+        <item name="arrowBackIcon">@drawable/ic_arrow_back_white_48dp</item>
         <!-- more -->
         <item name="authorsIcon">@drawable/ic_group_white_48dp</item>
         <item name="authorIcon">@drawable/ic_person_white_48dp</item>
@@ -141,6 +141,7 @@
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_grey600_48dp</item>
         <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_grey600_48dp</item>
         <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_grey600_48dp</item>
+        <item name="arrowBackIcon">@drawable/ic_arrow_back_grey600_48dp</item>
         <!-- more -->
         <item name="authorsIcon">@drawable/ic_group_grey600_48dp</item>
         <item name="authorIcon">@drawable/ic_person_grey600_48dp</item>

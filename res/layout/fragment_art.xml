@@ -9,6 +9,7 @@
         android:id="@+id/art_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?android:windowBackground"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -21,9 +22,6 @@
                 android:id="@+id/fakeHeader"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
-
-            <!-- <include layout="@layout/article_card_art_frag" /> -->
-            <!-- <include layout="article_card_art_frag" /> -->
 
             <LinearLayout
                 android:id="@+id/articles_text_container"
