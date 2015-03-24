@@ -29,17 +29,29 @@
             android:baselineAligned="false"
             android:orientation="horizontal" >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager_left"
+            <FrameLayout
+                android:id="@+id/container_left"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1" >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager_right"
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/container_right"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:layout_weight="2" />
+                android:layout_weight="2" >
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -55,6 +67,7 @@
                 android:layout_weight="1"
                 android:background="?colorPrimary"
                 android:minHeight="?attr/actionBarSize" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_right"
                 android:layout_width="0dip"

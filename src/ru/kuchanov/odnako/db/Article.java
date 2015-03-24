@@ -867,7 +867,6 @@ public class Article implements Parcelable
 		public String[] titles;
 		public String[] dates;
 
-		//		public AlsoToRead(String[] urls, String[] titles, String[] dates)
 		public AlsoToRead(String[] titles, String[] urls, String[] dates)
 		{
 			this.urls = urls;

@@ -703,13 +703,13 @@ public class HtmlHelper
 		//<div class="m-sidebar-also l-white outline-bot l-full-col">
 		TagNode[] byTheme = this.rootNode.getElementsByAttValue("class",
 		"m-sidebar-also l-white outline-bot l-full-col", isRecursive, isCaseSensitive);
-//		String toReadMain = "";
+		//		String toReadMain = "";
 		String toReadMore = "";
 		if (byTheme.length > 0 && byTheme[0] != null)
 		{
 			String title1, url, date;
 			TagNode[] divTags = byTheme[0].getElementsByName("div", isRecursive);
-			for (int i=0; i<divTags.length; i++)
+			for (int i = 0; i < divTags.length; i++)
 			{
 				TagNode div = divTags[i];
 				TagNode[] aTags = div.getElementsByName("a", isRecursive);
@@ -717,7 +717,7 @@ public class HtmlHelper
 				url = aTags[0].getAttributeByName("href");
 				date = aTags[1].getText().toString();
 				toReadMore += title1 + Article.DIVIDER + url + Article.DIVIDER + date;
-				if(i!=divTags.length-1)
+				if (i != divTags.length - 1)
 				{
 					toReadMore += Article.DIVIDER;
 				}
@@ -731,11 +731,11 @@ public class HtmlHelper
 		{
 			String title1, url, date;
 			TagNode[] divTags = byTheme[1].getElementsByName("div", isRecursive);
-			if(!toReadMore.equals(""))
+			if (!toReadMore.equals(""))
 			{
 				toReadMore += Article.DIVIDER;
 			}
-			for (int i=0; i<divTags.length; i++)
+			for (int i = 0; i < divTags.length; i++)
 			{
 				TagNode div = divTags[i];
 				TagNode[] aTags = div.getElementsByName("a", isRecursive);
@@ -743,7 +743,7 @@ public class HtmlHelper
 				url = aTags[0].getAttributeByName("href");
 				date = aTags[1].getText().toString();
 				toReadMore += title1 + Article.DIVIDER + url + Article.DIVIDER + date;
-				if(i!=divTags.length-1)
+				if (i != divTags.length - 1)
 				{
 					toReadMore += Article.DIVIDER;
 				}
@@ -751,8 +751,30 @@ public class HtmlHelper
 		}
 		else
 		{
-//			toReadMore = Const.EMPTY_STRING;
+			//			toReadMore = Const.EMPTY_STRING;
 		}
+		//LIKES
+		//<ul class="social-likes" data-url="" data-counters="yes">
+		//THERE is no way for me to get num of sharings..
+		//that's sad, because it spend a lot of time to draw card for it...
+		//so we'll just replace it with button with context menu with
+		//options as "share arts text or URL"
+		//		TagNode shareUlTag = this.rootNode.findElementByAttValue("class", "social-likes", isRecursive, isCaseSensitive);
+		//		String innerHtmlUlTag = this.cleaner.getInnerHtml(shareUlTag);
+		//		Log.e(LOG, innerHtmlUlTag);
+		//
+		//		TagNode[] likesLiTags = shareUlTag.getChildTags();
+		//		String shareQuont = "";// "0" + Article.DIVIDER + "0" + Article.DIVIDER + "0" + Article.DIVIDER + "0"
+		//		//+ Article.DIVIDER + "0" + Article.DIVIDER + "0" + Article.DIVIDER;
+		//		for (int i = 0; i < likesLiTags.length; i++)
+		//		{
+		//			TagNode li = likesLiTags[i];
+		//			shareQuont += li.getText();
+		//			if (i != likesLiTags.length - 1)
+		//			{
+		//				shareQuont += Article.DIVIDER;
+		//			}
+		//		}
 
 		a.setUrl(url);
 		a.setPreview(preview);
@@ -768,12 +790,14 @@ public class HtmlHelper
 		a.setAuthor(aut);
 		//tags
 		a.setTagsMain(tagMain);
+		a.setTagsAll(allTags);
 		//artText
 		a.setArtText(artText);
-		a.setTagsAll(allTags);
+
 		//toReadMore
-//		a.setToReadMain(toReadMain);
+		//		a.setToReadMain(toReadMain);
 		a.setToReadMore(toReadMore);
+		//		a.setShareQuont(shareQuont);
 		return a;
 	}
 
