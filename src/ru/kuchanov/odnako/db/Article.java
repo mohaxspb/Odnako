@@ -94,6 +94,7 @@ public class Article implements Parcelable
 	@DatabaseField(dataType = DataType.STRING)
 	private String shareQuont = Const.EMPTY_STRING;
 
+	//XXX to delete because it's too hard and we do not need it really
 	@DatabaseField(dataType = DataType.STRING)
 	private String toReadMain = Const.EMPTY_STRING;
 
@@ -803,7 +804,6 @@ public class Article implements Parcelable
 		}
 		else
 		{
-			//System.out.println("AllTegs var is empty!");
 			allTegsArr = null;
 		}
 		return allTegsArr;
@@ -830,7 +830,6 @@ public class Article implements Parcelable
 		}
 		else
 		{
-			//			System.out.println("alsoToRead (to_read_main) var is empty!");
 			alsoToRead = null;
 		}
 		return alsoToRead;
@@ -857,7 +856,6 @@ public class Article implements Parcelable
 		}
 		else
 		{
-			//			System.out.println("alsoToRead (to_read_more) var is empty!");
 			alsoToRead = null;
 		}
 		return alsoToRead;
@@ -869,7 +867,8 @@ public class Article implements Parcelable
 		public String[] titles;
 		public String[] dates;
 
-		public AlsoToRead(String[] urls, String[] titles, String[] dates)
+		//		public AlsoToRead(String[] urls, String[] titles, String[] dates)
+		public AlsoToRead(String[] titles, String[] urls, String[] dates)
 		{
 			this.urls = urls;
 			this.titles = titles;

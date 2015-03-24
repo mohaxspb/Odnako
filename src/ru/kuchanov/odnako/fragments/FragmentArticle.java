@@ -96,7 +96,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private CardView shareCard;
 	private CardView commentsBottomBtn;
 	private CardView allTagsCard;
-	private CardView alsoByThemeCard;
+//	private CardView alsoByThemeCard;
 	private CardView alsoToReadCard;
 
 	private Article curArticle;
@@ -368,35 +368,33 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		this.artTagsMain = (FlowLayout) v.findViewById(R.id.art_tags_main);
 		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
-		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
+//		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
 		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 	}
 
-	private void setUpAlsoByTheme()
-	{
-		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoByTheme();
-		//for test
-		//		String[] s1 = new String[] { "title", "title" };
-		//		String[] s2 = new String[] { "title", "title" };
-		//		String[] s3 = new String[] { "title", "title" };
-		//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
-		if (alsoToRead != null)
-		{
-
-			this.bottomPanel.addView(this.alsoByThemeCard);
-			LinearLayout mainLin = (LinearLayout) this.alsoByThemeCard.findViewById(R.id.also_main);
-			LayoutInflater inflater = act.getLayoutInflater();
-			for (int i = 0; i < alsoToRead.titles.length; i++)
-			{
-				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
-				TextView title = (TextView) c.findViewById(R.id.title);
-				title.setText(alsoToRead.titles[i]);
-				TextView date = (TextView) c.findViewById(R.id.date);
-				date.setText(alsoToRead.dates[i]);
-				mainLin.addView(c);
-			}
-		}
-	}
+//	private void setUpAlsoByTheme()
+//	{
+//		Article.AlsoToRead alsoToRead = this.curArticle.getAlsoByTheme();
+//		if (alsoToRead != null)
+//		{
+//			if (alsoByThemeCard.getParent() != null)
+//			{
+//				((ViewGroup) alsoByThemeCard.getParent()).removeView(alsoByThemeCard);
+//			}
+//			this.bottomPanel.addView(this.alsoByThemeCard);
+//			LinearLayout mainLin = (LinearLayout) this.alsoByThemeCard.findViewById(R.id.also_main);
+//			LayoutInflater inflater = act.getLayoutInflater();
+//			for (int i = 0; i < alsoToRead.titles.length; i++)
+//			{
+//				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
+//				TextView title = (TextView) c.findViewById(R.id.title);
+//				title.setText(alsoToRead.titles[i]);
+//				TextView date = (TextView) c.findViewById(R.id.date);
+//				date.setText(alsoToRead.dates[i]);
+//				mainLin.addView(c);
+//			}
+//		}
+//	}
 
 	private void setUpAlsoToRead()
 	{
@@ -408,7 +406,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//		alsoToRead = this.curArtInfo.new AlsoToRead(s1, s2, s3);
 		if (alsoToRead != null)
 		{
-
+			if (alsoToReadCard.getParent() != null)
+			{
+				((ViewGroup) alsoToReadCard.getParent()).removeView(alsoToReadCard);
+			}
 			this.bottomPanel.addView(this.alsoToReadCard);
 			LinearLayout mainLin = (LinearLayout) this.alsoToReadCard.findViewById(R.id.also_main);
 			LayoutInflater inflater = act.getLayoutInflater();
@@ -627,7 +628,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		//fill bottom
 		this.setUpAllTegsLayout();
-		this.setUpAlsoByTheme();
+//		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}
 
@@ -723,17 +724,17 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				final Tag tag = allTagsList.get(i);
 				View tagCard = this.inflater.inflate(R.layout.item, artTagsMain, false);
-					
+
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
 				tV.setOnClickListener(new OnClickListener()
 				{
-					
+
 					@Override
 					public void onClick(View v)
 					{
 						Actions.showAllCategoriesArticles(tag.url, act);
 					}
-				});			
+				});
 				tV.setTextSize(21 * scaleFactor);
 				tV.setText(tag.title);
 				artTagsMain.addView(tagCard);
@@ -749,7 +750,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			//for some reason allTagsCard can already have parent view...
 			//so, bedore adding it to bottom panel we remove it from parent...
-			if(allTagsCard.getParent()==null)
+			if (allTagsCard.getParent() == null)
 			{
 				this.bottomPanel.addView(this.allTagsCard);
 			}
@@ -757,9 +758,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				return;
 			}
-//			((ViewGroup)allTagsCard.getParent()).removeView(allTagsCard);
-			
-			
+			//			((ViewGroup)allTagsCard.getParent()).removeView(allTagsCard);
+
 			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
@@ -768,13 +768,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
 				tV.setOnClickListener(new OnClickListener()
 				{
-					
+
 					@Override
 					public void onClick(View v)
 					{
 						Actions.showAllCategoriesArticles(tag.url, act);
 					}
-				});			
+				});
 				String scaleFactorString = pref.getString("scale_art", "1");
 				float scaleFactor = Float.valueOf(scaleFactorString);
 				tV.setTextSize(21 * scaleFactor);
@@ -809,10 +809,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
-		}		
+		}
 
 		long beforeTime = System.currentTimeMillis();
-//		Log.e(LOG, "start fill fragment with info");
+		//		Log.e(LOG, "start fill fragment with info");
 		checkCurArtInfo(null, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));

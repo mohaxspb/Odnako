@@ -76,27 +76,17 @@ public class HtmlHelper
 		{
 			url = URLDecoder.decode(htmlPage, "utf-8");
 		}
-
-		if (this.url.contains("_"))
-		{
-			this.url = this.url.replaceAll("_", "%5F");
-			this.url = this.url.replaceAll("1", "%31");
-			this.url = this.url.replaceAll("4", "%34");
-			this.url = this.url.replaceAll("-", "%2D");
-		}
-		url = URLDecoder.decode(url, "utf-8");
-
 		try
 		{
 			cleaner = new HtmlCleaner();
+
 			CleanerProperties props = cleaner.getProperties();
 			props.setAllowHtmlInsideAttributes(false);
 			props.setAllowMultiWordAttributes(true);
 			props.setRecognizeUnicodeChars(true);
 			props.setOmitComments(true);
+
 			rootNode = cleaner.clean(new URL(url));
-			//			String htmlStr=connect(url);
-			//			rootNode = cleaner.clean(htmlStr);
 			htmlString = cleaner.getInnerHtml(rootNode);
 		} catch (HtmlCleanerException e)
 		{
@@ -286,7 +276,7 @@ public class HtmlHelper
 
 		allArtsUl = rootNode.getElementsByAttValue("class", CSSClassname, true, false);
 		//in some cases (i.e. while loading via webView) we have another class value
-		if(allArtsUl.length==0)
+		if (allArtsUl.length == 0)
 		{
 			allArtsUl = rootNode.getElementsByAttValue("class", CSSClassname2, true, false);
 		}
@@ -665,16 +655,15 @@ public class HtmlHelper
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
 		isRecursive, isCaseSensitive);
 		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();
-		ArrayList<TagNode> tagsToRemove=new ArrayList<TagNode>();
+		ArrayList<TagNode> tagsToRemove = new ArrayList<TagNode>();
 		for (int i = 0; i < artTextTagNodeChildren.length; i++)
 		{
 			if (artTextTagNodeChildren[i].getName().equals("aside"))
 			{
-//				articlesTextTagNode.removeChild(articlesTextTagNode.getChildTags()[i]);
 				tagsToRemove.add(articlesTextTagNode.getChildTags()[i]);
 			}
 		}
-		for(TagNode t: tagsToRemove)
+		for (TagNode t : tagsToRemove)
 		{
 			articlesTextTagNode.removeChild(t);
 		}
@@ -710,6 +699,61 @@ public class HtmlHelper
 			Log.e(LOG, "allTagsElement is  null!");
 		}
 
+		//ALSO BY THEME
+		//<div class="m-sidebar-also l-white outline-bot l-full-col">
+		TagNode[] byTheme = this.rootNode.getElementsByAttValue("class",
+		"m-sidebar-also l-white outline-bot l-full-col", isRecursive, isCaseSensitive);
+//		String toReadMain = "";
+		String toReadMore = "";
+		if (byTheme.length > 0 && byTheme[0] != null)
+		{
+			String title1, url, date;
+			TagNode[] divTags = byTheme[0].getElementsByName("div", isRecursive);
+			for (int i=0; i<divTags.length; i++)
+			{
+				TagNode div = divTags[i];
+				TagNode[] aTags = div.getElementsByName("a", isRecursive);
+				title1 = aTags[0].getText().toString();
+				url = aTags[0].getAttributeByName("href");
+				date = aTags[1].getText().toString();
+				toReadMore += title1 + Article.DIVIDER + url + Article.DIVIDER + date;
+				if(i!=divTags.length-1)
+				{
+					toReadMore += Article.DIVIDER;
+				}
+			}
+		}
+		else
+		{
+			toReadMore = Const.EMPTY_STRING;
+		}
+		if (byTheme.length > 1 && byTheme[1] != null)
+		{
+			String title1, url, date;
+			TagNode[] divTags = byTheme[1].getElementsByName("div", isRecursive);
+			if(!toReadMore.equals(""))
+			{
+				toReadMore += Article.DIVIDER;
+			}
+			for (int i=0; i<divTags.length; i++)
+			{
+				TagNode div = divTags[i];
+				TagNode[] aTags = div.getElementsByName("a", isRecursive);
+				title1 = aTags[0].getText().toString();
+				url = aTags[0].getAttributeByName("href");
+				date = aTags[1].getText().toString();
+				toReadMore += title1 + Article.DIVIDER + url + Article.DIVIDER + date;
+				if(i!=divTags.length-1)
+				{
+					toReadMore += Article.DIVIDER;
+				}
+			}
+		}
+		else
+		{
+//			toReadMore = Const.EMPTY_STRING;
+		}
+
 		a.setUrl(url);
 		a.setPreview(preview);
 		a.setTitle(title);
@@ -727,6 +771,9 @@ public class HtmlHelper
 		//artText
 		a.setArtText(artText);
 		a.setTagsAll(allTags);
+		//toReadMore
+//		a.setToReadMain(toReadMain);
+		a.setToReadMore(toReadMore);
 		return a;
 	}
 

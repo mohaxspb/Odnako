@@ -887,7 +887,6 @@ public class ActivityMain extends ActivityBase
 			//else - check if it's second time of pressing back
 			switch (this.getPagerType())
 			{
-
 				case PAGER_TYPE_MENU:
 					//else - check if it's second time of pressing back
 					if (this.backPressedQ == 1)
@@ -905,7 +904,8 @@ public class ActivityMain extends ActivityBase
 				//				case PAGER_TYPE_AUTHORS:
 				default:
 					//reset pagerType to MENU
-					this.setPagerType(PAGER_TYPE_MENU);
+//					this.setPagerType(PAGER_TYPE_MENU);
+					this.pagerType=PAGER_TYPE_MENU;
 
 					this.setCurentCategoryPosition(11);
 					PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
