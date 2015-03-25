@@ -57,12 +57,13 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		{
 			ActivityMain mainActivity = (ActivityMain) this.act;
 			//move topImg and toolBar while scrolling left list
-			//			toolbar.setY(0 - toolbar.getHeight());
 			toolbar.setY(0);
 			toolbar.getBackground().setAlpha(255);
 
 			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/"
 			+ artCommsPager.getAdapter().getCount());
+			toolbarRight.setY(0);
+			toolbarRight.getBackground().setAlpha(255);
 
 			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 

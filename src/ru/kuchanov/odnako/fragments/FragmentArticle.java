@@ -25,7 +25,6 @@ import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.utils.DateParse;
-import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -553,8 +552,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		// ART_IMG
 		if (!curArticle.getImgArt().equals(Const.EMPTY_STRING) && !curArticle.getImgArt().contains("/75_75/"))
 		{
+			int width = act.getResources().getDisplayMetrics().widthPixels;
+			if (twoPane)
+			{
+				//so 2/3 of width
+				width = width / 3 * 2;
+			}
+			int height=(int) (width / (1.7f));
 			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
-			params.height = (int) DipToPx.convert(120, act);
+			params.height = height;
 			this.artImageIV.setLayoutParams(params);
 			String HDimgURL = this.curArticle.getImgArt().replace("/120_72/", "/450_240/");
 
@@ -642,7 +648,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		if (!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 		{
-			articlesTextContainer.removeView(artTextView);
+//			articlesTextContainer.removeView(artTextView);
+			articlesTextContainer.removeAllViews();
 			for (int i = 0; i < formatedArticle.getChildTags().length; i++)
 			{
 				TagNode a = formatedArticle.getChildTags()[i];

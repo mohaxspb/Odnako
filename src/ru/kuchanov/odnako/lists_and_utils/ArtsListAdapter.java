@@ -24,7 +24,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -178,19 +177,28 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					// ART_IMG
 					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/"))
 					{
+						int width=act.getResources().getDisplayMetrics().widthPixels;
+						if(twoPane)
+						{
+							if(isInLeftPager)
+							{
+								//so 1/3 of width
+								width=width/3;
+							}
+							else
+							{
+								//so 2/3 of width
+								width=width/3*2;
+							}
+						}						
+						int height=(int) (width / (1.7f));
+						
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
-						params.height = (int) DipToPx.convert(120, act);
+						params.height = height;
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.getImgArt().replace("/120_72/", "/450_240/");
 						imageLoader.displayImage(HDimgURL, holderMain.art_img, options, new ImgLoadListenerBigSmall(
 						imageLoader, options, holderMain.art_img));
-
-//						int width = holderMain.art_img.getMeasuredWidth();
-//						int newHeight = (int) (width / (1.7f));
-//						params.height = newHeight;
-//						holderMain.art_img.setLayoutParams(params);
-//						Log.e(LOG, "width: " + width);
-//						Log.e(LOG, "newHeight: " + newHeight);
 					}
 					else
 					{
@@ -281,7 +289,6 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						holderMain.preview.setTextSize(21 * scaleFactor);
 						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
 						holderMain.preview.setText(spannedContentPreview);
-						//						Log.e(LOG, p.getPreview());
 					}
 					else
 					{

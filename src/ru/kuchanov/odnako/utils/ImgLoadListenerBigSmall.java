@@ -7,10 +7,8 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.utils;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,7 +20,7 @@ public class ImgLoadListenerBigSmall implements ImageLoadingListener
 
 	ImageLoader imageLoader;
 	DisplayImageOptions options;
-	ImageView imgView;
+	final ImageView imgView;
 
 	/**
 	 * 
@@ -41,16 +39,9 @@ public class ImgLoadListenerBigSmall implements ImageLoadingListener
 	}
 
 	@Override
-	public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)
+	public void onLoadingComplete(String imageUri, final View view, Bitmap loadedImage)
 	{
-		int width = imgView.getMeasuredWidth();
-		int newHeight = (int) (width / (1.7f));
-		LayoutParams params = (LayoutParams) imgView.getLayoutParams();
-		params.height = newHeight;
-		imgView.setLayoutParams(params);
-		Log.e(imageUri, "width: " + width);
-		Log.e(imageUri, "newHeight: " + newHeight);
-		//							        ...
+		
 	}
 
 	@Override

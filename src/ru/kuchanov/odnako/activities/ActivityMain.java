@@ -276,7 +276,6 @@ public class ActivityMain extends ActivityBase
 				this.setGroupChildPosition(-1, -1);
 			break;
 			case PAGER_TYPE_CATEGORIES:
-				//TODO
 				PagerAdapterAllCategories categoriesPagerAdapter = new PagerAdapterAllCategories(
 				act.getSupportFragmentManager(), this);
 				this.artsListPager.setAdapter(categoriesPagerAdapter);
