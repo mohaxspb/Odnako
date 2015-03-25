@@ -198,7 +198,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.findViews(v);
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
-		this.update(curArticle);
+		this.update(curArticle, savedInstanceState);
 
 		return v;
 	}
@@ -232,7 +232,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 				this.shareCard.setOnClickListener(new OnClickListener()
 				{
-
 					@Override
 					public void onClick(View v)
 					{
@@ -241,7 +240,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				});
 				this.commentsBottomBtn.setOnClickListener(new OnClickListener()
 				{
-
 					@Override
 					public void onClick(View v)
 					{
@@ -367,14 +365,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 
 		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
-		//set onClickListener
 
 		this.bottomPanel.addView(this.commentsBottomBtn);
 
 		this.artTagsMain = (FlowLayout) v.findViewById(R.id.art_tags_main);
 		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
-		//		this.alsoByThemeCard = (CardView) inflater.inflate(R.layout.also_by_theme, bottomPanel, false);
-		//		this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
 	}
 
 	private void setUpAlsoToRead()
@@ -443,7 +438,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						});
 					}
 				});
-
 				TextView title = (TextView) c.findViewById(R.id.title);
 				title.setText(alsoToRead.titles[i]);
 				TextView date = (TextView) c.findViewById(R.id.date);
@@ -455,7 +449,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void setSizeAndTheme()
 	{
-
 		String scaleFactorString = pref.getString("scale_art", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 
@@ -465,18 +458,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.artAuthorTV.setTextSize(21 * scaleFactor);
 		this.artAuthorDescriptionTV.setTextSize(21 * scaleFactor);
 		this.artDateTV.setTextSize(17 * scaleFactor);
-		//		this.artTagsMainTV.setTextSize(21 * scaleFactor);
 
 		//images
 		final float scale = getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 		LayoutParams params = new LayoutParams(pixels, pixels);
 
-		//		int iconPxels = (int) (50 * scaleFactor * scale + 0.5f);
-		//		LayoutParams iconsParams = new LayoutParams(iconPxels, iconPxels);
-
 		this.artAuthorIV.setLayoutParams(params);
-		//		this.artAuthorArticlesIV.setLayoutParams(params);
 		this.artAuthorDescriptionIV.setLayoutParams(params);
 
 		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
@@ -499,7 +487,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.artAuthorDescriptionTV.setText(null);
 			this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
-			//
 			this.artAuthorDescriptionIV.setLayoutParams(zeroAllParams);
 		}
 		else
@@ -507,23 +494,19 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			this.artAuthorDescriptionTV.setText(Html.fromHtml(this.curArticle.getAuthorDescr()));
 			//restore size
 			this.artAuthorDescriptionIV.setLayoutParams(params);
-
 			this.artAuthorDescriptionIV.setOnClickListener(new OnClickListener()
 			{
-
 				@Override
 				public void onClick(View v)
 				{
 					artAuthorDescrBehavior();
 				}
-
 			});
 
 		}
 		//set allArsList OnClick
 		((View) this.artAuthorIV.getParent()).setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
@@ -534,21 +517,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void artAuthorDescrBehavior()
 	{
+		//set arrowDownIcon by theme
+		int[] attrs = new int[] { R.attr.arrowDownIcon };
+		TypedArray ta = act.obtainStyledAttributes(attrs);
+		Drawable drawableArrowDown = ta.getDrawable(0);
+		ta.recycle();
+		attrs = new int[] { R.attr.arrowUpIcon };
+		ta = act.obtainStyledAttributes(attrs);
+		Drawable drawableArrowUp = ta.getDrawable(0);
+		ta.recycle();
 		if (!artAuthorDescrIsShown)
 		{
 			//set and show text
-			LayoutParams descrParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-			LayoutParams.WRAP_CONTENT);
+			LayoutParams descrParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			artAuthorDescriptionTV.setLayoutParams(descrParams);
 			//set btn image
-			if (pref.getString("theme", "dark").equals("dark"))
-			{
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
-			}
-			else
-			{
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_up_grey600_48dp);
-			}
+			artAuthorDescriptionIV.setImageDrawable(drawableArrowUp);
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
 		}
 		else
@@ -556,15 +540,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			LayoutParams descrParams0 = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
 			artAuthorDescriptionTV.setLayoutParams(descrParams0);
 			//set btn image
-			if (pref.getString("theme", "dark").equals("dark"))
-			{
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_white_48dp);
-			}
-			else
-			{
-				artAuthorDescriptionIV.setImageResource(R.drawable.ic_keyboard_arrow_down_grey600_48dp);
-
-			}
+			artAuthorDescriptionIV.setImageDrawable(drawableArrowDown);
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
 		}
 	}
@@ -656,13 +632,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		//fill bottom
 		this.setUpAllTegsLayout();
-		//		this.setUpAlsoByTheme();
 		this.setUpAlsoToRead();
 	}
 
 	private void setArticlesText()
 	{
-		String articleString = this.curArticle.getArtText();//.replaceAll("<br />", "\n");
+		String articleString = this.curArticle.getArtText();
 		HtmlCleaner cleaner = new HtmlCleaner();
 		TagNode articleTextTag = cleaner.clean(articleString);
 		//it's unexpectable, but this TagNode have "head" and "body" tags...
@@ -751,12 +726,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
 				final Tag tag = allTagsList.get(i);
-				View tagCard = this.inflater.inflate(R.layout.item, artTagsMain, false);
+				View tagCard = this.inflater.inflate(R.layout.card_tag, artTagsMain, false);
 
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
 				tV.setOnClickListener(new OnClickListener()
 				{
-
 					@Override
 					public void onClick(View v)
 					{
@@ -786,17 +760,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				return;
 			}
-			//			((ViewGroup)allTagsCard.getParent()).removeView(allTagsCard);
 
 			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
 			for (int i = 0; i < allTagsList.size(); i++)
 			{
 				final Tag tag = allTagsList.get(i);
-				View tagCard = this.inflater.inflate(R.layout.item, flowLay, false);
+				View tagCard = this.inflater.inflate(R.layout.card_tag, flowLay, false);
 				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
 				tV.setOnClickListener(new OnClickListener()
 				{
-
 					@Override
 					public void onClick(View v)
 					{
@@ -828,7 +800,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	@Override
 	//	public void update(ArrayList<Article> allArtInfo)
-	public void update(Article allArtInfo)
+	public void update(Article allArtInfo, Bundle b)
 	{
 		this.curArticle = allArtInfo;
 		//Log.i(LOG + curArticle.getUrl(), "update called");
@@ -840,8 +812,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 
 		long beforeTime = System.currentTimeMillis();
-		//		Log.e(LOG, "start fill fragment with info");
-		checkCurArtInfo(null, (ViewGroup) getView());
+		checkCurArtInfo(b, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}

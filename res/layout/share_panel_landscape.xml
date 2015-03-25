@@ -48,21 +48,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:background="@android:color/transparent"
                 android:contentDescription="@string/hello_world"
                 android:scaleType="centerInside"
                 android:src="@drawable/social_facebook" />
-
-            <TextView
-                android:id="@+id/art_share_quont_0"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
 
             <ImageView
                 android:id="@+id/art_share_1"
@@ -70,21 +58,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:background="@android:color/transparent"
                 android:contentDescription="@string/hello_world"
                 android:scaleType="centerInside"
                 android:src="@drawable/social_twitter" />
-
-            <TextView
-                android:id="@+id/art_share_quont_1"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
 
             <ImageView
                 android:id="@+id/art_share_2"
@@ -92,21 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:background="@android:color/transparent"
                 android:contentDescription="@string/hello_world"
                 android:scaleType="centerInside"
                 android:src="@drawable/social_vkontakte" />
-
-            <TextView
-                android:id="@+id/art_share_quont_2"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
 
             <ImageView
                 android:id="@+id/art_share_3"
@@ -118,17 +82,6 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/social_odnoklassniki" />
 
-            <TextView
-                android:id="@+id/art_share_quont_3"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
-
             <ImageView
                 android:id="@+id/art_share_4"
                 android:layout_width="0dip"
@@ -139,17 +92,6 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/social_google" />
 
-            <TextView
-                android:id="@+id/art_share_quont_4"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
-
             <ImageView
                 android:id="@+id/art_share_5"
                 android:layout_width="0dip"
@@ -159,17 +101,6 @@
                 android:contentDescription="@string/hello_world"
                 android:scaleType="centerInside"
                 android:src="@drawable/social_livejournal" />
-
-            <TextView
-                android:id="@+id/art_share_quont_5"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/zero"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="21sp" />
         </LinearLayout>
     </ru.kuchanov.odnako.utils.MaterialRippleLayout>
 

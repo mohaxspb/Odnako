@@ -12,7 +12,6 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.ServiceArticle;
-import ru.kuchanov.odnako.fragments.FragArtUPD;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,7 +25,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 	private Context ctx;
 	private DataBaseHelper h;
 
-	FragArtUPD f;
+//	FragArtUPD f;
 
 	public ParseArticle(Context ctx, String url, DataBaseHelper h)
 	{
@@ -35,13 +34,13 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		this.h = h;
 	}
 
-	public ParseArticle(Context ctx, String url, DataBaseHelper h, FragArtUPD f)
-	{
-		this.ctx = ctx;
-		this.url = url;
-		this.h = h;
-		this.f = f;
-	}
+//	public ParseArticle(Context ctx, String url, DataBaseHelper h, FragArtUPD f)
+//	{
+//		this.ctx = ctx;
+//		this.url = url;
+//		this.h = h;
+//		this.f = f;
+//	}
 
 	protected Article doInBackground(Void... arg)
 	{
@@ -117,15 +116,15 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		//check internet
 		if (article != null)
 		{
-			if (this.f != null)
-			{
-				this.f.update(article);
-				this.h.close();
-			}
-			else
-			{
+//			if (this.f != null)
+//			{
+//				this.f.update(article);
+//				this.h.close();
+//			}
+//			else
+//			{
 				ServiceArticle.sendDownloadedData(ctx, article, url);
-			}
+//			}
 		}
 		//NO internet
 		else
