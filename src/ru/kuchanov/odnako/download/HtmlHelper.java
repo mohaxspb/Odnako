@@ -530,7 +530,7 @@ public class HtmlHelper
 			}
 			previewString = previewString.substring(0, previewString.indexOf("<p>"));
 			a.setPreview(previewString);
-			Log.e(LOG, previewString);
+//			Log.e(LOG, previewString);
 			//End of preview
 			
 			artsList.add(a);
