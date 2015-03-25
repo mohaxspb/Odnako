@@ -686,6 +686,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						tV.setAutoLinkMask(Linkify.ALL);
 						tV.setLinksClickable(true);
 						tV.setMovementMethod(LinkMovementMethod.getInstance());
+						
+						tV.setTextIsSelectable(true);
 
 						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
 						+ ">"));
