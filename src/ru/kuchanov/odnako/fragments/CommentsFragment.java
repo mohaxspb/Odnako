@@ -107,8 +107,8 @@ public class CommentsFragment extends Fragment
 		ImageView read = (ImageView) vg.findViewById(R.id.read_img);
 		ImageView comms = (ImageView) vg.findViewById(R.id.comments_img);
 		ImageView share = (ImageView) vg.findViewById(R.id.share_img);
-		TextView num_of_comms = (TextView) vg.findViewById(R.id.num_of_comms);
-		TextView num_of_shares = (TextView) vg.findViewById(R.id.num_of_sharings);
+//		TextView num_of_comms = (TextView) vg.findViewById(R.id.num_of_comms);
+//		TextView num_of_shares = (TextView) vg.findViewById(R.id.num_of_sharings);
 		TextView date = (TextView) vg.findViewById(R.id.art_card_date_tv);
 		TextView preview = (TextView) vg.findViewById(R.id.art_card_preview_tv);
 		ImageView settings = (ImageView) vg.findViewById(R.id.art_card_settings);
@@ -254,11 +254,11 @@ public class CommentsFragment extends Fragment
 		//comments btn
 		LayoutParams zeroParams = new LayoutParams(0, 0);
 		comms.setLayoutParams(zeroParams);
-		num_of_comms.setText(null);
+//		num_of_comms.setText(null);
 		////end of comments btn
 		//share btn
 		share.setLayoutParams(zeroParams);
-		num_of_shares.setText(null);
+//		num_of_shares.setText(null);
 		////end of share btn
 		//settingsBtn
 		settings.setLayoutParams(zeroParams);

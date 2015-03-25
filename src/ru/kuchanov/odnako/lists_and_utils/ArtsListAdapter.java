@@ -274,7 +274,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 						holderMain.preview.setTextSize(21 * scaleFactor);
 						Spanned spannedContentPreview = Html.fromHtml(p.getPreview());
 						holderMain.preview.setText(spannedContentPreview);
-						
+//						Log.e(LOG, p.getPreview());
 					}
 					else
 					{						
@@ -340,7 +340,6 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 					holderMain.author_lin.setOnClickListener(new OnClickListener()
 					{
-
 						@Override
 						public void onClick(View v)
 						{
@@ -445,15 +444,15 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							Actions.shareUrl(p.getUrl(), act);
 						}
 					});
-					holderMain.num_of_shares.setText(String.valueOf(p.getNumOfSharings()));
-					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
-					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.shareUrl(p.getUrl(), act);
-						}
-					});
+//					holderMain.num_of_shares.setText(String.valueOf(p.getNumOfSharings()));
+//					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
+//					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
+//					{
+//						public void onClick(View v)
+//						{
+//							Actions.shareUrl(p.getUrl(), act);
+//						}
+//					});
 					////end of share btn
 
 					//comments btn
@@ -465,15 +464,15 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
 						}
 					});
-					holderMain.num_of_comms.setText(String.valueOf(p.getNumOfComments()));
-					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
-					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
-							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-						}
-					});
+//					holderMain.num_of_comms.setText(String.valueOf(p.getNumOfComments()));
+//					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
+//					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
+//					{
+//						public void onClick(View v)
+//						{
+//							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+//						}
+//					});
 					////end of comments btn
 
 					/////////animation
@@ -555,8 +554,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 		ImageView read;
 		ImageView comms;
 		ImageView share;
-		TextView num_of_comms;
-		TextView num_of_shares;
+//		TextView num_of_comms;
+//		TextView num_of_shares;
 		TextView date;
 		TextView preview;
 		ImageView settings;
@@ -582,8 +581,8 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 			this.read = (ImageView) itemLayoutView.findViewById(R.id.read_img);
 			this.comms = (ImageView) itemLayoutView.findViewById(R.id.comments_img);
 			this.share = (ImageView) itemLayoutView.findViewById(R.id.share_img);
-			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
-			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
+//			this.num_of_comms = (TextView) itemLayoutView.findViewById(R.id.num_of_comms);
+//			this.num_of_shares = (TextView) itemLayoutView.findViewById(R.id.num_of_sharings);
 
 			this.card = (CardView) itemLayoutView.findViewById(R.id.cardView);
 		}

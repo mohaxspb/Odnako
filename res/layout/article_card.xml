@@ -153,14 +153,14 @@
                         android:scaleType="fitXY"
                         android:src="?shareIcon" />
 
-                    <TextView
+                   <!--  <TextView
                         android:id="@+id/num_of_sharings"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="5dp"
                         android:text="@string/zero"
-                        android:textColor="?android:textColorPrimary" />
+                        android:textColor="?android:textColorPrimary" /> -->
                 </LinearLayout>
 
                 <LinearLayout
@@ -203,14 +203,14 @@
                         android:scaleType="fitXY"
                         android:src="?commentsIcon" />
 
-                    <TextView
+                    <!-- <TextView
                         android:id="@+id/num_of_comms"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="5dp"
                         android:text="@string/zero"
-                        android:textColor="?android:textColorPrimary" />
+                        android:textColor="?android:textColorPrimary" /> -->
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

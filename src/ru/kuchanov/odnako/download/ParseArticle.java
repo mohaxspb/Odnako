@@ -77,6 +77,10 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 					{
 						Date downLoadedDate = new Date(article.getPubDate().getTime());
 						Date dBDate = new Date(artInDB.getPubDate().getTime());
+						
+						//preview
+						//String previewDown=article.getPreview();
+						String previewDB=artInDB.getPreview();
 
 						article.setId(artInDB.getId());
 						h.getDaoArticle().update(article);
@@ -87,6 +91,10 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 						if (downLoadedDate.getTime() < dBDate.getTime())
 						{
 							Article.updatePubDate(h, artInDB.getId(), dBDate);
+						}
+						if(!previewDB.equals(Const.EMPTY_STRING))
+						{
+							Article.updatePreview(h, artInDB.getId(), previewDB);
 						}
 					}
 				}

@@ -520,6 +520,7 @@ public class HtmlHelper
 			TagNode guid = t.findElementByName("guid", true);
 			a.setUrl(guid.getText().toString());
 			a.setPubDate(DateParse.parse(t.findElementByName("pubDate", true).getText().toString()));
+			//preview
 			TagNode preview = t.findElementByName("description", true);
 			String previewString = Html.fromHtml(preview.getText().toString()).toString();
 			previewString = previewString.substring(previewString.indexOf("justify") + 9);
@@ -529,6 +530,9 @@ public class HtmlHelper
 			}
 			previewString = previewString.substring(0, previewString.indexOf("<p>"));
 			a.setPreview(previewString);
+			Log.e(LOG, previewString);
+			//End of preview
+			
 			artsList.add(a);
 		}
 		return artsList;

@@ -162,7 +162,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.e(LOG + curArticle.getUrl(), "articleReceiver onReceive");
+			Log.e(LOG, "articleReceiver onReceive");
 			if (!isAdded())
 			{
 				Log.e(LOG + curArticle.getUrl(), "fragment not added! RETURN!");
@@ -177,13 +177,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			else
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-				curArticle = a;
-				Log.i(LOG, a.getTitle() + " have been loaded");
-				long beforeTime = System.currentTimeMillis();
-				Log.e(LOG, "start fill fragment with info");
-				checkCurArtInfo(null, (ViewGroup) getView());
-				Log.e(LOG,
-				"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
+				update(a, null);
 			}
 		}
 	};
