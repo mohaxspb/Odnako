@@ -113,9 +113,6 @@ public class ActivityArticle extends ActivityBase
 		{
 			listener.onPageSelected(0);
 		}
-		//		listener.onPageSelected(this.getCurArtPosition());
-		
-		
 
 		//adMob
 		this.AddAds();
@@ -192,6 +189,15 @@ public class ActivityArticle extends ActivityBase
 		}
 		switch (item.getItemId())
 		{
+			case R.id.action_settings_all:
+				//set theme btn checked if theme is dark
+				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
+				String curTheme = pref.getString("theme", "dark");
+				if (curTheme.equals("dark"))
+				{
+					themeMenuItem.setChecked(true);
+				}
+				return true;
 			case R.id.comments:
 				Actions.showComments(curAllArtsInfo, getCurArtPosition(), act);
 				return true;

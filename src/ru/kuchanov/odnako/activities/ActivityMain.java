@@ -628,7 +628,6 @@ public class ActivityMain extends ActivityBase
 				{
 					isKeyboardOpened = false;
 				}
-
 			}
 		});
 
@@ -687,9 +686,6 @@ public class ActivityMain extends ActivityBase
 			//if expanded
 			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
-				//				settingsAll.setVisible(false);
-				//				refresh.setVisible(false);
-				//				search.setVisible(true);
 				//setvisibility depending on category
 				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
@@ -724,9 +720,6 @@ public class ActivityMain extends ActivityBase
 			else
 			{
 				//searchView is collapsed
-				//				settingsAll.setVisible(true);
-				//				refresh.setVisible(true);
-				//				search.setVisible(true);
 				//setvisibility depending on category
 				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
@@ -774,6 +767,7 @@ public class ActivityMain extends ActivityBase
 		switch (item.getItemId())
 		{
 			case R.id.action_settings_all:
+				//set theme btn checked if theme is dark
 				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
 				String curTheme = pref.getString("theme", "dark");
 				if (curTheme.equals("dark"))
