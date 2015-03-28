@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
+import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
@@ -663,6 +664,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
+		this.artsList.addItemDecoration(new SpacesItemDecoration(25));
 		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
 		//restore allArtsInfo from Activities HashMap

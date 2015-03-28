@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
-<android.support.v7.widget.CardView 
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="?cardBackGroundColor"
@@ -44,7 +41,7 @@
 
                 <!-- <TextView -->
 
-                <TextView
+                <ru.kuchanov.odnako.custom.view.JBTextView
                     android:id="@+id/art_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,7 +53,7 @@
 
                 <!-- <TextView -->
 
-                <TextView
+                <ru.kuchanov.odnako.custom.view.JBTextView
                     android:id="@+id/pub_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -98,7 +95,7 @@
 
                     <!-- <TextView -->
 
-                    <TextView
+                    <ru.kuchanov.odnako.custom.view.JBTextView
                         android:id="@+id/art_author"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
@@ -120,7 +117,7 @@
 
         <!-- <TextView -->
 
-        <TextView
+        <ru.kuchanov.odnako.custom.view.JBTextView
             android:id="@+id/art_author_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +127,7 @@
             android:textColor="?android:textColorPrimary"
             android:textSize="21sp" />
 
+        <!-- <TextView -->
         <ru.kuchanov.odnako.custom.view.FlowLayout
             android:id="@+id/art_tags_main"
             android:layout_width="wrap_content"
@@ -143,4 +141,3 @@
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
-</LinearLayout>

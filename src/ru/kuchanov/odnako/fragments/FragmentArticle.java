@@ -24,6 +24,8 @@ import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
+import ru.kuchanov.odnako.lists_and_utils.AdapterRecyclerArticleFragment;
+import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
@@ -44,6 +46,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -79,6 +84,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private TextView artTextView;
 
 	private ScrollView scroll;
+	private final String ARTICLE_SCROLL_POSITION = "article scroll position";
 	SwipeRefreshLayout swipeRef;
 
 	private ImageView artImageIV;
@@ -91,9 +97,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private TextView artAuthorDescriptionTV;
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
-	//	private ImageView artAuthorArticlesIV;
 
-	//	private TextView artTagsMainTV;
 	private FlowLayout artTagsMain;
 
 	private LinearLayout bottomPanel;
@@ -111,6 +115,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private boolean artAuthorDescrIsShown = false;
 
 	private DisplayImageOptions options;
+	
+	private RecyclerView recycler;
+	private AdapterRecyclerArticleFragment recyclerAdapter;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -126,13 +133,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.curArticle = stateFromArgs.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(stateFromArgs.getInt("position", 0));
-			//			this.allArtsInfo = stateFromArgs.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 		if (savedState != null)
 		{
 			this.curArticle = savedState.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(savedState.getInt("position"));
-			//			this.allArtsInfo = savedState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 		}
 
 		this.imageLoader = MyUIL.get(act);
@@ -176,7 +181,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			else
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-				update(a, null);
+				curArticle=a;
+				//show
+				swipeRef.setRefreshing(false);
+				recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+				recycler.setAdapter(recyclerAdapter);
+//				update(a, null);
 			}
 		}
 	};
@@ -187,11 +197,59 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.inflater = inflater;
 		View v = this.inflater.inflate(R.layout.fragment_art, container, false);
 
-		//find all views
-		this.findViews(v);
+		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
+		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
+		//as I understand before onResume of Activity
+		this.swipeRef.setColorSchemeColors(R.color.material_red_300,
+		R.color.material_red_500,
+		R.color.material_red_500,
+		R.color.material_red_500);
 
+		TypedValue typed_value = new TypedValue();
+		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
+		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+
+		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+		////set on swipe listener
+		this.swipeRef.setOnRefreshListener(new OnRefreshListener()
+		{
+
+			@Override
+			public void onRefresh()
+			{
+				//TODO
+				loadArticle(true);
+			}
+		});
+		
+		this.recycler=(RecyclerView) v.findViewById(R.id.article_recycler_view);
+		this.recycler.setItemAnimator(new DefaultItemAnimator());
+		this.recycler.setLayoutManager(new LinearLayoutManager(act));
+		this.recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+		this.recycler.setAdapter(recyclerAdapter);
+		
+		if (this.curArticle == null)
+		{
+			//show load...
+			this.swipeRef.setRefreshing(true);
+		}
+		else
+		{
+			if (this.curArticle.getArtText().equals(Const.EMPTY_STRING))
+			{
+				//load...
+				this.loadArticle(false);
+			}
+			else
+			{
+				//show
+				this.recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+				this.recycler.setAdapter(recyclerAdapter);
+			}
+		}
+		
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
-		this.update(curArticle, savedInstanceState);
+//		this.update(curArticle, savedInstanceState);
 
 		return v;
 	}
@@ -246,25 +304,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//setting size of Images and text
 				this.setSizeAndTheme();
 				//End of setting size of Images and text
-
-				//scroll to previous position
-				if (savedInstanceState != null && savedInstanceState.keySet().contains("ARTICLE_SCROLL_POSITION"))
-				{
-					final int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-					if (position != null)
-					{
-						if (position != null)
-						{
-							scroll.post(new Runnable()
-							{
-								public void run()
-								{
-									scroll.scrollTo(position[0], position[1]);
-								}
-							});
-						}
-					}
-				}
 			}
 		}
 	}//check cur Article
@@ -282,61 +321,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	private void findViews(View v)
 	{
-		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
-		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
-		//as I understand before onResume of Activity
-		this.swipeRef.setColorSchemeColors(R.color.material_red_300,
-		R.color.material_red_500,
-		R.color.material_red_500,
-		R.color.material_red_500);
-
-		TypedValue typed_value = new TypedValue();
-		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
-		this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
-
-		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
-		////set on swipe listener
-		this.swipeRef.setOnRefreshListener(new OnRefreshListener()
-		{
-
-			@Override
-			public void onRefresh()
-			{
-				//TODO
-			}
-		});
-
-		LinearLayout mainLinLayInScroll = (LinearLayout) v.findViewById(R.id.main_lin_lay_article_frags_scroll);
-		CardView artCard;
-		if (android.os.Build.VERSION.SDK_INT != 16)
-		{
-			artCard = (CardView) this.inflater.inflate(R.layout.article_card_art_frag, mainLinLayInScroll, false);
-		}
-		else
-		{
-			artCard = (CardView) this.inflater.inflate(R.layout.article_card_art_frag_jb, mainLinLayInScroll, false);
-		}
-		mainLinLayInScroll.addView(artCard, 1);
-
-		this.articlesTextContainer = (LinearLayout) v.findViewById(R.id.articles_text_container);
-		this.artTextView = (TextView) v.findViewById(R.id.art_text);
-
-		this.scroll = (ScrollView) v.findViewById(R.id.art_scroll);
-
-		this.artImageIV = (ImageView) v.findViewById(R.id.art_card_img);
-
-		this.artTitleTV = (TextView) v.findViewById(R.id.art_title);
-
-		this.authorLayout = (ViewGroup) v.findViewById(R.id.art_author_lin);
-		this.artAuthorTV = (TextView) v.findViewById(R.id.art_author);
-		this.artAuthorDescriptionTV = (TextView) v.findViewById(R.id.art_author_description);
-
-		this.artDateTV = (TextView) v.findViewById(R.id.pub_date);
-
-		this.artAuthorIV = (ImageView) v.findViewById(R.id.art_author_img);
-		this.artAuthorDescriptionIV = (ImageView) v.findViewById(R.id.art_author_description_btn);
-
-		this.bottomPanel = (LinearLayout) v.findViewById(R.id.art_bottom_panel);
 		//inflate bottom panels
 		DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 		int width = displayMetrics.widthPixels;
@@ -356,13 +340,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			this.shareCard = (CardView) inflater.inflate(R.layout.share_panel_landscape, bottomPanel, false);
 			this.bottomPanel.addView(this.shareCard);
 		}
-
-		this.commentsBottomBtn = (CardView) inflater.inflate(R.layout.comments_bottom_btn_layout, bottomPanel, false);
-
-		this.bottomPanel.addView(this.commentsBottomBtn);
-
-		this.artTagsMain = (FlowLayout) v.findViewById(R.id.art_tags_main);
-		this.allTagsCard = (CardView) inflater.inflate(R.layout.all_tegs_layout, bottomPanel, false);
 	}
 
 	private void setUpAlsoToRead()
@@ -558,7 +535,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//so 2/3 of width
 				width = width / 3 * 2;
 			}
-			int height=(int) (width / (1.7f));
+			int height = (int) (width / (1.7f));
 			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
 			params.height = height;
 			this.artImageIV.setLayoutParams(params);
@@ -648,7 +625,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		if (!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 		{
-//			articlesTextContainer.removeView(artTextView);
 			articlesTextContainer.removeAllViews();
 			for (int i = 0; i < formatedArticle.getChildTags().length; i++)
 			{
@@ -686,7 +662,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						tV.setAutoLinkMask(Linkify.ALL);
 						tV.setLinksClickable(true);
 						tV.setMovementMethod(LinkMovementMethod.getInstance());
-						
+
 						tV.setTextIsSelectable(true);
 
 						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
@@ -786,23 +762,17 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 		}
 	}//setUpAllTagsLayout
-
+	
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		//System.out.println("ArticleFragment onSaveInstanceState");
+		Log.i("ArticleFragment onSaveInstanceState", this.curArticle.getTitle());
 		super.onSaveInstanceState(outState);
-
-		//save scrollView position
-		outState.putIntArray("ARTICLE_SCROLL_POSITION", new int[] { scroll.getScrollX(), scroll.getScrollY() });
-
 		outState.putInt("position", this.getPosition());
 		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
-		//		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
 	}
 
 	@Override
-	//	public void update(ArrayList<Article> allArtInfo)
 	public void update(Article allArtInfo, Bundle b)
 	{
 		this.curArticle = allArtInfo;
@@ -818,6 +788,14 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		checkCurArtInfo(b, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
+//		scroll.post(new Runnable()
+//		{
+//			public void run()
+//			{
+//				Log.e("reciver", "position: 0/0");
+//				scroll.scrollTo(0, 0);
+//			}
+//		});
 	}
 
 	public int getPosition()
