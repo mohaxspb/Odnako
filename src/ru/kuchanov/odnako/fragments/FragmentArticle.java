@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
-
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -16,6 +15,7 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
+import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.db.Msg;
@@ -151,8 +151,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
+			
+			////////////////
+			LocalBroadcastManager.getInstance(this.act).registerReceiver(fragSelectedReceiver,
+			new IntentFilter(this.curArticle.getUrl() + "frag_selected"));
 		}
 	}
+	
+	private BroadcastReceiver fragSelectedReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.e(LOG, "articleReceiver onReceive");
+			((MyLinearLayoutManager)recycler.getLayoutManager()).setFirstScroll(true);
+		}
+	};
 
 	private BroadcastReceiver articleReceiver = new BroadcastReceiver()
 	{
@@ -214,13 +228,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		});
 
 		this.recycler = (RecyclerView) v.findViewById(R.id.article_recycler_view);
+
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
-		this.recycler.setLayoutManager(new LinearLayoutManager(act));
+//		this.recycler.setLayoutManager(new LinearLayoutManager(act));
+		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
 		this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
-		
-//		int savedPosition=((LinearLayoutManager) this.recycler.getLayoutManager()).onRestoreInstanceState(savedInstanceState);
-		((LinearLayoutManager) this.recycler.getLayoutManager()).scrollToPositionWithOffset(2, 20);
+
+		//		int savedPosition=((LinearLayoutManager) this.recycler.getLayoutManager()).onRestoreInstanceState(savedInstanceState);
+		//		((LinearLayoutManager) this.recycler.getLayoutManager()).scrollToPositionWithOffset(2, 20);
+		//		LinearLayoutManager manager=((LinearLayoutManager) this.recycler.getLayoutManager());
+		//		int index = manager.findFirstVisibleItemPosition();
+		//		View view = manager.getChildAt(0);
+		//		int top = (view == null) ? 0 : (view.getTop() - manager.getPaddingTop());
+		//		Log.e("index", "index: "+index);
+		//		Log.e("top", "top: "+top);
+		//		manager.scrollToPositionWithOffset(index, top);
 
 		if (this.curArticle == null)
 		{
@@ -238,20 +261,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				//show
 				this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
-//				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-//				{
-//					for (int i = 0; i < recyclerAdapter.getItemCount(); i++)
-//					{
-//						if (recyclerAdapter.getItemViewType(i) == AdapterRecyclerArticleFragment.TEXT)
-//						{
-//							recycler.addItemDecoration(new SpacesItemDecoration(0), i);
-//						}
-//						else
-//						{
-//							recycler.addItemDecoration(new SpacesItemDecoration(10), i);
-//						}
-//					}
-//				}
 				this.recycler.setAdapter(recyclerAdapter);
 			}
 		}
@@ -735,6 +744,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
 			articleReceiver = null;
+		}
+		if (fragSelectedReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+			fragSelectedReceiver = null;
 		}
 		// Must always call the super method at the end.
 		super.onDestroy();
