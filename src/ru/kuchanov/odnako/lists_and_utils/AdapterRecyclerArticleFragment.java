@@ -25,9 +25,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,14 +39,14 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 {
 	final static String LOG = AdapterRecyclerArticleFragment.class.getSimpleName();
 
-	private static final int HEADER = 0;
-	private static final int CARD_ARTICLE_TITLE = 1;
-	private static final int TEXT = 2;
-	private static final int IMAGE = 3;
-	private static final int CARD_COMMENTS = 4;
-	private static final int CARD_SHARE = 5;
-	private static final int CARD_TAGS_ALL = 6;
-	private static final int CARD_ALSO_TO_READ = 7;
+	public static final int HEADER = 0;
+	public static final int CARD_ARTICLE_TITLE = 1;
+	public static final int TEXT = 2;
+	public static final int IMAGE = 3;
+	public static final int CARD_COMMENTS = 4;
+	public static final int CARD_SHARE = 5;
+	public static final int CARD_TAGS_ALL = 6;
+	public static final int CARD_ALSO_TO_READ = 7;
 
 	private ActionBarActivity act;
 
@@ -61,7 +59,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 	boolean twoPane;
 
 	private boolean artAuthorDescrIsShown = false;
-	
+
 	private TagNode[] articlesTags;
 
 	public AdapterRecyclerArticleFragment(ActionBarActivity act, Article article)
@@ -69,7 +67,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		this.act = act;
 
 		this.article = article;
-		this.articlesTags=this.getArticlesTags();
+		this.articlesTags = this.getArticlesTags();
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
@@ -105,7 +103,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					return TEXT;
 				}
-//				TagNode[] articlesTags = this.getArticlesTags();
+				//				TagNode[] articlesTags = this.getArticlesTags();
 				int curPosition = position - 2;
 
 				if (curPosition < articlesTags.length)
@@ -181,7 +179,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 			numOfArticleNodes += this.article.getTagsAll().equals(Const.EMPTY_STRING) ? 0 : 1;
 			//toReadMore
 			numOfArticleNodes += this.article.getToReadMore().equals(Const.EMPTY_STRING) ? 0 : 1;
-
 			return numOfArticleNodes;
 		}
 	}
@@ -194,8 +191,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 
 		final float scale = act.getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-
-		//		final RecyclerView.ViewHolder h;
 
 		switch (getItemViewType(position))
 		{
@@ -234,7 +229,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) h.artImg
 					.getLayoutParams();
-					params.height = 0;
+					params.height = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 					h.artImg.setLayoutParams(params);
 				}
 				//end of ART_IMG
@@ -254,7 +249,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 					android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
 					android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
 
-					//artTagsMain.removeAllViews();
+					h.tagsMain.removeAllViews();
 					ArrayList<Tag> allTagsList = article.getTags(article.getTegsMain());
 					if (allTagsList.size() != 0)
 					{
@@ -283,7 +278,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				if (!article.getAuthorName().equals(Const.EMPTY_STRING))
 				{
 					LayoutParams p = (LayoutParams) h.authorLin.getLayoutParams();
-					p.height = LayoutParams.MATCH_PARENT;
+					p.height = LayoutParams.WRAP_CONTENT;
 					p.width = LayoutParams.MATCH_PARENT;
 					p.setMargins(0, 0, 0, 0);
 					h.authorLin.setLayoutParams(p);
@@ -294,8 +289,8 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 
 					if (article.getAuthorDescr().equals(Const.EMPTY_STRING) || article.getAuthorDescr().equals(""))
 					{
-						h.authorDescription.setText(null);
 						h.authorDescription.setLayoutParams(zeroHeightParams);
+						h.authorDescrArrow.setImageDrawable(null);
 					}
 					else
 					{
@@ -320,7 +315,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 						params.width = pixels;
 						params.setMargins(5, 5, 5, 5);
 						h.authorImg.setLayoutParams(params);
-						Log.e(LOG, "CARD_ARTICLE_TITLE AUTHOR_1");
 
 						this.imageLoader.displayImage(article.getImgAuthor(), h.authorImg,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
@@ -349,27 +343,59 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					LayoutParams params = (LayoutParams) h.authorLin.getLayoutParams();
 					params.height = 0;
-					params.width = 0;
+					//					params.width = LayoutParams.MATCH_PARENT;
 					params.setMargins(0, 0, 0, 0);
 					h.authorLin.setLayoutParams(params);
+					android.widget.LinearLayout.LayoutParams paramsLin = (android.widget.LinearLayout.LayoutParams) h.authorDescription
+					.getLayoutParams();
+					paramsLin.height = 0;
+					h.authorDescription.setLayoutParams(paramsLin);
+					h.authorDescrArrow.setLayoutParams(paramsLin);
 				}
 			break;
 			case TEXT:
 				final HolderText hT = (HolderText) holder;
-//				TagNode[] articlesTags = getArticlesTags();
 				//calculate position by minusing header and titleCard
 				int positionInArticlesTags = position - 1 - 1;
 
-				hT.text.setAutoLinkMask(Linkify.ALL);
+				hT.text.setTextIsSelectable(true);
+
+				//For no reason (?) this not work
+				//hT.text.setAutoLinkMask(Linkify.ALL);
+
 				hT.text.setLinksClickable(true);
 				hT.text.setMovementMethod(LinkMovementMethod.getInstance());
-
-				hT.text.setTextIsSelectable(true);
 
 				hT.text.setText(Html.fromHtml("<" + articlesTags[positionInArticlesTags].getName() + ">"
 				+ articlesTags[positionInArticlesTags].getText().toString() + "</"
 				+ articlesTags[positionInArticlesTags].getName()
 				+ ">"));
+			break;
+			case IMAGE:
+				final HolderImage hI = (HolderImage) holder;
+				//calculate position by minusing header and titleCard
+				positionInArticlesTags = position - 1 - 1;
+
+				int width = act.getResources().getDisplayMetrics().widthPixels;
+				if (twoPane)
+				{
+					//so 2/3 of width
+					width = width / 3 * 2;
+				}
+				//style="height:697px; width:500px"
+				String style = articlesTags[positionInArticlesTags].getAttributeByName("style");
+				int imgW = Integer.parseInt(style.substring(style.indexOf("width") + 6, style.lastIndexOf("px")));
+				int imgH = Integer.parseInt(style.substring(style.indexOf("height") + 7, style.indexOf("px")));
+				float imgScale = (float) (imgH) / (float) (imgW);
+				int height = (int) (width * imgScale);
+				android.view.ViewGroup.LayoutParams params = (android.view.ViewGroup.LayoutParams) hI.img
+				.getLayoutParams();
+				params.height = height;
+				hI.img.setLayoutParams(params);
+				String HDimgURL = articlesTags[positionInArticlesTags].getAttributeByName("src");
+
+				imageLoader.displayImage(HDimgURL, hI.img, options, new ImgLoadListenerBigSmall(
+				imageLoader, options, hI.img));
 			break;
 		}
 	}
@@ -414,15 +440,9 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		switch (position)
 		{
 			case (HEADER):
-				itemLayoutView = new LinearLayout(act);
-				TypedValue typedValue = new TypedValue();
-				int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
-				int indexOfAttrTextSize = 0;
-				TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-				int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
-				a.recycle();
-				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				android.widget.LinearLayout.LayoutParams.MATCH_PARENT, actionBarSize));
+				itemLayoutView = act.getLayoutInflater().inflate(R.layout.fake_header_small,
+				parent,
+				false);
 				return new HolderHeader(itemLayoutView);
 			case (CARD_ARTICLE_TITLE):
 				itemLayoutView = act.getLayoutInflater().inflate(R.layout.article_card_art_frag,
@@ -551,7 +571,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		HolderComments(View itemLayoutView)
 		{
 			super(itemLayoutView);
-			this.mainLin = (ViewGroup) itemLayoutView.findViewById(R.id.art_comments_bottom_btn);
+			this.mainLin = (ViewGroup) itemLayoutView;//.findViewById(R.id.art_comments_bottom_btn);
 		}
 	}
 

@@ -2916,11 +2916,9 @@ containing a value of this type.
          showAsAction="ifRoom" items can fit. "always" items can override this. 
          */
         public static final int abc_max_action_buttons=0x7f0b0000;
-        public static final int checkPeriod=0x7f0b0004;
-        public static final int db_version=0x7f0b0005;
+        public static final int checkPeriod=0x7f0b0002;
+        public static final int db_version=0x7f0b0003;
         public static final int google_play_services_version=0x7f0b0001;
-        public static final int heigth=0x7f0b0003;
-        public static final int width=0x7f0b0002;
     }
     public static final class layout {
         public static final int abc_action_bar_title_item=0x7f030000;
@@ -2957,14 +2955,14 @@ containing a value of this type.
         public static final int also_to_read_art_lay=0x7f03001f;
         public static final int article_card=0x7f030020;
         public static final int article_card_art_frag=0x7f030021;
-        public static final int article_card_art_frag_jb=0x7f030022;
-        public static final int author_card=0x7f030023;
-        public static final int card_tag=0x7f030024;
-        public static final int category_card=0x7f030025;
-        public static final int comment_card_view=0x7f030026;
-        public static final int comments_bottom_btn_layout=0x7f030027;
-        public static final int drawer_group=0x7f030028;
-        public static final int drawer_header=0x7f030029;
+        public static final int author_card=0x7f030022;
+        public static final int card_tag=0x7f030023;
+        public static final int category_card=0x7f030024;
+        public static final int comment_card_view=0x7f030025;
+        public static final int comments_bottom_btn_layout=0x7f030026;
+        public static final int drawer_group=0x7f030027;
+        public static final int drawer_header=0x7f030028;
+        public static final int fake_header_small=0x7f030029;
         public static final int fragment_all_authors_list=0x7f03002a;
         public static final int fragment_art=0x7f03002b;
         public static final int fragment_arts_list=0x7f03002c;

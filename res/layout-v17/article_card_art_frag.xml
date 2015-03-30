@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="?cardBackGroundColor"
     app:cardCornerRadius="6dp"
-    app:cardElevation="5dp" >
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true" >
 
     <LinearLayout
         android:id="@+id/art_card_main_lin_lay"
@@ -38,9 +38,6 @@
                     android:scaleType="fitXY" />
                 <!-- title and date -->
 
-
-                <!-- <TextView -->
-
                 <TextView
                     android:id="@+id/art_title"
                     android:layout_width="match_parent"
@@ -50,8 +47,6 @@
                     android:textColor="?android:textColorPrimary"
                     android:textSize="25sp"
                     android:textStyle="bold" />
-
-                <!-- <TextView -->
 
                 <TextView
                     android:id="@+id/pub_date"
@@ -93,8 +88,6 @@
                         android:contentDescription="@string/hello_world"
                         android:padding="5dp" />
 
-                    <!-- <TextView -->
-
                     <TextView
                         android:id="@+id/art_author"
                         android:layout_width="0dip"
@@ -114,8 +107,6 @@
                 android:padding="5dp"
                 android:src="?arrowDownIcon" />
         </LinearLayout>
-
-        <!-- <TextView -->
 
         <TextView
             android:id="@+id/art_author_description"

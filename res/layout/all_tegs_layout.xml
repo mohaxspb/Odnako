@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="?cardBackGroundColor"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="5dp" >
+    app:cardBackgroundColor="?cardBackGroundColor"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true" >
 
     <ru.kuchanov.odnako.custom.view.FlowLayout
         android:id="@+id/flow"
@@ -14,8 +15,8 @@
         android:paddingLeft="6dip"
         android:paddingRight="12dip"
         android:paddingTop="6dip"
-        card_view:horizontalSpacing="6dip"
-        card_view:verticalSpacing="12dip" >
+        app:horizontalSpacing="6dip"
+        app:verticalSpacing="12dip" >
     </ru.kuchanov.odnako.custom.view.FlowLayout>
 
 </android.support.v7.widget.CardView>

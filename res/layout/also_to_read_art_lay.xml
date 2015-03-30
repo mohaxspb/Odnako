@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="?cardBackGroundColorDark"
     app:cardCornerRadius="6dp"
-    app:cardElevation="5dp" >
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true" >
 
     <ru.kuchanov.odnako.utils.MaterialRippleLayout
         android:layout_width="match_parent"

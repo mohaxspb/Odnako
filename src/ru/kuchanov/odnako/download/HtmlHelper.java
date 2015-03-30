@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,7 +22,6 @@ import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
 
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 
 import ru.kuchanov.odnako.Const;
@@ -563,6 +563,10 @@ public class HtmlHelper
 		{
 			imgArt = Const.EMPTY_STRING;
 		}
+		if (imgArt.startsWith("/"))
+		{
+			imgArt = DOMAIN_MAIN + imgArt;
+		}
 
 		//<div class="date l-t-right l-right">12 марта 2015</div>
 		Date pubDate = DateParse.parse(this.rootNode
@@ -609,8 +613,10 @@ public class HtmlHelper
 		//<div hidden class="author-teaser-expander clearfix">
 		TagNode authorDescrDiv = this.rootNode.findElementByAttValue("class", "author-teaser-expander clearfix",
 		isRecursive, isCaseSensitive);
-		String authorDescr = "empty";
-		if (!TextUtils.isEmpty(authorDescrDiv.getText()))
+		String authorDescr = Const.EMPTY_STRING;
+		Pattern p = Pattern.compile("[а-яА-ЯёЁ]");
+		boolean hasSpecialChar = p.matcher(authorDescrDiv.getText().toString()).find();
+		if(hasSpecialChar)
 		{
 			authorDescr = authorDescrDiv.getText().toString();
 		}
@@ -625,7 +631,6 @@ public class HtmlHelper
 				"/75_75/", "/335_245/"), new Date(0), new Date(0));
 			}
 		}
-
 		//TAGS
 		//main
 		//<div class="biggest-tag l-left">

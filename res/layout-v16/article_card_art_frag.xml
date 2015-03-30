@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="?cardBackGroundColor"
     app:cardCornerRadius="6dp"
-    app:cardElevation="5dp" >
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true"  >
 
     <LinearLayout
         android:id="@+id/art_card_main_lin_lay"
@@ -38,9 +39,6 @@
                     android:scaleType="fitXY" />
                 <!-- title and date -->
 
-
-                <!-- <TextView -->
-
                 <ru.kuchanov.odnako.custom.view.JBTextView
                     android:id="@+id/art_title"
                     android:layout_width="match_parent"
@@ -50,8 +48,6 @@
                     android:textColor="?android:textColorPrimary"
                     android:textSize="25sp"
                     android:textStyle="bold" />
-
-                <!-- <TextView -->
 
                 <ru.kuchanov.odnako.custom.view.JBTextView
                     android:id="@+id/pub_date"
@@ -93,8 +89,6 @@
                         android:contentDescription="@string/hello_world"
                         android:padding="5dp" />
 
-                    <!-- <TextView -->
-
                     <ru.kuchanov.odnako.custom.view.JBTextView
                         android:id="@+id/art_author"
                         android:layout_width="0dip"
@@ -115,8 +109,6 @@
                 android:src="?arrowDownIcon" />
         </LinearLayout>
 
-        <!-- <TextView -->
-
         <ru.kuchanov.odnako.custom.view.JBTextView
             android:id="@+id/art_author_description"
             android:layout_width="match_parent"
@@ -126,9 +118,7 @@
             android:padding="10dp"
             android:textColor="?android:textColorPrimary"
             android:textSize="21sp" />
-
-        <!-- <TextView -->
-        <ru.kuchanov.odnako.custom.view.FlowLayout
+        <ru.kuchanov.odnako.custom.view.FlowLayout
             android:id="@+id/art_tags_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

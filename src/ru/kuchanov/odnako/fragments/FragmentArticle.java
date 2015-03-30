@@ -8,8 +8,6 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
-import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.TagNode;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -18,16 +16,13 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
-import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.AdapterRecyclerArticleFragment;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
 import ru.kuchanov.odnako.utils.DateParse;
-import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
@@ -51,8 +46,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -63,7 +56,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,8 +75,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	LinearLayout articlesTextContainer;
 	private TextView artTextView;
 
-	private ScrollView scroll;
-	private final String ARTICLE_SCROLL_POSITION = "article scroll position";
 	SwipeRefreshLayout swipeRef;
 
 	private ImageView artImageIV;
@@ -115,9 +105,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private boolean artAuthorDescrIsShown = false;
 
 	private DisplayImageOptions options;
-	
+
 	private RecyclerView recycler;
 	private AdapterRecyclerArticleFragment recyclerAdapter;
+
+	//	SpacesItemDecoration zeroDecor=;
+	//	SpacesItemDecoration defaultDecor;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -181,12 +174,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			else
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-				curArticle=a;
+				curArticle = a;
 				//show
 				swipeRef.setRefreshing(false);
-				recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+				recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
 				recycler.setAdapter(recyclerAdapter);
-//				update(a, null);
+				//				update(a, null);
 			}
 		}
 	};
@@ -213,21 +206,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		////set on swipe listener
 		this.swipeRef.setOnRefreshListener(new OnRefreshListener()
 		{
-
 			@Override
 			public void onRefresh()
 			{
-				//TODO
 				loadArticle(true);
 			}
 		});
-		
-		this.recycler=(RecyclerView) v.findViewById(R.id.article_recycler_view);
+
+		this.recycler = (RecyclerView) v.findViewById(R.id.article_recycler_view);
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
 		this.recycler.setLayoutManager(new LinearLayoutManager(act));
-		this.recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+		this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
 		
+//		int savedPosition=((LinearLayoutManager) this.recycler.getLayoutManager()).onRestoreInstanceState(savedInstanceState);
+		((LinearLayoutManager) this.recycler.getLayoutManager()).scrollToPositionWithOffset(2, 20);
+
 		if (this.curArticle == null)
 		{
 			//show load...
@@ -243,13 +237,27 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			else
 			{
 				//show
-				this.recyclerAdapter=new AdapterRecyclerArticleFragment(act, curArticle);
+				this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
+//				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+//				{
+//					for (int i = 0; i < recyclerAdapter.getItemCount(); i++)
+//					{
+//						if (recyclerAdapter.getItemViewType(i) == AdapterRecyclerArticleFragment.TEXT)
+//						{
+//							recycler.addItemDecoration(new SpacesItemDecoration(0), i);
+//						}
+//						else
+//						{
+//							recycler.addItemDecoration(new SpacesItemDecoration(10), i);
+//						}
+//					}
+//				}
 				this.recycler.setAdapter(recyclerAdapter);
 			}
 		}
-		
+
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
-//		this.update(curArticle, savedInstanceState);
+		//		this.update(curArticle, savedInstanceState);
 
 		return v;
 	}
@@ -552,7 +560,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 		//end of ART_IMG
 
-		this.setArticlesText();
+		//		this.setArticlesText();
 
 		this.artTitleTV.setText(Html.fromHtml(this.curArticle.getTitle()));
 
@@ -610,86 +618,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//fill bottom
 		this.setUpAllTegsLayout();
 		this.setUpAlsoToRead();
-	}
-
-	private void setArticlesText()
-	{
-		String articleString = this.curArticle.getArtText();
-		HtmlCleaner cleaner = new HtmlCleaner();
-		TagNode articleTextTag = cleaner.clean(articleString);
-		//it's unexpectable, but this TagNode have "head" and "body" tags...
-		//So we only need innerHTML from "body" tag;
-		TagNode[] articlesTags = articleTextTag.findElementByName("body", true).getChildTags();
-
-		TagNode formatedArticle = HtmlTextFormatting.format(articlesTags);
-
-		if (!this.curArticle.getArtText().equals(Const.EMPTY_STRING))
-		{
-			articlesTextContainer.removeAllViews();
-			for (int i = 0; i < formatedArticle.getChildTags().length; i++)
-			{
-				TagNode a = formatedArticle.getChildTags()[i];
-				if (a.getName().equals("img"))
-				{
-					ImageView iV = new ImageView(act);
-					LinearLayout.LayoutParams params = new LayoutParams(100, 100);
-					params.height = 200;
-					params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-					params.setMargins(5, 5, 5, 5);
-					iV.setLayoutParams(params);
-					articlesTextContainer.addView(iV);
-					imageLoader.displayImage(a.getAttributeByName("src"), iV, options);
-				}
-				else
-				{
-					//check if previous tag was img and create new TextView, else append text to existing
-					if (i == 0 || (i != 0 && formatedArticle.getChildTags()[i - 1].getName().equals("img")))
-					{
-						TextView tV;
-						if (android.os.Build.VERSION.SDK_INT != 16)
-						{
-							tV = new TextView(act);
-						}
-						else
-						{
-							tV = new JBTextView(act);
-						}
-						LinearLayout.LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-						LinearLayout.LayoutParams.MATCH_PARENT);
-						params.setMargins(5, 5, 5, 5);
-						tV.setLayoutParams(params);
-
-						tV.setAutoLinkMask(Linkify.ALL);
-						tV.setLinksClickable(true);
-						tV.setMovementMethod(LinkMovementMethod.getInstance());
-
-						tV.setTextIsSelectable(true);
-
-						tV.setText(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
-						+ ">"));
-						tV.setTextSize(19);
-						articlesTextContainer.addView(tV);
-					}
-					else
-					{
-						TextView tV;
-						if (android.os.Build.VERSION.SDK_INT != 16)
-						{
-							tV = (TextView) articlesTextContainer
-							.getChildAt(articlesTextContainer.getChildCount() - 1);
-						}
-						else
-						{
-							tV = (JBTextView) articlesTextContainer
-							.getChildAt(articlesTextContainer.getChildCount() - 1);
-						}
-
-						tV.append(Html.fromHtml("<" + a.getName() + ">" + a.getText().toString() + "</" + a.getName()
-						+ ">"));
-					}
-				}//if not img tag
-			}//loop trough articles tags
-		}//if Article.getArtText is not empty
 	}
 
 	private void setUpMainTags()
@@ -762,11 +690,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 		}
 	}//setUpAllTagsLayout
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		Log.i("ArticleFragment onSaveInstanceState", this.curArticle.getTitle());
 		super.onSaveInstanceState(outState);
 		outState.putInt("position", this.getPosition());
 		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
@@ -788,14 +715,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		checkCurArtInfo(b, (ViewGroup) getView());
 		Log.e(LOG,
 		"END fill fragment with info. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
-//		scroll.post(new Runnable()
-//		{
-//			public void run()
-//			{
-//				Log.e("reciver", "position: 0/0");
-//				scroll.scrollTo(0, 0);
-//			}
-//		});
 	}
 
 	public int getPosition()
