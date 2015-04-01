@@ -87,12 +87,13 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			}
 			this.toolbar.setTitle(categoriesTitle + " " + String.valueOf(position + 1) + "/"
 			+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
-			articleActivity.setCurArtPosition(position);
-			
-			String articleUrl=articleActivity.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();
-			
-			Intent intentToListFrag = new Intent(articleUrl + "frag_selected");
-			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
+			articleActivity.setCurArtPosition(position);			
 		}
+		//notify Article fragment, that it's selected
+		//onReceive it prevent first scrolling action
+		String articleUrl=act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();
+		
+		Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
+		LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
 	}
 }

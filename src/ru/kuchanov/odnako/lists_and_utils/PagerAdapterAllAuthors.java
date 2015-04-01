@@ -32,7 +32,10 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 	{
 		super(fm);
 		this.act = act;
-		this.allAuthorsInfo = (ArrayList<Author>) act.getAllAuthorsList();
+		if(this.act!=null)
+		{
+			this.allAuthorsInfo = (ArrayList<Author>) act.getAllAuthorsList();
+		}		
 	}
 
 	/**

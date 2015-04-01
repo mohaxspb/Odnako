@@ -108,18 +108,8 @@ public class Actions
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 						PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 						act.getSupportFragmentManager(), mainActivity);
-						boolean weFindIt = false;
-						int position = 0;
-						for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
-						{
-							if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
-							{
-								weFindIt = true;
-								position = i;
-								break;
-							}
-						}
-						if (weFindIt)
+						int position = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
+						if (position != -1)
 						{
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 							mainActivity.setCurentCategoryPosition(position);
@@ -158,6 +148,7 @@ public class Actions
 				else
 				{
 					//TODO open ActivityMain via intent, that contains pager type and authors url
+					Log.e(LOG, "TwoPane && NOT ActivityMain");
 				}
 			}
 			else
@@ -173,18 +164,8 @@ public class Actions
 					ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 					act.getSupportFragmentManager(), mainActivity);
-					boolean weFindIt = false;
-					int position = 0;
-					for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
-					{
-						if (authorBlogUrl.equals(pagerAllAut.getAllAuthorsList().get(i).getBlog_url()))
-						{
-							weFindIt = true;
-							position = i;
-							break;
-						}
-					}
-					if (weFindIt)
+					int position = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
+					if (position != -1)
 					{
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
 						mainActivity.setCurentCategoryPosition(position);
@@ -222,6 +203,28 @@ public class Actions
 				else
 				{
 					//TODO
+					Intent intent = new Intent(act, ActivityMain.class);
+
+					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
+					act.getSupportFragmentManager(), null);
+					ActivityBase activityBase = (ActivityBase) act;
+					pagerAllAut.updateData((ArrayList<Author>) activityBase.getAllAuthorsList());
+					int position = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
+					if (position != -1)
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_AUTHORS);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY_POSITION, position);
+					}
+					else
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, authorBlogUrl);
+					}
+
+					//set flags to prevent restoring activity from backStack and create really new instance
+					//with given categories number
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					act.startActivity(intent);
 				}
 			}
 		}
@@ -230,6 +233,40 @@ public class Actions
 			System.out.println("p.authorBlogUrl.equals('empty' || ''): WTF?!");
 		}
 	}//showAllAuthorsArticles
+
+	/**
+	 * returns position of given author in AllAuthorsPager's Authors list or -1
+	 * if can't find it
+	 * 
+	 * @param pagerAllAut
+	 * @param authorBlogUrl
+	 * @return
+	 */
+	public static int searchForAuthorInDB(PagerAdapterAllAuthors pagerAllAut, String authorBlogUrl)
+	{
+		boolean weFindIt = false;
+		int position = 0;
+		for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
+		{
+			String curAutUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllAut.getAllAuthorsList()
+			.get(i)
+			.getBlog_url());
+			if (authorBlogUrl.equals(curAutUrl))
+			{
+				weFindIt = true;
+				position = i;
+				break;
+			}
+		}
+		if (weFindIt)
+		{
+			return position;
+		}
+		else
+		{
+			return -1;
+		}
+	}
 
 	//TODO
 	public static void showAllCategoriesArticles(String categoryUrlFUCK, final ActionBarActivity act)
@@ -243,7 +280,7 @@ public class Actions
 			boolean twoPane = pref.getBoolean("twoPane", false);
 			if (twoPane)
 			{
-				if (act.getClass().getSimpleName().equals("ActivityMain"))
+				if (act instanceof ActivityMain)
 				{
 					final ActivityMain mainActivity = (ActivityMain) act;
 					//check if we show allAuthors frag
@@ -273,23 +310,7 @@ public class Actions
 						ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 						PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 						act.getSupportFragmentManager(), mainActivity);
-						//						boolean weFindIt = false;
-						//						int position = 0;
-						//						for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
-						//						{
-						//							String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
-						//							.get(i)
-						//							.getUrl());
-						//							if (categoryUrl.equals(curCatUrl))
-						//							{
-						//								weFindIt = true;
-						//								position = i;
-						//								break;
-						//							}
-						//						}
-						//						if (weFindIt)
 						int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
-						//						if (weFindIt)
 						if (position != -1)
 						{
 							mainActivity.setPagerType(ActivityMain.PAGER_TYPE_CATEGORIES);
@@ -328,13 +349,14 @@ public class Actions
 				}//on activity main
 				else
 				{
-					//TODO open ActivityMain via intent, that contains pager type and authors url
+					//open ActivityMain via intent, that contains pager type and authors url
+					Log.e(LOG, "twoPane && NOT ActivityMain");
 				}
 			}
 			else
 			{
 				//if not twoPane
-				//TODO check if it's ActivityMain and show AllAuthors pager or start activity with it
+				//check if it's ActivityMain and show AllAuthors pager or start activity with it
 				if (act instanceof ActivityMain)
 				{
 					ActivityMain mainActivity = (ActivityMain) act;
@@ -344,22 +366,7 @@ public class Actions
 					ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 					act.getSupportFragmentManager(), mainActivity);
-					//					boolean weFindIt = false;
-					//					int position = 0;
-					//					for (int i = 0; i < pagerAllCat.getAllCategoriesList().size(); i++)
-					//					{
-					//						String curCatUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllCat.getAllCategoriesList()
-					//						.get(i)
-					//						.getUrl());
-					//						if (categoryUrl.equals(curCatUrl))
-					//						{
-					//							weFindIt = true;
-					//							position = i;
-					//							break;
-					//						}
-					//					}
 					int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
-					//					if (weFindIt)
 					if (position != -1)
 					{
 						mainActivity.setPagerType(ActivityMain.PAGER_TYPE_CATEGORIES);
@@ -401,7 +408,7 @@ public class Actions
 
 					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 					act.getSupportFragmentManager(), null);
-					ActivityBase activityBase=(ActivityBase) act;
+					ActivityBase activityBase = (ActivityBase) act;
 					pagerAllCat.updateData((ArrayList<Category>) activityBase.getAllCategoriesList());
 					int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
 					if (position != -1)

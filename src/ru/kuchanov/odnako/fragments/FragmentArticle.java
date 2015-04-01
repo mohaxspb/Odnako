@@ -42,7 +42,6 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -163,7 +162,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.e(LOG, "articleReceiver onReceive");
+			//Log.e(LOG, "articleReceiver onReceive");
 			((MyLinearLayoutManager)recycler.getLayoutManager()).setFirstScroll(true);
 		}
 	};
@@ -228,22 +227,10 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		});
 
 		this.recycler = (RecyclerView) v.findViewById(R.id.article_recycler_view);
-
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
-//		this.recycler.setLayoutManager(new LinearLayoutManager(act));
 		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
 		this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
-
-		//		int savedPosition=((LinearLayoutManager) this.recycler.getLayoutManager()).onRestoreInstanceState(savedInstanceState);
-		//		((LinearLayoutManager) this.recycler.getLayoutManager()).scrollToPositionWithOffset(2, 20);
-		//		LinearLayoutManager manager=((LinearLayoutManager) this.recycler.getLayoutManager());
-		//		int index = manager.findFirstVisibleItemPosition();
-		//		View view = manager.getChildAt(0);
-		//		int top = (view == null) ? 0 : (view.getTop() - manager.getPaddingTop());
-		//		Log.e("index", "index: "+index);
-		//		Log.e("top", "top: "+top);
-		//		manager.scrollToPositionWithOffset(index, top);
 
 		if (this.curArticle == null)
 		{

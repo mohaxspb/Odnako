@@ -145,7 +145,7 @@ public class ActivityMain extends ActivityBase
 					groupChild[1]));
 				break;
 				case PAGER_TYPE_AUTHORS:
-					this.setCurrentCategory(this.getIntent().getStringExtra(KEY_CURRENT_CATEGORY));
+					this.setCurentCategoryPosition(this.getIntent().getIntExtra(KEY_CURRENT_CATEGORY_POSITION, 0));
 				break;
 				case PAGER_TYPE_SINGLE:
 					this.setCurrentCategory(this.getIntent().getStringExtra(KEY_CURRENT_CATEGORY));
@@ -154,7 +154,6 @@ public class ActivityMain extends ActivityBase
 					this.setCurentCategoryPosition(this.getIntent().getIntExtra(KEY_CURRENT_CATEGORY_POSITION, 0));
 				break;
 			}
-
 			//set savedInstanceState to null to prevent restoring previous state
 			savedInstanceState = null;
 		}
@@ -301,10 +300,10 @@ public class ActivityMain extends ActivityBase
 		{
 			toolbar.getBackground().setAlpha(0);
 		}
-		
+
 		//here we check if there is article or comments fragment in fm
 		//and show back btn in right toolbar
-		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			//set arrowDownIcon by theme
 			int[] attrs = new int[] { R.attr.arrowBackIcon };
@@ -899,15 +898,15 @@ public class ActivityMain extends ActivityBase
 			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
 			return;
 		}
-		
-		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			toolbarRight.setNavigationIcon(null);
-			Fragment artFrag=this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
 			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
 			return;
 		}
-		
+
 		//check left pagerType
 		//if so - we must show initial state of app
 		//else - check if it's second time of pressing back
