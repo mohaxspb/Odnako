@@ -7,7 +7,7 @@
     <string name="date">Дата</string>
     <string name="preview">Краткое содержание</string>
     <string name="author">Автор</string>
-    <string name="tegs">Теги</string>
+    <string name="tags">Теги:</string>
     <string name="also_by_theme">Также по теме "ТЕМА":</string>
     <string name="also_to_read">Также смотрите:</string>
     <string name="mark_as_read">Отметить прочитанной</string>

@@ -6,25 +6,14 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import java.util.ArrayList;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
-import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.AdapterRecyclerArticleFragment;
-import ru.kuchanov.odnako.utils.DateParse;
-import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
-import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -43,7 +31,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -69,32 +56,24 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private SharedPreferences pref;
 	private boolean twoPane;
 
-	private ImageLoader imageLoader;
 
 	LinearLayout articlesTextContainer;
 	private TextView artTextView;
 
 	SwipeRefreshLayout swipeRef;
 
-	private ImageView artImageIV;
 
 	private TextView artTitleTV;
 	private TextView artDateTV;
 
-	private ViewGroup authorLayout;
 	private TextView artAuthorTV;
 	private TextView artAuthorDescriptionTV;
 	private ImageView artAuthorIV;
 	private ImageView artAuthorDescriptionIV;
 
-	private FlowLayout artTagsMain;
-
 	private LinearLayout bottomPanel;
 	private CardView shareCard;
 	private CardView commentsBottomBtn;
-	private CardView allTagsCard;
-	//	private CardView alsoByThemeCard;
-	private CardView alsoToReadCard;
 
 	private Article curArticle;
 	//	position in all art arr; need to show next/previous arts
@@ -102,8 +81,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//	ArrayList<Article> allArtsInfo;
 
 	private boolean artAuthorDescrIsShown = false;
-
-	private DisplayImageOptions options;
 
 	private RecyclerView recycler;
 	private AdapterRecyclerArticleFragment recyclerAdapter;
@@ -132,19 +109,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			this.setPosition(savedState.getInt("position"));
 		}
 
-		this.imageLoader = MyUIL.get(act);
-
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
-
-		if (this.pref.getString("theme", "dark").equals("dark"))
-		{
-			options = MyUIL.getDarkOptions();
-		}
-		else
-		{
-			options = MyUIL.getLightOptions();
-		}
 
 		if (this.curArticle != null)
 		{
@@ -272,8 +238,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				//load...
 				this.loadArticle(false);
 
-				this.fillFielsdsWithInfo();
-
 				//setting size of Images and text
 				this.setSizeAndTheme();
 			}
@@ -302,9 +266,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 						//						Actions.showComments(allArtsInfo, getPosition(), act);
 					}
 				});
-
-				this.fillFielsdsWithInfo();
-
 				//setting size of Images and text
 				this.setSizeAndTheme();
 				//End of setting size of Images and text
@@ -346,81 +307,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 	}
 
-	private void setUpAlsoToRead()
-	{
-		final Article.AlsoToRead alsoToRead = this.curArticle.getAlsoToReadMore();
-		if (alsoToRead != null)
-		{
-			if (alsoToReadCard != null && alsoToReadCard.getParent() != null)
-			{
-				((ViewGroup) alsoToReadCard.getParent()).removeView(alsoToReadCard);
-			}
-			this.alsoToReadCard = (CardView) inflater.inflate(R.layout.also_to_read, bottomPanel, false);
-			this.bottomPanel.addView(this.alsoToReadCard);
-			LinearLayout mainLin = (LinearLayout) this.alsoToReadCard.findViewById(R.id.also_main);
-			LayoutInflater inflater = act.getLayoutInflater();
-			for (int i = 0; i < alsoToRead.titles.length; i++)
-			{
-				final int iterator = i;
-
-				CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, mainLin, false);
-
-				LinearLayout lin = (LinearLayout) c.findViewById(R.id.main_lin);
-
-				lin.setOnClickListener(new OnClickListener()
-				{
-
-					@Override
-					public void onClick(View v)
-					{
-						//ViewGroup vg=(ViewGroup) act.findViewById(R.id.container_right);
-						Fragment newFragment = new FragmentArticle();
-						Article a = new Article();
-						a.setUrl(alsoToRead.urls[iterator]);
-						a.setTitle(alsoToRead.titles[iterator]);
-						a.setPubDate(DateParse.parse(alsoToRead.dates[iterator]));
-						Bundle b = new Bundle();
-						b.putParcelable(Article.KEY_CURENT_ART, a);
-						newFragment.setArguments(b);
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
-						ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
-						ft.commit();
-
-						final Toolbar toolbar;
-						if (act instanceof ActivityMain)
-						{
-							toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
-						}
-						else
-						{
-							toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-						}
-						//set arrowDownIcon by theme
-						int[] attrs = new int[] { R.attr.arrowBackIcon };
-						TypedArray ta = act.obtainStyledAttributes(attrs);
-						Drawable drawableArrowBack = ta.getDrawable(0);
-						ta.recycle();
-						toolbar.setNavigationIcon(drawableArrowBack);
-						toolbar.setNavigationOnClickListener(new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View v)
-							{
-								toolbar.setNavigationIcon(null);
-								act.onBackPressed();
-							}
-						});
-					}
-				});
-				TextView title = (TextView) c.findViewById(R.id.title);
-				title.setText(alsoToRead.titles[i]);
-				TextView date = (TextView) c.findViewById(R.id.date);
-				date.setText(alsoToRead.dates[i]);
-				mainLin.addView(c);
-			}
-		}
-	}
-
 	private void setSizeAndTheme()
 	{
 		String scaleFactorString = pref.getString("scale_art", "1");
@@ -444,15 +330,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
 		LayoutParams zeroAllParams = new LayoutParams(0, 0);
 
-		//removing tags field if it's empty
-		if (this.curArticle.getTegsMain().equals(Const.EMPTY_STRING) || this.curArticle.getTegsMain().equals(""))
-		{
-			this.artTagsMain.setLayoutParams(zeroHeightParams);
-		}
-		else
-		{
-			this.setUpMainTags();
-		}
 		//set descr of author btn
 		//set descrTV height to 0 by default
 		this.artAuthorDescriptionTV.setLayoutParams(zeroHeightParams);
@@ -476,7 +353,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 					artAuthorDescrBehavior();
 				}
 			});
-
 		}
 		//set allArsList OnClick
 		((View) this.artAuthorIV.getParent()).setOnClickListener(new OnClickListener()
@@ -518,174 +394,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			artAuthorDescrIsShown = !artAuthorDescrIsShown;
 		}
 	}
-
-	//set text, tegs, author etc
-	private void fillFielsdsWithInfo()
-	{
-		//variables for scaling text and icons and images from settings
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
-
-		final float scale = act.getResources().getDisplayMetrics().density;
-		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
-		////End of variables for scaling text and icons and images from settings
-
-		// ART_IMG
-		if (!curArticle.getImgArt().equals(Const.EMPTY_STRING) && !curArticle.getImgArt().contains("/75_75/"))
-		{
-			int width = act.getResources().getDisplayMetrics().widthPixels;
-			if (twoPane)
-			{
-				//so 2/3 of width
-				width = width / 3 * 2;
-			}
-			int height = (int) (width / (1.7f));
-			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
-			params.height = height;
-			this.artImageIV.setLayoutParams(params);
-			String HDimgURL = this.curArticle.getImgArt().replace("/120_72/", "/450_240/");
-
-			imageLoader.displayImage(HDimgURL, this.artImageIV, options, new ImgLoadListenerBigSmall(
-			imageLoader, options, this.artImageIV));
-		}
-		else
-		{
-			LayoutParams params = (LayoutParams) this.artImageIV.getLayoutParams();
-			params.height = 0;
-			this.artImageIV.setLayoutParams(params);
-		}
-		//end of ART_IMG
-
-		//		this.setArticlesText();
-
-		this.artTitleTV.setText(Html.fromHtml(this.curArticle.getTitle()));
-
-		String dateToShow = DateParse.formatDateByCurTime(this.curArticle.getPubDate());
-		this.artDateTV.setText(Html.fromHtml(dateToShow));
-		LayoutParams zeroHeightParams = new LayoutParams(LayoutParams.WRAP_CONTENT, 0);
-		if (this.curArticle.getTegsMain().equals(Const.EMPTY_STRING) || this.curArticle.getTegsMain().equals(""))
-		{
-			this.artTagsMain.setLayoutParams(zeroHeightParams);
-		}
-		else
-		{
-			this.setUpMainTags();
-		}
-
-		//AUTHOR
-		if (!this.curArticle.getAuthorName().equals(Const.EMPTY_STRING))
-		{
-			LayoutParams p = (LayoutParams) this.authorLayout.getLayoutParams();
-			p.height = LayoutParams.MATCH_PARENT;
-			p.width = LayoutParams.MATCH_PARENT;
-			p.setMargins(0, 0, 0, 0);
-			this.authorLayout.setLayoutParams(p);
-
-			this.artAuthorTV.setText(this.curArticle.getAuthorName());
-			this.artAuthorDescriptionTV.setText(Html.fromHtml(this.curArticle.getAuthorDescr()));
-			if (!this.curArticle.getImgAuthor().equals(Const.EMPTY_STRING))
-			{
-				LayoutParams params = (LayoutParams) this.artAuthorIV.getLayoutParams();
-				params.height = pixels;
-				params.width = pixels;
-				params.setMargins(5, 5, 5, 5);
-				this.artAuthorIV.setLayoutParams(params);
-
-				this.imageLoader.displayImage(this.curArticle.getImgAuthor(), this.artAuthorIV,
-				MyUIL.getTransparentBackgroundROUNDOptions(act));
-			}
-			else
-			{
-				LayoutParams params = (LayoutParams) this.artAuthorIV.getLayoutParams();
-				params.height = 0;
-				params.width = 0;
-				params.setMargins(0, 0, 0, 0);
-				this.artAuthorIV.setLayoutParams(params);
-			}
-		}
-		else
-		{
-			LayoutParams params = (LayoutParams) this.authorLayout.getLayoutParams();
-			params.height = 0;
-			params.width = 0;
-			params.setMargins(0, 0, 0, 0);
-			this.authorLayout.setLayoutParams(params);
-		}
-		//fill bottom
-		this.setUpAllTegsLayout();
-		this.setUpAlsoToRead();
-	}
-
-	private void setUpMainTags()
-	{
-		this.artTagsMain.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
-
-		artTagsMain.removeAllViews();
-		ArrayList<Tag> allTagsList = this.curArticle.getTags(this.curArticle.getTegsMain());
-		if (allTagsList.size() != 0)
-		{
-			for (int i = 0; i < allTagsList.size(); i++)
-			{
-				final Tag tag = allTagsList.get(i);
-				View tagCard = this.inflater.inflate(R.layout.card_tag, artTagsMain, false);
-
-				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
-				tV.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						Actions.showAllCategoriesArticles(tag.url, act);
-					}
-				});
-				tV.setTextSize(21 * scaleFactor);
-				tV.setText(tag.title);
-				artTagsMain.addView(tagCard);
-			}
-		}
-	}
-
-	private void setUpAllTegsLayout()
-	{
-		ArrayList<Tag> allTagsList = this.curArticle.getTags(this.curArticle.getTagsAll());
-
-		if (allTagsList.size() != 0)
-		{
-			//for some reason allTagsCard can already have parent view...
-			//so, bedore adding it to bottom panel we remove it from parent...
-			if (allTagsCard.getParent() == null)
-			{
-				this.bottomPanel.addView(this.allTagsCard);
-			}
-			else
-			{
-				return;
-			}
-
-			FlowLayout flowLay = (FlowLayout) allTagsCard.findViewById(R.id.flow);
-			for (int i = 0; i < allTagsList.size(); i++)
-			{
-				final Tag tag = allTagsList.get(i);
-				View tagCard = this.inflater.inflate(R.layout.card_tag, flowLay, false);
-				TextView tV = (TextView) tagCard.findViewById(R.id.tag);
-				tV.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						Actions.showAllCategoriesArticles(tag.url, act);
-					}
-				});
-				String scaleFactorString = pref.getString("scale_art", "1");
-				float scaleFactor = Float.valueOf(scaleFactorString);
-				tV.setTextSize(21 * scaleFactor);
-				tV.setText(tag.title);
-				flowLay.addView(tagCard);
-			}
-		}
-	}//setUpAllTagsLayout
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)

@@ -10,9 +10,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
@@ -20,12 +22,16 @@ import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -172,14 +178,16 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		}
 		else
 		{
-			int numOfArticleNodes = this.articlesTags.length;
+			int itemCount = this.articlesTags.length;
+			//add fakeHeader and titleCard
+			itemCount += 2;
 			//add commentsBrn and sharePanel
-			numOfArticleNodes += 2;
+			itemCount += 2;
 			//tagsAll
-			numOfArticleNodes += this.article.getTagsAll().equals(Const.EMPTY_STRING) ? 0 : 1;
+			itemCount += this.article.getTagsAll().equals(Const.EMPTY_STRING) ? 0 : 1;
 			//toReadMore
-			numOfArticleNodes += this.article.getToReadMore().equals(Const.EMPTY_STRING) ? 0 : 1;
-			return numOfArticleNodes;
+			itemCount += this.article.getToReadMore().equals(Const.EMPTY_STRING) ? 0 : 1;
+			return itemCount;
 		}
 	}
 
@@ -343,7 +351,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					LayoutParams params = (LayoutParams) h.authorLin.getLayoutParams();
 					params.height = 0;
-					//					params.width = LayoutParams.MATCH_PARENT;
 					params.setMargins(0, 0, 0, 0);
 					h.authorLin.setLayoutParams(params);
 					android.widget.LinearLayout.LayoutParams paramsLin = (android.widget.LinearLayout.LayoutParams) h.authorDescription
@@ -396,6 +403,104 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 
 				imageLoader.displayImage(HDimgURL, hI.img, options, new ImgLoadListenerBigSmall(
 				imageLoader, options, hI.img));
+			break;
+			case CARD_TAGS_ALL:
+				final HolderTagsAll hTA = (HolderTagsAll) holder;
+				//remove all views to avoid dublicates and add description TV
+				hTA.flow.removeAllViews();
+				TextView description=(TextView) this.act.getLayoutInflater().inflate(R.layout.card_description_text_view, hTA.flow, false);
+				description.setText(R.string.tags);
+				hTA.flow.addView(description);
+				
+				ArrayList<Tag> allTagsList = article.getTags(article.getTagsAll());
+				for (int i = 0; i < allTagsList.size(); i++)
+				{
+					final Tag tag = allTagsList.get(i);
+					View tagCard = this.act.getLayoutInflater().inflate(R.layout.card_tag, hTA.flow, false);
+					TextView tV = (TextView) tagCard.findViewById(R.id.tag);
+					tV.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(View v)
+						{
+							Actions.showAllCategoriesArticles(tag.url, act);
+						}
+					});
+					tV.setTextSize(21 * scaleFactor);
+					tV.setText(tag.title);
+					hTA.flow.addView(tagCard);
+				}
+			break;
+			case CARD_ALSO_TO_READ:
+				final HolderAlsoToRead hATR = (HolderAlsoToRead) holder;
+				//remove all views to avoid dublicates and add description TV
+				hATR.mainLin.removeAllViews();
+				TextView descriptionAlsoToRead=(TextView) this.act.getLayoutInflater().inflate(R.layout.card_description_text_view, hATR.mainLin, false);
+				descriptionAlsoToRead.setText(R.string.also_to_read);
+				hATR.mainLin.addView(descriptionAlsoToRead);
+				
+				final Article.AlsoToRead alsoToRead = article.getAlsoToReadMore();
+				if (alsoToRead != null)
+				{
+					LayoutInflater inflater = act.getLayoutInflater();
+					for (int i = 0; i < alsoToRead.titles.length; i++)
+					{
+						final int iterator = i;
+
+						CardView c = (CardView) inflater.inflate(R.layout.also_to_read_art_lay, hATR.mainLin, false);
+						LinearLayout lin = (LinearLayout) c.findViewById(R.id.main_lin);
+						lin.setOnClickListener(new OnClickListener()
+						{
+							@Override
+							public void onClick(View v)
+							{
+								//ViewGroup vg=(ViewGroup) act.findViewById(R.id.container_right);
+								Fragment newFragment = new FragmentArticle();
+								Article a = new Article();
+								a.setUrl(alsoToRead.urls[iterator]);
+								a.setTitle(alsoToRead.titles[iterator]);
+								a.setPubDate(DateParse.parse(alsoToRead.dates[iterator]));
+								Bundle b = new Bundle();
+								b.putParcelable(Article.KEY_CURENT_ART, a);
+								newFragment.setArguments(b);
+								FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
+								ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
+								ft.commit();
+
+								final Toolbar toolbar;
+								if (act instanceof ActivityMain)
+								{
+									toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+								}
+								else
+								{
+									toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+								}
+								//set arrowDownIcon by theme
+								int[] attrs = new int[] { R.attr.arrowBackIcon };
+								TypedArray ta = act.obtainStyledAttributes(attrs);
+								Drawable drawableArrowBack = ta.getDrawable(0);
+								ta.recycle();
+								toolbar.setNavigationIcon(drawableArrowBack);
+								toolbar.setNavigationOnClickListener(new View.OnClickListener()
+								{
+									@Override
+									public void onClick(View v)
+									{
+										toolbar.setNavigationIcon(null);
+										act.onBackPressed();
+									}
+								});
+							}
+						});
+						TextView title = (TextView) c.findViewById(R.id.title);
+						title.setText(alsoToRead.titles[i]);
+						TextView date = (TextView) c.findViewById(R.id.date);
+						date.setText(alsoToRead.dates[i]);
+						hATR.mainLin.addView(c);
+					}
+				}
+
 			break;
 		}
 	}
