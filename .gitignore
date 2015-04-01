@@ -1,4 +1,6 @@
 # Built application files
+bin/*
+!bin/Odnako.apk
 
 # Files for the Dalvik VM
 *.dex
