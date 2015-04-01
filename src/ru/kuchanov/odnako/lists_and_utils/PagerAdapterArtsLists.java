@@ -25,13 +25,13 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 
 	//////////
 	//XXX
-	public static interface FirstShot
-	{
-		public void onFirstShot();
-	}
+//	public static interface FirstShot
+//	{
+//		public void onFirstShot();
+//	}
 
-	private FirstShot firstShot;
-	private boolean shot = false;
+//	private FirstShot firstShot;
+//	private boolean shot = false;
 
 	//////////
 
@@ -44,12 +44,12 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-		//XXX
-		if (!shot && firstShot != null)
-		{
-			shot = true;
-			firstShot.onFirstShot();
-		}
+//		//XXX
+//		if (!shot && firstShot != null)
+//		{
+//			shot = true;
+//			firstShot.onFirstShot();
+//		}
 		////////////
 
 		if (position != 3 && position != 13)

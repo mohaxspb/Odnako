@@ -91,9 +91,17 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		}
 		//notify Article fragment, that it's selected
 		//onReceive it prevent first scrolling action
-		String articleUrl=act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();
+//		Log.i(LOG, categoryToLoad);
+//		Log.i(LOG, String.valueOf(act.getAllCatArtsInfo().get(categoryToLoad)==null));
+//		Log.i(LOG, String.valueOf(act.getAllCatArtsInfo().get(categoryToLoad).get(position)==null));
 		
-		Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
-		LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
+		if(act.getAllCatArtsInfo().get(categoryToLoad)!=null)
+		{
+			//if there are some loaded list of arts with urls send intent with this URL
+			//(If it's first launch (without any loaded arts in cache) it'll be null
+			String articleUrl=act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();		
+			Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
+			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
+		}		
 	}
 }

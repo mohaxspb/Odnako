@@ -110,7 +110,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 					try
 					{
 						FragmentArticle artFrag = (FragmentArticle) object;
-						((FragArtUPD) object).update(this.allArtsInfo.get(artFrag.getPosition()), null);
+						((FragArtUPD) object).update(this.allArtsInfo.get(artFrag.getPosition()));
 					} catch (NullPointerException e)
 					{
 						Log.e(LOG,

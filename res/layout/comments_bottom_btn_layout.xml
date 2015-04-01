@@ -26,6 +26,7 @@
                 android:id="@+id/art_comments_bottom_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="?commentsIcon"
                 android:padding="10dp"
                 android:text="@string/comments"
                 android:textColor="?android:textColorPrimary"

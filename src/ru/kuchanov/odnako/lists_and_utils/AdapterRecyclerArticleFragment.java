@@ -32,6 +32,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,8 +74,10 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		this.act = act;
 
 		this.article = article;
-		this.articlesTags = this.getArticlesTags();
-
+		if (this.article != null)//!this.article.getArtText().equals(Const.EMPTY_STRING))
+		{
+			this.articlesTags = this.getArticlesTags();
+		}
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
 
@@ -171,7 +174,11 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 	@Override
 	public int getItemCount()
 	{
-		if (this.article.getArtText().equals(Const.EMPTY_STRING))
+		if (this.article == null)
+		{
+			return 1;
+		}
+		else if (this.article.getArtText().equals(Const.EMPTY_STRING))
 		{
 			//show only header and titleCard
 			return 2;
@@ -408,10 +415,11 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				final HolderTagsAll hTA = (HolderTagsAll) holder;
 				//remove all views to avoid dublicates and add description TV
 				hTA.flow.removeAllViews();
-				TextView description=(TextView) this.act.getLayoutInflater().inflate(R.layout.card_description_text_view, hTA.flow, false);
+				TextView description = (TextView) this.act.getLayoutInflater().inflate(
+				R.layout.card_description_text_view, hTA.flow, false);
 				description.setText(R.string.tags);
 				hTA.flow.addView(description);
-				
+
 				ArrayList<Tag> allTagsList = article.getTags(article.getTagsAll());
 				for (int i = 0; i < allTagsList.size(); i++)
 				{
@@ -435,10 +443,11 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				final HolderAlsoToRead hATR = (HolderAlsoToRead) holder;
 				//remove all views to avoid dublicates and add description TV
 				hATR.mainLin.removeAllViews();
-				TextView descriptionAlsoToRead=(TextView) this.act.getLayoutInflater().inflate(R.layout.card_description_text_view, hATR.mainLin, false);
+				TextView descriptionAlsoToRead = (TextView) this.act.getLayoutInflater().inflate(
+				R.layout.card_description_text_view, hATR.mainLin, false);
 				descriptionAlsoToRead.setText(R.string.also_to_read);
 				hATR.mainLin.addView(descriptionAlsoToRead);
-				
+
 				final Article.AlsoToRead alsoToRead = article.getAlsoToReadMore();
 				if (alsoToRead != null)
 				{
@@ -500,7 +509,29 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 						hATR.mainLin.addView(c);
 					}
 				}
-
+			break;
+			case CARD_COMMENTS:
+				HolderComments hC = (HolderComments) holder;
+				hC.mainLin.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						//TODO
+						//Actions.showComments(allArtsInfo, getPosition(), act);
+					}
+				});
+			break;
+			case CARD_SHARE:
+				HolderShare hS = (HolderShare) holder;
+				hS.mainLin.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						Actions.shareUrl(article.getUrl(), act);
+					}
+				});
 			break;
 		}
 	}
@@ -573,10 +604,26 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				false);
 				return new HolderComments(itemLayoutView);
 			case (CARD_SHARE):
-				//TODO
-				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.share_panel,
-				parent,
-				false);
+				DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
+				int width = displayMetrics.widthPixels;
+				int minWidth = 800;
+				//if(twoPane) we must set width to width/4*3 
+				if (twoPane)
+				{
+					width = displayMetrics.widthPixels / 3 * 2;
+				}
+				if (width <= minWidth)
+				{
+					itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.share_panel,
+					parent,
+					false);
+				}
+				else
+				{
+					itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.share_panel_landscape,
+					parent,
+					false);
+				}
 				return new HolderShare(itemLayoutView);
 			case (CARD_TAGS_ALL):
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.all_tegs_layout,
