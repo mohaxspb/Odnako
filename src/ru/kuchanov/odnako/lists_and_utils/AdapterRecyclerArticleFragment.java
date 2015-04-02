@@ -16,7 +16,6 @@ import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
-import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
@@ -471,7 +470,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 							@Override
 							public void onClick(View v)
 							{
-								//ViewGroup vg=(ViewGroup) act.findViewById(R.id.container_right);
 								Fragment newFragment = new FragmentArticle();
 								Article a = new Article();
 								a.setUrl(alsoToRead.urls[iterator]);
@@ -489,9 +487,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 								if (!twoPane)
 								{
 									//So it's article activity
-									//ActionBarDrawerToggle toggle = ((ActivityBase) act).mDrawerToggle;
-									//ActivityArticle.toggleActionBarIcon(ActivityArticle.ActionDrawableState.ARROW,
-									//toggle, true);
 									((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 								}
 								else
@@ -509,7 +504,6 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 										}
 									});
 								}
-
 							}
 						});
 						TextView title = (TextView) c.findViewById(R.id.title);
@@ -527,42 +521,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 					@Override
 					public void onClick(View v)
 					{
-						//TODO
-						//ViewGroup conteinerRight = (ViewGroup) act.findViewById(R.id.container_right);
-						//ViewPager pager = (ViewPager) conteinerRight.findViewById(R.id.pager_right);
-						//PagerAdapterArticles adapter = (PagerAdapterArticles) pager.getAdapter();
-						//String categoryToLoad = adapter.getCategoryToLoad();
-						//Actions.showComments(adapter.getAllArtsInfo(), getPosition(), categoryToLoad, act);
-
-						FragmentComments newFragment = new FragmentComments();
-						Bundle b = new Bundle();
-						b.putParcelable(Article.KEY_CURENT_ART, article);
-						newFragment.setArguments(b);
-
-						FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
-						ft.add(R.id.container_right, newFragment, FragmentComments.LOG);
-						ft.commit();
-
-						if (!twoPane)
-						{
-							//So it's article activity
-							((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
-						}
-						else
-						{
-							//we are on main activity, so we must set toggle to rightToolbar
-							final Toolbar toolbar;
-							toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
-							toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-							toolbar.setNavigationOnClickListener(new OnClickListener()
-							{
-								@Override
-								public void onClick(View v)
-								{
-									act.onBackPressed();
-								}
-							});
-						}
+						Actions.addCommentsFrgament(article, act);
 					}
 				});
 			break;

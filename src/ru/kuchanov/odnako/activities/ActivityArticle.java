@@ -112,6 +112,12 @@ public class ActivityArticle extends ActivityBase
 			listener.onPageSelected(0);
 		}
 
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) == null
+		&& stateFromIntent.containsKey(FragmentComments.LOG))
+		{
+			Actions.showComments(curAllArtsInfo, this.getCurArtPosition(), categoryToLoad, act);
+		}
+
 		//adMob
 		this.AddAds();
 		//end of adMob

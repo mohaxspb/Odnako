@@ -15,6 +15,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 
 import android.content.Context;
@@ -22,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +31,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 public class Actions
@@ -471,7 +475,7 @@ public class Actions
 	public static void showComments(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
 	ActionBarActivity act)
 	{
-		Log.d(LOG, "showArticle!");
+		Log.d(LOG, "showComments!");
 		//check if it's large screen
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
@@ -501,23 +505,9 @@ public class Actions
 				}
 
 				pagerAllAut.updateData(adAllAut.getCurAllAuthorsList());
-				//				boolean weFindIt = false;
 				String authorBlogUrl = Author
 				.getURLwithoutSlashAtTheEnd(allArtsInfo.get(positionOfArticle).getAuthorBlogUrl());
-				int positionInLeftPager = searchForAuthorInDB(pagerAllAut, authorBlogUrl);//0;
-
-				//				for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
-				//				{
-				//					String authorUrlFromAdapter = Author
-				//					.getURLwithoutSlashAtTheEnd(pagerAllAut.getAllAuthorsList().get(i).getBlog_url());
-				//					if (authorBlogUrl.equals(authorUrlFromAdapter))
-				//					{
-				//						weFindIt = true;
-				//						positionInLeftPager = i;
-				//						break;
-				//					}
-				//				}
-				//				if (weFindIt)
+				int positionInLeftPager = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
 				if (positionInLeftPager != -1)
 				{
 					mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
@@ -598,21 +588,63 @@ public class Actions
 			}
 			else
 			{
-				//it's Articles pager Adapter, so just select cur fragment
+				//it's Articles pager Adapter, so just set current fragment
 				rightPager.setCurrentItem(positionOfArticle, true);
 			}
+			Actions.addCommentsFrgament(allArtsInfo.get(positionOfArticle), act);
+		}//if(twoPane)
+		else
+		{
+			if (act instanceof ActivityMain)
+			{
+				Intent intent = new Intent(act, ActivityArticle.class);
+				intent.putExtra("position", positionOfArticle);
+				intent.putExtra("categoryToLoad", categoryToLoad);
+				intent.putExtra(Article.KEY_ALL_ART_INFO, allArtsInfo);
+				intent.putExtra("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
+				intent.putExtra(FragmentComments.LOG, true);
+				act.startActivity(intent);
+			}
+			else
+			{
+				Actions.addCommentsFrgament(allArtsInfo.get(positionOfArticle), act);
+			}
+		}
+	}
+
+	public static void addCommentsFrgament(Article article, final ActionBarActivity act)
+	{
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		boolean twoPane = pref.getBoolean("twoPane", false);
+
+		FragmentComments newFragment = new FragmentComments();
+		Bundle b = new Bundle();
+		b.putParcelable(Article.KEY_CURENT_ART, article);
+		newFragment.setArguments(b);
+
+		FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
+		ft.add(R.id.container_right, newFragment, FragmentComments.LOG);
+		ft.commit();
+
+		if (!twoPane)
+		{
+			//So it's article activity
+			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 		}
 		else
 		{
-			Intent intent = new Intent(act, ActivityArticle.class);
-			Bundle b = new Bundle();
-			b.putInt("position", positionOfArticle);
-			b.putString("categoryToLoad", categoryToLoad);
-			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
-			b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
-			intent.putExtras(b);
-
-			act.startActivity(intent);
+			//we are on main activity, so we must set toggle to rightToolbar
+			final Toolbar toolbar;
+			toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+			toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+			toolbar.setNavigationOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					act.onBackPressed();
+				}
+			});
 		}
 	}
 
@@ -623,8 +655,6 @@ public class Actions
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 		//check if it's large screen
-		//		if (act instanceof ActivityMain)
-		//		{
 		final ActivityMain mainActivity = (ActivityMain) act;
 		if (twoPane)
 		{
@@ -649,23 +679,9 @@ public class Actions
 				}
 
 				pagerAllAut.updateData(adAllAut.getCurAllAuthorsList());
-				//				boolean weFindIt = false;
 				String authorBlogUrl = Author
 				.getURLwithoutSlashAtTheEnd(allArtsInfo.get(positionOfArticle).getAuthorBlogUrl());
-				int positionInLeftPager = searchForAuthorInDB(pagerAllAut, authorBlogUrl);//0;
-
-				//				for (int i = 0; i < pagerAllAut.getAllAuthorsList().size(); i++)
-				//				{
-				//					String authorUrlFromAdapter = Author
-				//					.getURLwithoutSlashAtTheEnd(pagerAllAut.getAllAuthorsList().get(i).getBlog_url());
-				//					if (authorBlogUrl.equals(authorUrlFromAdapter))
-				//					{
-				//						weFindIt = true;
-				//						positionInLeftPager = i;
-				//						break;
-				//					}
-				//				}
-				//				if (weFindIt)
+				int positionInLeftPager = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
 				if (positionInLeftPager != -1)
 				{
 					mainActivity.setPagerType(ActivityMain.PAGER_TYPE_AUTHORS);
@@ -762,10 +778,5 @@ public class Actions
 
 			act.startActivity(intent);
 		}
-		//		}
-		//		else if (act instanceof ActivityArticle)
-		//		{
-		//			//TODO
-		//		}
 	}
 }

@@ -43,7 +43,7 @@ public class FragmentComments extends Fragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		System.out.println("CommentsFragment onCreate");
+		//System.out.println("CommentsFragment onCreate");
 
 		this.act = (ActionBarActivity) this.getActivity();
 
@@ -62,7 +62,7 @@ public class FragmentComments extends Fragment
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		System.out.println("CommentsFragment onCreateView");
+		//System.out.println("CommentsFragment onCreateView");
 		View v = inflater.inflate(R.layout.fragment_comments_list, new LinearLayout(act));
 
 		//find all views
