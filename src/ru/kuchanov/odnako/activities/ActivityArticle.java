@@ -14,20 +14,17 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
-import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class ActivityArticle extends ActivityBase
 {
@@ -103,7 +100,7 @@ public class ActivityArticle extends ActivityBase
 		this.getAllCatAndAutURLs();
 		this.getAllCatAndAutTitles();
 
-		this.pager = (ViewPager) this.findViewById(R.id.article_container);
+		this.pager = (ViewPager) this.findViewById(R.id.pager_right);
 		this.pager.setPageTransformer(true, new RotationPageTransformer());
 		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), categoryToLoad, act);
 		this.pager.setAdapter(pagerAdapter);
@@ -139,24 +136,6 @@ public class ActivityArticle extends ActivityBase
 				break;
 			}
 		}
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
-		{
-			//set arrowDownIcon by theme
-			//			int[] attrs = new int[] { R.attr.arrowBackIcon };
-			//			TypedArray ta = act.obtainStyledAttributes(attrs);
-			//			Drawable drawableArrowBack = ta.getDrawable(0);
-			//			ta.recycle();
-			//			toolbar.setNavigationIcon(drawableArrowBack);
-			//			toolbar.setNavigationOnClickListener(new View.OnClickListener()
-			//			{
-			//				@Override
-			//				public void onClick(View v)
-			//				{
-			//					//					toolbar.setNavigationIcon(null);
-			//					act.onBackPressed();
-			//				}
-			//			});
-		}
 	}
 
 	/** Called whenever we call supportInvalidateOptionsMenu() */
@@ -169,7 +148,11 @@ public class ActivityArticle extends ActivityBase
 		menu.findItem(R.id.comments).setVisible(!drawerOpen);
 		menu.findItem(R.id.share).setVisible(!drawerOpen);
 
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+		{
+			mDrawerToggle.setDrawerIndicatorEnabled(false);
+		}
+		else if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			this.mDrawerToggle.setDrawerIndicatorEnabled(false);
 		}
@@ -209,7 +192,7 @@ public class ActivityArticle extends ActivityBase
 				}
 				return true;
 			case R.id.comments:
-				Actions.showComments(curAllArtsInfo, getCurArtPosition(), act);
+				Actions.showComments(curAllArtsInfo, getCurArtPosition(), getCurrentCategory(), act);
 				return true;
 			case R.id.share:
 				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
@@ -259,51 +242,5 @@ public class ActivityArticle extends ActivityBase
 
 		this.allCatAndAutTitles = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_TITLES_LIST);
 		this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
-	}
-
-	public static enum ActionDrawableState
-	{
-		BURGER, ARROW
-	}
-
-	public static void toggleActionBarIcon(ActionDrawableState state, final ActionBarDrawerToggle toggle,
-	boolean animate)
-	{
-		if (animate)
-		{
-			float start = state == ActionDrawableState.BURGER ? 0f : 1.0f;
-			float end = Math.abs(start - 1);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			{
-				ValueAnimator offsetAnimator = ValueAnimator.ofFloat(start, end);
-				offsetAnimator.setDuration(300);
-				offsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-				offsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-				{
-					@Override
-					public void onAnimationUpdate(ValueAnimator animation)
-					{
-						float offset = (Float) animation.getAnimatedValue();
-						toggle.onDrawerSlide(null, offset);
-					}
-				});
-				offsetAnimator.start();
-			}
-			else
-			{
-				//do the same with nine-old-androids lib :)
-			}
-		}
-		else
-		{
-			if (state == ActionDrawableState.BURGER)
-			{
-				toggle.onDrawerClosed(null);
-			}
-			else
-			{
-				toggle.onDrawerOpened(null);
-			}
-		}
 	}
 }

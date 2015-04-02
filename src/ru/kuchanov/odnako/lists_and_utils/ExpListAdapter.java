@@ -8,7 +8,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
-import ru.kuchanov.odnako.activities.ActivityComments;
 import ru.kuchanov.odnako.activities.ActivityDownloads;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
@@ -303,7 +302,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			holderMain = (MyHolder) convertView.getTag();
 		}
 		//		light selected
-		if (act instanceof ActivityMain || act instanceof ActivityArticle || act instanceof ActivityComments)
+		if (act instanceof ActivityMain || act instanceof ActivityArticle)
 		{
 			int[] curGrChPos = new int[] { groupPosition, childPosition };
 			int[] activityGrChPos = ((ActivityBase) this.act).getGroupChildPosition();

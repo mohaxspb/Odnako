@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
@@ -302,23 +303,21 @@ public class ActivityMain extends ActivityBase
 
 		//here we check if there is article or comments fragment in fm
 		//and show back btn in right toolbar
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 		{
-			//set arrowDownIcon by theme
-//			int[] attrs = new int[] { R.attr.arrowBackIcon };
-//			TypedArray ta = act.obtainStyledAttributes(attrs);
-//			Drawable drawableArrowBack = ta.getDrawable(0);
-//			ta.recycle();
-//			toolbarRight.setNavigationIcon(drawableArrowBack);
-//			toolbarRight.setNavigationOnClickListener(new View.OnClickListener()
-//			{
-//				@Override
-//				public void onClick(View v)
-//				{
-//					toolbarRight.setNavigationIcon(null);
-//					act.onBackPressed();
-//				}
-//			});
+			//we are on main activity, so we must set toggle to rightToolbar
+			toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+			toolbarRight.setNavigationOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					act.onBackPressed();
+				}
+			});
+		}
+		else if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
 			//we are on main activity, so we must set toggle to rightToolbar
 			toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 			toolbarRight.setNavigationOnClickListener(new OnClickListener()
@@ -651,7 +650,6 @@ public class ActivityMain extends ActivityBase
 			}
 			else
 			{
-				//				searchView.onActionViewExpanded();
 				MenuItemCompat.expandActionView(searchMenuItem);
 
 				searchView.setQuery(queryToSave, true);
@@ -666,7 +664,7 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			//			Log.e(LOG, "searchText==null");
+			//Log.e(LOG, "searchText==null");
 		}
 		return true;
 	}
@@ -912,6 +910,18 @@ public class ActivityMain extends ActivityBase
 			return;
 		}
 
+		if(this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+		{
+			//check if we have also article frag in manager and if not - show hamburger
+			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
+			{
+				toolbarRight.setNavigationIcon(null);
+			}
+
+			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			return;
+		}
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			toolbarRight.setNavigationIcon(null);

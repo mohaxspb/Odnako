@@ -265,7 +265,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 											Actions.shareUrl(p.getUrl(), act);
 											return true;
 										case R.id.show_comments:
-											Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+											Actions.showComments(artsInfo, positionInAllArtsInfo, artsListFrag.getCategoryToLoad(), act);
 											return true;
 										default:
 											return false;
@@ -450,7 +450,7 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 					////end read Img
 
 					//share btn
-					//					holderMain.share.setLayoutParams(paramsForIcons);
+					//holderMain.share.setLayoutParams(paramsForIcons);
 					holderMain.share.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)
@@ -458,35 +458,17 @@ public class ArtsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 							Actions.shareUrl(p.getUrl(), act);
 						}
 					});
-					//					holderMain.num_of_shares.setText(String.valueOf(p.getNumOfSharings()));
-					//					holderMain.num_of_shares.setTextSize(21 * scaleFactor);
-					//					holderMain.num_of_shares.setOnClickListener(new OnClickListener()
-					//					{
-					//						public void onClick(View v)
-					//						{
-					//							Actions.shareUrl(p.getUrl(), act);
-					//						}
-					//					});
 					////end of share btn
 
 					//comments btn
-					//					holderMain.comms.setLayoutParams(paramsForIcons);
+					//holderMain.comms.setLayoutParams(paramsForIcons);
 					holderMain.comms.setOnClickListener(new OnClickListener()
 					{
 						public void onClick(View v)
 						{
-							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
+							Actions.showComments(artsInfo, positionInAllArtsInfo, artsListFrag.getCategoryToLoad(), act);
 						}
 					});
-					//					holderMain.num_of_comms.setText(String.valueOf(p.getNumOfComments()));
-					//					holderMain.num_of_comms.setTextSize(21 * scaleFactor);
-					//					holderMain.num_of_comms.setOnClickListener(new OnClickListener()
-					//					{
-					//						public void onClick(View v)
-					//						{
-					//							Actions.showComments(artsInfo, positionInAllArtsInfo, act);
-					//						}
-					//					});
 					////end of comments btn
 
 					/////////animation

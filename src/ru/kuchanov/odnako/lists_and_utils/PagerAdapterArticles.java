@@ -23,9 +23,9 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 {
 	static String LOG = PagerAdapterArticles.class.getSimpleName() + "/";
 
-	ArrayList<Article> allArtsInfo;
+	private ArrayList<Article> allArtsInfo;
 
-	String category;
+	private String category;
 
 	ActionBarActivity act;
 
@@ -36,7 +36,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		this.category = category;
 		this.act = act;
 
-		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
+		this.setAllArtsInfo(((ActivityBase) act).getAllCatArtsInfo().get(category));
 		//		this.notifyDataSetChanged();
 	}
 
@@ -44,7 +44,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 	public void notifyDataSetChanged()
 	{
 		//		Log.e(LOG_TAG + category, "notifyDataSetChanged called");
-		this.allArtsInfo = ((ActivityBase) act).getAllCatArtsInfo().get(category);
+		this.setAllArtsInfo(((ActivityBase) act).getAllCatArtsInfo().get(getCategoryToLoad()));
 		super.notifyDataSetChanged();
 	}
 
@@ -53,7 +53,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 	{
 		FragmentArticle artFrag = new FragmentArticle();
 		Bundle b = new Bundle();
-		if (this.allArtsInfo == null)
+		if (this.getAllArtsInfo() == null)
 		{
 			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, null);
 			b.putParcelable(Article.KEY_CURENT_ART, null);
@@ -61,13 +61,13 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 			ArrayList<Article> def = new ArrayList<Article>();
 			Article a = new Article();
 			a.setTitle("Статьи загружаются, подождите пожалуйста");
-			this.allArtsInfo = def;
+			this.setAllArtsInfo(def);
 			this.notifyDataSetChanged();
 		}
 		else
 		{
-			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, this.allArtsInfo);
-			b.putParcelable(Article.KEY_CURENT_ART, this.allArtsInfo.get(position));
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, this.getAllArtsInfo());
+			b.putParcelable(Article.KEY_CURENT_ART, this.getAllArtsInfo().get(position));
 		}
 
 		b.putInt("position", position);
@@ -79,20 +79,20 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 	@Override
 	public int getCount()
 	{
-		if (this.allArtsInfo == null)
+		if (this.getAllArtsInfo() == null)
 		{
 			return 1;
 		}
 		else
 		{
-			return this.allArtsInfo.size();
+			return this.getAllArtsInfo().size();
 		}
 	}
 
 	@Override
 	public int getItemPosition(Object object)
 	{
-		if (this.allArtsInfo == null)
+		if (this.getAllArtsInfo() == null)
 		{
 			return POSITION_NONE;
 		}
@@ -100,7 +100,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		{
 			if (((Fragment) object).isAdded())
 			{
-				if (((FragmentArticle) object).getPosition() >= this.allArtsInfo.size())
+				if (((FragmentArticle) object).getPosition() >= this.getAllArtsInfo().size())
 				{
 					//Log.e(LOG_TAG + category, "(FragmentArticle) object).getPosition()>=this.allArtsInfo.size()");
 					return POSITION_NONE;
@@ -110,7 +110,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 					try
 					{
 						FragmentArticle artFrag = (FragmentArticle) object;
-						((FragArtUPD) object).update(this.allArtsInfo.get(artFrag.getPosition()));
+						((FragArtUPD) object).update(this.getAllArtsInfo().get(artFrag.getPosition()));
 					} catch (NullPointerException e)
 					{
 						Log.e(LOG,
@@ -127,5 +127,20 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		}
 		//don't return POSITION_NONE, avoid fragment recreation. 
 		return super.getItemPosition(object);
+	}
+
+	public String getCategoryToLoad()
+	{
+		return category;
+	}
+
+	public ArrayList<Article> getAllArtsInfo()
+	{
+		return allArtsInfo;
+	}
+
+	public void setAllArtsInfo(ArrayList<Article> allArtsInfo)
+	{
+		this.allArtsInfo = allArtsInfo;
 	}
 }

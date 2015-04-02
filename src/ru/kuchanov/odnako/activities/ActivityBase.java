@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
@@ -433,9 +434,21 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
+			if(this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+			{
+				//check if we have also article frag in manager and if not - show hamburger
+				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
+				{
+					mDrawerToggle.setDrawerIndicatorEnabled(true);
+					this.mDrawerToggle.syncState();
+				}
+
+				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+				return;
+			}
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 			{
-//				this.setNavDrawer();
 				mDrawerToggle.setDrawerIndicatorEnabled(true);
 				this.mDrawerToggle.syncState();
 
