@@ -1,5 +1,6 @@
 # Built application files
 bin/*
+bin/*/
 !bin/Odnako.apk
 
 # Files for the Dalvik VM
@@ -9,7 +10,7 @@ bin/*
 *.class
 
 # Generated files
-gen/
+gen/*
 
 # Gradle files
 .gradle/
