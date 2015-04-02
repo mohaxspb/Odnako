@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.JBTextView;
@@ -479,6 +480,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 								Bundle b = new Bundle();
 								b.putParcelable(Article.KEY_CURENT_ART, a);
 								newFragment.setArguments(b);
+								
 								FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
 								ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
 								ft.commit();
@@ -492,18 +494,13 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 								{
 									toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 								}
-								//set arrowDownIcon by theme
-								int[] attrs = new int[] { R.attr.arrowBackIcon };
-								TypedArray ta = act.obtainStyledAttributes(attrs);
-								Drawable drawableArrowBack = ta.getDrawable(0);
-								ta.recycle();
-								toolbar.setNavigationIcon(drawableArrowBack);
+								//Next to actions works 
+								((ActivityBase)act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 								toolbar.setNavigationOnClickListener(new View.OnClickListener()
 								{
 									@Override
 									public void onClick(View v)
 									{
-										toolbar.setNavigationIcon(null);
 										act.onBackPressed();
 									}
 								});

@@ -151,7 +151,7 @@ public class ActivityArticle extends ActivityBase
 				@Override
 				public void onClick(View v)
 				{
-					toolbar.setNavigationIcon(null);
+//					toolbar.setNavigationIcon(null);
 					act.onBackPressed();
 				}
 			});

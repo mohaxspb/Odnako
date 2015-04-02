@@ -24,7 +24,6 @@ import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -50,7 +49,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-@SuppressLint("Registered")
 public class ActivityBase extends ActionBarActivity
 {
 	static final String LOG = ActivityBase.class.getSimpleName();
@@ -68,7 +66,7 @@ public class ActivityBase extends ActionBarActivity
 	protected ExpandableListView mDrawer;
 	protected ExpListAdapter expAdapter;
 	protected boolean drawerOpened;
-	protected ActionBarDrawerToggle mDrawerToggle;
+	public ActionBarDrawerToggle mDrawerToggle;
 
 	protected int[] groupChildPosition = new int[] { 1, 7 };
 	public static final String KEY_GROUP_CHILD_POSITION = "groupChildPosition";
@@ -233,7 +231,10 @@ public class ActivityBase extends ActionBarActivity
 		// e.g. "Navigation".
 		//		mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_open));
 		//setHeader BEFORE setting adapter
-		this.addHeaderForDrawer();
+		if (this.mDrawer.getHeaderViewsCount() == 0)
+		{
+			this.addHeaderForDrawer();
+		}
 		////
 		this.expAdapter = new ExpListAdapter(act, FillMenuList.getGroups(act));
 		mDrawer.setAdapter(expAdapter);
@@ -243,7 +244,6 @@ public class ActivityBase extends ActionBarActivity
 
 		mDrawer.expandGroup(1);
 		((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
-
 		////End of drawer settings
 	}
 
@@ -256,7 +256,6 @@ public class ActivityBase extends ActionBarActivity
 		MyUIL.getTransparentBackgroundROUNDOptions(act));
 		ava.setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
@@ -434,10 +433,13 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
-			if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 			{
-				toolbar.setNavigationIcon(null);
-				Fragment artFrag=this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+				this.setNavDrawer();
+				mDrawerToggle.setDrawerIndicatorEnabled(true);
+				this.mDrawerToggle.syncState();
+
+				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
 				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
 				return;
 			}
