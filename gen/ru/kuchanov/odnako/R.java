@@ -2956,21 +2956,22 @@ containing a value of this type.
         public static final int article_card=0x7f030020;
         public static final int article_card_art_frag=0x7f030021;
         public static final int author_card=0x7f030022;
-        public static final int card_tag=0x7f030023;
-        public static final int category_card=0x7f030024;
-        public static final int comment_card_view=0x7f030025;
-        public static final int comments_bottom_btn_layout=0x7f030026;
-        public static final int drawer_group=0x7f030027;
-        public static final int drawer_header=0x7f030028;
-        public static final int fake_header_small=0x7f030029;
-        public static final int fragment_all_authors_list=0x7f03002a;
-        public static final int fragment_art=0x7f03002b;
-        public static final int fragment_arts_list=0x7f03002c;
-        public static final int fragment_comments_list=0x7f03002d;
-        public static final int share_panel=0x7f03002e;
-        public static final int share_panel_landscape=0x7f03002f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030030;
-        public static final int toolbar_preference=0x7f030031;
+        public static final int card_description_text_view=0x7f030023;
+        public static final int card_tag=0x7f030024;
+        public static final int category_card=0x7f030025;
+        public static final int comment_card_view=0x7f030026;
+        public static final int comments_bottom_btn_layout=0x7f030027;
+        public static final int drawer_group=0x7f030028;
+        public static final int drawer_header=0x7f030029;
+        public static final int fake_header_small=0x7f03002a;
+        public static final int fragment_all_authors_list=0x7f03002b;
+        public static final int fragment_art=0x7f03002c;
+        public static final int fragment_arts_list=0x7f03002d;
+        public static final int fragment_comments_list=0x7f03002e;
+        public static final int share_panel=0x7f03002f;
+        public static final int share_panel_landscape=0x7f030030;
+        public static final int support_simple_spinner_dropdown_item=0x7f030031;
+        public static final int toolbar_preference=0x7f030032;
     }
     public static final class menu {
         public static final int art_card_menu_ligth=0x7f0f0000;
@@ -3226,7 +3227,7 @@ containing a value of this type.
         public static final int store_picture_message=0x7f0d0011;
         public static final int store_picture_title=0x7f0d0010;
         public static final int system_settings=0x7f0d0059;
-        public static final int tegs=0x7f0d0039;
+        public static final int tags=0x7f0d0039;
         public static final int text_scale=0x7f0d0070;
         public static final int theme=0x7f0d006d;
         public static final int title=0x7f0d0035;

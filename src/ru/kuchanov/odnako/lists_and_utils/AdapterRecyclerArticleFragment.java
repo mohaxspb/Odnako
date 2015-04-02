@@ -12,6 +12,7 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
+import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
@@ -204,6 +205,9 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		String scaleFactorString = pref.getString("scale", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 
+		String scaleFactorArticleString = pref.getString("scale_art", "1");
+		float scaleFactorArticle = Float.valueOf(scaleFactorArticleString);
+
 		final float scale = act.getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 
@@ -371,6 +375,9 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				final HolderText hT = (HolderText) holder;
 				//calculate position by minusing header and titleCard
 				int positionInArticlesTags = position - 1 - 1;
+
+				hT.text.setPadding(10, 10, 10, 0);
+				hT.text.setTextSize(21 * scaleFactorArticle);
 
 				hT.text.setTextIsSelectable(true);
 
@@ -586,17 +593,23 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				false);
 				return new HolderArticleTitle(itemLayoutView);
 			case (TEXT):
-				//TODO
-				itemLayoutView = new TextView(act);
-				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
+				if (android.os.Build.VERSION.SDK_INT != android.os.Build.VERSION_CODES.JELLY_BEAN)
+				{
+					itemLayoutView = new TextView(act);
+				}
+				else
+				{
+					itemLayoutView = new JBTextView(act);
+				}
+				//				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+				//				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+				//				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
 				return new HolderText(itemLayoutView);
 			case (IMAGE):
 				itemLayoutView = new ImageView(act);
-				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
+				//				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+				//				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+				//				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
 				return new HolderImage(itemLayoutView);
 			case (CARD_COMMENTS):
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.comments_bottom_btn_layout,
