@@ -17,16 +17,17 @@ import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class ActivityArticle extends ActivityBase
 {
@@ -138,23 +139,23 @@ public class ActivityArticle extends ActivityBase
 				break;
 			}
 		}
-		if(this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			//set arrowDownIcon by theme
-			int[] attrs = new int[] { R.attr.arrowBackIcon };
-			TypedArray ta = act.obtainStyledAttributes(attrs);
-			Drawable drawableArrowBack = ta.getDrawable(0);
-			ta.recycle();
-			toolbar.setNavigationIcon(drawableArrowBack);
-			toolbar.setNavigationOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-//					toolbar.setNavigationIcon(null);
-					act.onBackPressed();
-				}
-			});
+			//			int[] attrs = new int[] { R.attr.arrowBackIcon };
+			//			TypedArray ta = act.obtainStyledAttributes(attrs);
+			//			Drawable drawableArrowBack = ta.getDrawable(0);
+			//			ta.recycle();
+			//			toolbar.setNavigationIcon(drawableArrowBack);
+			//			toolbar.setNavigationOnClickListener(new View.OnClickListener()
+			//			{
+			//				@Override
+			//				public void onClick(View v)
+			//				{
+			//					//					toolbar.setNavigationIcon(null);
+			//					act.onBackPressed();
+			//				}
+			//			});
 		}
 	}
 
@@ -167,6 +168,11 @@ public class ActivityArticle extends ActivityBase
 		menu.findItem(R.id.action_settings_all).setVisible(!drawerOpen);
 		menu.findItem(R.id.comments).setVisible(!drawerOpen);
 		menu.findItem(R.id.share).setVisible(!drawerOpen);
+
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
+			this.mDrawerToggle.setDrawerIndicatorEnabled(false);
+		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -189,6 +195,10 @@ public class ActivityArticle extends ActivityBase
 		}
 		switch (item.getItemId())
 		{
+			case android.R.id.home:
+				//called when the up affordance/carat in actionbar is pressed
+				onBackPressed();
+				return true;
 			case R.id.action_settings_all:
 				//set theme btn checked if theme is dark
 				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
@@ -249,5 +259,51 @@ public class ActivityArticle extends ActivityBase
 
 		this.allCatAndAutTitles = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_TITLES_LIST);
 		this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
+	}
+
+	public static enum ActionDrawableState
+	{
+		BURGER, ARROW
+	}
+
+	public static void toggleActionBarIcon(ActionDrawableState state, final ActionBarDrawerToggle toggle,
+	boolean animate)
+	{
+		if (animate)
+		{
+			float start = state == ActionDrawableState.BURGER ? 0f : 1.0f;
+			float end = Math.abs(start - 1);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				ValueAnimator offsetAnimator = ValueAnimator.ofFloat(start, end);
+				offsetAnimator.setDuration(300);
+				offsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+				offsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+				{
+					@Override
+					public void onAnimationUpdate(ValueAnimator animation)
+					{
+						float offset = (Float) animation.getAnimatedValue();
+						toggle.onDrawerSlide(null, offset);
+					}
+				});
+				offsetAnimator.start();
+			}
+			else
+			{
+				//do the same with nine-old-androids lib :)
+			}
+		}
+		else
+		{
+			if (state == ActionDrawableState.BURGER)
+			{
+				toggle.onDrawerClosed(null);
+			}
+			else
+			{
+				toggle.onDrawerOpened(null);
+			}
+		}
 	}
 }

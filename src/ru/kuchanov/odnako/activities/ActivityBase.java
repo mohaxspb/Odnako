@@ -435,7 +435,7 @@ public class ActivityBase extends ActionBarActivity
 		{
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 			{
-				this.setNavDrawer();
+//				this.setNavDrawer();
 				mDrawerToggle.setDrawerIndicatorEnabled(true);
 				this.mDrawerToggle.syncState();
 

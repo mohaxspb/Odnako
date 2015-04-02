@@ -11,7 +11,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
@@ -480,30 +479,36 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 								Bundle b = new Bundle();
 								b.putParcelable(Article.KEY_CURENT_ART, a);
 								newFragment.setArguments(b);
-								
+
 								FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
 								ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
 								ft.commit();
 
-								final Toolbar toolbar;
-								if (act instanceof ActivityMain)
+								//Next to actions works
+								if (!twoPane)
 								{
-									toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+									//So it's article activity
+									//ActionBarDrawerToggle toggle = ((ActivityBase) act).mDrawerToggle;
+									//ActivityArticle.toggleActionBarIcon(ActivityArticle.ActionDrawableState.ARROW,
+									//toggle, true);
+									((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 								}
 								else
 								{
-									toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-								}
-								//Next to actions works 
-								((ActivityBase)act).mDrawerToggle.setDrawerIndicatorEnabled(false);
-								toolbar.setNavigationOnClickListener(new View.OnClickListener()
-								{
-									@Override
-									public void onClick(View v)
+									//we are on main activity, so we must set toggle to rightToolbar
+									final Toolbar toolbar;
+									toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+									toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+									toolbar.setNavigationOnClickListener(new OnClickListener()
 									{
-										act.onBackPressed();
-									}
-								});
+										@Override
+										public void onClick(View v)
+										{
+											act.onBackPressed();
+										}
+									});
+								}
+
 							}
 						});
 						TextView title = (TextView) c.findViewById(R.id.title);

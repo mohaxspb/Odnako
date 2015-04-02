@@ -30,8 +30,6 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -50,6 +48,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -306,17 +305,27 @@ public class ActivityMain extends ActivityBase
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			//set arrowDownIcon by theme
-			int[] attrs = new int[] { R.attr.arrowBackIcon };
-			TypedArray ta = act.obtainStyledAttributes(attrs);
-			Drawable drawableArrowBack = ta.getDrawable(0);
-			ta.recycle();
-			toolbarRight.setNavigationIcon(drawableArrowBack);
-			toolbarRight.setNavigationOnClickListener(new View.OnClickListener()
+//			int[] attrs = new int[] { R.attr.arrowBackIcon };
+//			TypedArray ta = act.obtainStyledAttributes(attrs);
+//			Drawable drawableArrowBack = ta.getDrawable(0);
+//			ta.recycle();
+//			toolbarRight.setNavigationIcon(drawableArrowBack);
+//			toolbarRight.setNavigationOnClickListener(new View.OnClickListener()
+//			{
+//				@Override
+//				public void onClick(View v)
+//				{
+//					toolbarRight.setNavigationIcon(null);
+//					act.onBackPressed();
+//				}
+//			});
+			//we are on main activity, so we must set toggle to rightToolbar
+			toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+			toolbarRight.setNavigationOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					toolbarRight.setNavigationIcon(null);
 					act.onBackPressed();
 				}
 			});
@@ -765,6 +774,10 @@ public class ActivityMain extends ActivityBase
 		}
 		switch (item.getItemId())
 		{
+			case android.R.id.home:
+				//called when the up affordance/carat in actionbar is pressed
+				onBackPressed();
+				return true;
 			case R.id.action_settings_all:
 				//set theme btn checked if theme is dark
 				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
