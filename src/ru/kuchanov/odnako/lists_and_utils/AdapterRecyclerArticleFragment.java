@@ -601,15 +601,9 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					itemLayoutView = new JBTextView(act);
 				}
-				//				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				//				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-				//				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
 				return new HolderText(itemLayoutView);
 			case (IMAGE):
 				itemLayoutView = new ImageView(act);
-				//				itemLayoutView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-				//				android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-				//				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT));
 				return new HolderImage(itemLayoutView);
 			case (CARD_COMMENTS):
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.comments_bottom_btn_layout,
@@ -736,7 +730,8 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 		HolderComments(View itemLayoutView)
 		{
 			super(itemLayoutView);
-			this.mainLin = (ViewGroup) itemLayoutView;//.findViewById(R.id.art_comments_bottom_btn);
+			//			this.mainLin = (ViewGroup) itemLayoutView;//.findViewById(R.id.art_comments_bottom_btn);
+			this.mainLin = (ViewGroup) itemLayoutView.findViewById(R.id.main_lin);
 		}
 	}
 

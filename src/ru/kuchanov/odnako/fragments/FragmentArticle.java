@@ -218,7 +218,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		long beforeTime = System.currentTimeMillis();
 		this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
-		Log.e(LOG, "update frgment. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
+		Log.e(LOG, "update fragment. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}
 
 	public int getPosition()
