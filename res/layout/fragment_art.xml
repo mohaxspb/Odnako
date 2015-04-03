@@ -4,53 +4,9 @@
     android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-    <!-- <ScrollView
-        android:id="@+id/art_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:windowBackground"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/main_lin_lay_article_frags_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <FrameLayout
-                android:id="@+id/fakeHeader"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
-
-            <include layout="@layout/article_card_art_frag" />
-
-            <LinearLayout
-                android:id="@+id/articles_text_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/art_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?cardBackGroundColor"
-                    android:padding="5dp"
-                    android:text="@string/article_loading"
-                    android:textColor="?android:textColorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/art_bottom_panel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView> -->
+    
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/article_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?android:windowBackground"

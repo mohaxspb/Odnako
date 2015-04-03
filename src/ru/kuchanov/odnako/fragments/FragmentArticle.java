@@ -50,9 +50,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private RecyclerView recycler;
 	private AdapterRecyclerArticleFragment recyclerAdapter;
 
-	//	SpacesItemDecoration zeroDecor=;
-	//	SpacesItemDecoration defaultDecor;
-
 	@Override
 	public void onCreate(Bundle savedState)
 	{
@@ -148,7 +145,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 		});
 
-		this.recycler = (RecyclerView) v.findViewById(R.id.article_recycler_view);
+		this.recycler = (RecyclerView) v.findViewById(R.id.recycler_view);
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
 		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
 

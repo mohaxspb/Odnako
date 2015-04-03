@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/comments_fragment"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/arts_list_refresh"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="ru.kuchanov.odnako.activities.ActivityMain" >
+        android:background="?android:windowBackground"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
-        <ListView
-            android:id="@+id/comments_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

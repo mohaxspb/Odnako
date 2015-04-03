@@ -665,15 +665,7 @@ public class FragmentArtsListRecycler extends Fragment
 		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
 		this.artsList.setItemAnimator(new DefaultItemAnimator());
 		this.artsList.addItemDecoration(new SpacesItemDecoration(25));
-		LinearLayoutManager manager = new LinearLayoutManager(act);
-//		{
-//			@Override
-//			public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state)
-//			{
-//				return 0;
-//			}
-//		};
-		this.artsList.setLayoutManager(manager);
+		this.artsList.setLayoutManager(new LinearLayoutManager(act));
 
 		//restore allArtsInfo from Activities HashMap
 		if (this.allArtsInfo == null && this.act.getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
