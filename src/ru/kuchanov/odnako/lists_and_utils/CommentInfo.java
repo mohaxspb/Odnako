@@ -2,11 +2,19 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-public class CommentInfo
-{
-	String[] CommInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-	public String name, txt, flag, time, like, dislike, avaImg, city, data_pid, id, padding, numOfCommsPages;
+import ru.kuchanov.odnako.Const;
+
+public class CommentInfo implements Parcelable
+{
+	public final static String KEY_ALL_COMMENTS_LIST = "all comments list";
+	public final static String KEY_COMMENT = "comment";
+	//	String[] CommInfo;
+
+	public String name, txt, flag, time, like, dislike, avaImg, city, data_pid, id, padding,
+	numOfCommsPages = Const.EMPTY_STRING;
 
 	public CommentInfo(String name, String txt, String flag, String time, String city, String like, String dislike,
 	String avaImg, String data_pid, String id, String padding, String numOfCommsPages)
@@ -24,19 +32,19 @@ public class CommentInfo
 		this.padding = padding;
 		this.numOfCommsPages = numOfCommsPages;
 
-		this.CommInfo = new String[12];
-		this.CommInfo[0] = this.name;
-		this.CommInfo[1] = this.txt;
-		this.CommInfo[2] = this.flag;
-		this.CommInfo[3] = this.time;
-		this.CommInfo[4] = this.city;
-		this.CommInfo[5] = this.like;
-		this.CommInfo[6] = this.dislike;
-		this.CommInfo[7] = this.avaImg;
-		this.CommInfo[8] = this.data_pid;
-		this.CommInfo[9] = this.id;
-		this.CommInfo[10] = this.padding;
-		this.CommInfo[11] = this.numOfCommsPages;
+		//		this.CommInfo = new String[12];
+		//		this.CommInfo[0] = this.name;
+		//		this.CommInfo[1] = this.txt;
+		//		this.CommInfo[2] = this.flag;
+		//		this.CommInfo[3] = this.time;
+		//		this.CommInfo[4] = this.city;
+		//		this.CommInfo[5] = this.like;
+		//		this.CommInfo[6] = this.dislike;
+		//		this.CommInfo[7] = this.avaImg;
+		//		this.CommInfo[8] = this.data_pid;
+		//		this.CommInfo[9] = this.id;
+		//		this.CommInfo[10] = this.padding;
+		//		this.CommInfo[11] = this.numOfCommsPages;
 	}
 
 	public CommentInfo(String[] commInfoArr)
@@ -54,7 +62,7 @@ public class CommentInfo
 		this.padding = commInfoArr[10];
 		this.numOfCommsPages = commInfoArr[11];
 
-		this.CommInfo = commInfoArr;
+		//		this.CommInfo = commInfoArr;
 	}
 
 	public void fillCommInfo(String[] commInfoArr)
@@ -72,13 +80,13 @@ public class CommentInfo
 		this.padding = commInfoArr[10];
 		this.numOfCommsPages = commInfoArr[11];
 
-		this.CommInfo = commInfoArr;
+		//		this.CommInfo = commInfoArr;
 	}
 
-	public String[] getCommentInfoAsStringArr()
-	{
-		return this.CommInfo;
-	}
+	//	public String[] getCommentInfoAsStringArr()
+	//	{
+	//		return this.CommInfo;
+	//	}
 
 	public static CommentInfo getDefaultCommentInfo()
 	{
@@ -98,13 +106,13 @@ public class CommentInfo
 		defCommInfoArr[10] = "0";
 		defCommInfoArr[11] = "5";
 		defCommInfo = new CommentInfo(defCommInfoArr);
-		
+
 		return defCommInfo;
 	}
-	
+
 	public static ArrayList<CommentInfo> getDefaultArtsCommentsInfo(int numOfComments)
 	{
-		
+
 		//fill Arraylist with artsInfo
 		ArrayList<CommentInfo> curArtCommentsInfoList = new ArrayList<CommentInfo>();
 		for (int i = 0; i < numOfComments; i++)
@@ -117,19 +125,79 @@ public class CommentInfo
 		"https://pp.vk.me/c9733/u77102/151125793/w_91f2635a.jpg", "100", "1000", "0", "5");
 
 		curArtCommentsInfoList.set(1, artInfoTEST);
-		
+
 		return curArtCommentsInfoList;
 	}
-	
+
 	public static ArrayList<ArrayList<CommentInfo>> getDefaultAllArtsCommentsInfo(int numOfArts, int numOfComments)
 	{
-		ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo=new ArrayList<ArrayList<CommentInfo>>(numOfArts);
-		
-		for(int i=0; i<numOfArts; i++)
+		ArrayList<ArrayList<CommentInfo>> allArtsCommentsInfo = new ArrayList<ArrayList<CommentInfo>>(numOfArts);
+
+		for (int i = 0; i < numOfArts; i++)
 		{
 			allArtsCommentsInfo.add(CommentInfo.getDefaultArtsCommentsInfo(numOfComments));
 		}
-		
+
 		return allArtsCommentsInfo;
 	}
+
+	//////PARCEL implementation
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		dest.writeString(name);
+		dest.writeString(txt);
+		dest.writeString(flag);
+		dest.writeString(time);
+		dest.writeString(city);
+
+		dest.writeString(like);
+
+		dest.writeString(dislike);
+		dest.writeString(avaImg);
+		dest.writeString(data_pid);
+		dest.writeString(id);
+		dest.writeString(padding);
+		dest.writeString(numOfCommsPages);
+	}
+
+	private CommentInfo(Parcel in)
+	{
+		this.name = in.readString();
+		this.txt = in.readString();
+		this.flag = in.readString();
+		this.time = in.readString();
+		this.city = in.readString();
+		this.like = in.readString();
+		this.dislike = in.readString();
+		this.avaImg = in.readString();
+		this.data_pid = in.readString();
+		this.id = in.readString();
+		this.padding = in.readString();
+		this.numOfCommsPages = in.readString();
+	}
+
+	public static final Parcelable.Creator<CommentInfo> CREATOR = new Parcelable.Creator<CommentInfo>()
+	{
+
+		@Override
+		public CommentInfo createFromParcel(Parcel source)
+		{
+			return new CommentInfo(source);
+		}
+
+		@Override
+		public CommentInfo[] newArray(int size)
+		{
+			return new CommentInfo[size];
+		}
+	};
+
+	/////////////////////////////
 }

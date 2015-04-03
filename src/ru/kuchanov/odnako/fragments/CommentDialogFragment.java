@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,15 +37,15 @@ public class CommentDialogFragment extends DialogFragment
 	private SharedPreferences pref;
 	private boolean twoPane;
 
-	CommentInfo curCommentInfo;
+	private CommentInfo curCommentInfo;
 
-	TextView name;
-	ImageView flag;
-	TextView time_city;
-	ImageView ava;
-	TextView commText;
-	TextView like;
-	TextView dislike;
+	private TextView name;
+	private ImageView flag;
+	private TextView time_city;
+	private ImageView ava;
+	private TextView commText;
+	private TextView like;
+	private TextView dislike;
 
 	//	String[] defaultCommInfo;
 
@@ -52,7 +53,7 @@ public class CommentDialogFragment extends DialogFragment
 	{
 		CommentDialogFragment frag = new CommentDialogFragment();
 		Bundle args = new Bundle();
-		args.putStringArray("CommentInfo", curCommentInfo.getCommentInfoAsStringArr());
+		args.putParcelable(CommentInfo.KEY_COMMENT, curCommentInfo);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -80,13 +81,13 @@ public class CommentDialogFragment extends DialogFragment
 	{
 		System.out.println("CommentDialogFragment onCreateDialog");
 		Dialog dialog = new Dialog(act);
-		
-		LayoutInflater inflater=this.getActivity().getLayoutInflater();
-		
-		LinearLayout linlay=(LinearLayout) inflater.inflate(R.layout.comment_card_view, new LinearLayout(act), false);
-		
+
+		LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
+		FrameLayout linlay = (FrameLayout) inflater.inflate(R.layout.comment_card_view, new FrameLayout(act), false);
+
 		dialog.setContentView(linlay);
-		
+
 		//find all views
 		name = (TextView) linlay.findViewById(R.id.name);
 		flag = (ImageView) linlay.findViewById(R.id.flag);
@@ -102,10 +103,9 @@ public class CommentDialogFragment extends DialogFragment
 		name.setText(spannedContentName);
 
 		//setText
-		String commentText=this.curCommentInfo.txt;
+		String commentText = this.curCommentInfo.txt;
 		Spanned spannedContent = Html.fromHtml(commentText);
 		commText.setText(spannedContent);
-//		commText.setText(R.string.version_history);
 		commText.setMovementMethod(LinkMovementMethod.getInstance());
 
 		// FLAG
@@ -120,31 +120,30 @@ public class CommentDialogFragment extends DialogFragment
 		time_city.setText(this.curCommentInfo.time + " " + this.curCommentInfo.city);
 
 		// Karma
-//		String colored = "<font color=\'#00FF00\'>" + this.curCommentInfo.like + "</font> | "
-//		+ "<font color=\'#FF0000\'>" + this.curCommentInfo.dislike + "</font>";
-//		Spanned spannedContentKarma = Html.fromHtml(colored);
-//		karma.setText(spannedContentKarma);
-//		karma.setText("gfhgfjhfkjhgkj");
-		
-//		LinearLayout vg=(LinearLayout) like.getParent();
-//		LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, 30);
-//		vg.setLayoutParams(params);
-//		vg.setGravity(Gravity.RIGHT);
+		//		String colored = "<font color=\'#00FF00\'>" + this.curCommentInfo.like + "</font> | "
+		//		+ "<font color=\'#FF0000\'>" + this.curCommentInfo.dislike + "</font>";
+		//		Spanned spannedContentKarma = Html.fromHtml(colored);
+		//		karma.setText(spannedContentKarma);
+		//		karma.setText("gfhgfjhfkjhgkj");
+
+		//		LinearLayout vg=(LinearLayout) like.getParent();
+		//		LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, 30);
+		//		vg.setLayoutParams(params);
+		//		vg.setGravity(Gravity.RIGHT);
 		like.setText(this.curCommentInfo.like);
 		dislike.setText(this.curCommentInfo.dislike);
-		
+
 		//karma isn't working with spanned content. FUCK!!!!!!!!!!!!
-//		
-//		LinearLayout vg=(LinearLayout) karma.getParent();
-//		LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, 500);
-//		vg.setLayoutParams(params);
-//		
-//		dialog.setContentView(linlay);
+		//		
+		//		LinearLayout vg=(LinearLayout) karma.getParent();
+		//		LayoutParams params=new LayoutParams(LayoutParams.MATCH_PARENT, 500);
+		//		vg.setLayoutParams(params);
+		//		
+		//		dialog.setContentView(linlay);
 
 		showDialogWithNoTopSpace(linlay, dialog, false);
 		return dialog;
 	}
-
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
@@ -210,20 +209,20 @@ public class CommentDialogFragment extends DialogFragment
 					else
 					{
 						// Found it, now remove the height of the title area
-//						View child = dialogLayout.getChildAt(0);
-//						if (child != customView)
-//						{
-//							// remove height
-//							LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child
-//							.getLayoutParams();
-//							lp.height = 0;
-//							child.setLayoutParams(lp);
-//
-//						}
-//						else
-//						{
-//							// Could find it. Unexpected.
-//						}
+						//						View child = dialogLayout.getChildAt(0);
+						//						if (child != customView)
+						//						{
+						//							// remove height
+						//							LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child
+						//							.getLayoutParams();
+						//							lp.height = 0;
+						//							child.setLayoutParams(lp);
+						//
+						//						}
+						//						else
+						//						{
+						//							// Could find it. Unexpected.
+						//						}
 						//remove divider
 						View child1 = dialogLayout.getChildAt(1);
 						if (child1 != customView)

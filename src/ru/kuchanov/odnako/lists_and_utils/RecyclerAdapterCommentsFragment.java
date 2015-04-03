@@ -11,6 +11,7 @@ import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.fragments.CommentDialogFragment;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -81,6 +82,11 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 	public void setCommentsInfo(ArrayList<CommentInfo> commentsInfoList)
 	{
 		this.commentsInfoList = commentsInfoList;
+	}
+
+	public void addCommentsInfo(ArrayList<CommentInfo> commentsInfoList)
+	{
+		this.commentsInfoList.addAll(commentsInfoList);
 	}
 
 	@Override
@@ -209,6 +215,19 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 						}
 					}
 				}
+				h.topLin.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						FragmentComments fragComm = (FragmentComments) act.getSupportFragmentManager()
+						.findFragmentByTag(FragmentComments.LOG);
+//						fragComm.isLoading = true;
+						fragComm.pageToLoad = 2;
+						fragComm.startDownload();
+					}
+				});
+
 				//AUTHOR
 				if (!article.getAuthorName().equals(Const.EMPTY_STRING))
 				{
@@ -442,6 +461,8 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 	static class HolderArticleTitle extends RecyclerView.ViewHolder
 	{
+		ViewGroup topLin;
+
 		ImageView artImg;
 
 		TextView title;
@@ -460,6 +481,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 		{
 			super(itemLayoutView);
 			//top panel
+			this.topLin = (ViewGroup) itemLayoutView.findViewById(R.id.art_card_top_lin_lay);
 			this.artImg = (ImageView) itemLayoutView.findViewById(R.id.art_card_img);
 			this.title = (TextView) itemLayoutView.findViewById(R.id.art_title);
 			this.date = (TextView) itemLayoutView.findViewById(R.id.pub_date);

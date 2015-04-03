@@ -12,7 +12,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
 import ru.kuchanov.odnako.lists_and_utils.AllAuthorsListAdapter;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import android.content.BroadcastReceiver;
@@ -345,7 +345,7 @@ public class FragmentAllAuthors extends Fragment
 	public void setActivatedPosition(int position)
 	{
 		this.position = position;
-		this.recyclerView.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		this.recyclerView.scrollToPosition(RecyclerAdapterArtsListFragment.getPositionInRecyclerView(position));
 		adapter.notifyDataSetChanged();
 	}
 

@@ -21,7 +21,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceRSS;
-import ru.kuchanov.odnako.lists_and_utils.ArtsListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
@@ -76,8 +76,8 @@ public class FragmentArtsListRecycler extends Fragment
 	private int toolbarId = R.id.toolbar;
 	private boolean isInLeftPager = true;
 
-	private RecyclerView artsList;
-	private ArtsListAdapter artsListAdapter;
+	private RecyclerView recycler;
+	private RecyclerAdapterArtsListFragment recyclerAdapter;
 
 	private ActivityMain act;
 	private SharedPreferences pref;
@@ -151,7 +151,7 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			//			Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
+			//Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
 			boolean isCurrentlyLoading = intent.getBooleanExtra(Const.Action.IS_LOADING, false);
 			if (isCurrentlyLoading)
 			{
@@ -168,7 +168,7 @@ public class FragmentArtsListRecycler extends Fragment
 				}
 				else
 				{
-					int[] textSizeAttr = new int[] { android.R.attr.textSize };
+					int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
 					int indexOfAttrTextSize = 0;
 					TypedValue typedValue = new TypedValue();
 					TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
@@ -197,7 +197,7 @@ public class FragmentArtsListRecycler extends Fragment
 			position = intent.getIntExtra("position", 0);
 
 			setActivatedPosition(position);
-			artsListAdapter.notifyDataSetChanged();
+			recyclerAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -225,7 +225,7 @@ public class FragmentArtsListRecycler extends Fragment
 			}
 			//after  updating Articles from activities HashMap
 			//we update adapter and right pager
-			artsList.getAdapter().notifyDataSetChanged();
+			recycler.getAdapter().notifyDataSetChanged();
 		}
 	};
 
@@ -433,7 +433,7 @@ public class FragmentArtsListRecycler extends Fragment
 					def.add(a);
 					allArtsInfo = def;
 					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
-					artsList.getAdapter().notifyDataSetChanged();
+					recycler.getAdapter().notifyDataSetChanged();
 
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
@@ -499,7 +499,7 @@ public class FragmentArtsListRecycler extends Fragment
 				allArtsInfo.clear();
 			}
 			allArtsInfo.addAll(newAllArtsInfo);
-			artsListAdapter.notifyDataSetChanged();
+			recyclerAdapter.notifyDataSetChanged();
 
 			((ActivityBase) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 		}
@@ -662,10 +662,10 @@ public class FragmentArtsListRecycler extends Fragment
 			}
 		});
 
-		this.artsList = (RecyclerView) v.findViewById(R.id.arts_list_view);
-		this.artsList.setItemAnimator(new DefaultItemAnimator());
-		this.artsList.addItemDecoration(new SpacesItemDecoration(25));
-		this.artsList.setLayoutManager(new LinearLayoutManager(act));
+		this.recycler = (RecyclerView) v.findViewById(R.id.arts_list_view);
+		this.recycler.setItemAnimator(new DefaultItemAnimator());
+		this.recycler.addItemDecoration(new SpacesItemDecoration(25));
+		this.recycler.setLayoutManager(new LinearLayoutManager(act));
 
 		//restore allArtsInfo from Activities HashMap
 		if (this.allArtsInfo == null && this.act.getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
@@ -685,17 +685,17 @@ public class FragmentArtsListRecycler extends Fragment
 			def.add(a);
 			this.allArtsInfo = def;
 
-			this.artsListAdapter = new ArtsListAdapter(act, this.allArtsInfo, this);
-			this.artsList.setAdapter(artsListAdapter);
+			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, this.allArtsInfo, this);
+			this.recycler.setAdapter(recyclerAdapter);
 
 		}
 		else
 		{
 			//Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
-			this.artsListAdapter = new ArtsListAdapter(act, allArtsInfo, this);
-			this.artsList.setAdapter(artsListAdapter);
+			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, allArtsInfo, this);
+			this.recycler.setAdapter(recyclerAdapter);
 
-			this.artsListAdapter.notifyDataSetChanged();
+			this.recyclerAdapter.notifyDataSetChanged();
 
 			//ask service if it has working task with this page and category
 			Intent intent = new Intent(this.act, ServiceDB.class);
@@ -714,7 +714,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 	private void setOnScrollListener()
 	{
-		this.artsList.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
+		this.recycler.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
 		this.toolbarId)
 		{
 			public void onLoadMore()
@@ -793,7 +793,7 @@ public class FragmentArtsListRecycler extends Fragment
 		//System.out.println("setActivatedPosition(int position: " + position);
 		this.position = position;
 
-		this.artsList.scrollToPosition(ArtsListAdapter.getPositionInRecyclerView(position));
+		this.recycler.scrollToPosition(RecyclerAdapterArtsListFragment.getPositionInRecyclerView(position));
 	}
 
 	public int getMyActivatedPosition()
