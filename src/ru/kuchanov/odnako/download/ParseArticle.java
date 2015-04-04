@@ -24,23 +24,15 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 	private String url;
 	private Context ctx;
 	private DataBaseHelper h;
+	boolean forceDownLoad;
 
-//	FragArtUPD f;
-
-	public ParseArticle(Context ctx, String url, DataBaseHelper h)
+	public ParseArticle(Context ctx, String url, DataBaseHelper h, boolean forceDownLoad)
 	{
 		this.ctx = ctx;
 		this.url = url;
 		this.h = h;
+		this.forceDownLoad = forceDownLoad;
 	}
-
-//	public ParseArticle(Context ctx, String url, DataBaseHelper h, FragArtUPD f)
-//	{
-//		this.ctx = ctx;
-//		this.url = url;
-//		this.h = h;
-//		this.f = f;
-//	}
 
 	protected Article doInBackground(Void... arg)
 	{
@@ -57,10 +49,10 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 
 		try
 		{
-			//check if we already have article obj with artText!=Const.EMPTY_STRING
+			//check if we already have article obj with artText!=Const.EMPTY_STRING or we have to forceDownload
 			Article artInDB = null;
 			artInDB = Article.getArticleByURL(h, this.url);
-			if (artInDB == null || artInDB.getArtText().equals(Const.EMPTY_STRING))
+			if (artInDB == null || artInDB.getArtText().equals(Const.EMPTY_STRING) || forceDownLoad)
 			{
 				//start download
 				HtmlHelper hh = new HtmlHelper(link);
@@ -77,10 +69,10 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 					{
 						Date downLoadedDate = new Date(article.getPubDate().getTime());
 						Date dBDate = new Date(artInDB.getPubDate().getTime());
-						
+
 						//preview
 						//String previewDown=article.getPreview();
-						String previewDB=artInDB.getPreview();
+						String previewDB = artInDB.getPreview();
 
 						article.setId(artInDB.getId());
 						h.getDaoArticle().update(article);
@@ -92,7 +84,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 						{
 							Article.updatePubDate(h, artInDB.getId(), dBDate);
 						}
-						if(!previewDB.equals(Const.EMPTY_STRING))
+						if (!previewDB.equals(Const.EMPTY_STRING))
 						{
 							Article.updatePreview(h, artInDB.getId(), previewDB);
 						}
@@ -113,7 +105,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 
 		} catch (Exception e)
 		{
-//			Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
+			//Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
 		return article;
@@ -124,15 +116,15 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		//check internet
 		if (article != null)
 		{
-//			if (this.f != null)
-//			{
-//				this.f.update(article);
-//				this.h.close();
-//			}
-//			else
-//			{
-				ServiceArticle.sendDownloadedData(ctx, article, url);
-//			}
+			//			if (this.f != null)
+			//			{
+			//				this.f.update(article);
+			//				this.h.close();
+			//			}
+			//			else
+			//			{
+			ServiceArticle.sendDownloadedData(ctx, article, url);
+			//			}
 		}
 		//NO internet
 		else

@@ -72,11 +72,11 @@ public class ServiceArticle extends Service
 			return super.onStartCommand(intent, flags, startId);
 		}
 
-		this.startDownLoad(url);
+		this.startDownLoad(url, intent.getBooleanExtra("startDownload", false));
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	private void startDownLoad(String url)
+	private void startDownLoad(String url, boolean forceDownLoad)
 	{
 		//check for url equality and don't start loading if true
 		for (ParseArticle a : currentTasks)
@@ -90,7 +90,7 @@ public class ServiceArticle extends Service
 		if (currentTasks.size() < 4)
 		{
 			//Everything is OK. Just add it and execute
-			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper());
+			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper(), forceDownLoad);
 			articleParser.execute();
 			currentTasks.add(articleParser);
 			Log.e(LOG, "start download article: " + url);
@@ -107,13 +107,13 @@ public class ServiceArticle extends Service
 				removedParse.cancel(true);
 				sendErrorMsg(ctx, removedParse.getUrl(), Const.Error.CANCELLED_ERROR);
 			}
-			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper());
+			ParseArticle articleParser = new ParseArticle(ctx, url, getHelper(), forceDownLoad);
 			articleParser.execute();
 			currentTasks.add(articleParser);
 			Log.e(LOG, "start download article: " + url);
 		}
 	}
-	
+
 	public static void sendDownloadedData(Context ctx, Article a, String url)
 	{
 		for (int i = 0; i < currentTasks.size(); i++)
@@ -188,5 +188,5 @@ public class ServiceArticle extends Service
 	public IBinder onBind(Intent intent)
 	{
 		return null;
-	}	
+	}
 }

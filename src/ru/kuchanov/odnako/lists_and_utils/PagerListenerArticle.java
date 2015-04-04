@@ -91,9 +91,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		}
 		//notify Article fragment, that it's selected
 		//onReceive it prevent first scrolling action
-//		Log.i(LOG, categoryToLoad);
-//		Log.i(LOG, String.valueOf(act.getAllCatArtsInfo().get(categoryToLoad)==null));
-//		Log.i(LOG, String.valueOf(act.getAllCatArtsInfo().get(categoryToLoad).get(position)==null));
 		
 		if(act.getAllCatArtsInfo().get(categoryToLoad)!=null)
 		{
