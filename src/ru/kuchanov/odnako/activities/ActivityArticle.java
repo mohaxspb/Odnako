@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,7 +38,7 @@ public class ActivityArticle extends ActivityBase
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		System.out.println("ActivityArticle onCreate");
+		Log.i(LOG, "onCreate");
 
 		this.act = this;
 		//get default settings to get all settings later
@@ -49,7 +50,8 @@ public class ActivityArticle extends ActivityBase
 		//end of get default settings to get all settings later
 
 		//set theme before super and set content to apply it
-		if (pref.getString("theme", "dark").equals("dark"))
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			this.setTheme(R.style.ThemeDark);
 		}
@@ -60,13 +62,26 @@ public class ActivityArticle extends ActivityBase
 
 		super.onCreate(savedInstanceState);
 
+		////CHECK HERE SITUATION WHEN WE LAUNCH THIS ACTIVITY WITH TWOPANE MODE
+		//that's can be if we open settings from article activity
+		//and enable twoPane
+		if (this.pref.getBoolean("twoPane", false))
+		{
+			Intent intent = new Intent(act, ActivityMain.class);
+			//set flags to prevent restoring activity from backStack and create really new instance
+			//with given categories number
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			act.startActivity(intent);
+			this.finish();
+			return;
+		}
+
 		this.setContentView(R.layout.activity_article);
 
 		//restore state
 		Bundle stateFromIntent = this.getIntent().getExtras();
 		if (stateFromIntent != null)
 		{
-
 			this.curAllArtsInfo = stateFromIntent.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 			this.categoryToLoad = stateFromIntent.getString("categoryToLoad");
 			this.setCurArtPosition(stateFromIntent.getInt("position"));
@@ -160,10 +175,16 @@ public class ActivityArticle extends ActivityBase
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 		{
 			mDrawerToggle.setDrawerIndicatorEnabled(false);
+			//hide comments and share buttons
+			menu.findItem(R.id.comments).setVisible(false);
+			menu.findItem(R.id.share).setVisible(false);
 		}
 		else if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			this.mDrawerToggle.setDrawerIndicatorEnabled(false);
+			//show previously hided comments and share buttons
+			menu.findItem(R.id.comments).setVisible(true);
+			menu.findItem(R.id.share).setVisible(true);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -185,6 +206,7 @@ public class ActivityArticle extends ActivityBase
 		{
 			return true;
 		}
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
@@ -194,30 +216,46 @@ public class ActivityArticle extends ActivityBase
 			case R.id.action_settings_all:
 				//set theme btn checked if theme is dark
 				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
-				String curTheme = pref.getString("theme", "dark");
-				if (curTheme.equals("dark"))
+				if (nightModeIsOn)
 				{
 					themeMenuItem.setChecked(true);
 				}
 				return true;
 			case R.id.comments:
-				Actions.showComments(curAllArtsInfo, getCurArtPosition(), getCurrentCategory(), act);
+				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+				{
+					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
+					.findFragmentByTag(FragmentArticle.LOG);
+					Actions.addCommentsFrgament(upperArtFrag.getArticle(), act);
+				}
+				else
+				{
+					Actions.showComments(curAllArtsInfo, getCurArtPosition(), getCurrentCategory(), act);
+				}
 				return true;
 			case R.id.share:
-				Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
+				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+				{
+					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
+					.findFragmentByTag(FragmentArticle.LOG);
+					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
+				}
+				else
+				{
+					Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
+				}
 				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
 			case R.id.theme_dark:
-				String theme = pref.getString("theme", "dark");
-				if (theme.equals("dark"))
+				if (nightModeIsOn)
 				{
-					this.pref.edit().putString("theme", "light").commit();
+					this.pref.edit().putBoolean("night_mode", false).commit();
 				}
 				else
 				{
-					this.pref.edit().putString("theme", "dark").commit();
+					this.pref.edit().putBoolean("night_mode", true).commit();
 				}
 				this.recreate();
 				return super.onOptionsItemSelected(item);

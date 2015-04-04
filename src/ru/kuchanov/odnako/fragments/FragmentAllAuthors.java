@@ -297,7 +297,8 @@ public class FragmentAllAuthors extends Fragment
 
 		this.topImg.setY(topImgCoord);
 		this.topImgCover = (ImageView) v.findViewById(R.id.top_img_cover);
-		if (this.pref.getString("theme", "dark").equals("dark"))
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			topImgCover.setBackgroundResource(R.drawable.top_img_cover_dark);
 		}

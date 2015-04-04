@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -469,35 +467,12 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 							Actions.showComments(artsInfo, positionInAllArtsInfo, artsListFrag.getCategoryToLoad(), act);
 						}
 					});
-					////end of comments btn
-
-					/////////animation
-					// Here you apply the animation when the view is bound
-					//					setAnimation(vg, position);
 				} catch (Exception e)
 				{
 					return;
 				}
-
 			break;
-
 		}
-
-	}
-
-	/**
-	 * Here is the key method to apply the animation
-	 */
-	protected void setAnimation(View viewToAnimate, int position)
-	{
-		// If the bound view wasn't previously displayed on screen, it's animated
-		//		if (position > lastPosition)
-		//		{
-		Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.slide_in_left);
-		//        	Animation animation = AnimationUtils.loadAnimation(this.act, android.R.anim.fade_in);
-		viewToAnimate.startAnimation(animation);
-		//			lastPosition = position;
-		//		}
 	}
 
 	@Override

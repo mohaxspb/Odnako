@@ -14,8 +14,8 @@ import ru.kuchanov.odnako.animations.RecyclerCommentsOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.download.DownloadComments;
-import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterCommentsFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -231,6 +231,13 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		outState.putParcelableArrayList(CommentInfo.KEY_ALL_COMMENTS_LIST, this.commentsInfoList);
 		outState.putBoolean("isLoading", isLoading);
 		outState.putInt(KEY_PAGE_TO_LOAD, pageToLoad);
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		this.act.supportInvalidateOptionsMenu();
 	}
 
 	@Override

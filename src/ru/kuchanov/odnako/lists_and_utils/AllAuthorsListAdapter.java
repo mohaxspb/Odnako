@@ -210,7 +210,8 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				//					link = "http://odnako.org" + p.getAvatar();
 				//				}
 
-				if (this.pref.getString("theme", "dark").equals("dark"))
+				boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+				if (nightModeIsOn)
 				{
 					imageLoader.displayImage(p.getAvatar(), holderMain.author_img,
 					MyUIL.getDarkOptions());

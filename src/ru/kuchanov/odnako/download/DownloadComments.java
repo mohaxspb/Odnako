@@ -19,7 +19,6 @@ import android.util.Log;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
-import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
 
 public class DownloadComments extends AsyncTaskLoader<ArrayList<CommentInfo>>
 {

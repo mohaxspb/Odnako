@@ -10,6 +10,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
+import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.fragments.CommentDialogFragment;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
@@ -68,7 +69,8 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 		this.imageLoader = MyUIL.get(act);
 
-		if (this.pref.getString("theme", "dark").equals("dark"))
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			this.options = MyUIL.getDarkOptions();
 		}

@@ -2732,7 +2732,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0c0042;
         public static final int action_mode_bar_stub=0x7f0c0041;
         public static final int action_mode_close_button=0x7f0c0034;
-        public static final int action_search=0x7f0c00b3;
+        public static final int action_search=0x7f0c00b2;
         public static final int action_settings=0x7f0c00ab;
         public static final int action_settings_all=0x7f0c00ac;
         public static final int activity_chooser_view_content=0x7f0c0035;
@@ -2852,7 +2852,7 @@ containing a value of this type.
         public static final int radio=0x7f0c003f;
         public static final int read_img=0x7f0c0071;
         public static final int recycler_view=0x7f0c00a0;
-        public static final int refresh=0x7f0c00b2;
+        public static final int refresh=0x7f0c00b1;
         public static final int sandbox=0x7f0c0026;
         public static final int satellite=0x7f0c0021;
         public static final int save_img=0x7f0c0070;
@@ -2887,7 +2887,6 @@ containing a value of this type.
         public static final int text=0x7f0c0099;
         public static final int theme=0x7f0c00ad;
         public static final int theme_dark=0x7f0c00ae;
-        public static final int theme_ligth=0x7f0c00b1;
         public static final int time_city=0x7f0c008e;
         public static final int title=0x7f0c003b;
         public static final int toolbar=0x7f0c0057;
@@ -2986,8 +2985,7 @@ containing a value of this type.
         public static final int download_menu_dark=0x7f0f0001;
         public static final int download_menu_ligth=0x7f0f0002;
         public static final int menu_article=0x7f0f0003;
-        public static final int menu_comments=0x7f0f0004;
-        public static final int menu_main=0x7f0f0005;
+        public static final int menu_main=0x7f0f0004;
     }
     public static final class raw {
         public static final int gtm_analytics=0x7f060000;

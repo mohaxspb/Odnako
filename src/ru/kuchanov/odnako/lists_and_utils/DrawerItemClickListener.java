@@ -71,7 +71,7 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 		{
 			mDrawerList.setSelectedChild(groupPosition, childPosition, true);
 			mDrawerLayout.closeDrawer(mDrawerList);
-			// TODO
+			
 			Intent intent = new Intent(act, ActivityMain.class);
 			int[] groupChildPosition = new int[] { groupPosition, childPosition };
 			intent.putExtra(ActivityBase.KEY_GROUP_CHILD_POSITION, groupChildPosition);

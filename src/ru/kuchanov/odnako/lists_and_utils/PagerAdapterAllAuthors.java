@@ -46,7 +46,6 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 	public void updateData(ArrayList<Author> allAuthorsInfo)
 	{
 		this.allAuthorsInfo = new ArrayList<Author>(allAuthorsInfo);
-//		this.allAuthorsInfo.addAll(allAuthorsInfo);
 		this.notifyDataSetChanged();
 	}
 
@@ -74,7 +73,6 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 		b.putInt("pageToLoad", 1);
 		frag.setArguments(b);
 		return frag;
-
 	}
 
 	@Override
@@ -86,15 +84,6 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 	@Override
 	public int getItemPosition(Object object)
 	{
-		//		FragmentArtsRecyclerList frag = (FragmentArtsRecyclerList) object;
-		//		frag.updateAdapter();
-		//		Log.e(LOG, frag.getCategoryToLoad());
 		return POSITION_NONE;
-		//		if (this.allAuthorsInfo.size()==0)
-		//		{
-		//			return POSITION_NONE;
-		//		}
-		//		//don't return POSITION_NONE, avoid fragment recreation. 
-		//		return super.getItemPosition(object);
 	}
 }

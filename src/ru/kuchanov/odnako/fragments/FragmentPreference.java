@@ -6,7 +6,6 @@ import android.preference.PreferenceFragment;
 
 public class FragmentPreference extends PreferenceFragment
 {
-
 	@Override
 	public void onCreate(Bundle aSavedState)
 	{
@@ -16,5 +15,4 @@ public class FragmentPreference extends PreferenceFragment
 		"xml", ctx.getPackageName());
 		addPreferencesFromResource(thePrefRes);
 	}
-
 }

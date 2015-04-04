@@ -1,7 +1,6 @@
 package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.R;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,7 +17,6 @@ import android.preference.PreferenceFragment;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("NewApi")
 public class FragmentPreferenceAbout extends PreferenceFragment
 {
 	PreferenceActivity act;
@@ -71,7 +69,6 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	protected OnPreferenceClickListener linkToMarket = new OnPreferenceClickListener()
 	{
-
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
@@ -90,7 +87,6 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	protected OnPreferenceClickListener linkToPro = new OnPreferenceClickListener()
 	{
-
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
@@ -109,7 +105,6 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	protected OnPreferenceClickListener shareApp = new OnPreferenceClickListener()
 	{
-
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
@@ -117,7 +112,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			intent.setType("text/plain");
 			String webLinkToApp = "http://play.google.com/store/apps/details?id=ru.kuchanov.odnako";
 			String sendingApp = "Отправлено из приложения 'Однако. Новости и Аналитика' для Android.";
-			intent.putExtra(Intent.EXTRA_TEXT, webLinkToApp+" "+sendingApp);
+			intent.putExtra(Intent.EXTRA_TEXT, webLinkToApp + " " + sendingApp);
 			intent.putExtra(Intent.EXTRA_TEXT, webLinkToApp);
 			try
 			{
@@ -132,7 +127,6 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	protected OnPreferenceClickListener mailToMeCL = new OnPreferenceClickListener()
 	{
-
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
@@ -140,7 +134,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "mohax.spb@gmail.com", null));
 			emailIntent.putExtra(Intent.EXTRA_SUBJECT, "От пользователя приложения \"Однако\"");
 			startActivity(Intent.createChooser(emailIntent, "Написать письмо..."));
-			////
+
 			return false;
 		}
 	};
@@ -166,13 +160,11 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	protected OnPreferenceClickListener versionHistoryCL = new OnPreferenceClickListener()
 	{
-
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
 			Dialog dialog = new Dialog(act);
 
-			////
 			PackageManager m = act.getPackageManager();
 			String app_ver = "";
 			try
@@ -188,9 +180,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			AlertDialog.Builder builder = new AlertDialog.Builder(act);
 			//set TV to message
 			final TextView messageTV = new TextView(act);
-			//			System.out.println(act.getResources().getString(R.string.version_history));
 			String message = act.getResources().getString(R.string.version_history);
-			//			System.out.println(message);
 			messageTV.setText(message);
 
 			builder

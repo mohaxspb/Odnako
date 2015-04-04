@@ -1,4 +1,4 @@
-package ru.kuchanov.odnako.lists_and_utils;
+package ru.kuchanov.odnako.download;
 
 import java.util.ArrayList;
 

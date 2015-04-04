@@ -20,7 +20,7 @@
                 android:checkableBehavior="single" >
                 <item
                     android:id="@+id/theme_dark"
-                    android:icon="?themeIcon"
+                    android:icon="?nightModeIcon"
                     android:orderInCategory="220"
                     android:title="@string/night_mode"
                     app:showAsAction="always"/>
@@ -39,6 +39,6 @@
         android:orderInCategory="110"
         android:title="@string/share"
         app:showAsAction="always"/>
- <!-- android:actionProviderClass="android.widget.ShareActionProvider" -->
+   <!-- android:actionProviderClass="android.widget.ShareActionProvider" -->
 
 </menu>

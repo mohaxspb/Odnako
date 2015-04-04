@@ -414,7 +414,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 
 	static class MyHolder
 	{
-
 		ImageView left;
 		TextView text;
 		ImageView right;

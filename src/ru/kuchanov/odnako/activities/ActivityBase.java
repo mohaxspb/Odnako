@@ -41,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -158,7 +159,10 @@ public class ActivityBase extends ActionBarActivity
 	@Override
 	public void onDestroy()
 	{
-		adView.destroy();
+		if (this.adView != null)
+		{
+			adView.destroy();
+		}
 		super.onDestroy();
 	}
 
@@ -434,7 +438,7 @@ public class ActivityBase extends ActionBarActivity
 		}
 		else
 		{
-			if(this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+			if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 			{
 				//check if we have also article frag in manager and if not - show hamburger
 				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
@@ -442,9 +446,17 @@ public class ActivityBase extends ActionBarActivity
 					mDrawerToggle.setDrawerIndicatorEnabled(true);
 					this.mDrawerToggle.syncState();
 				}
-
+				//remove comments fragment
 				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
 				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+				//show previously hided comments and share buttons
+				final Toolbar toolbar;
+				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				Menu menu = toolbar.getMenu();
+				MenuItem comments = menu.findItem(R.id.comments);
+				MenuItem share = menu.findItem(R.id.share);
+				comments.setVisible(true);
+				share.setVisible(true);
 				return;
 			}
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)

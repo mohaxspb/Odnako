@@ -91,11 +91,7 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 			{
 				this.act.getAllCatListsSelectedArtPosition().put(singleCategoryUrl, curPos);
 			}
-			//			pagerRight.setCurrentItem(curPos, true);
-			//			if (curPos == 0)
-			//			{
 			listener.onPageSelected(curPos);
-			//			}
 		}
 	}
 }

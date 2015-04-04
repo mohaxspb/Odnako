@@ -20,6 +20,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.view.MenuItem;
 
 public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
@@ -51,10 +52,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		//end of get default settings to get all settings later
 
 		//set theme before super and set content to apply it
-		//check if API<11 and set theme without ActionBar if no
-		//		if (android.os.Build.VERSION.SDK_INT >= 11)
-		//		{
-		if (pref.getString("theme", "dark").equals("dark"))
+		//		if (pref.getString("theme", "dark").equals("dark"))
+		if (this.pref.getBoolean("night_mode", false))
 		{
 			this.setTheme(R.style.ThemeDarkPreference);
 		}
@@ -62,18 +61,6 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		{
 			this.setTheme(R.style.ThemeLightPreference);
 		}
-		//		}
-		//		else
-		//		{
-		//			if (pref.getString("theme", "dark").equals("dark"))
-		//			{
-		//				this.setTheme(R.style.ThemeDark);
-		//			}
-		//			else
-		//			{
-		//				this.setTheme(R.style.ThemeLight);
-		//			}
-		//		}
 
 		//onBuildHeaders() will be called during super.onCreate()
 		try
@@ -87,12 +74,6 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 
-		//		if (!isNewV11Prefs())
-		//		{
-		//			addPreferencesFromResource(R.xml.pref);
-		//		}
-		//		else
-		//		{
 		///set title and icon to actionbar
 		this.getActionBar().setTitle(R.string.settings);
 		//set themeDependedIconsIDs
@@ -101,14 +82,23 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		int settingsIconId = ta.getResourceId(0, R.drawable.ic_color_lens_grey600_48dp);
 		ta.recycle();
 		this.getActionBar().setIcon(settingsIconId);
-		//		}
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+	}
 
-		//setThemeDependedIcons
-		//			this.getThemeDependedIconsIDs();
-		//			this.setHeadersIcons();
-
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				//called when the up affordance/carat in actionbar is pressed
+				onBackPressed();
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	private void setHeadersIcons()
@@ -133,31 +123,6 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			}
 		}
 	}
-
-	/////////////
-
-	/**
-	 * Checks to see if using new v11+ way of handling PrefsFragments.
-	 * 
-	 * @return Returns false pre-v11, else checks to see if using headers.
-	 */
-	//	public boolean isNewV11Prefs()
-	//	{
-	//		if (mHasHeaders != null && mLoadHeaders != null)
-	//		{
-	//			try
-	//			{
-	//				return (Boolean) mHasHeaders.invoke(this);
-	//			} catch (IllegalArgumentException e)
-	//			{
-	//			} catch (IllegalAccessException e)
-	//			{
-	//			} catch (InvocationTargetException e)
-	//			{
-	//			}
-	//		}
-	//		return false;
-	//	}
 
 	private void getThemeDependedIconsIDs()
 	{
@@ -211,6 +176,9 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		|| FragmentPreferenceAbout.class.getName().equals(fragmentName);
 	}
 
+	/**
+	 * As I remember it's for applying theme (backgroundColor) for dialogs
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference)
@@ -243,20 +211,6 @@ SharedPreferences.OnSharedPreferenceChangeListener
 
 	}
 
-	//	@SuppressLint("NewApi")
-	//	public void myRecreate()
-	//	{
-	//		if (android.os.Build.VERSION.SDK_INT >= 11)
-	//		{
-	//			super.recreate();
-	//		}
-	//		else
-	//		{
-	//			finish();
-	//			startActivity(getIntent());
-	//		}
-	//	}
-
 	//here we will:
 	//change theme by restarting activity
 	@Override
@@ -268,7 +222,6 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			System.out.println("key.equals('theme'): " + String.valueOf(key.equals("theme")));
 			this.recreate();
 		}
-
 		///Запускаем\ отключаем сервис
 		//
 		//		if (key.equals("notification"))
@@ -286,6 +239,5 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		//				stopService(serviceIntent);
 		//			}
 		//		}
-
 	}
 }

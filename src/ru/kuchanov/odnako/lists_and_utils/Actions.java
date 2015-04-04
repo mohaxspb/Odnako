@@ -203,7 +203,6 @@ public class Actions
 				}//if ActivityMain
 				else
 				{
-					//TODO
 					Intent intent = new Intent(act, ActivityMain.class);
 
 					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
@@ -269,7 +268,6 @@ public class Actions
 		}
 	}
 
-	//TODO
 	public static void showAllCategoriesArticles(String categoryUrlFUCK, final ActionBarActivity act)
 	{
 		Log.d(LOG + categoryUrlFUCK, "show all categories articles!");
@@ -345,12 +343,12 @@ public class Actions
 							{
 								listener.onPageSelected(0);
 							}
-						}
+						}//we don't find, so open in singlePager
 					}//if NOT all authors or categories
 				}//on activity main
 				else
 				{
-					//open ActivityMain via intent, that contains pager type and authors url
+					//TODO open ActivityMain via intent, that contains pager type and authors url
 					Log.e(LOG, "twoPane && NOT ActivityMain");
 				}
 			}
@@ -547,7 +545,7 @@ public class Actions
 						listener.onPageSelected(0);
 					}
 				}//cant't find
-			}//if rightPager.adapter() isinstanceof AllAuthors
+			}//if rightPager.adapter() is instanceof AllAuthors
 			else if (rightPager.getAdapter() instanceof PagerAdapterAllCategories)
 			{
 				//if so we must change adapters to all ViewPagers
@@ -574,7 +572,6 @@ public class Actions
 				mainActivity.setCurentCategoryPosition(positionInLeftPager);
 				mainActivity.getAllCatListsSelectedArtPosition().put(categoryUrl, positionOfArticle);
 				//and also set selectedArtPosition for allCategories fragment;
-				//					mainActivity.getAllCatListsSelectedArtPosition().put(CatData.getMenuLinks(mainActivity)[13], positionInLeftPager);
 				leftPager.setAdapter(pagerAllCat);
 				OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity,
 				pagerAllCat.getAllCategoriesList());
@@ -629,6 +626,7 @@ public class Actions
 		if (!twoPane)
 		{
 			//So it's article activity
+			//replace havburger icon to backArrow
 			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 		}
 		else

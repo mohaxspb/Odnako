@@ -37,13 +37,12 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		this.act = act;
 
 		this.setAllArtsInfo(((ActivityBase) act).getAllCatArtsInfo().get(category));
-		//		this.notifyDataSetChanged();
 	}
 
 	@Override
 	public void notifyDataSetChanged()
 	{
-		//		Log.e(LOG_TAG + category, "notifyDataSetChanged called");
+		//Log.e(LOG_TAG + category, "notifyDataSetChanged called");
 		this.setAllArtsInfo(((ActivityBase) act).getAllCatArtsInfo().get(getCategoryToLoad()));
 		super.notifyDataSetChanged();
 	}

@@ -181,7 +181,8 @@ public class AllCategoriesListAdapter extends RecyclerView.Adapter<RecyclerView.
 				{
 					link = "http://odnako.org" + p.getImgUrl();
 				}
-				if (this.pref.getString("theme", "dark").equals("dark"))
+				boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+				if (nightModeIsOn)
 				{
 					imageLoader.displayImage(link, holderMain.categoryImg, MyUIL.getDarkOptions());
 				}

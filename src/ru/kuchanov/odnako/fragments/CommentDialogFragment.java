@@ -9,7 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.lists_and_utils.CommentInfo;
+import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Activity;
 import android.app.Dialog;

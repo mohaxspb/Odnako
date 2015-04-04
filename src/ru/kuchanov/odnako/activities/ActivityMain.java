@@ -123,7 +123,8 @@ public class ActivityMain extends ActivityBase
 		this.twoPane = this.pref.getBoolean("twoPane", false);
 
 		//set theme before super and set content to apply it
-		if (pref.getString("theme", "dark").equals("dark"))
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			this.setTheme(R.style.ThemeDark);
 		}
@@ -406,13 +407,6 @@ public class ActivityMain extends ActivityBase
 				this.expAdapter.notifyDataSetChanged();
 			break;
 		}
-	}
-
-	@Override
-	protected void onResume()
-	{
-		//Log.e(LOG, "onResume");
-		super.onResume();
 	}
 
 	@Override
@@ -775,6 +769,7 @@ public class ActivityMain extends ActivityBase
 		{
 			return true;
 		}
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
@@ -784,8 +779,7 @@ public class ActivityMain extends ActivityBase
 			case R.id.action_settings_all:
 				//set theme btn checked if theme is dark
 				MenuItem themeMenuItem = item.getSubMenu().findItem(R.id.theme_dark);
-				String curTheme = pref.getString("theme", "dark");
-				if (curTheme.equals("dark"))
+				if (nightModeIsOn)
 				{
 					themeMenuItem.setChecked(true);
 				}
@@ -827,16 +821,14 @@ public class ActivityMain extends ActivityBase
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
 			case R.id.theme_dark:
-				String theme = pref.getString("theme", "dark");
-				if (theme.equals("dark"))
+				if (nightModeIsOn)
 				{
-					this.pref.edit().putString("theme", "light").commit();
+					this.pref.edit().putBoolean("night_mode", false).commit();
 				}
 				else
 				{
-					this.pref.edit().putString("theme", "dark").commit();
+					this.pref.edit().putBoolean("night_mode", true).commit();
 				}
-
 				this.recreate();
 				return super.onOptionsItemSelected(item);
 			default:

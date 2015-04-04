@@ -100,8 +100,8 @@ public class MyUIL
 		int imageOnFail;
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String theme = pref.getString("theme", "dark");
-		if (theme.equals("dark"))
+		boolean nightModeIsOn = pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			imageOnLoading = R.drawable.ic_autorenew_white_48dp;
 			imageForEmptyUri = R.drawable.ic_crop_original_white_48dp;
@@ -133,8 +133,8 @@ public class MyUIL
 		int imageOnFail;
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
-		String theme = pref.getString("theme", "dark");
-		if (theme.equals("dark"))
+		boolean nightModeIsOn = pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			imageOnLoading = R.drawable.ic_autorenew_white_48dp;
 			imageForEmptyUri = R.drawable.ic_crop_original_white_48dp;

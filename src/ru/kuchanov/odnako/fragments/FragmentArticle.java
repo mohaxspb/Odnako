@@ -245,4 +245,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
+
+	public Article getArticle()
+	{
+		return this.curArticle;
+	}
 }

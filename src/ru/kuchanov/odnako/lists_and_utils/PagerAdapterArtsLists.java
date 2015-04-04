@@ -23,18 +23,6 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 
-	//////////
-	//XXX
-//	public static interface FirstShot
-//	{
-//		public void onFirstShot();
-//	}
-
-//	private FirstShot firstShot;
-//	private boolean shot = false;
-
-	//////////
-
 	public PagerAdapterArtsLists(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
@@ -44,14 +32,6 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 	@Override
 	public Fragment getItem(int position)
 	{
-//		//XXX
-//		if (!shot && firstShot != null)
-//		{
-//			shot = true;
-//			firstShot.onFirstShot();
-//		}
-		////////////
-
 		if (position != 3 && position != 13)
 		{
 			FragmentArtsListRecycler artsListFrag = new FragmentArtsListRecycler();
@@ -84,7 +64,6 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 	@Override
 	public int getCount()
 	{
-		//		return this.categories.size();
 		return CatData.getMenuLinks(act).length;
 	}
 }

@@ -84,7 +84,8 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 
 		imageLoader = MyUIL.get(act);
 
-		if (this.pref.getString("theme", "dark").equals("dark"))
+		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		if (nightModeIsOn)
 		{
 			options = MyUIL.getDarkOptions();
 		}

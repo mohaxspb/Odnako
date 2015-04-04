@@ -45,7 +45,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 	@Override
 	public void onPageSelected(int position)
 	{
-		//		Log.d(LOG, "select artsListPager position= " + position);
+		//Log.d(LOG, "select artsListPager position= " + position);
 		//this will set current pos, and adapters group/child pos
 		this.act.setCurentCategoryPosition(position);
 		this.currentCategoryPosition = position;
@@ -65,7 +65,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
-//				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
@@ -75,7 +74,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			}
 			else if (currentCategoryPosition == 13)
 			{
-				//TODO show all categories adapters
+				//show all categories adapters
 				PagerAdapterAllCategories pagerRightAdapter = new PagerAdapterAllCategories(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
@@ -84,7 +83,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRightAdapter.getAllCategoriesList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
-//				Log.e(LOG, "selectedArtPosition: " + curPos);
 				pagerRight.setCurrentItem(curPos, true);
 
 				if (curPos == 0)
