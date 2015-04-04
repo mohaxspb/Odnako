@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RecyclerCommentsOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
@@ -31,6 +32,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayList<CommentInfo>>
 {
@@ -43,6 +45,8 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 	private Article article;
 
 	private ArrayList<CommentInfo> commentsInfoList;
+
+	public final static String KEY_URL_TO_LOAD = "categoryToLoad";
 	public int pageToLoad = 1;
 	public final static String KEY_PAGE_TO_LOAD = "pageToLoad";
 	public boolean isLoading = false;
@@ -74,6 +78,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 
 		Bundle b = new Bundle();
 		b.putInt("pageToLoad", pageToLoad);
+		b.putString(KEY_URL_TO_LOAD, this.article.getUrl());
 		getLoaderManager().initLoader(LOADER_COMMENTS_ID, b, this);
 	}
 
@@ -208,6 +213,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 			Loader<ArrayList<CommentInfo>> loader;
 			Bundle b = new Bundle();
 			b.putInt(KEY_PAGE_TO_LOAD, pageToLoad);
+			b.putString(KEY_URL_TO_LOAD, this.article.getUrl());
 			loader = getLoaderManager().restartLoader(LOADER_COMMENTS_ID, b, this);
 			loader.forceLoad();
 			this.isLoading = true;
@@ -256,6 +262,14 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 				((RecyclerAdapterCommentsFragment) this.recycler.getAdapter()).addCommentsInfo(commentsInfoList);
 				this.recycler.getAdapter().notifyItemRangeInserted(
 				this.recycler.getAdapter().getItemCount() - downloadedComments.size(), downloadedComments.size());
+			}
+		}
+		else
+		{
+			Toast.makeText(act, Const.Error.CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
+			if (this.pageToLoad != 1)
+			{
+				this.pageToLoad--;
 			}
 		}
 

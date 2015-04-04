@@ -37,7 +37,7 @@ public class HtmlHelper
 
 	public final static String DOMAIN_MAIN = "http://odnako.org";
 
-	TagNode rootNode;
+	public TagNode rootNode;
 	public String htmlString;
 
 	private String url;
@@ -530,9 +530,9 @@ public class HtmlHelper
 			}
 			previewString = previewString.substring(0, previewString.indexOf("<p>"));
 			a.setPreview(previewString);
-//			Log.e(LOG, previewString);
+			//			Log.e(LOG, previewString);
 			//End of preview
-			
+
 			artsList.add(a);
 		}
 		return artsList;
@@ -616,7 +616,7 @@ public class HtmlHelper
 		String authorDescr = Const.EMPTY_STRING;
 		Pattern p = Pattern.compile("[а-яА-ЯёЁ]");
 		boolean hasSpecialChar = p.matcher(authorDescrDiv.getText().toString()).find();
-		if(hasSpecialChar)
+		if (hasSpecialChar)
 		{
 			authorDescr = authorDescrDiv.getText().toString();
 		}

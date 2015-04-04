@@ -303,33 +303,35 @@ public class ActivityMain extends ActivityBase
 
 		//here we check if there is article or comments fragment in fm
 		//and show back btn in right toolbar
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+		if (this.twoPane)
 		{
-			//we are on main activity, so we must set toggle to rightToolbar
-			toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-			toolbarRight.setNavigationOnClickListener(new OnClickListener()
+			if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 			{
-				@Override
-				public void onClick(View v)
+				//we are on main activity, so we must set toggle to rightToolbar
+				toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+				toolbarRight.setNavigationOnClickListener(new OnClickListener()
 				{
-					act.onBackPressed();
-				}
-			});
-		}
-		else if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
-		{
-			//we are on main activity, so we must set toggle to rightToolbar
-			toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-			toolbarRight.setNavigationOnClickListener(new OnClickListener()
+					@Override
+					public void onClick(View v)
+					{
+						act.onBackPressed();
+					}
+				});
+			}
+			else if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 			{
-				@Override
-				public void onClick(View v)
+				//we are on main activity, so we must set toggle to rightToolbar
+				toolbarRight.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+				toolbarRight.setNavigationOnClickListener(new OnClickListener()
 				{
-					act.onBackPressed();
-				}
-			});
+					@Override
+					public void onClick(View v)
+					{
+						act.onBackPressed();
+					}
+				});
+			}
 		}
-
 		//adMob
 		this.AddAds();
 
@@ -910,7 +912,7 @@ public class ActivityMain extends ActivityBase
 			return;
 		}
 
-		if(this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 		{
 			//check if we have also article frag in manager and if not - show hamburger
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)

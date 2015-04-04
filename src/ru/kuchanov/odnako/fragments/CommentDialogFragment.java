@@ -69,7 +69,7 @@ public class CommentDialogFragment extends DialogFragment
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.twoPane = pref.getBoolean("twoPane", false);
 
-		this.curCommentInfo = new CommentInfo(this.getArguments().getStringArray("CommentInfo"));
+		this.curCommentInfo = this.getArguments().getParcelable(CommentInfo.KEY_COMMENT);//new CommentInfo(this.getArguments().getStringArray("CommentInfo"));
 		if (this.twoPane)
 		{
 

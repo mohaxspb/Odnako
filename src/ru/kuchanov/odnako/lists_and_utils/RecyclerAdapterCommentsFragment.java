@@ -11,7 +11,6 @@ import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.fragments.CommentDialogFragment;
-import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -215,18 +214,17 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 						}
 					}
 				}
-				h.topLin.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						FragmentComments fragComm = (FragmentComments) act.getSupportFragmentManager()
-						.findFragmentByTag(FragmentComments.LOG);
-//						fragComm.isLoading = true;
-						fragComm.pageToLoad = 2;
-						fragComm.startDownload();
-					}
-				});
+				//				h.topLin.setOnClickListener(new OnClickListener()
+				//				{
+				//					@Override
+				//					public void onClick(View v)
+				//					{
+				//						FragmentComments fragComm = (FragmentComments) act.getSupportFragmentManager()
+				//						.findFragmentByTag(FragmentComments.LOG);
+				//						fragComm.pageToLoad = 2;
+				//						fragComm.startDownload();
+				//					}
+				//				});
 
 				//AUTHOR
 				if (!article.getAuthorName().equals(Const.EMPTY_STRING))
@@ -312,7 +310,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 				//minus header and titleCard
 				final CommentInfo p = this.commentsInfoList.get(position - 1 - 1);
 
-				int padding = (Math.round(Float.valueOf(p.padding) / Float.valueOf("1.875")) - 1) * 25;
+				int padding = (Math.round(Float.valueOf(p.padding) / Float.valueOf("1.875")) - 1) * 50;
 
 				DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
 				int displayWidth = displayMetrics.widthPixels;
@@ -343,8 +341,10 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 					newWidth = maxWidth - padding;
 				}
 				//set width to cardc
-				LayoutParams cardParams = new LayoutParams(newWidth, LayoutParams.WRAP_CONTENT);
+				LayoutParams cardParams = (LayoutParams) holderMain.card.getLayoutParams();//new LayoutParams(newWidth, LayoutParams.WRAP_CONTENT);
+				cardParams.width = newWidth;
 				holderMain.card.setLayoutParams(cardParams);
+//				Log.e(LOG, "maxWidth/newWidth/padding: " + maxWidth + "/ " + newWidth + "/ " + padding);
 				//End of set width to card
 
 				//set name
