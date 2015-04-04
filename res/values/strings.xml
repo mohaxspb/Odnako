@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- AdMob Banners IDs -->
+    <string name="MAIN_AD_UNIT_ID">ca-app-pub-2231528705144312/6655162184</string>
+    <string name="ARTICLE_AD_UNIT_ID">ca-app-pub-2231528705144312/4065818981</string>
+    <string name="COMMENTS_AD_UNIT_ID">ca-app-pub-2231528705144312/7019285382</string>
+    <string name="DOWNLOADINGS_AD_UNIT_ID">ca-app-pub-2231528705144312/8496018582</string>
+    <string name="TWO_PANE_AD_UNIT_ID">ca-app-pub-2231528705144312/7818128982</string>
+    <!--  -->
     <string name="app_name">Однако</string>
     <string name="article">Статья</string>
     <string name="title">Заголовок</string>
@@ -28,10 +35,9 @@
     <string name="service_db">Работа с базой данных статей</string>
     <string name="service_rss">Обновление даты и краткого содержания статей</string>
     <string name="service_article">Загрузка текста статей</string>
-    
-    <string name="next">Следующая страница</string>
-    <string name="previous">Предыдущая страница</string>
-    <string name="more_comm">Загрузить ещё</string>
+    <string name="check_new">Поиск новых статей</string>
+    <string name="auto_load">Автозагрузка статей</string>
+    <!--  -->
     <string name="hello_world">Hello world!</string>
     <string name="search_author">Поиск автора</string>
     <string name="search">Поиск</string>
@@ -49,23 +55,20 @@
     <string name="download_all">Скачать всё</string>
     <string name="deleteBtn">Очистить память</string>
     <string name="choose_time_btn">Выбрать время</string>
-    <string name="check_new">Поиск новых статей</string>
-    <string name="auto_load">Автозагрузка статей</string>
     <string name="allLoadInfoMessage">Под \"Всё\" имеются в виду последние 30-ть статей всех доступных категорий. Всего: 9*30=270 статей. \nОбщим размером около 3Мб. Рекомендуется скачивать при подключении к интернету через Wi-Fi.</string>
     <string name="on">Включено</string>
     <string name="off">Выключено</string>
-    <string name="MAIN_AD_UNIT_ID">ca-app-pub-2231528705144312/6655162184</string>
-    <string name="ARTICLE_AD_UNIT_ID">ca-app-pub-2231528705144312/4065818981</string>
-    <string name="COMMENTS_AD_UNIT_ID">ca-app-pub-2231528705144312/7019285382</string>
-    <string name="DOWNLOADINGS_AD_UNIT_ID">ca-app-pub-2231528705144312/8496018582</string>
-    <string name="TWO_PANE_AD_UNIT_ID">ca-app-pub-2231528705144312/7818128982</string>
+    <!--  -->
     <string name="light">Светлая</string>
     <string name="dark">Тёмная</string>
     <string name="theme">Тема</string>
     <string name="night_mode">Ночной режим</string>
+    <string name="ui_text_scale">Размер текста заголовков, имён авторов, некоторых иконок</string>
     <string name="art_text_scale">Размер  текста в статьях</string>
+    <string name="comments_text_scale">Размер  текста комментариев</string>
     <string name="text_scale">Размер  шрифта</string>
-    <string name="divider">|</string>
+    <!--  -->
+    <string name="divider_vertical">|</string>
     <string name="img">картинка</string>
     <string name="sending_app">Отправлено из приложения \"Однако. Новости и Аналитика\" для Android.</string>
     <string name="name">Имя</string>

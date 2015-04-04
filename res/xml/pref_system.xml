@@ -27,7 +27,7 @@
         android:summaryOn="ОБНОВЛЯЮСЬ при запуске"
         android:title="Обновлять при запуске" >
     </CheckBoxPreference>
-    <CheckBoxPreference
+    <!-- <CheckBoxPreference
         android:defaultValue="@bool/isTablet"
         android:enabled="@bool/isTablet"
         android:icon="?tabletIcon"
@@ -35,21 +35,6 @@
         android:summaryOff="Планшетный режим отключён"
         android:summaryOn="Планшетный режим включён"
         android:title="Планшетный режим" >
-    </CheckBoxPreference>
-
-    <!-- animation of lists on pre HONEYCOMB devices -->
-    <!-- We do not need it here, cause this is used only on OS ver>3.0 -->
-   <!--  <Preference
-        android:summary="Анимировать спики и главную панель. Не рекомендуется на Android до 3-ей версии, т.к. возможно непредсказуемое поведение и отказ приложения выполнять возложенные на него задачи по причине, в частности, отсутствия возможности задавать элеменам на экране абсолютных координат."
-        android:title="Анимировать спики и главную панель. Не рекомендуется на Android до 3-ей версии, т.к. возможно непредсказуемое поведение и отказ приложения выполнять возложенные на него задачи по причине, в частности, отсутствия возможности задавать элеменам на экране абсолютных координат." />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:enabled="true"
-        android:key="animate_lists"
-        android:summaryOff="Анимация отключена"
-        android:summaryOn="Анимация включена"
-        android:title="Анимировать спики и главную панель. Не рекомендуется на Android до 3-ей версии, т.к. возможно непредсказуемое поведение." >
     </CheckBoxPreference> -->
 
 </PreferenceScreen>

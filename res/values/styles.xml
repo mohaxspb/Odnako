@@ -25,10 +25,10 @@
         <item name="android:textColor">@color/material_grey_300</item>
         <item name="searchViewStyle">@style/DarkSearchViewStyle</item>
         <!-- custom attrs -->
-        <item name="cardBackGroundColor">@color/material_grey_800</item>        
+        <item name="cardBackGroundColor">@color/material_grey_800</item>
         <item name="cardBackGroundColorDark">@color/material_grey_800</item>
-        
         <item name="themeIcon">@drawable/ic_color_lens_white_48dp</item>
+        <item name="nightModeIcon">@drawable/ic_brightness_4_white_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_dark</item>
         <item name="settingsIcon">@drawable/ic_settings_white_48dp</item>
         <item name="refreshIcon">@drawable/ic_autorenew_white_48dp</item>
@@ -56,6 +56,7 @@
         <item name="marketDownlodIcon">@drawable/ic_shop_white_48dp</item>
         <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_white_48dp</item>
         <item name="folderIcon">@drawable/ic_folder_special_white_48dp</item>
+        <item name="textFormatIcon">@drawable/ic_text_format_white_48dp</item>
         <item name="textSizeIcon">@drawable/ic_format_size_white_48dp</item>
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_white_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
@@ -127,8 +128,8 @@
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_50</item>
         <item name="cardBackGroundColorDark">@color/material_grey_200</item>
-        
         <item name="themeIcon">@drawable/ic_color_lens_grey600_48dp</item>
+        <item name="nightModeIcon">@drawable/ic_brightness_4_grey600_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_light</item>
         <item name="settingsIcon">@drawable/ic_settings_grey600_48dp</item>
         <item name="refreshIcon">@drawable/ic_autorenew_grey600_48dp</item>
@@ -158,6 +159,7 @@
         <item name="marketDownlodIcon">@drawable/ic_shop_grey600_48dp</item>
         <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_grey600_48dp</item>
         <item name="folderIcon">@drawable/ic_folder_special_grey600_48dp</item>
+        <item name="textFormatIcon">@drawable/ic_text_format_grey600_48dp</item>
         <item name="textSizeIcon">@drawable/ic_format_size_grey600_48dp</item>
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_grey600_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>

@@ -11,33 +11,65 @@
         android:defaultValue="0.75"
         android:entries="@array/scale"
         android:entryValues="@array/scale_values"
+        android:icon="?textSizeIcon"
         android:key="scale"
         android:summary="От 0.5х до 2х"
-        android:title="Размер интерфейса и текста" >
+        android:title="@string/ui_text_scale" >
     </ListPreference>
 
     <!-- Масштаб текста в статьях -->
 
     <ListPreference
-        android:icon="?textSizeIcon"
         android:defaultValue="0.75"
-        android:entries="@array/scale_art"
-        android:entryValues="@array/scale_values_art"
+        android:entries="@array/scale"
+        android:entryValues="@array/scale_values"
+        android:icon="?textFormatIcon"
         android:key="scale_art"
         android:summary="От 0.5х до 2х"
         android:title="@string/art_text_scale" >
     </ListPreference>
 
-    <!-- Выбор темы -->
+    <!-- Масштаб текста комментариев -->
 
     <ListPreference
-        android:icon="?themeIcon"
+        android:defaultValue="0.75"
+        android:entries="@array/scale"
+        android:entryValues="@array/scale_values"
+        android:icon="?commentsIcon"
+        android:key="scale_comments"
+        android:summary="От 0.5х до 2х"
+        android:title="@string/comments_text_scale" >
+    </ListPreference>
+
+    <!-- Выбор темы -->
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="?nightModeIcon"
+        android:key="night_mode"
+        android:summaryOff="Ночной режим"
+        android:summaryOn="Ночной режим"
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
+
+    <ListPreference
         android:defaultValue="ligth"
         android:entries="@array/theme"
         android:entryValues="@array/theme_values"
+        android:icon="?themeIcon"
         android:key="theme"
         android:summary="Поверните экран для применения"
         android:title="Выбор темы приложения" >
     </ListPreference>
+
+    <SwitchPreference
+        android:defaultValue="@bool/isTablet"
+        android:enabled="@bool/isTablet"
+        android:icon="?tabletIcon"
+        android:key="twoPane"
+        android:summaryOff="Планшетный режим"
+        android:summaryOn="Планшетный режим"
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
 
 </PreferenceScreen>

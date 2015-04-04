@@ -33,7 +33,7 @@
     </declare-styleable>
 
     <attr name="selectorColor" format="reference|color" />
-    <attr name="themeIcon" format="reference" />
+    
     <attr name="overflowIcon" format="reference" />
     <attr name="settingsIcon" format="reference" />
     <attr name="refreshIcon" format="reference" />
@@ -61,7 +61,10 @@
     <attr name="marketDownlodIcon" format="reference" />
     <attr name="marketDOWNLOADEDIcon" format="reference" />
     <attr name="folderIcon" format="reference" />
+    <attr name="textFormatIcon" format="reference" />
     <attr name="textSizeIcon" format="reference" />
+    <attr name="nightModeIcon" format="reference" />
+    <attr name="themeIcon" format="reference" />
     <attr name="openInBrowserIcon" format="reference" />
     <attr name="mailToMeIcon" format="reference" />
     <attr name="tabletIcon" format="reference" />

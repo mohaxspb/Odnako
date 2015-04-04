@@ -129,6 +129,9 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 		String scaleFactorString = pref.getString("scale", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 
+		String scaleFactorCommentsString = pref.getString("scale_comments", "1");
+		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
+
 		final float scale = act.getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
 
@@ -214,18 +217,6 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 						}
 					}
 				}
-				//				h.topLin.setOnClickListener(new OnClickListener()
-				//				{
-				//					@Override
-				//					public void onClick(View v)
-				//					{
-				//						FragmentComments fragComm = (FragmentComments) act.getSupportFragmentManager()
-				//						.findFragmentByTag(FragmentComments.LOG);
-				//						fragComm.pageToLoad = 2;
-				//						fragComm.startDownload();
-				//					}
-				//				});
-
 				//AUTHOR
 				if (!article.getAuthorName().equals(Const.EMPTY_STRING))
 				{
@@ -310,6 +301,12 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 				//minus header and titleCard
 				final CommentInfo p = this.commentsInfoList.get(position - 1 - 1);
 
+				holderMain.name.setTextSize(23 * scaleFactorComments);
+				holderMain.txt.setTextSize(21 * scaleFactorComments);
+				holderMain.time_city.setTextSize(17 * scaleFactorComments);
+				holderMain.like.setTextSize(17 * scaleFactorComments);
+				holderMain.dislike.setTextSize(17 * scaleFactorComments);
+
 				int padding = (Math.round(Float.valueOf(p.padding) / Float.valueOf("1.875")) - 1) * 50;
 
 				DisplayMetrics displayMetrics = act.getResources().getDisplayMetrics();
@@ -344,8 +341,6 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 				LayoutParams cardParams = (LayoutParams) holderMain.card.getLayoutParams();//new LayoutParams(newWidth, LayoutParams.WRAP_CONTENT);
 				cardParams.width = newWidth;
 				holderMain.card.setLayoutParams(cardParams);
-//				Log.e(LOG, "maxWidth/newWidth/padding: " + maxWidth + "/ " + newWidth + "/ " + padding);
-				//End of set width to card
 
 				//set name
 				Spanned spannedContentName = Html.fromHtml(p.name);
@@ -353,7 +348,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 				//setText
 				String commentText;
-				commentText = "<p>" + p.txt + "</p>";
+				commentText = p.txt;// "<p>" + p.txt + "</p>";
 				Spanned spannedContent = Html.fromHtml(commentText);
 				holderMain.txt.setText(spannedContent);
 				holderMain.txt.setMovementMethod(LinkMovementMethod.getInstance());
@@ -367,14 +362,11 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 				});
 
 				// FLAG
-
 				ImageLoader imageLoader = MyUIL.get(act);
 				imageLoader.displayImage(p.flag, holderMain.flag);
-				//end of FLAG
 
 				// AVA
 				imageLoader.displayImage(p.avaImg, holderMain.avaImg);
-				// AVA
 
 				holderMain.time_city.setText(p.time + " " + p.city);
 

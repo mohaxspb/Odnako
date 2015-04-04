@@ -38,7 +38,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 {
 	public final static String LOG = FragmentComments.class.getSimpleName() + "/";
 
-	static final int LOADER_COMMENTS_ID = 1;
+	private static final int LOADER_COMMENTS_ID = 1;
 
 	private ActionBarActivity act;
 
@@ -64,11 +64,11 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 
 		this.act = (ActionBarActivity) this.getActivity();
 
-		if (this.getArguments() != null)// && this.getArguments().containsKey(Article.KEY_CURENT_ART))
+		if (this.getArguments() != null)
 		{
 			this.article = this.getArguments().getParcelable(Article.KEY_CURENT_ART);
 		}
-		if (savedState != null)// && savedState.containsKey(Article.KEY_CURENT_ART))
+		if (savedState != null)
 		{
 			this.article = savedState.getParcelable(Article.KEY_CURENT_ART);
 			this.commentsInfoList = savedState.getParcelableArrayList(CommentInfo.KEY_ALL_COMMENTS_LIST);
@@ -98,9 +98,11 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 			TypedValue typed_value = new TypedValue();
 			getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value,
 			true);
-			this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+			this.swipeRef.setProgressViewOffset(false, 0,
+			getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
 
-			this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+			this.swipeRef.setProgressViewEndTarget(false,
+			getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
 
 		}
 		else
@@ -130,7 +132,6 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 			@Override
 			public void onRefresh()
 			{
-				//TODO
 				pageToLoad = 1;
 				startDownload();
 			}
@@ -139,7 +140,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		this.recycler = (RecyclerView) v.findViewById(R.id.recycler_view);
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
 		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
-		this.recycler.addItemDecoration(new SpacesItemDecoration(20));
+		this.recycler.addItemDecoration(new SpacesItemDecoration(15));
 		//end of find all views
 
 		if (this.commentsInfoList != null)
@@ -188,7 +189,8 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		if (this.pageToLoad == 1)
 		{
 			//this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
-			this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+			this.swipeRef.setProgressViewEndTarget(false,
+			getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
 		}
 		else
 		{
@@ -282,7 +284,8 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
 
 		//this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
-		this.swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
+		this.swipeRef
+		.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
 	}
 
 	@Override

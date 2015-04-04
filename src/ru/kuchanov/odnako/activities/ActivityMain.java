@@ -113,7 +113,10 @@ public class ActivityMain extends ActivityBase
 		this.act = this;
 
 		//get default settings to get all settings later
-		PreferenceManager.setDefaultValues(this, R.xml.pref, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_design, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_notifications, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_system, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//end of get default settings to get all settings later
 
