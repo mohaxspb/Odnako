@@ -17,7 +17,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -50,6 +53,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	private RecyclerView recycler;
 	private AdapterRecyclerArticleFragment recyclerAdapter;
 
+	private boolean isSingle = false;
+
 	@Override
 	public void onCreate(Bundle savedState)
 	{
@@ -64,11 +69,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		{
 			this.curArticle = stateFromArgs.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(stateFromArgs.getInt("position", 0));
+			this.isSingle = stateFromArgs.getBoolean("isSingle", false);
 		}
 		if (savedState != null)
 		{
 			this.curArticle = savedState.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(savedState.getInt("position"));
+			this.isSingle = savedState.getBoolean("isSingle", false);
 		}
 
 		if (this.curArticle != null)
@@ -172,6 +179,28 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		super.onSaveInstanceState(outState);
 		outState.putInt("position", this.getPosition());
 		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
+		outState.putBoolean("isSingle", isSingle);
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		if (this.isSingle)
+		{
+			//setBackButton to toolbar and its title
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+			if (pref.getBoolean("twoPane", false))
+			{
+				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+				toolbar.setTitle("Статья");
+			}
+			else
+			{
+				Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				toolbar.setTitle("Статья");
+			}
+		}
 	}
 
 	@Override

@@ -25,9 +25,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 
 	private boolean twoPane;
 
-	//ViewPager and it's adapter for articles/comments
-	//	private ViewPager artCommsPager;
-
 	private Toolbar toolbar;
 
 	private String categoryToLoad;
@@ -39,11 +36,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		this.categoryToLoad = categoryToLoad;
 
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
-
-		//		this.artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
-
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		//		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 	}
 
 	@Override
@@ -59,11 +52,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			toolbar.setY(0);
 			toolbar.getBackground().setAlpha(255);
 
-			//			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/"
-			//			+ artCommsPager.getAdapter().getCount());
-			//			toolbarRight.setY(0);
-			//			toolbarRight.getBackground().setAlpha(255);
-
 			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 
 			Intent intentToListFrag = new Intent(categoryToLoad + "art_position");
@@ -73,19 +61,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		else
 		{
 			ActivityArticle articleActivity = (ActivityArticle) this.act;
-			//			String categoriesTitle = "";
-			//
-			//			for (int i = 0; i < articleActivity.getAllCatAndAutURLs().size(); i++)
-			//			{
-			//				String s = articleActivity.getAllCatAndAutURLs().get(i);
-			//				if (s.equals(this.categoryToLoad))
-			//				{
-			//					categoriesTitle = articleActivity.getAllCatAndAutTitles().get(i);
-			//					break;
-			//				}
-			//			}
-			//			this.toolbar.setTitle(categoriesTitle + " " + String.valueOf(position + 1) + "/"
-			//			+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
 			articleActivity.setCurArtPosition(position);
 		}
 		//notify Article fragment, that it's selected

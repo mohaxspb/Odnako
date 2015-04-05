@@ -441,25 +441,31 @@ public class ActivityBase extends ActionBarActivity
 		{
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 			{
+				final Toolbar toolbar;
+				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 				//check if we have also article frag in manager and if not - show hamburger
 				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
 				{
 					mDrawerToggle.setDrawerIndicatorEnabled(true);
 					this.mDrawerToggle.syncState();
+					//restore title of toolbar via calling to onPageSelected of pager's listener
+					PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
+				}
+				else
+				{
+					//set toolbar title
+					toolbar.setTitle("Статья");
 				}
 				//remove comments fragment
 				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
 				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-				//show previously hided comments and share buttons
-				final Toolbar toolbar;
-				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				//show previously hided comments and share buttons				
 				Menu menu = toolbar.getMenu();
 				MenuItem comments = menu.findItem(R.id.comments);
 				MenuItem share = menu.findItem(R.id.share);
 				comments.setVisible(true);
 				share.setVisible(true);
-				//restore title of toolbar via calling to onPageSelected of pager's listener
-				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
+
 				return;
 			}
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
@@ -469,6 +475,8 @@ public class ActivityBase extends ActionBarActivity
 
 				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
 				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+				//restore toolbars title
+				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
 				return;
 			}
 			if (mDrawerLayout.isDrawerOpen(Gravity.START))

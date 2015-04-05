@@ -915,9 +915,44 @@ public class ActivityMain extends ActivityBase
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
 			{
 				toolbarRight.setNavigationIcon(null);
+				//restore title of toolbar via calling to onPageSelected of pager's listener
+				String currentCategory;
+				switch (this.pagerType)
+				{
+					case PAGER_TYPE_MENU:
+						currentCategory = CatData.getMenuLinks(act)[this.currentCategoryPosition];
+					break;
+					case PAGER_TYPE_CATEGORIES:
+						currentCategory = ((PagerAdapterAllCategories) this.artsListPager.getAdapter())
+						.getAllCategoriesList().get(this.currentCategoryPosition).getUrl();
+					break;
+					case PAGER_TYPE_AUTHORS:
+						currentCategory = ((PagerAdapterAllAuthors) this.artsListPager.getAdapter())
+						.getAllAuthorsList().get(this.currentCategoryPosition).getBlog_url();
+					break;
+					case PAGER_TYPE_SINGLE:
+						currentCategory = this.getCurrentCategory();
+					break;
+					default:
+						currentCategory = HtmlHelper.DOMAIN_MAIN + "/blogs/";
+				}
+				int selectedArt=this.allCatListsSelectedArtPosition.get(currentCategory);
+				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
 			}
-
+			else
+			{
+				//we have single article fragment so set it's toolbar title
+				toolbarRight.setTitle("Статья");
+			}
+			//remove fragment
 			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			return;
+		}
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
+			toolbarRight.setNavigationIcon(null);
+			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
 			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
 			//restore title of toolbar via calling to onPageSelected of pager's listener
 			String currentCategory;
@@ -942,13 +977,6 @@ public class ActivityMain extends ActivityBase
 			}
 			int selectedArt=this.allCatListsSelectedArtPosition.get(currentCategory);
 			PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
-			return;
-		}
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
-		{
-			toolbarRight.setNavigationIcon(null);
-			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
-			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
 			return;
 		}
 

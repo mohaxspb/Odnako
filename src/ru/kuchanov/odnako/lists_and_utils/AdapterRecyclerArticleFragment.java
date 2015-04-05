@@ -478,22 +478,25 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 								a.setPubDate(DateParse.parse(alsoToRead.dates[iterator]));
 								Bundle b = new Bundle();
 								b.putParcelable(Article.KEY_CURENT_ART, a);
+								b.putBoolean("isSingle", true);
 								newFragment.setArguments(b);
 
 								FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
 								ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
 								ft.commit();
 
-								//Next to actions works
+								//setBackButton to toolbar and its title
+								Toolbar toolbar;
 								if (!twoPane)
 								{
 									//So it's article activity
 									((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
+									toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+									toolbar.setTitle("Статья");
 								}
 								else
 								{
 									//we are on main activity, so we must set toggle to rightToolbar
-									final Toolbar toolbar;
 									toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
 									toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 									toolbar.setNavigationOnClickListener(new OnClickListener()
@@ -504,6 +507,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 											act.onBackPressed();
 										}
 									});
+									toolbar.setTitle("Статья");
 								}
 							}
 						});
