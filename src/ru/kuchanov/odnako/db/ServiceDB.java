@@ -22,6 +22,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
+import ru.kuchanov.odnako.callbacks.CallbackAskDBFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromTop;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
@@ -40,7 +41,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
-public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackAskDBFromTop
+public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackAskDBFromTop, CallbackAskDBFromBottom
 {
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
@@ -134,78 +135,16 @@ public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackA
 				AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, catToLoad, cal,
 				pageToLoad, this);
 				askFromTop.execute();
-				//				DBActions dbActions = new DBActions(this, this.getHelper());
-				//				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				//Log.d(LOG + catToLoad, DBRezult);
-
-				//				switch (DBRezult)
-				//				{
-				//					case Msg.DB_ANSWER_NEVER_REFRESHED:
-				//						//was never refreshed, so start to refresh
-				//						//so start download category with 1-st page
-				//						this.startDownLoad(catToLoad, pageToLoad);
-				//					break;
-				//					case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
-				//						//was refreshed more than max period, so start to refresh
-				//						//so start download category with 1-st page
-				//						//but firstly we must show old articles
-				//						this.startDownLoad(catToLoad, pageToLoad);
-				//					break;
-				//
-				//					case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
-				//						//no arts in DB (why?)
-				//						//we get it if there is no need to refresh by period, so we have one successful load in past...
-				//						//but no art's in db... that's realy strange! =)
-				//						//so start download from web
-				//						this.startDownLoad(catToLoad, pageToLoad);
-				//					break;
-				//					case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
-				//						//TODO here we must create new entry in Category (or Author) table
-				//						//and start download arts of this category
-				//						this.startDownLoad(catToLoad, pageToLoad);
-				//					break;
-				//					case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
-				//					//here we have nothing to do... Cause there is no need to load somthing from web,
-				//					//and arts have been already sended to frag
-				//					break;
-				//				}
 			}
 		}
 		else
 		{
 			//if pageToLoad!=1 we load from bottom
 			//Log.d(LOG, "LOAD FROM BOTTOM!");
-			DBActions dbActions = new DBActions(this, this.getHelper());
-			String dBRezult = dbActions.askDBFromBottom(catToLoad, pageToLoad);
-			//Log.d(LOG, dBRezult);
 
-			switch (dBRezult)
-			{
-				case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
-				//all is done, we can go to drink some vodka, Ivan! =)
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN:
-				//initial art is shown, do nothing
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
-				//arts already send to frag with initial art, do nothing
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
-					//so load from web
-					this.startDownLoad(catToLoad, pageToLoad);
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL:
-					//so load from web
-					this.startDownLoad(catToLoad, pageToLoad);
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP:
-				//initial art is shown (less then 30 in category at all), do nothing
-				break;
-				case Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL:
-					//no arts except already shown, so load them from web
-					this.startDownLoad(catToLoad, pageToLoad);
-				break;
-			}
+			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(this, dataBaseHelper, catToLoad,
+			pageToLoad, this);
+			askFromBottom.execute();
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -564,7 +503,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackA
 	@Override
 	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad)
 	{
-		Log.e(LOG, answer);
+		//Log.i(LOG, answer);
 		switch (answer)
 		{
 			case Msg.DB_ANSWER_NEVER_REFRESHED:
@@ -587,13 +526,45 @@ public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackA
 				this.startDownLoad(categoryToLoad, pageToLoad);
 			break;
 			case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
-				//TODO here we must create new entry in Category (or Author) table
-				//and start download arts of this category
+				//start download arts of this category
 				this.startDownLoad(categoryToLoad, pageToLoad);
 			break;
 			case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 			//here we have nothing to do... Cause there is no need to load somthing from web,
 			//and arts have been already sended to frag
+			break;
+		}
+	}
+
+	@Override
+	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad)
+	{
+		//Log.i(LOG, answer);
+		switch (answer)
+		{
+			case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
+			//all is done, we can go to drink some vodka, Ivan! =)
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN:
+			//initial art is shown, do nothing
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
+			//arts already send to frag with initial art, do nothing
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
+				//so load from web
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_MATCH_TO_INITIAL:
+				//so load from web
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_THEN_30_FROM_TOP:
+			//initial art is shown (less then 30 in category at all), do nothing
+			break;
+			case Msg.DB_ANSWER_FROM_BOTTOM_NO_ARTS_AT_ALL:
+				//no arts except already shown, so load them from web
+				this.startDownLoad(categoryToLoad, pageToLoad);
 			break;
 		}
 	}
