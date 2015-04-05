@@ -43,9 +43,9 @@ import android.widget.LinearLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
-public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-	final static String LOG = AdapterRecyclerArticleFragment.class.getSimpleName();
+	final static String LOG = RecyclerAdapterArticleFragment.class.getSimpleName();
 
 	public static final int HEADER = 0;
 	public static final int CARD_ARTICLE_TITLE = 1;
@@ -70,7 +70,7 @@ public class AdapterRecyclerArticleFragment extends RecyclerView.Adapter<Recycle
 
 	private TagNode[] articlesTags;
 
-	public AdapterRecyclerArticleFragment(ActionBarActivity act, Article article)
+	public RecyclerAdapterArticleFragment(ActionBarActivity act, Article article)
 	{
 		this.act = act;
 

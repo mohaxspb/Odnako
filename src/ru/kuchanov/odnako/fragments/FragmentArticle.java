@@ -12,7 +12,7 @@ import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
-import ru.kuchanov.odnako.lists_and_utils.AdapterRecyclerArticleFragment;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArticleFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +51,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//	ArrayList<Article> allArtsInfo;
 
 	private RecyclerView recycler;
-	private AdapterRecyclerArticleFragment recyclerAdapter;
+	private RecyclerAdapterArticleFragment recyclerAdapter;
 
 	private boolean isSingle = false;
 
@@ -242,7 +242,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		}
 
 		//long beforeTime = System.currentTimeMillis();
-		this.recyclerAdapter = new AdapterRecyclerArticleFragment(act, curArticle);
+		this.recyclerAdapter = new RecyclerAdapterArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
 		//Log.e(LOG, "update fragment. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}

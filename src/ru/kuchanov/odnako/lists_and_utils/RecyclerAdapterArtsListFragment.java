@@ -46,6 +46,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 	private ActionBarActivity act;
 
 	private ImageLoader imageLoader;
+	private final DisplayImageOptions options;
+	boolean nightMode;
 
 	private ArrayList<Article> artsInfo;
 	private SharedPreferences pref;
@@ -55,7 +57,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 	private FragmentArtsListRecycler artsListFrag;
 
-	public RecyclerAdapterArtsListFragment(ActionBarActivity act, ArrayList<Article> artsInfo, FragmentArtsListRecycler artsListFrag)
+	public RecyclerAdapterArtsListFragment(ActionBarActivity act, ArrayList<Article> artsInfo,
+	FragmentArtsListRecycler artsListFrag)
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
@@ -67,6 +70,16 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 		twoPane = pref.getBoolean("twoPane", false);
 
 		imageLoader = MyUIL.get(act);
+
+		nightMode = this.pref.getBoolean("night_mode", false);
+		if (nightMode == true)
+		{
+			options = MyUIL.getDarkOptions();
+		}
+		else
+		{
+			options = MyUIL.getLightOptions();
+		}
 	}
 
 	@Override
@@ -118,16 +131,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
-		final DisplayImageOptions options;
-		if (this.pref.getString("theme", "dark").equals("dark"))
-		{
-			options = MyUIL.getDarkOptions();
-		}
-		else
-		{
-			options = MyUIL.getLightOptions();
-		}
-
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
@@ -140,7 +143,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 				{
 					p = this.getArtInfoByPosition(position);
 
-					final int positionInAllArtsInfo = RecyclerAdapterArtsListFragment.getPositionInAllArtsInfo(position);
+					final int positionInAllArtsInfo = RecyclerAdapterArtsListFragment
+					.getPositionInAllArtsInfo(position);
 
 					final ArticleHolder holderMain = (ArticleHolder) holder;
 
@@ -175,22 +179,22 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					// ART_IMG
 					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/"))
 					{
-						int width=act.getResources().getDisplayMetrics().widthPixels;
-						if(twoPane)
+						int width = act.getResources().getDisplayMetrics().widthPixels;
+						if (twoPane)
 						{
-							if(isInLeftPager)
+							if (isInLeftPager)
 							{
 								//so 1/3 of width
-								width=width/3;
+								width = width / 3;
 							}
 							else
 							{
 								//so 2/3 of width
-								width=width/3*2;
+								width = width / 3 * 2;
 							}
-						}						
-						int height=(int) (width / (1.7f));
-						
+						}
+						int height = (int) (width / (1.7f));
+
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						params.height = height;
 						holderMain.art_img.setLayoutParams(params);
@@ -263,7 +267,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											Actions.shareUrl(p.getUrl(), act);
 											return true;
 										case R.id.show_comments:
-											Actions.showComments(artsInfo, positionInAllArtsInfo, artsListFrag.getCategoryToLoad(), act);
+											Actions.showComments(artsInfo, positionInAllArtsInfo,
+											artsListFrag.getCategoryToLoad(), act);
 											return true;
 										default:
 											return false;
@@ -395,7 +400,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					}
 					if (p.getUrl() != null)
 					{
-						if (pref.getString("theme", "dark").equals("dark"))
+						if (nightMode == true)
 						{
 							holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
 						}
@@ -407,14 +412,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					}
 					else
 					{
-						if (pref.getString("theme", "dark").equals("dark"))
-						{
-							holderMain.save.setImageResource(android.R.color.transparent);
-						}
-						else
-						{
-							holderMain.save.setImageResource(android.R.color.transparent);
-						}
+						holderMain.save.setImageResource(android.R.color.transparent);
 					}
 					////end SaveImg
 
@@ -425,7 +423,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 					if (read.check(p.getUrl()))
 					{
-						if (pref.getString("theme", "dark").equals("dark"))
+						if (nightMode == true)
 						{
 							holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
 						}
@@ -436,7 +434,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					}
 					else
 					{
-						if (pref.getString("theme", "dark").equals("dark"))
+						if (nightMode == true)
 						{
 							holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
 						}
