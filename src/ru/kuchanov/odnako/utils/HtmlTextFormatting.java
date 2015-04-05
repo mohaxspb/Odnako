@@ -10,8 +10,6 @@ import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
-import android.util.Log;
-
 import ru.kuchanov.odnako.db.Article;
 
 /**
@@ -133,10 +131,10 @@ public class HtmlTextFormatting
 		}
 		//create img tag with info from input
 		TagNode imgTag = new TagNode("img");
-		String imgUrl=curInnerTag.getAttributeByName("src");
-		if(imgUrl.startsWith("/"))
+		String imgUrl = curInnerTag.getAttributeByName("src");
+		if (imgUrl.startsWith("/"))
 		{
-			imgUrl=DOMAIN_NAME+imgUrl;
+			imgUrl = DOMAIN_NAME + imgUrl;
 		}
 		imgTag.addAttribute("src", imgUrl);
 		imgTag.addAttribute("style", curInnerTag.getAttributeByName("style"));
@@ -180,17 +178,9 @@ public class HtmlTextFormatting
 		}
 		//create p tag with a tag from iframes src
 		TagNode pTag = new TagNode("p");
-//		TagNode aTag = new TagNode("a");
-//		aTag.addAttribute("href", curInnerTag.getAttributeByName("src"));
-//		aTag.addChild(new ContentNode("ссылка на видео"));
-//		pTag.addChild(aTag);
-		String link="<a href='"+curInnerTag.getAttributeByName("src")+"'>"+"ссылка на видео"+"</a>";
+		String link = "<a href='" + curInnerTag.getAttributeByName("src") + "'>" + "ссылка на видео" + "</a>";
 		pTag.addChild(new ContentNode(link));
 		//add them to our formated tag
 		formatedArticle.addChild(pTag);
-		
-		HtmlCleaner cleaner = new HtmlCleaner();
-		String t=cleaner.getInnerHtml(pTag);
-		Log.e("djdj", t);
 	}
 }

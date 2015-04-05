@@ -12,11 +12,11 @@ import java.util.Date;
 import org.apache.http.client.methods.HttpGet;
 
 import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
 import android.content.Context;
 import android.os.AsyncTask;

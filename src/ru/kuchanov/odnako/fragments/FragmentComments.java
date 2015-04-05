@@ -15,7 +15,7 @@ import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.download.CommentInfo;
-import ru.kuchanov.odnako.download.DownloadComments;
+import ru.kuchanov.odnako.download.DownloadCommentsLoader;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterCommentsFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -260,7 +260,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		Loader<ArrayList<CommentInfo>> loader = null;
 		if (id == LOADER_COMMENTS_ID)
 		{
-			loader = new DownloadComments(this.act, b);
+			loader = new DownloadCommentsLoader(this.act, b);
 			Log.d(LOG, "onCreateLoader: " + loader.hashCode());
 		}
 		return loader;
@@ -273,7 +273,7 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 
 		if (downloadedComments != null)
 		{
-			if (((DownloadComments) loader).pageToLoad == 1)
+			if (((DownloadCommentsLoader) loader).pageToLoad == 1)
 			{
 				this.commentsInfoList = downloadedComments;
 				this.recyclerAdapter = new RecyclerAdapterCommentsFragment(act, article, commentsInfoList);

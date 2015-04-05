@@ -21,9 +21,10 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
+import ru.kuchanov.odnako.callbacks.CallbackAskDBFromTop;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
-import ru.kuchanov.odnako.fragments.callbacks.AllArtsInfoCallback;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -39,11 +40,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
-public class ServiceDB extends Service implements AllArtsInfoCallback
+public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackAskDBFromTop
 {
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
 	private DataBaseHelper dataBaseHelper;
+
+	Context ctx;
 
 	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
 
@@ -54,6 +57,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		Log.d(LOG, "onCreate");
 		super.onCreate();
 
+		this.ctx = this;
 		this.getHelper();
 
 		//		categoriesToCheck = new ArrayList<String>();
@@ -127,41 +131,44 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			}
 			else
 			{
-				DBActions dbActions = new DBActions(this, this.getHelper());
-				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
+				AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, catToLoad, cal,
+				pageToLoad, this);
+				askFromTop.execute();
+				//				DBActions dbActions = new DBActions(this, this.getHelper());
+				//				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
 				//Log.d(LOG + catToLoad, DBRezult);
 
-				switch (DBRezult)
-				{
-					case Msg.DB_ANSWER_NEVER_REFRESHED:
-						//was never refreshed, so start to refresh
-						//so start download category with 1-st page
-						this.startDownLoad(catToLoad, pageToLoad);
-					break;
-					case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
-						//was refreshed more than max period, so start to refresh
-						//so start download category with 1-st page
-						//but firstly we must show old articles
-						this.startDownLoad(catToLoad, pageToLoad);
-					break;
-
-					case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
-						//no arts in DB (why?)
-						//we get it if there is no need to refresh by period, so we have one successful load in past...
-						//but no art's in db... that's realy strange! =)
-						//so start download from web
-						this.startDownLoad(catToLoad, pageToLoad);
-					break;
-					case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
-						//TODO here we must create new entry in Category (or Author) table
-						//and start download arts of this category
-						this.startDownLoad(catToLoad, pageToLoad);
-					break;
-					case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
-					//here we have nothing to do... Cause there is no need to load somthing from web,
-					//and arts have been already sended to frag
-					break;
-				}
+				//				switch (DBRezult)
+				//				{
+				//					case Msg.DB_ANSWER_NEVER_REFRESHED:
+				//						//was never refreshed, so start to refresh
+				//						//so start download category with 1-st page
+				//						this.startDownLoad(catToLoad, pageToLoad);
+				//					break;
+				//					case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
+				//						//was refreshed more than max period, so start to refresh
+				//						//so start download category with 1-st page
+				//						//but firstly we must show old articles
+				//						this.startDownLoad(catToLoad, pageToLoad);
+				//					break;
+				//
+				//					case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
+				//						//no arts in DB (why?)
+				//						//we get it if there is no need to refresh by period, so we have one successful load in past...
+				//						//but no art's in db... that's realy strange! =)
+				//						//so start download from web
+				//						this.startDownLoad(catToLoad, pageToLoad);
+				//					break;
+				//					case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
+				//						//TODO here we must create new entry in Category (or Author) table
+				//						//and start download arts of this category
+				//						this.startDownLoad(catToLoad, pageToLoad);
+				//					break;
+				//					case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+				//					//here we have nothing to do... Cause there is no need to load somthing from web,
+				//					//and arts have been already sended to frag
+				//					break;
+				//				}
 			}
 		}
 		else
@@ -425,8 +432,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			if (categoryToLoad.equals(this.currentTasks.get(i).getCategoryToLoad())
 			&& pageToLoad == this.currentTasks.get(i).getPageToLoad())
 			{
-				/* ParsePageForAllArtsInfo taskToRemove = */this.currentTasks.remove(i);
-				//				taskToRemove = null;
+				this.currentTasks.remove(i);
 			}
 		}
 
@@ -460,31 +466,44 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 			return;
 		}
+		//we can now try to get articles, storred in DB;
 		if (pageToLoad == 1)
 		{
-			switch (new DBActions(this, this.getHelper()).askDBFromTop(categoryToLoad, calOfLastRefresh, pageToLoad))
+			CallbackAskDBFromTop callback = new CallbackAskDBFromTop()
 			{
-				case Msg.DB_ANSWER_NEVER_REFRESHED:
-				//that's can't be, because we check it before
-				break;
-				case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
-				//that's can't be, because we give same time that we retrieve from category
-				break;
-				case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
-					//That's strange... We have non zero REFRESHED time and given Category record in DB,
-					//but no arts... Anyway we tell about it;
-					resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
-					ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
-				break;
-				case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
-				//that's can't be, because we check it before
-				break;
-				case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
-					//Everything is OK. We send arts from DB to fragment
-					resultMessage = new String[] { Msg.ERROR, "Статьи загружены из кэша" };
-					ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
-				break;
-			}//switch
+				@Override
+				public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad)
+				{
+					//					switch (new DBActions(this, this.getHelper()).askDBFromTop(categoryToLoad, calOfLastRefresh, pageToLoad))
+					String[] resultMessage;
+					switch (answer)
+					{
+						case Msg.DB_ANSWER_NEVER_REFRESHED:
+						//that's can't be, because we check it before
+						break;
+						case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
+						//that's can't be, because we give same time that we retrieve from category
+						break;
+						case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
+							//That's strange... We have non zero REFRESHED time and given Category record in DB,
+							//but no arts... Anyway we tell about it;
+							resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
+							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+						break;
+						case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
+						//that's can't be, because we check it before
+						break;
+						case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+							//Everything is OK. We send arts from DB to fragment
+							resultMessage = new String[] { Msg.ERROR, "Статьи загружены из кэша" };
+							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+						break;
+					}//switch
+				}
+			};
+			AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, categoryToLoad,
+			calOfLastRefresh, pageToLoad, callback);
+			askFromTop.execute();
 		}//if (pageToLoad == 1)
 	}//onError
 
@@ -540,5 +559,42 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 		intent.putExtra("pageToLoad", pageToLoad);
 		intent.putExtra(Article.KEY_ALL_ART_INFO, dataToSend);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+	}
+
+	@Override
+	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad)
+	{
+		Log.e(LOG, answer);
+		switch (answer)
+		{
+			case Msg.DB_ANSWER_NEVER_REFRESHED:
+				//was never refreshed, so start to refresh
+				//so start download category with 1-st page
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+			case Msg.DB_ANSWER_REFRESH_BY_PERIOD:
+				//was refreshed more than max period, so start to refresh
+				//so start download category with 1-st page
+				//but firstly we must show old articles
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+
+			case Msg.DB_ANSWER_NO_ENTRY_OF_ARTS:
+				//no arts in DB (why?)
+				//we get it if there is no need to refresh by period, so we have one successful load in past...
+				//but no art's in db... that's realy strange! =)
+				//so start download from web
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+			case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
+				//TODO here we must create new entry in Category (or Author) table
+				//and start download arts of this category
+				this.startDownLoad(categoryToLoad, pageToLoad);
+			break;
+			case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+			//here we have nothing to do... Cause there is no need to load somthing from web,
+			//and arts have been already sended to frag
+			break;
+		}
 	}
 }

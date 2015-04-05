@@ -8,24 +8,20 @@ package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import com.j256.ormlite.stmt.UpdateBuilder;
 
-import ru.kuchanov.odnako.R;
 import android.content.Context;
 import android.util.Log;
 
-//tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 /**
  * Class with actions with DB, such as writing arts, sending it to listener and
  * so on
  */
 public class DBActions
 {
-	//TODO think about closing DB connection. I.e. by sending it through static methods or by closing it at the end of code
 	final private static String LOG_TAG = DBActions.class.getSimpleName();
 
 	private DataBaseHelper dataBaseHelper;
@@ -40,129 +36,6 @@ public class DBActions
 	private DataBaseHelper getHelper()
 	{
 		return dataBaseHelper;
-	}
-
-	/**
-	 * Searches trough DB for art, that can be send to caller, or starts
-	 * downloading from web if there are no needed arts or no so many as caller
-	 * wish or it's time to refresh DB
-	 * 
-	 * @param categoryToLoad
-	 * @param cal
-	 *            holder of timeStamp, that is matched to refreshing period
-	 * @param pageToLoad
-	 *            to switch between from top/bottom loading
-	 * @return answer, that is used to switch between next actions (loading from
-	 *         web/ get data from DB or some SQLException)
-	 */
-	public String askDBFromTop(String categoryToLoad, Calendar cal, int pageToLoad)
-	{
-
-		//check if this is known category or author
-		if (Category.isCategory(this.getHelper(), categoryToLoad) == null)
-		{
-			return Msg.DB_ANSWER_UNKNOWN_CATEGORY;
-		}
-
-		//try to find db entry for given catToLoad
-		//first in Category
-		if (Category.isCategory(this.getHelper(), categoryToLoad))
-		{
-			Category cat = Category.getCategoryByURL(getHelper(), categoryToLoad);
-			//first try to know when was last sink
-			long lastRefreshedMills = cat.getRefreshed().getTime();
-			if (lastRefreshedMills == 0)
-			{
-				//was never refreshed, so start to refresh
-				return Msg.DB_ANSWER_NEVER_REFRESHED;
-			}
-			else
-			{
-				//check period from last sink
-				int millsInSecond = 1000;
-				long millsInMinute = millsInSecond * 60;
-				//time in Minutes. Default period between refreshing.
-				int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
-				int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
-				int refreshedMinutes = (int) (lastRefreshedMills / millsInMinute);
-				int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
-				if (periodFromRefreshedInMinutes > checkPeriod)
-				{
-					return Msg.DB_ANSWER_REFRESH_BY_PERIOD;
-				}
-				else
-				{
-					//we do not have to refresh by period,
-					//so go to check if there is info in db
-				}
-			}
-			int categoryId = cat.getId();
-			if (ArtCatTable.categoryArtsExists(getHelper(), categoryId))
-			{
-				//so there is some arts in DB by category, that we can send to frag and show
-				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(getHelper(), categoryId, pageToLoad);
-				ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(getHelper(), dataFromDBToSend);
-				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
-				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-
-				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
-			}
-			else
-			{
-				//there are no arts of given category in DB, so start to load it
-				return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
-			}
-		}
-		else
-		{
-			//this is Author
-			Author aut = Author.getAuthorByURL(getHelper(), Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
-
-			//first try to know when was last sink
-			long lastRefreshedMills = aut.getRefreshed().getTime();
-			if (lastRefreshedMills == 0)
-			{
-				//was never refreshed, so start to refresh
-				return Msg.DB_ANSWER_NEVER_REFRESHED;
-			}
-			else
-			{
-				//check period from last sink
-				//check period from last sink
-				int millsInSecond = 1000;
-				long millsInMinute = millsInSecond * 60;
-				//time in Minutes. Default period between refreshing.
-				int checkPeriod = ctx.getResources().getInteger(R.integer.checkPeriod);
-				int givenMinutes = (int) (cal.getTimeInMillis() / millsInMinute);
-				int refreshedMinutes = (int) (lastRefreshedMills / millsInMinute);
-				int periodFromRefreshedInMinutes = givenMinutes - refreshedMinutes;
-				if (periodFromRefreshedInMinutes > checkPeriod)
-				{
-					return Msg.DB_ANSWER_REFRESH_BY_PERIOD;
-				}
-				else
-				{
-					//we do not have to refresh by period,
-					//so go to check if there is info in db
-				}
-			}
-			int authorId = aut.getId();
-			if (ArtAutTable.authorArtsExists(getHelper(), authorId))
-			{
-				//so there is some arts in DB by category, that we can send to frag and show
-				List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(getHelper(), authorId, pageToLoad);
-				ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(getHelper(), dataFromDBToSend);
-				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
-				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-
-				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
-			}
-			else
-			{
-				//there are no arts of given category in DB, so start to load it
-				return Msg.DB_ANSWER_NO_ENTRY_OF_ARTS;
-			}
-		}
 	}
 
 	public String askDBFromBottom(String categoryToLoad, int pageToLoad)
