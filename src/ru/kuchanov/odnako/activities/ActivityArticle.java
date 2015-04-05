@@ -130,8 +130,8 @@ public class ActivityArticle extends ActivityBase
 			listener.onPageSelected(0);
 		}
 
-		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) == null
-		&& stateFromIntent.containsKey(FragmentComments.LOG))
+		//check if it first launch (no saved state) and intents bundle contains command to open comments 
+		if (savedInstanceState == null && stateFromIntent.containsKey(FragmentComments.LOG))
 		{
 			Actions.showComments(curAllArtsInfo, this.getCurArtPosition(), getCurrentCategory(), act);
 		}
