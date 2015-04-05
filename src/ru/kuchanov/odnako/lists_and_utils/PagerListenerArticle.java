@@ -26,9 +26,8 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 	private boolean twoPane;
 
 	//ViewPager and it's adapter for articles/comments
-	private ViewPager artCommsPager;
+	//	private ViewPager artCommsPager;
 
-	private Toolbar toolbarRight;
 	private Toolbar toolbar;
 
 	private String categoryToLoad;
@@ -41,10 +40,10 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 
-		this.artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
+		//		this.artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
 
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
+		//		this.toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
 	}
 
 	@Override
@@ -60,10 +59,10 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			toolbar.setY(0);
 			toolbar.getBackground().setAlpha(255);
 
-			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/"
-			+ artCommsPager.getAdapter().getCount());
-			toolbarRight.setY(0);
-			toolbarRight.getBackground().setAlpha(255);
+			//			toolbarRight.setTitle("Статья " + String.valueOf(position + 1) + "/"
+			//			+ artCommsPager.getAdapter().getCount());
+			//			toolbarRight.setY(0);
+			//			toolbarRight.getBackground().setAlpha(255);
 
 			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
 
@@ -74,31 +73,67 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		else
 		{
 			ActivityArticle articleActivity = (ActivityArticle) this.act;
-			String categoriesTitle = "";
-
-			for (int i = 0; i < articleActivity.getAllCatAndAutURLs().size(); i++)
-			{
-				String s = articleActivity.getAllCatAndAutURLs().get(i);
-				if (s.equals(this.categoryToLoad))
-				{
-					categoriesTitle = articleActivity.getAllCatAndAutTitles().get(i);
-					break;
-				}
-			}
-			this.toolbar.setTitle(categoriesTitle + " " + String.valueOf(position + 1) + "/"
-			+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
-			articleActivity.setCurArtPosition(position);			
+			//			String categoriesTitle = "";
+			//
+			//			for (int i = 0; i < articleActivity.getAllCatAndAutURLs().size(); i++)
+			//			{
+			//				String s = articleActivity.getAllCatAndAutURLs().get(i);
+			//				if (s.equals(this.categoryToLoad))
+			//				{
+			//					categoriesTitle = articleActivity.getAllCatAndAutTitles().get(i);
+			//					break;
+			//				}
+			//			}
+			//			this.toolbar.setTitle(categoriesTitle + " " + String.valueOf(position + 1) + "/"
+			//			+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
+			articleActivity.setCurArtPosition(position);
 		}
 		//notify Article fragment, that it's selected
 		//onReceive it prevent first scrolling action
-		
-		if(act.getAllCatArtsInfo().get(categoryToLoad)!=null)
+
+		if (act.getAllCatArtsInfo().get(categoryToLoad) != null)
 		{
 			//if there are some loaded list of arts with urls send intent with this URL
 			//(If it's first launch (without any loaded arts in cache) it'll be null
-			String articleUrl=act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();		
+			String articleUrl = act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();
 			Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
-		}		
+		}
+
+		setTitleToToolbar(categoryToLoad, act, twoPane, position);
+	}
+
+	public static void setTitleToToolbar(String categoryToLoad, ActivityBase act, boolean twoPane, int positionInPager)
+	{
+		if (twoPane)
+		{
+			ViewPager artCommsPager;
+			artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
+
+			Toolbar toolbarRight;
+			toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
+			toolbarRight.setTitle("Статья " + String.valueOf(positionInPager + 1) + "/"
+			+ artCommsPager.getAdapter().getCount());
+			toolbarRight.setY(0);
+			toolbarRight.getBackground().setAlpha(255);
+		}
+		else
+		{
+			Toolbar toolbar;
+			toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+			String categoriesTitle = "";
+
+			for (int i = 0; i < act.getAllCatAndAutURLs().size(); i++)
+			{
+				String s = act.getAllCatAndAutURLs().get(i);
+				if (s.equals(categoryToLoad))
+				{
+					categoriesTitle = act.getAllCatAndAutTitles().get(i);
+					break;
+				}
+			}
+			toolbar.setTitle(categoriesTitle + " " + String.valueOf(positionInPager + 1) + "/"
+			+ act.getAllCatArtsInfo().get(categoryToLoad).size());
+		}
 	}
 }

@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
@@ -25,6 +26,7 @@ import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllCategories;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
@@ -166,8 +168,8 @@ public class ActivityMain extends ActivityBase
 		{
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
 			this.curAllArtsInfo = savedInstanceState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
-			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
-			this.setCurrentCategory(savedInstanceState.getString("currentCategory"));
+			this.currentCategoryPosition = savedInstanceState.getInt(KEY_CURRENT_CATEGORY_POSITION);
+			this.setCurrentCategory(savedInstanceState.getString(KEY_CURRENT_CATEGORY));
 			this.pagerType = savedInstanceState.getInt(KEY_PAGER_TYPE);
 
 			this.allAuthorsList = savedInstanceState.getParcelableArrayList(KEY_ALL_AUTHORS_LIST);
@@ -917,6 +919,29 @@ public class ActivityMain extends ActivityBase
 
 			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
 			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			//restore title of toolbar via calling to onPageSelected of pager's listener
+			String currentCategory;
+			switch (this.pagerType)
+			{
+				case PAGER_TYPE_MENU:
+					currentCategory = CatData.getMenuLinks(act)[this.currentCategoryPosition];
+				break;
+				case PAGER_TYPE_CATEGORIES:
+					currentCategory = ((PagerAdapterAllCategories) this.artsListPager.getAdapter())
+					.getAllCategoriesList().get(this.currentCategoryPosition).getUrl();
+				break;
+				case PAGER_TYPE_AUTHORS:
+					currentCategory = ((PagerAdapterAllAuthors) this.artsListPager.getAdapter())
+					.getAllAuthorsList().get(this.currentCategoryPosition).getBlog_url();
+				break;
+				case PAGER_TYPE_SINGLE:
+					currentCategory = this.getCurrentCategory();
+				break;
+				default:
+					currentCategory = HtmlHelper.DOMAIN_MAIN + "/blogs/";
+			}
+			int selectedArt=this.allCatListsSelectedArtPosition.get(currentCategory);
+			PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
 			return;
 		}
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)

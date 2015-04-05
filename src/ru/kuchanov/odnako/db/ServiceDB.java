@@ -129,7 +129,7 @@ public class ServiceDB extends Service implements AllArtsInfoCallback
 			{
 				DBActions dbActions = new DBActions(this, this.getHelper());
 				String DBRezult = dbActions.askDBFromTop(catToLoad, cal, pageToLoad);
-				//				Log.d(LOG + catToLoad, DBRezult);
+				//Log.d(LOG + catToLoad, DBRezult);
 
 				switch (DBRezult)
 				{

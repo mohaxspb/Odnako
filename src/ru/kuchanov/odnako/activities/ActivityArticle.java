@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
@@ -34,7 +33,7 @@ public class ActivityArticle extends ActivityBase
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter;
 
-	private String categoryToLoad = Const.EMPTY_STRING;
+	//	private String categoryToLoad = Const.EMPTY_STRING;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -83,24 +82,25 @@ public class ActivityArticle extends ActivityBase
 		if (stateFromIntent != null)
 		{
 			this.curAllArtsInfo = stateFromIntent.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
-			this.categoryToLoad = stateFromIntent.getString("categoryToLoad");
+			//			this.categoryToLoad = stateFromIntent.getString("categoryToLoad");
+			this.setCurrentCategory(stateFromIntent.getString("categoryToLoad"));
 			this.setCurArtPosition(stateFromIntent.getInt("position"));
 			this.currentCategoryPosition = stateFromIntent.getInt("curentCategoryPosition");
 
 			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
-			this.allCatArtsInfo.put(categoryToLoad, curAllArtsInfo);
+			this.allCatArtsInfo.put(this.getCurrentCategory(), curAllArtsInfo);
 
 			this.restoreGroupChildPosition(stateFromIntent);
 		}
 		/* else */if (savedInstanceState != null)
 		{
-			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
+			this.setCurrentCategory(savedInstanceState.getString("categoryToLoad"));
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
 			this.currentCategoryPosition = savedInstanceState.getInt("curentCategoryPosition");
 
 			this.restoreAllCatArtsInfo(savedInstanceState);
 
-			this.curAllArtsInfo = this.allCatArtsInfo.get(categoryToLoad);
+			this.curAllArtsInfo = this.allCatArtsInfo.get(getCurrentCategory());
 
 			this.allCatAndAutTitles = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_TITLES_LIST);
 			this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
@@ -120,9 +120,9 @@ public class ActivityArticle extends ActivityBase
 
 		this.pager = (ViewPager) this.findViewById(R.id.pager_right);
 		this.pager.setPageTransformer(true, new RotationPageTransformer());
-		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), categoryToLoad, act);
+		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), getCurrentCategory(), act);
 		this.pager.setAdapter(pagerAdapter);
-		PagerListenerArticle listener = new PagerListenerArticle(this, categoryToLoad);
+		PagerListenerArticle listener = new PagerListenerArticle(this, getCurrentCategory());
 		this.pager.setOnPageChangeListener(listener);
 		this.pager.setCurrentItem(getCurArtPosition(), true);
 		if (getCurArtPosition() == 0)
@@ -133,7 +133,7 @@ public class ActivityArticle extends ActivityBase
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) == null
 		&& stateFromIntent.containsKey(FragmentComments.LOG))
 		{
-			Actions.showComments(curAllArtsInfo, this.getCurArtPosition(), categoryToLoad, act);
+			Actions.showComments(curAllArtsInfo, this.getCurArtPosition(), getCurrentCategory(), act);
 		}
 
 		//adMob
@@ -152,11 +152,11 @@ public class ActivityArticle extends ActivityBase
 		for (int i = 0; i < articleActivity.getAllCatAndAutURLs().size(); i++)
 		{
 			String s = articleActivity.getAllCatAndAutURLs().get(i);
-			if (s.equals(this.categoryToLoad))
+			if (s.equals(this.getCurrentCategory()))
 			{
 				categotiesTitle = articleActivity.getAllCatAndAutTitles().get(i);
 				this.toolbar.setTitle(categotiesTitle + " " + String.valueOf(this.getCurArtPosition() + 1) + "/"
-				+ articleActivity.getAllCatArtsInfo().get(categoryToLoad).size());
+				+ articleActivity.getAllCatArtsInfo().get(getCurrentCategory()).size());
 				break;
 			}
 		}
@@ -269,7 +269,7 @@ public class ActivityArticle extends ActivityBase
 	{
 		super.onSaveInstanceState(outState);
 		//		outState.putParcelableArrayList(Article.KEY_ALL_ART_INFO, curAllArtsInfo);
-		outState.putString("categoryToLoad", categoryToLoad);
+		outState.putString("categoryToLoad", getCurrentCategory());
 		outState.putInt("position", this.getCurArtPosition());
 		outState.putInt("currentCategoryPosition", this.currentCategoryPosition);
 		this.saveAllCatArtsInfo(outState);
@@ -282,7 +282,7 @@ public class ActivityArticle extends ActivityBase
 	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		super.onRestoreInstanceState(savedInstanceState);
-		this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
+		this.setCurrentCategory(savedInstanceState.getString("categoryToLoad"));
 		this.setCurArtPosition(savedInstanceState.getInt("position"));
 		currentCategoryPosition = savedInstanceState.getInt("currentCategoryPosition");
 		this.restoreAllCatArtsInfo(savedInstanceState);

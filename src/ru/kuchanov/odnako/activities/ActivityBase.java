@@ -22,6 +22,7 @@ import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -457,6 +458,8 @@ public class ActivityBase extends ActionBarActivity
 				MenuItem share = menu.findItem(R.id.share);
 				comments.setVisible(true);
 				share.setVisible(true);
+				//restore title of toolbar via calling to onPageSelected of pager's listener
+				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
 				return;
 			}
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)

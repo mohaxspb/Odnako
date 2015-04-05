@@ -17,7 +17,9 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.download.DownloadComments;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterCommentsFragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -26,6 +28,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -238,6 +241,17 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 	{
 		super.onResume();
 		this.act.supportInvalidateOptionsMenu();
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		if (pref.getBoolean("twoPane", false))
+		{
+			Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+			toolbar.setTitle("Комментарии");
+		}
+		else
+		{
+			Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+			toolbar.setTitle("Комментарии");
+		}
 	}
 
 	@Override
