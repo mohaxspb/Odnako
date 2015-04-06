@@ -6,6 +6,8 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import com.yandex.metrica.YandexMetrica;
+
 import ru.kuchanov.odnako.R;
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,7 +98,13 @@ public class ActivityDownloads extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-
+				try
+				{
+					throw new RuntimeException("Exception from Downloading activity from refresh button");
+				} catch (Throwable error)
+				{
+					YandexMetrica.reportError("Error while parsing some integer number", error);
+				}
 				throw new RuntimeException("Exception from Downloading activity from refresh button");
 				//return true;
 			case R.id.action_settings:

@@ -9,6 +9,9 @@ package ru.kuchanov.odnako.activities;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
+
+import com.yandex.metrica.YandexMetrica;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
@@ -126,7 +129,7 @@ public class ActivityMain extends ActivityBase
 
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
-		if (nightModeIsOn==true)
+		if (nightModeIsOn == true)
 		{
 			this.setTheme(R.style.ThemeDark);
 		}
@@ -345,6 +348,42 @@ public class ActivityMain extends ActivityBase
 		{
 			this.queryToSave = this.getSearchText();
 		}
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		YandexMetrica.onResumeActivity(this);
+
+		//report setting
+		Map<String, Object> eventAttributes = new HashMap<String, Object>();
+		//app package
+		eventAttributes.put("Application", this.getPackageName());
+		//ads settings
+		eventAttributes.put(ActivityPreference.PREF_KEY_ADS_IS_ON,
+		this.pref.getBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false));
+		//design settings
+		eventAttributes.put(ActivityPreference.PREF_KEY_TWO_PANE,
+		this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false));
+		eventAttributes.put(ActivityPreference.PREF_KEY_NIGHT_MODE,
+		this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false));
+		eventAttributes.put(ActivityPreference.PREF_KEY_UI_SCALE,
+		this.pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "0.75"));
+		eventAttributes.put(ActivityPreference.PREF_KEY_ART_SCALE,
+		this.pref.getString(ActivityPreference.PREF_KEY_ART_SCALE, "0.75"));
+		eventAttributes.put(ActivityPreference.PREF_KEY_COMMENTS_SCALE,
+		this.pref.getString(ActivityPreference.PREF_KEY_COMMENTS_SCALE, "0.75"));
+		//send report
+		YandexMetrica.reportEvent("Current app statistics", eventAttributes);
+	}
+
+	@Override
+	public void onPause()
+	{
+		YandexMetrica.onPauseActivity(this);
+		adView.pause();
+		super.onPause();
 	}
 
 	private void saveAllCatListsSelectedArtPosition(Bundle b)
@@ -936,7 +975,7 @@ public class ActivityMain extends ActivityBase
 					default:
 						currentCategory = HtmlHelper.DOMAIN_MAIN + "/blogs/";
 				}
-				int selectedArt=this.allCatListsSelectedArtPosition.get(currentCategory);
+				int selectedArt = this.allCatListsSelectedArtPosition.get(currentCategory);
 				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
 			}
 			else
@@ -975,7 +1014,7 @@ public class ActivityMain extends ActivityBase
 				default:
 					currentCategory = HtmlHelper.DOMAIN_MAIN + "/blogs/";
 			}
-			int selectedArt=this.allCatListsSelectedArtPosition.get(currentCategory);
+			int selectedArt = this.allCatListsSelectedArtPosition.get(currentCategory);
 			PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
 			return;
 		}

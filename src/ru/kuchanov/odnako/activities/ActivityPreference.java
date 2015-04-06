@@ -10,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.yandex.metrica.YandexMetrica;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentPreference;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceAbout;
@@ -25,6 +27,12 @@ import android.view.MenuItem;
 public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
 {
+	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
+	public static final String PREF_KEY_NIGHT_MODE = "night_mode";
+	public static final String PREF_KEY_TWO_PANE = "twoPane";
+	public static final String PREF_KEY_UI_SCALE = "scale";
+	public static final String PREF_KEY_ART_SCALE = "scale_art";
+	public static final String PREF_KEY_COMMENTS_SCALE = "scale_comments";
 
 	private SharedPreferences pref;
 
@@ -85,6 +93,20 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		this.getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@Override
+	public void onPause()
+	{
+		YandexMetrica.onPauseActivity(this);
+		super.onPause();
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		YandexMetrica.onResumeActivity(this);
 	}
 
 	@Override

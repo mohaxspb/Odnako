@@ -9,10 +9,13 @@ package ru.kuchanov.odnako;
 import org.acra.*;
 import org.acra.annotation.*;
 
+import com.yandex.metrica.YandexMetrica;
+
 import android.app.Application;
 
 /**
  * here we initialize ACRA crah reporter
+ * 
  * @see https://github.com/ACRA/acra
  */
 @ReportsCrashes(
@@ -22,12 +25,16 @@ mode = ReportingInteractionMode.TOAST,
 resToastText = R.string.hello_world)
 public class MyApplication extends Application
 {
+	private static final String API_KEY = "39630";
+
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
-
 		// The following line triggers the initialization of ACRA
 		ACRA.init(this);
+		//Initialize YandexMetrika
+		YandexMetrica.initialize(getApplicationContext(), API_KEY);
+
 	}
 }

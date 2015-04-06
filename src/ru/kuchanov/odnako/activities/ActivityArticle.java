@@ -9,6 +9,8 @@ package ru.kuchanov.odnako.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.yandex.metrica.YandexMetrica;
+
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
@@ -140,11 +142,20 @@ public class ActivityArticle extends ActivityBase
 		this.AddAds();
 		//end of adMob
 	}
+	
+	@Override
+	public void onPause()
+	{
+		YandexMetrica.onPauseActivity(this);
+		adView.pause();
+		super.onPause();
+	}
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
+		YandexMetrica.onResumeActivity(this);
 		//TODO find why here we have default title of ActionBar;
 		ActivityArticle articleActivity = (ActivityArticle) this.act;
 		String categotiesTitle = "";
