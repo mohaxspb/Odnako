@@ -96,9 +96,9 @@ public class ActivityDownloads extends ActivityBase
 			case R.id.refresh:
 				System.out.println("refresh");
 				// TODO
-				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[0]);
-				System.out.println(this.getResources().getStringArray(R.array.all_authors_imgs)[1]);
-				return true;
+
+				throw new RuntimeException("Exception from Downloading activity from refresh button");
+				//return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
