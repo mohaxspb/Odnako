@@ -410,9 +410,8 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				int imgH = Integer.parseInt(style.substring(style.indexOf("height") + 7, style.indexOf("px")));
 				float imgScale = (float) (imgH) / (float) (imgW);
 				int height = (int) (width * imgScale);
-				android.view.ViewGroup.LayoutParams params = (android.view.ViewGroup.LayoutParams) hI.img
-				.getLayoutParams();
-				params.height = height;
+				android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
+				android.widget.LinearLayout.LayoutParams.MATCH_PARENT, height);
 				hI.img.setLayoutParams(params);
 				String HDimgURL = articlesTags[positionInArticlesTags].getAttributeByName("src");
 

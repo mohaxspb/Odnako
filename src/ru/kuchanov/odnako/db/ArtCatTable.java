@@ -346,21 +346,28 @@ public class ArtCatTable
 
 	public static List<ArtCatTable> getListFromTop(DataBaseHelper h, int categoryId, int pageToLoad)
 	{
-		ArtCatTable topArt = ArtCatTable.getTopArtCat(h, categoryId, true);
 		List<ArtCatTable> allArtCatList = new ArrayList<ArtCatTable>();
-		for (int i = 0; i < pageToLoad; i++)
+		try
 		{
-			if (i == 0)
+			ArtCatTable topArt = ArtCatTable.getTopArtCat(h, categoryId, true);
+
+			for (int i = 0; i < pageToLoad; i++)
 			{
-				allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
-				categoryId, topArt.getId(), true));
+				if (i == 0)
+				{
+					allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+					categoryId, topArt.getId(), true));
+				}
+				else
+				{
+					allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
+					categoryId, topArt.getId(), false));
+				}
+				topArt = allArtCatList.get(allArtCatList.size() - 1);
 			}
-			else
-			{
-				allArtCatList.addAll(ArtCatTable.getArtCatTableListByCategoryIdFromGivenId(h,
-				categoryId, topArt.getId(), false));
-			}
-			topArt = allArtCatList.get(allArtCatList.size() - 1);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		return allArtCatList;
 	}
@@ -495,7 +502,7 @@ public class ArtCatTable
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
-			objs =new ArrayList<ArtCatTable>();
+			objs = new ArrayList<ArtCatTable>();
 		}
 		return objs;
 	}
@@ -511,17 +518,17 @@ public class ArtCatTable
 		try
 		{
 			h.getDaoArtCatTable().delete(rowsToDelete);
-//			DeleteBuilder<ArtCatTable, Integer> dB = h.getDaoArtCatTable().deleteBuilder();
-//			Where<ArtCatTable, Integer> where = dB.where();
-//			for (int i = 0; i < rowsToDelete.size(); i++)
-//			{
-//				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
-//				if (i != rowsToDelete.size() - 1)
-//				{
-//					where.and();
-//				}
-//			}
-//			dB.delete();
+			//			DeleteBuilder<ArtCatTable, Integer> dB = h.getDaoArtCatTable().deleteBuilder();
+			//			Where<ArtCatTable, Integer> where = dB.where();
+			//			for (int i = 0; i < rowsToDelete.size(); i++)
+			//			{
+			//				where.eq(ID_FIELD_NAME, rowsToDelete.get(i).getId());
+			//				if (i != rowsToDelete.size() - 1)
+			//				{
+			//					where.and();
+			//				}
+			//			}
+			//			dB.delete();
 		} catch (SQLException e)
 		{
 			Log.e(LOG, "error while deleting");
