@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class AsyncTaskAskDBFromBottom extends AsyncTask<Void, Void, String>
 {
-	final private static String LOG = DBActions.class.getSimpleName();
+	final private static String LOG = AsyncTaskAskDBFromBottom.class.getSimpleName();
 
 	private Context ctx;
 	private DataBaseHelper h;
