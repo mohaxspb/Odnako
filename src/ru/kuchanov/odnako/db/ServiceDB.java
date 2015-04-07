@@ -21,6 +21,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromTop;
@@ -31,11 +32,15 @@ import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
@@ -50,6 +55,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
 	private DataBaseHelper dataBaseHelper;
+
+	private boolean notify = false;
+	private String catToNotify;
+	private int pageToNotify;
 
 	Context ctx;
 
@@ -87,38 +96,43 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		//Log.d(LOG, "onStartCommand");
-		String catToLoad;
-		//firstly: if we load from top or not? Get it by pageToLoad
-		int pageToLoad;
 		if (intent == null)
 		{
 			Log.e(LOG, "intent=null!!! WTF?!");
 			return super.onStartCommand(intent, flags, startId);
 		}
+		//firstly: if we load from top or not? Get it by pageToLoad
+		int pageToLoad = intent.getIntExtra("pageToLoad", 1);
+		String categoryToLoad = intent.getStringExtra("categoryToLoad");
+		boolean startDownload = intent.getBooleanExtra("startDownload", false);
+		this.notify = intent.getBooleanExtra("notify", false);
+		if (notify)
+		{
+			this.catToNotify = categoryToLoad;
+			this.pageToNotify = pageToLoad;
+		}
+
+		//We use actionName to check if some task is alredy running.
+		//Maybe we can do it in frgment itself as we do it in comments fragment;
 		String action = intent.getAction();
-		catToLoad = intent.getStringExtra("categoryToLoad");
-		pageToLoad = intent.getIntExtra("pageToLoad", 1);
 		if (action.equals(Const.Action.IS_LOADING))
 		{
 			for (ParsePageForAllArtsInfo a : this.currentTasks)
 			{
-				if (catToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
+				if (categoryToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
 				&& (a.getStatus() == AsyncTask.Status.RUNNING))
 				{
-					Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+					Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
 					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
 					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
 					return super.onStartCommand(intent, flags, startId);
 				}
 			}
-			Intent intentIsLoading = new Intent(catToLoad + Const.Action.IS_LOADING);
+			Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
 			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
 			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
 			return super.onStartCommand(intent, flags, startId);
 		}
-
-		//get startDownload flag
-		boolean startDownload = intent.getBooleanExtra("startDownload", false);
 
 		if (pageToLoad == 1)
 		{
@@ -132,11 +146,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			//we simply start download
 			if (startDownload)
 			{
-				this.startDownLoad(catToLoad, pageToLoad);
+				this.startDownLoad(categoryToLoad, pageToLoad);
 			}
 			else
 			{
-				AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, catToLoad, cal,
+				AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, categoryToLoad, cal,
 				pageToLoad, this);
 				askFromTop.execute();
 			}
@@ -145,7 +159,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		{
 			//if pageToLoad!=1 we load from bottom
 			//Log.d(LOG, "LOAD FROM BOTTOM!");
-			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(this, dataBaseHelper, catToLoad,
+			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(this, dataBaseHelper, categoryToLoad,
 			pageToLoad, this);
 			askFromBottom.execute();
 		}
@@ -568,7 +582,59 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	public void onDoneWritingFromTop(String[] resultMessage, ArrayList<Article> dataFromWeb, String categoryToLoad,
 	int pageToLoad)
 	{
-		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
+		//here we can check if we start it from notif task and show notification
+		if (this.notify)
+		{
+			if (this.catToNotify.equals(categoryToLoad) && this.pageToNotify == pageToLoad)
+			{
+				//notify
+				Log.i(LOG, "WE CAN NOTIFY!");
+				this.notify = false;
+				sendNotification();
+			}
+		}
+		else
+		{
+			ServiceDB.sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
+		}
+	}
+
+	/**
+	 * Send simple notification using the NotificationCompat API.
+	 */
+	public void sendNotification()
+	{
+
+		// Use NotificationCompat.Builder to set up our notification.
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+		//icon appears in device notification bar and right hand corner of notification
+		builder.setSmallIcon(R.drawable.ic_launcher);
+
+		// This intent is fired when notification is clicked
+		Intent intent = new Intent(this, ActivityMain.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+		// Set the intent that will fire when the user taps the notification.
+		builder.setContentIntent(pendingIntent);
+
+		// Large icon appears on the left of the notification
+		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+
+		// Content title, which appears in large type at the top of the notification
+		builder.setContentTitle("Новые статьи");
+
+		// Content text, which appears in smaller text below the title
+		builder.setContentText("Новые статьи_1");
+
+		// The subtext, which appears under the text on newer devices.
+		// This will show-up in the devices with Android 4.2 and above only
+		builder.setSubText("Tap to view documentation about notifications.");
+
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		// Will display the notification in the notification bar
+		notificationManager.notify(1, builder.build());
 	}
 
 	@Override

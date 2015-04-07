@@ -31,9 +31,12 @@ import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
+import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -376,6 +379,37 @@ public class ActivityMain extends ActivityBase
 		this.pref.getString(ActivityPreference.PREF_KEY_COMMENTS_SCALE, "0.75"));
 		//send report
 		YandexMetrica.reportEvent("Current app statistics", eventAttributes);
+
+		//Check if autoload alarm is seted
+		Intent intent2check;
+		intent2check = new Intent(this, ReceiverTimer.class);
+		boolean alarmUp = (PendingIntent.getBroadcast(this, 0, intent2check, PendingIntent.FLAG_NO_CREATE) != null);
+
+		if (alarmUp)
+		{
+			//Log.d("myTag", "Alarm is already active");
+			System.out.println("Alarm is already active");
+		}
+		else
+		{
+			System.out.println("Alarm IS NOT active");
+			boolean notifOn = pref.getBoolean("notification", false);
+
+			if (notifOn)
+			{
+				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+				Intent intentToTimerReceiver = new Intent(this, ReceiverTimer.class);
+				intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60 * 1000;
+				//TODO test less intervel
+				checkPeriod = 60 * 1000;
+
+				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
+			}
+		}
 	}
 
 	@Override

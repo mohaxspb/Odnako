@@ -17,6 +17,15 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <!-- These is need for removing lint -->
+    <!-- warning : Exported receiver does not require permission -->
+    <!-- @see http://stackoverflow.com/a/17597416/3212712 -->
+    <permission
+        android:name="com.yourpage.permission.YOUR_PERMISSION"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="com.yourpage.permission.YOUR_PERMISSION" />
+
     <!-- for overscreen icon -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
     <!-- other -->
@@ -108,11 +117,20 @@
             android:label="@string/downloads" />
 
         <receiver
-            android:name="ru.kuchanov.odnako.recivers.BootBroadReciver"
+            android:name="ru.kuchanov.odnako.receivers.ReciverBoot"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver
+            android:name="ru.kuchanov.odnako.receivers.ReceiverTimer"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="ru.kuchanov.odnako.RECEIVER_TIMER" />
             </intent-filter>
         </receiver>
 
@@ -122,42 +140,46 @@
             android:exported="true"
             android:grantUriPermissions="true" >
         </provider>
-        
-         <!-- start of Yandex Metrica -->
-      
+
+        <!-- start of Yandex Metrica -->
+
         <service
             android:name="com.yandex.metrica.MetricaService"
             android:enabled="true"
             android:exported="true"
-            android:process=":Metrica">
+            android:permission="com.yourpage.permission.YOUR_PERMISSION"
+            android:process=":Metrica" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <intent-filter>
-                    <category android:name="android.intent.category.DEFAULT"/>
-                    <action android:name="com.yandex.metrica.IMetricaService"/>
-                    <data android:scheme="metrica"/>
-                </intent-filter>
+                <action android:name="com.yandex.metrica.IMetricaService" />
 
-                <meta-data android:name="metrica:api:level" android:value="16"/>
+                <data android:scheme="metrica" />
+            </intent-filter>
+
+            <meta-data
+                android:name="metrica:api:level"
+                android:value="16" />
         </service>
 
         <receiver
             android:name="com.yandex.metrica.MetricaEventHandler"
             android:enabled="true"
-            android:exported="true">
-
+            android:exported="true"
+            android:permission="com.yourpage.permission.YOUR_PERMISSION" >
             <intent-filter>
-                <action android:name="com.yandex.metrica.intent.action.SYNC"/>
+                <action android:name="com.yandex.metrica.intent.action.SYNC" />
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED"/>
-                <data android:scheme="package"/>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED" />
+
+                <data android:scheme="package" />
             </intent-filter>
 
             <!-- Необходимо для трэкинга кампаний -->
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
@@ -165,9 +187,9 @@
             android:name="ru.kuchanov.odnako.utils.MetricaContentProvider"
             android:authorities="ru.kuchanov.odnako.MetricaContentProvider"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
-        <!-- end of Yandex Metrica -->   
+        <!-- end of Yandex Metrica -->
     </application>
 
 </manifest>

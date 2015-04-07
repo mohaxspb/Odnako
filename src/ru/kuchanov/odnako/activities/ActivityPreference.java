@@ -33,6 +33,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_UI_SCALE = "scale";
 	public static final String PREF_KEY_ART_SCALE = "scale_art";
 	public static final String PREF_KEY_COMMENTS_SCALE = "scale_comments";
+	//notification keys
+	public static final String PREF_KEY_NOTIF_PERIOD = "notif_period";
 
 	private SharedPreferences pref;
 
@@ -94,7 +96,7 @@ SharedPreferences.OnSharedPreferenceChangeListener
 
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	@Override
 	public void onPause()
 	{
