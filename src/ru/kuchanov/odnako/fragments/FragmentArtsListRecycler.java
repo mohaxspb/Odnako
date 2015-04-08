@@ -144,6 +144,10 @@ public class FragmentArtsListRecycler extends Fragment
 		//reciver for scrolling and highligting selected position
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverForRSS,
 		new IntentFilter(this.getCategoryToLoad() + "_rss"));
+
+		//receiver for updating savedState (if artsText is loaded)
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverArticleLoaded,
+		new IntentFilter(Const.Action.ARTICLE_LOADED));
 	}
 
 	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
@@ -836,6 +840,12 @@ public class FragmentArtsListRecycler extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverForRSS);
 			receiverForRSS = null;
 		}
+		if (receiverArticleLoaded != null)
+		{
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverArticleLoaded);
+			receiverArticleLoaded = null;
+		}
+
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
@@ -859,4 +869,27 @@ public class FragmentArtsListRecycler extends Fragment
 	//	{
 	//		this.isLoading = isLoading;
 	//	}
+
+	protected BroadcastReceiver receiverArticleLoaded = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			//Log.i(LOG, "receiverArticleLoaded onReceive called");
+			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			//loop through all arts in activity and update them and adapters
+			boolean notFound = true;
+			for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+			{
+				Article artInList = allArtsInfo.get(i);
+				if (artInList.getUrl().equals(a.getUrl()))
+				{
+					//artInList = a;
+					allArtsInfo.set(i, a);
+					recyclerAdapter.updateArticle(a, i);
+					notFound = false;
+				}
+			}
+		}
+	};
 }

@@ -102,12 +102,12 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 				Log.i(LOG, url + " LOADED FROM DB");
 				article = artInDB;
 			}
-
 		} catch (Exception e)
 		{
 			//Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
+		
 		return article;
 	}
 

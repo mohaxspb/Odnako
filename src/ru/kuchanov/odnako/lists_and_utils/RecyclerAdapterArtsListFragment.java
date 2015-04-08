@@ -126,6 +126,13 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 		return artsListPosition + 1;
 	}
 
+	public void updateArticle(Article a, int positionInList)
+	{
+		this.artsInfo.set(positionInList, a);
+		//+1 because of fakeHeader
+		this.notifyItemChanged(positionInList + 1);
+	}
+
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{

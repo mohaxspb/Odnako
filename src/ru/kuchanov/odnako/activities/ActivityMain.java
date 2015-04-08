@@ -420,6 +420,7 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public void onPause()
 	{
+		Log.e(LOG, "onPause");
 		YandexMetrica.onPauseActivity(this);
 		adView.pause();
 		super.onPause();

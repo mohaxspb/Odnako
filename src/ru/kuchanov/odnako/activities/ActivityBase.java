@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
-import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
@@ -28,17 +25,13 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -582,37 +575,5 @@ public class ActivityBase extends ActionBarActivity
 			h.close();
 		}
 		return allCatAndAutTitles;
-	}
-
-	protected BroadcastReceiver receiverArticleLoaded = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			//Log.i(LOG + categoryToLoad, "catgoryIsLoadingReceiver onReceive called");
-			//TODO loop through all arts in activity and update them and adapters
-			Set<String> keySet = allCatArtsInfo.keySet();
-			//			for(int i=0; i < keySet.size(); i++)
-			for (String key : keySet)
-			{
-				ArrayList<Article> list = allCatArtsInfo.get(key);
-			}
-		}
-	};
-
-	protected void setReceivers()
-	{
-		LocalBroadcastManager.getInstance(this).registerReceiver(receiverArticleLoaded,
-		new IntentFilter(Const.Action.ARTICLE_LOADED));
-	}
-
-	protected void clearReceivers()
-	{
-		// If the DownloadStateReceiver still exists, unregister it and set it to null
-		if (receiverArticleLoaded != null)
-		{
-			LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverArticleLoaded);
-			receiverArticleLoaded = null;
-		}
 	}
 }
