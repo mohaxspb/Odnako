@@ -197,7 +197,6 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				artCatDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtCatTable
 				ArtCatTable.write(h, artCatDataToWrite);
-				//				return new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
 				return new String[] { Msg.NO_NEW, null };
 			}
 		}

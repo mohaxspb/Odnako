@@ -423,10 +423,10 @@ public class FragmentArtsListRecycler extends Fragment
 						.show();
 					}
 					pageToLoad = 1;
-					getAllArtsInfo(true);
+
 					position = 0;
 					((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
-					allArtsInfo = null;
+					allArtsInfo.clear();
 					ArrayList<Article> def = new ArrayList<Article>();
 					Article a = new Article();
 					a.setTitle("Статьи загружаются, подождите пожалуйста");
@@ -434,6 +434,7 @@ public class FragmentArtsListRecycler extends Fragment
 					allArtsInfo = def;
 					((ActivityMain) act).getAllCatArtsInfo().put(categoryToLoad, allArtsInfo);
 					recycler.getAdapter().notifyDataSetChanged();
+					getAllArtsInfo(true);
 
 				break;
 				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):

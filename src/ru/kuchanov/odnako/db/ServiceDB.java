@@ -38,6 +38,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -590,7 +593,23 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 				//notify
 				Log.i(LOG, "WE CAN NOTIFY!");
 				this.notify = false;
-				sendNotification();
+				switch (resultMessage[0])
+				{
+					case (Msg.NO_NEW):
+						Log.d(LOG + "NOTIF", "Новых статей не обнаружено!");
+						//TODO delete it. It's for test omly!
+						sendNotification("15", dataFromWeb);
+					//nothing to notify
+					break;
+					case (Msg.NEW_QUONT):
+						Log.d(LOG + "NOTIF", "Обнаружено " + resultMessage[1] + " новых статей");
+						sendNotification(resultMessage[1], dataFromWeb);
+					break;
+					case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+						Log.d(LOG + "NOTIF", "Обнаружено " + resultMessage[1] + " новых статей");
+						sendNotification(resultMessage[1], dataFromWeb);
+					break;
+				}
 			}
 		}
 		else
@@ -602,18 +621,21 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	/**
 	 * Send simple notification using the NotificationCompat API.
 	 */
-	public void sendNotification()
+	public void sendNotification(String newQuont, ArrayList<Article> dataFromWeb)
 	{
-
 		// Use NotificationCompat.Builder to set up our notification.
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
 		//icon appears in device notification bar and right hand corner of notification
-		builder.setSmallIcon(R.drawable.ic_launcher);
+		builder.setSmallIcon(R.drawable.ic_radio_button_off_white_48dp);
+
+		//Set the text that is displayed in the status bar when the notification first arrives.
+		builder.setTicker(dataFromWeb.get(0).getTitle());
 
 		// This intent is fired when notification is clicked
 		Intent intent = new Intent(this, ActivityMain.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 		// Set the intent that will fire when the user taps the notification.
 		builder.setContentIntent(pendingIntent);
@@ -622,14 +644,76 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 
 		// Content title, which appears in large type at the top of the notification
-		builder.setContentTitle("Новые статьи");
+		//		builder.setContentTitle("Новые статьи");
 
 		// Content text, which appears in smaller text below the title
-		builder.setContentText("Новые статьи_1");
+		//				builder.setContentText("Новые статьи");
 
 		// The subtext, which appears under the text on newer devices.
 		// This will show-up in the devices with Android 4.2 and above only
-		builder.setSubText("Tap to view documentation about notifications.");
+		builder.setSubText("Всего новых статей:");
+
+		builder.setAutoCancel(true);
+
+		///////////////
+		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
+		if (newQuont.equals("более 30"))
+		{
+			String[] events = new String[dataFromWeb.size()];
+			inboxStyle.setBigContentTitle("Новые статьи:");
+			// Moves events into the expanded layout
+			for (int i = 0; i < events.length; i++)
+			{
+				events[i] = dataFromWeb.get(i).getTitle();
+				inboxStyle.addLine(events[i]);
+			}
+			builder.setNumber(30);
+		}
+		else
+		{
+			//TODO to test
+			newQuont = "10";
+			String[] events = new String[Integer.parseInt(newQuont)];
+			// Sets a title for the Inbox in expanded layout
+			inboxStyle.setBigContentTitle("Новые статьи:");
+			// Moves events into the expanded layout
+			for (int i = 0; i < events.length; i++)
+			{
+				events[i] = dataFromWeb.get(i).getTitle();
+				inboxStyle.addLine(events[i]);
+			}
+			builder.setNumber(Integer.parseInt(newQuont));
+		}
+
+		// Moves the expanded layout object into the notification object.
+		builder.setStyle(inboxStyle);
+		////////////
+
+		// Sets up the Snooze and Dismiss action buttons that will appear in the
+		// big view of the notification.
+		Intent dismissIntent = new Intent(this, ActivityMain.class);
+//		dismissIntent.setAction("android.intent.category.DEFAULT");
+		dismissIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent piDismiss = PendingIntent.getActivity(this, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+		Intent snoozeIntent = new Intent(this, ServiceRSS.class);
+		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+		builder.addAction(R.drawable.ic_save_white_48dp,
+		"Save", piDismiss);
+		builder.addAction(R.drawable.ic_share_white_48dp,
+		"Share", piSnooze);
+		///////////////
+
+		//Vibration
+		builder.setVibrate(new long[] { 500, 500, 500, 500, 500 });
+
+		//LED
+		builder.setLights(Color.WHITE, 3000, 3000);
+		//Sound
+		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		builder.setSound(alarmSound);
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 

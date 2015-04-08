@@ -35,8 +35,8 @@ public class ReciverBoot extends BroadcastReceiver
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentToTimerReceiver,
 			PendingIntent.FLAG_UPDATE_CURRENT);
 
-			long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60 * 1000;
-			//TODO test less intervel
+			long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
+			//test less interval in 1 min
 			checkPeriod = 60 * 1000;
 
 			am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);

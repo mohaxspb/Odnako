@@ -6,8 +6,8 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako;
 
-import org.acra.*;
-import org.acra.annotation.*;
+//import org.acra.*;
+//import org.acra.annotation.*;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -18,11 +18,11 @@ import android.app.Application;
  * 
  * @see https://github.com/ACRA/acra
  */
-@ReportsCrashes(
-formKey = "", // This is required for backward compatibility but not used
-mailTo = "mohax.spb@gmail.com",
-mode = ReportingInteractionMode.TOAST,
-resToastText = R.string.hello_world)
+//@ReportsCrashes(
+//formKey = "", // This is required for backward compatibility but not used
+//mailTo = "mohax.spb@gmail.com",
+//mode = ReportingInteractionMode.TOAST,
+//resToastText = R.string.hello_world)
 public class MyApplication extends Application
 {
 	private static final String API_KEY = "39630";
@@ -32,7 +32,7 @@ public class MyApplication extends Application
 	{
 		super.onCreate();
 		// The following line triggers the initialization of ACRA
-		ACRA.init(this);
+		//		ACRA.init(this);
 		//Initialize YandexMetrika
 		YandexMetrica.initialize(getApplicationContext(), API_KEY);
 
