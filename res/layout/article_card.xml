@@ -10,10 +10,10 @@
         android:layout_height="wrap_content"
         android:checkable="true"
         android:focusable="false"
-        app:cardUseCompatPadding="true"
         app:cardBackgroundColor="?cardBackGroundColor"
         app:cardCornerRadius="3dp"
-        app:cardElevation="3dp" >
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true" >
 
         <LinearLayout
             android:id="@+id/art_card_main_lin"
@@ -152,15 +152,6 @@
                         android:contentDescription="@string/hello_world"
                         android:scaleType="fitXY"
                         android:src="?shareIcon" />
-
-                   <!--  <TextView
-                        android:id="@+id/num_of_sharings"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/zero"
-                        android:textColor="?android:textColorPrimary" /> -->
                 </LinearLayout>
 
                 <LinearLayout
@@ -202,15 +193,6 @@
                         android:contentDescription="@string/hello_world"
                         android:scaleType="fitXY"
                         android:src="?commentsIcon" />
-
-                    <!-- <TextView
-                        android:id="@+id/num_of_comms"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:text="@string/zero"
-                        android:textColor="?android:textColorPrimary" /> -->
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

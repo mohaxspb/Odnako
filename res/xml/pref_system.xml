@@ -2,7 +2,7 @@
 <!-- Настройки уведомлений -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="systemSettings"
-    android:summary="Папка хранения картинок и статей, обновлление при запуске"
+    android:summary="Папка хранения картинок и статей, обновление при запуске"
     android:title="@string/system_settings" >
 
     <!-- Папка хранения файлов -->
@@ -27,7 +27,8 @@
         android:summaryOn="ОБНОВЛЯЮСЬ при запуске"
         android:title="Обновлять при запуске" >
     </CheckBoxPreference>
-    <!-- <CheckBoxPreference
+    <!--
+    <CheckBoxPreference
         android:defaultValue="@bool/isTablet"
         android:enabled="@bool/isTablet"
         android:icon="?tabletIcon"
@@ -35,6 +36,7 @@
         android:summaryOff="Планшетный режим отключён"
         android:summaryOn="Планшетный режим включён"
         android:title="Планшетный режим" >
-    </CheckBoxPreference> -->
+    </CheckBoxPreference>
+    -->
 
 </PreferenceScreen>

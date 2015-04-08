@@ -20,6 +20,10 @@ public class Const
 		 * const for intent action for requesting if some task is running
 		 */
 		public static final String IS_LOADING = Action.class.getName() + ".IS_LOADING";
+		/**
+		 * const for intent action for notifiing that article loaded;
+		 */
+		public static final String ARTICLE_LOADED = Action.class.getName() + ".ARTICLE_LOADED";
 	}
 
 	public static class Error

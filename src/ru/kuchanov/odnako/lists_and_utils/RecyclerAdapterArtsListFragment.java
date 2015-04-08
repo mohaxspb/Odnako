@@ -1,6 +1,5 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -31,7 +30,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -366,40 +364,12 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					//end of name of author
 
 					//SaveImg
-					String appDir;
-					appDir = pref.getString("filesDir", "");
-
-					String formatedCategory;
-					//				formatedCategory = MainActivityNew.CATEGORY_TO_LOAD.replace("-", "_");
-					String TO_DELETE = "odnako.org/blogs";
-					formatedCategory = TO_DELETE.replace("-", "_");
-					formatedCategory = formatedCategory.replace("/", "_");
-					formatedCategory = formatedCategory.replace(":", "_");
-					formatedCategory = formatedCategory.replace(".", "_");
-
-					String formatedLink;
-					formatedLink = p.getUrl().replace("-", "_");
-					formatedLink = formatedLink.replace("/", "_");
-					formatedLink = formatedLink.replace(":", "_");
-					formatedLink = formatedLink.replace(".", "_");
-
-					File currentArticleFile = new File(appDir + "/" + formatedCategory + "/"
-					+ formatedLink);
-					//System.out.println("Try load from file: " + currentArticleFile.getAbsolutePath());
-					//					LayoutParams paramsForIcons = new LayoutParams((int) DipToPx.convert(25, act),
-					//					(int) DipToPx.convert(25, act));
-					//					paramsForIcons.setMargins(5, 5, 5, 5);
-
-					holderMain.save.setScaleType(ScaleType.FIT_XY);
-					//					holderMain.save.setLayoutParams(paramsForIcons);
-
-					//TODO
-					if (currentArticleFile.exists())
+					if (!p.getArtText().equals(Const.EMPTY_STRING))
 					{
-
-					}
-					if (p.getUrl() != null)
-					{
+						LayoutParams params = (LayoutParams) holderMain.save.getLayoutParams();
+						params.height = (int) DipToPx.convert(25, act);
+						params.width = (int) DipToPx.convert(25, act);
+						holderMain.save.setLayoutParams(params);
 						if (nightMode == true)
 						{
 							holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
@@ -408,10 +378,13 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						{
 							holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
 						}
-
 					}
 					else
 					{
+						LayoutParams params = (LayoutParams) holderMain.save.getLayoutParams();
+						params.height = 0;
+						params.width = 0;
+						holderMain.save.setLayoutParams(params);
 						holderMain.save.setImageResource(android.R.color.transparent);
 					}
 					////end SaveImg

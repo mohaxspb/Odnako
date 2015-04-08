@@ -133,6 +133,11 @@ public class ServiceArticle extends Service
 		Intent intent = new Intent(url);
 		intent.putExtra(Article.KEY_CURENT_ART, a);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
+
+		//Send intent with article to another activities to be able to update their data
+		Intent intentGlobal = new Intent(Const.Action.ARTICLE_LOADED);
+		intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intentGlobal);
 	}
 
 	public static void sendErrorMsg(Context ctx, String url, String errorMsg)

@@ -392,11 +392,12 @@ public class ActivityMain extends ActivityBase
 		}
 		else
 		{
-			System.out.println("Alarm IS NOT active");
+			Log.i(LOG, "Alarm IS NOT active");
 			boolean notifOn = pref.getBoolean("notification", false);
 
 			if (notifOn)
 			{
+				Log.i(LOG, "And MUST be active");
 				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
 				intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
@@ -408,6 +409,10 @@ public class ActivityMain extends ActivityBase
 				checkPeriod = 60 * 1000;
 
 				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
+			}
+			else
+			{
+				Log.i(LOG, "And must NOT be active");
 			}
 		}
 	}
