@@ -15,6 +15,11 @@ import com.yandex.metrica.YandexMetrica;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentPreference;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceAbout;
+import ru.kuchanov.odnako.receivers.ReceiverTimer;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -22,11 +27,14 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.MenuItem;
 
 public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
 {
+	private static final String LOG = ActivityPreference.class.getSimpleName();
+
 	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
 	public static final String PREF_KEY_NIGHT_MODE = "night_mode";
 	public static final String PREF_KEY_TWO_PANE = "twoPane";
@@ -34,6 +42,9 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_ART_SCALE = "scale_art";
 	public static final String PREF_KEY_COMMENTS_SCALE = "scale_comments";
 	//notification keys
+	public static final String PREF_KEY_NOTIFICATION = "notification";
+	public static final String PREF_KEY_NOTIF_VIBRATION = "vibration";
+	public static final String PREF_KEY_NOTIF_SOUND = "sound";
 	public static final String PREF_KEY_NOTIF_PERIOD = "notif_period";
 
 	private SharedPreferences pref;
@@ -246,22 +257,34 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			System.out.println("key.equals('theme'): " + String.valueOf(key.equals("theme")));
 			this.recreate();
 		}
+
 		///Запускаем\ отключаем сервис
-		//
-		//		if (key.equals("notification"))
-		//		{
-		//			boolean notifOn = sharedPreferences.getBoolean(key, false);
-		//
-		//			if (notifOn)
-		//			{
-		//				Intent serviceIntent = new Intent(this, ru.kuchanov.odnako.onboot.CheckNewService.class);
-		//				startService(serviceIntent);
-		//			}
-		//			else
-		//			{
-		//				Intent serviceIntent = new Intent(this, ru.kuchanov.odnako.onboot.CheckNewService.class);
-		//				stopService(serviceIntent);
-		//			}
-		//		}
+
+		if (key.equals(PREF_KEY_NOTIFICATION))
+		{
+			boolean notifOn = sharedPreferences.getBoolean(key, false);
+
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+			Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
+			intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
+
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
+			PendingIntent.FLAG_UPDATE_CURRENT);
+
+			if (notifOn)
+			{
+				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
+				//test less interval in 1 min
+				checkPeriod = 60 * 1000;
+
+				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
+			}
+			else
+			{
+				Log.e(LOG, "Canceling alarm");
+				am.cancel(pendingIntent);
+			}
+		}
 	}
 }

@@ -22,6 +22,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromTop;
@@ -37,12 +38,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -65,6 +68,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 	Context ctx;
 
+	SharedPreferences pref;
+
 	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
 
 	//	List<String> categoriesToCheck;
@@ -75,6 +80,14 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		super.onCreate();
 
 		this.ctx = this;
+
+		//get default settings to get all settings later
+		PreferenceManager.setDefaultValues(this, R.xml.pref_design, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_notifications, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_system, true);
+		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+
 		this.getHelper();
 
 		//		categoriesToCheck = new ArrayList<String>();
@@ -690,10 +703,12 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		builder.setStyle(inboxStyle);
 		////////////
 
+		// Content title, which appears in large type at the top of the notification
+		builder.setContentTitle("Новые статьи: " + newQuont);
+
 		// Sets up the Snooze and Dismiss action buttons that will appear in the
 		// big view of the notification.
 		Intent dismissIntent = new Intent(this, ActivityMain.class);
-//		dismissIntent.setAction("android.intent.category.DEFAULT");
 		dismissIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		PendingIntent piDismiss = PendingIntent.getActivity(this, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -707,13 +722,19 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		///////////////
 
 		//Vibration
-		builder.setVibrate(new long[] { 500, 500, 500, 500, 500 });
+		if (this.pref.getBoolean(ActivityPreference.PREF_KEY_NOTIF_VIBRATION, false))
+		{
+			builder.setVibrate(new long[] { 500, 500, 500, 500, 500 });
+		}
 
 		//LED
 		builder.setLights(Color.WHITE, 3000, 3000);
 		//Sound
-		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		builder.setSound(alarmSound);
+		if (this.pref.getBoolean(ActivityPreference.PREF_KEY_NOTIF_SOUND, false))
+		{
+			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			builder.setSound(alarmSound);
+		}
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 

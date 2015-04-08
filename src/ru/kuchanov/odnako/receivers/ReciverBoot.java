@@ -30,7 +30,7 @@ public class ReciverBoot extends BroadcastReceiver
 		if (notifOn)
 		{
 			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-			Intent intentToTimerReceiver = new Intent(context, ReceiverTimer.class);
+			Intent intentToTimerReceiver = new Intent(context.getApplicationContext(), ReceiverTimer.class);
 			intent.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentToTimerReceiver,
 			PendingIntent.FLAG_UPDATE_CURRENT);

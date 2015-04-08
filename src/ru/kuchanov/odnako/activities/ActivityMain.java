@@ -398,7 +398,7 @@ public class ActivityMain extends ActivityBase
 			if (notifOn)
 			{
 				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-				Intent intentToTimerReceiver = new Intent(this, ReceiverTimer.class);
+				Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
 				intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
 				PendingIntent.FLAG_UPDATE_CURRENT);
