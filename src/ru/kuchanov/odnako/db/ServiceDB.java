@@ -76,6 +76,22 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 	//	List<String> categoriesToCheck;
 
+	/**
+	 * map with lists of articles info for all categories and authors, witch
+	 * keys gets from BD
+	 */
+	private HashMap<String, ArrayList<Article>> allCatArtsInfo;// = new HashMap<String, ArrayList<Article>>();
+
+	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
+	{
+		Log.d(LOG, "this.allCatArtsInfo == null: " + String.valueOf(this.allCatArtsInfo == null));
+		if (this.allCatArtsInfo == null)
+		{
+			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
+		}
+		return allCatArtsInfo;
+	}
+
 	public void onCreate()
 	{
 		Log.d(LOG, "onCreate");
@@ -91,6 +107,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		this.pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 
 		this.getHelper();
+
+		//		this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
 
 		//		categoriesToCheck = new ArrayList<String>();
 		//		String[] menuUrls = CatData.getMenuLinks(this);
@@ -431,7 +449,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			CallbackAskDBFromTop callback = new CallbackAskDBFromTop()
 			{
 				@Override
-				public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad)
+				public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad,
+				ArrayList<Article> dataToSend)
 				{
 					//					switch (new DBActions(this, this.getHelper()).askDBFromTop(categoryToLoad, calOfLastRefresh, pageToLoad))
 					String[] resultMessage;
@@ -448,6 +467,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 							//but no arts... Anyway we tell about it;
 							resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
 							sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+						//TODO chrck theis
 						break;
 						case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
 						//that's can't be, because we check it before
@@ -465,12 +485,6 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			askFromTop.execute();
 		}//if (pageToLoad == 1)
 	}//onError
-
-	//	public IBinder onBind(Intent intent)
-	//	{
-	//		Log.d(LOG, "onBind");
-	//		return null;
-	//	}
 
 	/**
 	 * this method simply returns connection (?) (and open it if neccesary) to
@@ -522,11 +536,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		intent.putExtra("pageToLoad", pageToLoad);
 		intent.putExtra(Article.KEY_ALL_ART_INFO, dataToSend);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
-
 	}
 
 	@Override
-	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad)
+	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad,
+	ArrayList<Article> dataToSend)
 	{
 		//Log.i(LOG, answer);
 		switch (answer)
@@ -555,8 +569,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 				this.startDownLoad(categoryToLoad, pageToLoad);
 			break;
 			case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
-			//here we have nothing to do... Cause there is no need to load somthing from web,
-			//and arts have been already sended to frag
+				//here we have nothing to do... Cause there is no need to load somthing from web,
+				//and arts have been already sended to frag
+				String[] resultMessage = { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
+				sendBroadcastWithResult(ctx, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 			break;
 		}
 	}
@@ -772,26 +788,15 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 	}
 
-	/**
-	 * map with lists of articles info for all categories and authors, witch
-	 * keys gets from BD
-	 */
-	private HashMap<String, ArrayList<Article>> allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
-
-	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
-	{
-		return allCatArtsInfo;
-	}
-
 	public void updateHashMap(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)
 	{
 		if (pageToLoad == 1)
 		{
-			this.allCatArtsInfo.put(categoryToLoad, dataToSend);
+			this.getAllCatArtsInfo().put(categoryToLoad, dataToSend);
 		}
 		else
 		{
-			this.allCatArtsInfo.get(categoryToLoad).addAll(dataToSend);
+			this.getAllCatArtsInfo().get(categoryToLoad).addAll(dataToSend);
 		}
 	}
 

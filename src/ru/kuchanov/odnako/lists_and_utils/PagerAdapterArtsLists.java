@@ -38,7 +38,7 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 			Bundle b = new Bundle();
 			String categoryToLoad = CatData.getMenuLinks(act)[position];
 			b.putString("categoryToLoad", categoryToLoad);
-			b.putInt("pageToLoad", 1);
+//			b.putInt("pageToLoad", 1);
 			//setting position of selected art by asking Activities HashMap for it by category
 			int selectedArtPosition = ((ActivityMain) act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
 			b.putInt("position", selectedArtPosition);

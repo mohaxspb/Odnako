@@ -36,6 +36,7 @@ public class AsyncTaskAskDBFromTop extends AsyncTask<Void, Void, String>
 	private Calendar cal;
 	private int pageToLoad;
 	private CallbackAskDBFromTop callback;
+	ArrayList<Article> dataToSend;
 
 	public AsyncTaskAskDBFromTop(Context ctx, DataBaseHelper dataBaseHelper, String categoryToLoad, Calendar cal,
 	int pageToLoad, CallbackAskDBFromTop callback)
@@ -96,9 +97,12 @@ public class AsyncTaskAskDBFromTop extends AsyncTask<Void, Void, String>
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(h, categoryId, pageToLoad);
 				ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(h, dataFromDBToSend);
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
-				
-//				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-				new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+
+				//				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+				//				new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+				//				this.callback
+				//				.onAnswerFromDBFromTop(Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, categoryToLoad, categoryId, data);
+				this.dataToSend = data;
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
 			}
@@ -148,8 +152,9 @@ public class AsyncTaskAskDBFromTop extends AsyncTask<Void, Void, String>
 				List<ArtAutTable> dataFromDBToSend = ArtAutTable.getListFromTop(h, authorId, pageToLoad);
 				ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(h, dataFromDBToSend);
 				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
-//				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-				new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+				//				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+				//				new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+				this.dataToSend = data;
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;
 			}
@@ -163,6 +168,6 @@ public class AsyncTaskAskDBFromTop extends AsyncTask<Void, Void, String>
 
 	protected void onPostExecute(String result)
 	{
-		this.callback.onAnswerFromDBFromTop(result, categoryToLoad, pageToLoad);
+		this.callback.onAnswerFromDBFromTop(result, categoryToLoad, pageToLoad, dataToSend);
 	}
 }

@@ -92,7 +92,7 @@ public class FragmentArtsListRecycler extends Fragment
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
 
-	ServiceConnection sConn;
+	//	ServiceConnection sConn;
 	boolean bound;
 	ServiceDB serviceDB;
 
@@ -110,6 +110,7 @@ public class FragmentArtsListRecycler extends Fragment
 		if (fromArgs != null)
 		{
 			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
+			this.position = fromArgs.getInt("position");
 		}
 
 		//restore topImg and toolbar prop's
@@ -121,22 +122,29 @@ public class FragmentArtsListRecycler extends Fragment
 
 			this.categoryToLoad = savedInstanceState.getString("categoryToLoad");
 			//			this.curArtInfo = savedInstanceState.getParcelable(ArtInfo.KEY_CURENT_ART);
-			this.allArtsInfo = savedInstanceState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
+			//			this.allArtsInfo = savedInstanceState.getParcelableArrayList(Article.KEY_ALL_ART_INFO);
 			this.position = savedInstanceState.getInt("position");
 		}
-		else
-		{
-			if (act.getAllCatListsSelectedArtPosition().containsKey(categoryToLoad))
-			{
-				this.position = act.getAllCatListsSelectedArtPosition().get(categoryToLoad);
-			}
-			else
-			{
-				this.position = 0;
-				act.getAllCatListsSelectedArtPosition().put(categoryToLoad, this.position);
-				act.getAllCatArtsInfo().put(categoryToLoad, null);
-			}
-		}
+
+		//		else
+		//		{
+		//			if (act.getAllCatListsSelectedArtPosition().containsKey(categoryToLoad))
+		//			{
+		//				this.position = act.getAllCatListsSelectedArtPosition().get(categoryToLoad);
+		//			}
+		//			else
+		//			{
+		//				this.position = 0;
+		//				act.getAllCatListsSelectedArtPosition().put(categoryToLoad, this.position);
+		//				act.getAllCatArtsInfo().put(categoryToLoad, null);
+		//			}
+		//		}
+
+		/////////////
+		Intent intentBind = new Intent(act, ServiceDB.class);
+		act.bindService(intentBind, sConn, ActivityMain.BIND_AUTO_CREATE);
+		//		act.startService(intentBind);
+		/////////////
 
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artsDataReceiver,
 		new IntentFilter(this.getCategoryToLoad()));
@@ -157,6 +165,24 @@ public class FragmentArtsListRecycler extends Fragment
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverArticleLoaded,
 		new IntentFilter(Const.Action.ARTICLE_CHANGED));
 	}
+
+	protected ServiceConnection sConn = new ServiceConnection()
+	{
+		public void onServiceConnected(ComponentName name, IBinder binder)
+		{
+			Log.d(LOG, "onServiceConnected");
+			bound = true;
+			LocalBinder localBinder = (LocalBinder) binder;
+			serviceDB = (ServiceDB) localBinder.getService();
+		}
+
+		public void onServiceDisconnected(ComponentName name)
+		{
+			Log.d(LOG, "onServiceDisconnected");
+			bound = false;
+			serviceDB = null;
+		}
+	};
 
 	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
 	{
@@ -241,6 +267,14 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 	};
 
+	private void setAdapter()
+	{
+		this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, serviceDB.getAllCatArtsInfo().get(
+		categoryToLoad), this);
+		this.recycler.setAdapter(recyclerAdapter);
+
+	}
+
 	/**
 	 * receives intent with Articles data and updates list, toolbar and toast in
 	 * some cases, based on message from DB. Also, if this is main list
@@ -258,13 +292,13 @@ public class FragmentArtsListRecycler extends Fragment
 				Log.e(LOG + categoryToLoad, "fragment not added! RETURN!");
 				return;
 			}
-
-			/////////////
-			//			Intent intentBind = new Intent(act, ServiceDB.class);
-			//			act.bindService(intentBind, sConn, ActivityMain.BIND_AUTO_CREATE);
-			String thirdTitle = serviceDB.getAllCatArtsInfo().get(categoryToLoad).get(2).getTitle();
-			Log.e(LOG, thirdTitle);
-			/////////////
+			//XXX TEsT
+			setAdapter();
+			if(serviceDB.getAllCatArtsInfo().get("sdfksjdhfjsd")==null)
+			{
+				return;
+			}
+			
 
 			//check if this fragment is currently displayed 
 			boolean isDisplayed = false;
@@ -596,29 +630,6 @@ public class FragmentArtsListRecycler extends Fragment
 		//Log.d(LOG_TAG, "onCreateView");
 		View v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
-		sConn = new ServiceConnection()
-		{
-			public void onServiceConnected(ComponentName name, IBinder binder)
-			{
-				Log.d(LOG, "MainActivity onServiceConnected");
-				bound = true;
-//				serviceDB = (ServiceDB) binder;
-				LocalBinder localBinder=(LocalBinder) binder;
-				serviceDB = (ServiceDB) localBinder.getService();
-			}
-
-			public void onServiceDisconnected(ComponentName name)
-			{
-				Log.d(LOG, "MainActivity onServiceDisconnected");
-				bound = false;
-				serviceDB = null;
-			}
-		};
-		/////////////
-		Intent intentBind = new Intent(act, ServiceDB.class);
-		act.bindService(intentBind, sConn, ActivityMain.BIND_AUTO_CREATE);
-		/////////////
-
 		//find cur frag's toolbar
 		if (container.getId() == R.id.pager_right)
 		{
@@ -710,45 +721,62 @@ public class FragmentArtsListRecycler extends Fragment
 		this.recycler.addItemDecoration(new SpacesItemDecoration(25));
 		this.recycler.setLayoutManager(new LinearLayoutManager(act));
 
-		//restore allArtsInfo from Activities HashMap
-		if (this.allArtsInfo == null && this.act.getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
+		//		//restore allArtsInfo from Activities HashMap
+		//		if (this.allArtsInfo == null && this.act.getAllCatArtsInfo().get(this.getCategoryToLoad()) != null)
+		//		{
+		//			this.allArtsInfo = this.act.getAllCatArtsInfo().get(this.getCategoryToLoad());
+		//		}
+		//
+		//		if (this.allArtsInfo == null
+		//		|| this.allArtsInfo.get(0).getTitle().equals("Статьи загружаются, подождите пожалуйста"))
+		//		{
+		//			//Log.i(categoryToLoad, "this.allArtsInfo=NULL");
+		//			this.getAllArtsInfo(false);
+		//
+		//			ArrayList<Article> def = new ArrayList<Article>();
+		//			Article a = new Article();
+		//			a.setTitle("Статьи загружаются, подождите пожалуйста");
+		//			def.add(a);
+		//			this.allArtsInfo = def;
+		//
+		//			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, this.allArtsInfo, this);
+		//			this.recycler.setAdapter(recyclerAdapter);
+		//
+		//		}
+		//		else
+		//		{
+		//			//Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
+		//			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, allArtsInfo, this);
+		//			this.recycler.setAdapter(recyclerAdapter);
+		//
+		//			this.recyclerAdapter.notifyDataSetChanged();
+		//
+		//			//ask service if it has working task with this page and category
+		//			Intent intent = new Intent(this.act, ServiceDB.class);
+		//			intent.setAction(Const.Action.IS_LOADING);
+		//			Bundle b = new Bundle();
+		//			b.putString("categoryToLoad", this.getCategoryToLoad());
+		//			b.putInt("pageToLoad", this.pageToLoad);
+		//			intent.putExtras(b);
+		//			this.act.startService(intent);
+		//		}
+
+		if (this.serviceDB != null)
 		{
-			this.allArtsInfo = this.act.getAllCatArtsInfo().get(this.getCategoryToLoad());
+			this.allArtsInfo = this.serviceDB.getAllCatArtsInfo().get(this.categoryToLoad);
 		}
 
-		if (this.allArtsInfo == null
-		|| this.allArtsInfo.get(0).getTitle().equals("Статьи загружаются, подождите пожалуйста"))
+		if (this.allArtsInfo == null)
 		{
-			//Log.i(categoryToLoad, "this.allArtsInfo=NULL");
 			this.getAllArtsInfo(false);
-
-			ArrayList<Article> def = new ArrayList<Article>();
-			Article a = new Article();
-			a.setTitle("Статьи загружаются, подождите пожалуйста");
-			def.add(a);
-			this.allArtsInfo = def;
-
-			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, this.allArtsInfo, this);
-			this.recycler.setAdapter(recyclerAdapter);
-
 		}
 		else
 		{
-			//Log.e(categoryToLoad, "this.allArtsInfo!=NULL");
 			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, allArtsInfo, this);
 			this.recycler.setAdapter(recyclerAdapter);
-
-			this.recyclerAdapter.notifyDataSetChanged();
-
-			//ask service if it has working task with this page and category
-			Intent intent = new Intent(this.act, ServiceDB.class);
-			intent.setAction(Const.Action.IS_LOADING);
-			Bundle b = new Bundle();
-			b.putString("categoryToLoad", this.getCategoryToLoad());
-			b.putInt("pageToLoad", this.pageToLoad);
-			intent.putExtras(b);
-			this.act.startService(intent);
+			//this.recyclerAdapter.notifyDataSetChanged();
 		}
+
 		//set onScrollListener
 		setOnScrollListener();
 

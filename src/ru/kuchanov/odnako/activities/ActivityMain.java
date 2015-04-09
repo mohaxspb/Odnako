@@ -19,6 +19,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
@@ -119,6 +120,9 @@ public class ActivityMain extends ActivityBase
 	{
 		Log.e(LOG, "ActivityMain onCreate called");
 		this.act = this;
+		
+//		Intent intentBind = new Intent(act, ServiceDB.class);
+//		act.startService(intentBind);
 
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref_design, true);
