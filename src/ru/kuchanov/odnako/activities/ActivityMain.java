@@ -238,7 +238,6 @@ public class ActivityMain extends ActivityBase
 		{
 			this.setContentView(R.layout.activity_main);
 		}
-		/////////////
 		////////find all views
 		this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
 		this.setSupportActionBar(toolbar);

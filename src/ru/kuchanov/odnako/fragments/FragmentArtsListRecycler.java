@@ -20,6 +20,7 @@ import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
+import ru.kuchanov.odnako.db.ServiceDB.LocalBinder;
 import ru.kuchanov.odnako.db.ServiceRSS;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
@@ -28,12 +29,15 @@ import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -87,6 +91,10 @@ public class FragmentArtsListRecycler extends Fragment
 	//TODO check if we need it
 	//	private ArtInfo curArtInfo;
 	private int position = 0;
+
+	ServiceConnection sConn;
+	boolean bound;
+	ServiceDB serviceDB;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -250,6 +258,13 @@ public class FragmentArtsListRecycler extends Fragment
 				Log.e(LOG + categoryToLoad, "fragment not added! RETURN!");
 				return;
 			}
+
+			/////////////
+			//			Intent intentBind = new Intent(act, ServiceDB.class);
+			//			act.bindService(intentBind, sConn, ActivityMain.BIND_AUTO_CREATE);
+			String thirdTitle = serviceDB.getAllCatArtsInfo().get(categoryToLoad).get(2).getTitle();
+			Log.e(LOG, thirdTitle);
+			/////////////
 
 			//check if this fragment is currently displayed 
 			boolean isDisplayed = false;
@@ -581,6 +596,29 @@ public class FragmentArtsListRecycler extends Fragment
 		//Log.d(LOG_TAG, "onCreateView");
 		View v = inflater.inflate(R.layout.fragment_arts_list, container, false);
 
+		sConn = new ServiceConnection()
+		{
+			public void onServiceConnected(ComponentName name, IBinder binder)
+			{
+				Log.d(LOG, "MainActivity onServiceConnected");
+				bound = true;
+//				serviceDB = (ServiceDB) binder;
+				LocalBinder localBinder=(LocalBinder) binder;
+				serviceDB = (ServiceDB) localBinder.getService();
+			}
+
+			public void onServiceDisconnected(ComponentName name)
+			{
+				Log.d(LOG, "MainActivity onServiceDisconnected");
+				bound = false;
+				serviceDB = null;
+			}
+		};
+		/////////////
+		Intent intentBind = new Intent(act, ServiceDB.class);
+		act.bindService(intentBind, sConn, ActivityMain.BIND_AUTO_CREATE);
+		/////////////
+
 		//find cur frag's toolbar
 		if (container.getId() == R.id.pager_right)
 		{
@@ -846,6 +884,12 @@ public class FragmentArtsListRecycler extends Fragment
 			receiverArticleLoaded = null;
 		}
 
+		if (bound)
+		{
+			this.act.unbindService(sConn);
+			bound = false;
+		}
+
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}
@@ -879,10 +923,10 @@ public class FragmentArtsListRecycler extends Fragment
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 			boolean notFound = true;
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
-			{				
+			{
 				case Const.Action.ARTICLE_READ:
 					//loop through all arts in activity and update them and adapters
-					
+
 					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 					{
 						Article artInList = allArtsInfo.get(i);

@@ -95,7 +95,8 @@ public class AsyncTaskAskDBFromBottom extends AsyncTask<Void, Void, String>
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 					ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(h, allArts);
 					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+//					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+					new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
 				}
 				else
@@ -120,7 +121,8 @@ public class AsyncTaskAskDBFromBottom extends AsyncTask<Void, Void, String>
 							//so it is real end of all arts in category and we can send arts to frag
 							ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(h, allArts);
 							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+//							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+							new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
 						}
@@ -194,7 +196,8 @@ public class AsyncTaskAskDBFromBottom extends AsyncTask<Void, Void, String>
 					//Log.d(LOG_TAG, "we have 30, so we pass 30 to fragment");
 					ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(h, allArts);
 					String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+//					ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+					new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 					return Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG;
 				}
@@ -220,7 +223,8 @@ public class AsyncTaskAskDBFromBottom extends AsyncTask<Void, Void, String>
 							//so it is real end of all arts in Author and we can send arts to frag
 							ArrayList<Article> data = ArtAutTable.getArtInfoListFromArtAutList(h, allArts);
 							String[] resultMessage = new String[] { Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT, null };
-							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+//							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
+							new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
 
 							return Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL;
 						}

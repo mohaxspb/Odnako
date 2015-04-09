@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -44,6 +45,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -350,7 +352,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			a.setTitle("Ни одной статьи не обнаружено.");
 			dataToSend.add(a);
 			String[] resultMessage = new String[] { Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY, null };
-			ServiceDB.sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
+			sendBroadcastWithResult(this, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 		}
 		else
 		{
@@ -394,7 +396,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 
 		String[] resultMessage = new String[] { Msg.ERROR, e };
-		ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+		sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 		//here if we loaded from top and get NO_CONNECTION ERROR we can ask DB for arts.
 		//And toast if there are no arts in DB (cache);
 		//So ask DB with calendar(time of last refresh);
@@ -403,7 +405,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		if (isCategory == null)
 		{
 			resultMessage = new String[] { Msg.ERROR, "Категория в базе данных не обнаружена. И разработчик очень удивится, узнав, что вы читаете это сообщение" };
-			ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+			sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 			return;
 		}
 		if (Category.isCategory(getHelper(), categoryToLoad))
@@ -420,7 +422,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		if (calOfLastRefresh.getTimeInMillis() == 0)
 		{
 			resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
-			ServiceDB.sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
+			sendBroadcastWithResult(this, resultMessage, null, categoryToLoad, pageToLoad);
 			return;
 		}
 		//we can now try to get articles, storred in DB;
@@ -445,7 +447,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 							//That's strange... We have non zero REFRESHED time and given Category record in DB,
 							//but no arts... Anyway we tell about it;
 							resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
-							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+							sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
 						break;
 						case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
 						//that's can't be, because we check it before
@@ -453,7 +455,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 						case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 							//Everything is OK. We send arts from DB to fragment
 							resultMessage = new String[] { Msg.ERROR, "Статьи загружены из кэша" };
-							ServiceDB.sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+							sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
 						break;
 					}//switch
 				}
@@ -464,11 +466,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}//if (pageToLoad == 1)
 	}//onError
 
-	public IBinder onBind(Intent intent)
-	{
-		Log.d(LOG, "onBind");
-		return null;
-	}
+	//	public IBinder onBind(Intent intent)
+	//	{
+	//		Log.d(LOG, "onBind");
+	//		return null;
+	//	}
 
 	/**
 	 * this method simply returns connection (?) (and open it if neccesary) to
@@ -501,21 +503,26 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	/**
 	 * Sends intent with message and data to fragment
 	 * 
+	 * Also updates hashMap with all articles
+	 * 
 	 * @param ctx
 	 * @param resultMessage
 	 * @param dataToSend
 	 * @param categoryToLoad
 	 * @param pageToLoad
 	 */
-	public static void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<Article> dataToSend,
+	public void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<Article> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
 		//Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+		updateHashMap(dataToSend, categoryToLoad, pageToLoad);
+
 		Intent intent = new Intent(categoryToLoad);
 		intent.putExtra(Msg.MSG, resultMessage);
 		intent.putExtra("pageToLoad", pageToLoad);
 		intent.putExtra(Article.KEY_ALL_ART_INFO, dataToSend);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
+
 	}
 
 	@Override
@@ -591,7 +598,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	public void onDoneWritingFromBottom(String[] resultMessage, ArrayList<Article> dataFromWeb, String categoryToLoad,
 	int pageToLoad)
 	{
-		ServiceDB.sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
+		sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
 	}
 
 	@Override
@@ -627,7 +634,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 		else
 		{
-			ServiceDB.sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
+			sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
 		}
 	}
 
@@ -763,5 +770,59 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			categoryToLoad, pageToLoad, this);
 			resultWriteFromBottom.execute();
 		}
+	}
+
+	/**
+	 * map with lists of articles info for all categories and authors, witch
+	 * keys gets from BD
+	 */
+	private HashMap<String, ArrayList<Article>> allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
+
+	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
+	{
+		return allCatArtsInfo;
+	}
+
+	public void updateHashMap(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)
+	{
+		if (pageToLoad == 1)
+		{
+			this.allCatArtsInfo.put(categoryToLoad, dataToSend);
+		}
+		else
+		{
+			this.allCatArtsInfo.get(categoryToLoad).addAll(dataToSend);
+		}
+	}
+
+	/**
+	 * Class used for the client Binder. Because we know this service always
+	 * runs in the same process as its clients, we don't need to deal with IPC.
+	 */
+	public class LocalBinder extends Binder
+	{
+		public ServiceDB getService()
+		{
+			// Return this instance of LocalService so clients can call public methods
+			return ServiceDB.this;
+		}
+	}
+
+	public IBinder onBind(Intent intent)
+	{
+		Log.d(LOG, "MyService onBind");
+		return new LocalBinder();
+	}
+
+	public void onRebind(Intent intent)
+	{
+		super.onRebind(intent);
+		Log.d(LOG, "MyService onRebind");
+	}
+
+	public boolean onUnbind(Intent intent)
+	{
+		Log.d(LOG, "MyService onUnbind");
+		return super.onUnbind(intent);
 	}
 }
