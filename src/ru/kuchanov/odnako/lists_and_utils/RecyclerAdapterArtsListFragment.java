@@ -12,7 +12,6 @@ import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
-import ru.kuchanov.odnako.utils.ReadUnreadRegister;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -253,7 +252,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					//popUp menu in cardView
 					holderMain.settings.setOnClickListener(new OnClickListener()
 					{
-
 						@Override
 						public void onClick(View v)
 						{
@@ -397,11 +395,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					////end SaveImg
 
 					//read Img
-					//TODO
-					ReadUnreadRegister read = new ReadUnreadRegister(act);
-					//					holderMain.read.setLayoutParams(paramsForIcons);
-
-					if (read.check(p.getUrl()))
+					if (p.isReaden())
 					{
 						if (nightMode == true)
 						{

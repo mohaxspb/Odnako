@@ -45,6 +45,7 @@ public class Article implements Parcelable
 	public final static String FIELD_NAME_PUB_DATE = "pubDate";
 	public final static String FIELD_NAME_PREVIEW = "preview";
 	public final static String FIELD_NAME_ART_TEXT = "artText";
+	public final static String FIELD_IS_READEN = "isReaden";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -103,6 +104,9 @@ public class Article implements Parcelable
 
 	@DatabaseField(dataType = DataType.STRING)
 	private String imgAuthor = Const.EMPTY_STRING;
+
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = FIELD_IS_READEN)
+	private boolean isReaden = false;
 
 	//foreignKeys
 	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
@@ -555,7 +559,7 @@ public class Article implements Parcelable
 		}
 
 		return art;
-	}	
+	}
 
 	public static void updatePubDate(DataBaseHelper h, int articleId, Date d)
 	{
@@ -595,6 +599,21 @@ public class Article implements Parcelable
 			updateBuilder = h.getDaoArticle().updateBuilder();
 			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_ART_TEXT, artText);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void updateIsReaden(DataBaseHelper h, int articleId, boolean isReaden)
+	{
+		UpdateBuilder<Article, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArticle().updateBuilder();
+			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_IS_READEN, isReaden);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -692,6 +711,8 @@ public class Article implements Parcelable
 
 		dest.writeLong(refreshed.getTime());
 		dest.writeParcelable(author, flags);
+
+		dest.writeByte((byte) (isReaden ? 1 : 0)); //if myBoolean == true, byte == 1
 	}
 
 	private Article(Parcel in)
@@ -716,8 +737,10 @@ public class Article implements Parcelable
 		this.toReadMore = in.readString();
 		this.imgAuthor = in.readString();
 
-		refreshed = new Date(in.readLong());
-		author = (Author) in.readParcelable(Author.class.getClassLoader());
+		this.refreshed = new Date(in.readLong());
+		this.author = (Author) in.readParcelable(Author.class.getClassLoader());
+
+		this.isReaden = in.readByte() != 0; //myBoolean == true if byte != 0
 	}
 
 	public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>()
@@ -872,5 +895,15 @@ public class Article implements Parcelable
 			updateArtText(h, inDB.getId(), loaded.getArtText());
 		}
 
+	}
+
+	public Boolean isReaden()
+	{
+		return isReaden;
+	}
+
+	public void setReaden(Boolean isReaden)
+	{
+		this.isReaden = isReaden;
 	}
 }

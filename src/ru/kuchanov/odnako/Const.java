@@ -6,24 +6,34 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako;
 
-public class Const
+public final class Const
 {
 	public static final String EMPTY_STRING = "empty";
 
-	public static class Action
+	public final static class Action
 	{
+		private static final String ACTION = "ru.kuchanov.odnako.Const.Action";
+		
 		/**
 		 * const for intent action for requesting data from service
 		 */
-		public static final String DATA_REQUEST = Action.class.getName() + ".DATA_REQUEST";
+		public static final String DATA_REQUEST = ACTION + ".DATA_REQUEST";
 		/**
 		 * const for intent action for requesting if some task is running
 		 */
-		public static final String IS_LOADING = Action.class.getName() + ".IS_LOADING";
+		public static final String IS_LOADING = ACTION + ".IS_LOADING";
 		/**
-		 * const for intent action for notifiing that article loaded;
+		 * const for intent action for notifying that article changed;
 		 */
-		public static final String ARTICLE_LOADED = Action.class.getName() + ".ARTICLE_LOADED";
+		public static final String ARTICLE_CHANGED = ACTION + ".ARTICLE_CHANGED";
+		/**
+		 * const for intent action for notifying that article loaded;
+		 */
+		public static final String ARTICLE_LOADED = ACTION + ".ARTICLE_LOADED";
+		/**
+		 * const for intent action for notifying that article is read;
+		 */
+		public static final String ARTICLE_READ = ACTION + ".ARTICLE_READ";
 	}
 
 	public static class Error

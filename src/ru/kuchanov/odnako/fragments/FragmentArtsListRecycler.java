@@ -147,7 +147,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 		//receiver for updating savedState (if artsText is loaded)
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverArticleLoaded,
-		new IntentFilter(Const.Action.ARTICLE_LOADED));
+		new IntentFilter(Const.Action.ARTICLE_CHANGED));
 	}
 
 	private BroadcastReceiver categoryIsLoadingReceiver = new BroadcastReceiver()
@@ -877,18 +877,38 @@ public class FragmentArtsListRecycler extends Fragment
 		{
 			//Log.i(LOG, "receiverArticleLoaded onReceive called");
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			//loop through all arts in activity and update them and adapters
 			boolean notFound = true;
-			for (int i = 0; i < allArtsInfo.size() && notFound; i++)
-			{
-				Article artInList = allArtsInfo.get(i);
-				if (artInList.getUrl().equals(a.getUrl()))
-				{
-					//artInList = a;
-					allArtsInfo.set(i, a);
-					recyclerAdapter.updateArticle(a, i);
-					notFound = false;
-				}
+			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
+			{				
+				case Const.Action.ARTICLE_READ:
+					//loop through all arts in activity and update them and adapters
+					
+					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					{
+						Article artInList = allArtsInfo.get(i);
+						if (artInList.getUrl().equals(a.getUrl()))
+						{
+							//artInList = a;
+							allArtsInfo.set(i, a);
+							recyclerAdapter.updateArticle(a, i);
+							notFound = false;
+						}
+					}
+				break;
+				case Const.Action.ARTICLE_LOADED:
+					//loop through all arts in activity and update them and adapters
+					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					{
+						Article artInList = allArtsInfo.get(i);
+						if (artInList.getUrl().equals(a.getUrl()))
+						{
+							//artInList = a;
+							allArtsInfo.set(i, a);
+							recyclerAdapter.updateArticle(a, i);
+							notFound = false;
+						}
+					}
+				break;
 			}
 		}
 	};

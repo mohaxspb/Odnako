@@ -6,10 +6,13 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -73,6 +76,21 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			String articleUrl = act.getAllCatArtsInfo().get(categoryToLoad).get(position).getUrl();
 			Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
 			LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
+
+			//Here we also can update Articles isRead field in DB
+			//And notify fragment (so as savedState) to change Icon
+			//Ho-ho-ho! He can do it from upper intent! But...
+			//But we must notify all Fragments, so we can use receiver of savedState of art and switch by action
+			//Send intent with article to another activities to be able to update their data
+			Article a = act.getAllCatArtsInfo().get(categoryToLoad).get(position);
+			DataBaseHelper h = new DataBaseHelper(act);
+			Article.updateIsReaden(h, a.getId(), true);
+			h.close();
+			a.setReaden(true);
+			Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
+			intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
+			intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_READ);
+			LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
 		}
 
 		setTitleToToolbar(categoryToLoad, act, twoPane, position);

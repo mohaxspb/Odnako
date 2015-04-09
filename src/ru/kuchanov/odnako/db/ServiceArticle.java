@@ -135,8 +135,9 @@ public class ServiceArticle extends Service
 		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
 
 		//Send intent with article to another activities to be able to update their data
-		Intent intentGlobal = new Intent(Const.Action.ARTICLE_LOADED);
+		Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
 		intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
+		intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_LOADED);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intentGlobal);
 	}
 
