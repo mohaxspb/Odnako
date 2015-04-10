@@ -6,6 +6,10 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.callbacks;
 
+import java.util.ArrayList;
+
+import ru.kuchanov.odnako.db.Article;
+
 public interface CallbackAskDBFromBottom
 {
 	/**
@@ -13,5 +17,7 @@ public interface CallbackAskDBFromBottom
 	 * 
 	 * @param answer
 	 */
-	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad);
+	//	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad);
+	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad,
+	ArrayList<Article> dataToSend);
 }

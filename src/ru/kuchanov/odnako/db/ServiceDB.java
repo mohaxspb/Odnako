@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.htmlcleaner.HtmlCleaner;
@@ -37,6 +38,7 @@ import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,21 +78,37 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 	//	List<String> categoriesToCheck;
 
-	/**
-	 * map with lists of articles info for all categories and authors, witch
-	 * keys gets from BD
-	 */
-	private HashMap<String, ArrayList<Article>> allCatArtsInfo;// = new HashMap<String, ArrayList<Article>>();
-
-	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
+	protected BroadcastReceiver receiverArticleLoaded = new BroadcastReceiver()
 	{
-		Log.d(LOG, "this.allCatArtsInfo == null: " + String.valueOf(this.allCatArtsInfo == null));
-		if (this.allCatArtsInfo == null)
+		@Override
+		public void onReceive(Context context, Intent intent)
 		{
-			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
+			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
+			{
+				case Const.Action.ARTICLE_READ:
+				case Const.Action.ARTICLE_LOADED:
+					//loop through all arts in activity and update them and adapters
+					Set<String> keySet = getAllCatArtsInfo().keySet();
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+						boolean notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								artsList.set(i, a);
+								notFound = false;
+							}
+						}
+					}
+				break;
+			}
 		}
-		return allCatArtsInfo;
-	}
+	};
 
 	public void onCreate()
 	{
@@ -150,25 +168,25 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		//We use actionName to check if some task is alredy running.
 		//Maybe we can do it in frgment itself as we do it in comments fragment;
-		String action = intent.getAction();
-		if (action.equals(Const.Action.IS_LOADING))
-		{
-			for (ParsePageForAllArtsInfo a : this.currentTasks)
-			{
-				if (categoryToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
-				&& (a.getStatus() == AsyncTask.Status.RUNNING))
-				{
-					Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
-					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
-					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-					return super.onStartCommand(intent, flags, startId);
-				}
-			}
-			Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
-			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
-			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-			return super.onStartCommand(intent, flags, startId);
-		}
+		//		String action = intent.getAction();
+		//		if (action.equals(Const.Action.IS_LOADING))
+		//		{
+		//			for (ParsePageForAllArtsInfo a : this.currentTasks)
+		//			{
+		//				if (categoryToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
+		//				&& (a.getStatus() == AsyncTask.Status.RUNNING))
+		//				{
+		//					Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
+		//					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
+		//					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+		//					return super.onStartCommand(intent, flags, startId);
+		//				}
+		//			}
+		//			Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
+		//			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
+		//			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+		//			return super.onStartCommand(intent, flags, startId);
+		//		}
 
 		if (pageToLoad == 1)
 		{
@@ -195,7 +213,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		{
 			//if pageToLoad!=1 we load from bottom
 			//Log.d(LOG, "LOAD FROM BOTTOM!");
-			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(this, dataBaseHelper, categoryToLoad,
+			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(dataBaseHelper, categoryToLoad,
 			pageToLoad, this);
 			askFromBottom.execute();
 		}
@@ -578,19 +596,23 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	}
 
 	@Override
-	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad)
+	public void onAnswerFromDBFromBottom(String answer, String categoryToLoad, int pageToLoad,
+	ArrayList<Article> dataToSend)
 	{
 		//Log.i(LOG, answer);
+		String[] resultMessage = { answer, null };
 		switch (answer)
 		{
 			case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
-			//all is done, we can go to drink some vodka, Ivan! =)
+				//all is done, we can go to drink some vodka, Ivan! =)
+				sendBroadcastWithResult(ctx, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 			break;
 			case Msg.DB_ANSWER_FROM_BOTTOM_INITIAL_ART_ALREADY_SHOWN:
 			//initial art is shown, do nothing
 			break;
 			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
-			//arts already send to frag with initial art, do nothing
+				//arts already send to frag with initial art, do nothingf
+				sendBroadcastWithResult(ctx, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 			break;
 			case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_NO_INITIAL:
 				//so load from web
@@ -786,6 +808,21 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			categoryToLoad, pageToLoad, this);
 			resultWriteFromBottom.execute();
 		}
+	}
+
+	/**
+	 * map with lists of articles info for all categories and authors, witch
+	 * keys gets from BD
+	 */
+	private HashMap<String, ArrayList<Article>> allCatArtsInfo;// = new HashMap<String, ArrayList<Article>>();
+
+	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
+	{
+		if (this.allCatArtsInfo == null)
+		{
+			this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
+		}
+		return allCatArtsInfo;
 	}
 
 	public void updateHashMap(ArrayList<Article> dataToSend, String categoryToLoad, int pageToLoad)

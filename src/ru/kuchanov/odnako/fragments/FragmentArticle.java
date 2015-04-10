@@ -10,6 +10,7 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArticleFragment;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
@@ -120,6 +122,22 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 				update(a);
+
+				//if it's currently displayed fra, we can notify, that it is readen now
+				ViewPager pager = (ViewPager) act.findViewById(R.id.pager_right);
+				if (a.isReaden() == false && position == pager.getCurrentItem())
+				{
+					a.setReaden(true);
+					DataBaseHelper h = new DataBaseHelper(act);
+					//Log.e(a.getTitle(), "a.getId(): " + a.getId());
+					Article.updateIsReaden(h, Article.getArticleIdByURL(h, a.getUrl()), true);
+					h.close();
+
+					Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
+					intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
+					intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_READ);
+					LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
+				}
 			}
 		}
 	};

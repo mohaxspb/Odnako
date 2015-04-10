@@ -6,6 +6,7 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +35,11 @@ public class PagerAdapterSingleCategory extends FragmentStatePagerAdapter
 		FragmentArtsListRecycler artsListFrag = new FragmentArtsListRecycler();
 		Bundle b = new Bundle();
 		b.putString("categoryToLoad", categoryToLoad);
-		b.putInt("pageToLoad", 1);
+		//we show this pager if we cant find category in DB
+		//So we haven't selectedArtPosition
+		//So set it
+		((ActivityMain) act).getAllCatListsSelectedArtPosition().put(categoryToLoad, 0);
+		b.putInt("position", 0);
 		artsListFrag.setArguments(b);
 		return artsListFrag;
 	}

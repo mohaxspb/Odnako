@@ -19,11 +19,11 @@ import android.support.v7.app.ActionBarActivity;
 /**
  * PagerAdapter for mainActivity, which shows main menu Categories
  */
-public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
+public class PagerAdapterMenu extends FragmentStatePagerAdapter
 {
 	ActionBarActivity act;
 
-	public PagerAdapterArtsLists(FragmentManager fm, ActionBarActivity act)
+	public PagerAdapterMenu(FragmentManager fm, ActionBarActivity act)
 	{
 		super(fm);
 		this.act = act;
@@ -38,7 +38,6 @@ public class PagerAdapterArtsLists extends FragmentStatePagerAdapter
 			Bundle b = new Bundle();
 			String categoryToLoad = CatData.getMenuLinks(act)[position];
 			b.putString("categoryToLoad", categoryToLoad);
-//			b.putInt("pageToLoad", 1);
 			//setting position of selected art by asking Activities HashMap for it by category
 			int selectedArtPosition = ((ActivityMain) act).getAllCatListsSelectedArtPosition().get(categoryToLoad);
 			b.putInt("position", selectedArtPosition);

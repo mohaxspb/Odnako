@@ -52,25 +52,25 @@ public class ServiceArticle extends Service
 			return super.onStartCommand(intent, flags, startId);
 		}
 
-		String action = intent.getAction();
+//		String action = intent.getAction();
 		url = intent.getStringExtra(FragmentArticle.ARTICLE_URL);
-		if (action.equals(Const.Action.IS_LOADING))
-		{
-			for (ParseArticle a : ServiceArticle.currentTasks)
-			{
-				if (url.equals(a.getUrl()) && (a.getStatus() == AsyncTask.Status.RUNNING))
-				{
-					Intent intentIsLoading = new Intent(url + Const.Action.IS_LOADING);
-					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
-					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-					return super.onStartCommand(intent, flags, startId);
-				}
-			}
-			Intent intentIsLoading = new Intent(url + Const.Action.IS_LOADING);
-			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
-			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-			return super.onStartCommand(intent, flags, startId);
-		}
+//		if (action.equals(Const.Action.IS_LOADING))
+//		{
+//			for (ParseArticle a : ServiceArticle.currentTasks)
+//			{
+//				if (url.equals(a.getUrl()) && (a.getStatus() == AsyncTask.Status.RUNNING))
+//				{
+//					Intent intentIsLoading = new Intent(url + Const.Action.IS_LOADING);
+//					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
+//					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+//					return super.onStartCommand(intent, flags, startId);
+//				}
+//			}
+//			Intent intentIsLoading = new Intent(url + Const.Action.IS_LOADING);
+//			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
+//			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
+//			return super.onStartCommand(intent, flags, startId);
+//		}
 
 		this.startDownLoad(url, intent.getBooleanExtra("startDownload", false));
 		return super.onStartCommand(intent, flags, startId);
@@ -132,13 +132,13 @@ public class ServiceArticle extends Service
 		}
 		Intent intent = new Intent(url);
 		intent.putExtra(Article.KEY_CURENT_ART, a);
-		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intent);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
 		//Send intent with article to another activities to be able to update their data
 		Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
 		intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
 		intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_LOADED);
-		LocalBroadcastManager.getInstance(ctx).sendBroadcastSync(intentGlobal);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentGlobal);
 	}
 
 	public static void sendErrorMsg(Context ctx, String url, String errorMsg)

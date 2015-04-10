@@ -19,12 +19,11 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArtsLists;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterMenu;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
@@ -116,13 +115,53 @@ public class ActivityMain extends ActivityBase
 	private boolean isKeyboardOpened = false;
 	private final static String KEY_IS_KEYBOARD_OPENED = "isKeyboardOpened";
 
+	//	boolean bound = false;
+	//	ServiceDB serviceDB;
+	//
+	//	public ServiceDB getServiceDB()
+	//	{
+	//		return this.serviceDB;
+	//	}
+	//
+	//	public ServiceConnection sConn = new ServiceConnection()
+	//	{
+	//		public void onServiceConnected(ComponentName name, IBinder binder)
+	//		{
+	//			Log.d(LOG, "onServiceConnected");
+	//			bound = true;
+	//			LocalBinder localBinder = (LocalBinder) binder;
+	//			serviceDB = (ServiceDB) localBinder.getService();
+	//			
+	//			allCatArtsInfo = serviceDB.getAllCatArtsInfo();
+	//		}
+	//
+	//		public void onServiceDisconnected(ComponentName name)
+	//		{
+	//			Log.d(LOG, "onServiceDisconnected");
+	//			bound = false;
+	//			serviceDB = null;
+	//		}
+	//	};
+
+	//	public void onDestroy()
+	//	{
+	//		Log.d(LOG, "onDestroy");
+	//		if (bound)
+	//		{
+	//			this.act.unbindService(sConn);
+	//			bound = false;
+	//		}
+	//		super.onDestroy();
+	//	}
+
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		Log.e(LOG, "ActivityMain onCreate called");
 		this.act = this;
-		
-//		Intent intentBind = new Intent(act, ServiceDB.class);
-//		act.startService(intentBind);
+
+		//		/////////////
+		this.bindService();
+		//		/////////////
 
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref_design, true);
@@ -264,7 +303,7 @@ public class ActivityMain extends ActivityBase
 		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
-				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
+				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				listener = new PagerListenerMenu(this);
@@ -1088,7 +1127,7 @@ public class ActivityMain extends ActivityBase
 				this.pagerType = PAGER_TYPE_MENU;
 
 				this.setCurentCategoryPosition(11);
-				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
+				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
@@ -1126,7 +1165,7 @@ public class ActivityMain extends ActivityBase
 
 				this.setCurentCategoryPosition(curentCategoryPosition);
 
-				PagerAdapterArtsLists artsListPagerAdapter = new PagerAdapterArtsLists(
+				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());

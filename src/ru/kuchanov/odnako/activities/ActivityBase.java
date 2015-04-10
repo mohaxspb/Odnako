@@ -15,6 +15,8 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.ServiceDB;
+import ru.kuchanov.odnako.db.ServiceDB.LocalBinder;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
@@ -25,12 +27,15 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -38,6 +43,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -113,6 +119,55 @@ public class ActivityBase extends ActionBarActivity
 	protected Menu menu;
 	private String searchText;
 
+	boolean bound = false;
+	ServiceDB serviceDB;
+
+	public ServiceDB getServiceDB()
+	{
+		return this.serviceDB;
+	}
+
+	public ServiceConnection sConn = new ServiceConnection()
+	{
+		public void onServiceConnected(ComponentName name, IBinder binder)
+		{
+			Log.d(LOG, "onServiceConnected");
+			bound = true;
+			LocalBinder localBinder = (LocalBinder) binder;
+			serviceDB = (ServiceDB) localBinder.getService();
+
+			allCatArtsInfo = serviceDB.getAllCatArtsInfo();
+		}
+
+		public void onServiceDisconnected(ComponentName name)
+		{
+			Log.d(LOG, "onServiceDisconnected");
+			bound = false;
+			serviceDB = null;
+		}
+	};
+
+	public void onDestroy()
+	{
+		Log.d(LOG, "onDestroy");
+		if (bound)
+		{
+			this.act.unbindService(sConn);
+			bound = false;
+		}
+		if (this.adView != null)
+		{
+			adView.destroy();
+		}
+		super.onDestroy();
+	}
+
+	public void bindService()
+	{
+		Intent intentBind = new Intent(this, ServiceDB.class);
+		this.bindService(intentBind, sConn, BIND_AUTO_CREATE);
+	}
+
 	protected void AddAds()
 	{
 		//adMob
@@ -154,16 +209,6 @@ public class ActivityBase extends ActionBarActivity
 	{
 		adView.pause();
 		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		if (this.adView != null)
-		{
-			adView.destroy();
-		}
-		super.onDestroy();
 	}
 
 	//set Navigatin drawer

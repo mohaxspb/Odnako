@@ -146,6 +146,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 				try
 				{
 					p = this.getArtInfoByPosition(position);
+					//Log.d(LOG, p.getTitle());
 
 					final int positionInAllArtsInfo = RecyclerAdapterArtsListFragment
 					.getPositionInAllArtsInfo(position);
@@ -264,9 +265,11 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 									switch (item.getItemId())
 									{
 										case R.id.mark_as_read:
+											//TODO
 											Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
+											//TODO
 											Actions.shareUrl(p.getUrl(), act);
 											return true;
 										case R.id.show_comments:
@@ -395,6 +398,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					////end SaveImg
 
 					//read Img
+					//Log.d(LOG, "p.isReaden(): " + String.valueOf(p.isReaden()));
 					if (p.isReaden())
 					{
 						if (nightMode == true)
@@ -425,6 +429,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					{
 						public void onClick(View v)
 						{
+							//TODO
 							Actions.shareUrl(p.getUrl(), act);
 						}
 					});

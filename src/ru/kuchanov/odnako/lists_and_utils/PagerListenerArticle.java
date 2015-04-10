@@ -83,14 +83,19 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			//But we must notify all Fragments, so we can use receiver of savedState of art and switch by action
 			//Send intent with article to another activities to be able to update their data
 			Article a = act.getAllCatArtsInfo().get(categoryToLoad).get(position);
-			DataBaseHelper h = new DataBaseHelper(act);
-			Article.updateIsReaden(h, a.getId(), true);
-			h.close();
-			a.setReaden(true);
-			Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
-			intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
-			intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_READ);
-			LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
+			if (a.isReaden() == false)
+			{
+				a.setReaden(true);
+				DataBaseHelper h = new DataBaseHelper(act);
+				//Log.e(a.getTitle(), "a.getId(): " + a.getId());
+				Article.updateIsReaden(h, Article.getArticleIdByURL(h, a.getUrl()), true);
+				h.close();
+
+				Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
+				intentGlobal.putExtra(Article.KEY_CURENT_ART, a);
+				intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_READ);
+				LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
+			}
 		}
 
 		setTitleToToolbar(categoryToLoad, act, twoPane, position);
