@@ -261,7 +261,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						{
 							PopupMenu popup = new PopupMenu(act, v);
 							MenuInflater inflater = popup.getMenuInflater();
-							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
+							inflater.inflate(R.menu.art_card_menu, popup.getMenu());
 							if (p.isReaden())
 							{
 								popup.getMenu().findItem(R.id.mark_as_read).setTitle("Отметить НЕ прочитанной");
@@ -441,6 +441,24 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 							holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
 						}
 					}
+					holderMain.read.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(View v)
+						{
+							p.setReaden(!p.isReaden());
+							DataBaseHelper h = new DataBaseHelper(act);
+							Article.updateIsReaden(h, Article.getArticleIdByURL(h, p.getUrl()),
+							!p.isReaden());
+							h.close();
+
+							Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
+							intentGlobal.putExtra(Article.KEY_CURENT_ART, p);
+							intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED,
+							Const.Action.ARTICLE_READ);
+							LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
+						}
+					});
 					////end read Img
 
 					//share btn

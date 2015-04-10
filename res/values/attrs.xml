@@ -39,6 +39,8 @@
     <attr name="refreshIcon" format="reference" />
     <attr name="commentsIcon" format="reference" />
     <attr name="shareIcon" format="reference" />
+    <attr name="readenIcon" format="reference" />
+    <attr name="unreadenIcon" format="reference" />
     <attr name="searchIconOdnako" format="reference" />
     <attr name="default_image" format="reference" />
     <!-- arrows -->

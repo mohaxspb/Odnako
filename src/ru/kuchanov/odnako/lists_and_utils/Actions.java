@@ -33,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 public class Actions
 {
@@ -460,14 +459,15 @@ public class Actions
 		}
 	}
 
-	public static void markAsRead(String url, Context ctx)
-	{
-		Toast.makeText(ctx, "readed!", Toast.LENGTH_SHORT).show();
-	}
-
 	public static void shareUrl(String url, Context ctx)
 	{
-		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
+		//		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+		sendIntent.setType("text/plain");
+		ctx.startActivity(Intent.createChooser(sendIntent, ctx.getResources().getText(R.string.share_link)));
+		//ctx.startActivity(sendIntent);
 	}
 
 	public static void showComments(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
