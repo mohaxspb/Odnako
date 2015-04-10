@@ -85,12 +85,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		{
 			Log.i(LOG, "receiverArticleLoaded onReceive called");
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			Set<String> keySet = getAllCatArtsInfo().keySet();
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
 			{
 				case Const.Action.ARTICLE_READ:
-				case Const.Action.ARTICLE_LOADED:
 					//loop through all arts in activity and update them and adapters
-					Set<String> keySet = getAllCatArtsInfo().keySet();
 					for (String key : keySet)
 					{
 						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
@@ -100,7 +99,26 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 							Article artInList = artsList.get(i);
 							if (artInList.getUrl().equals(a.getUrl()))
 							{
-								artsList.set(i, a);
+								artsList.get(i).setReaden(a.isReaden());
+								//artsList.set(i, a);
+								notFound = false;
+							}
+						}
+					}
+				break;
+				case Const.Action.ARTICLE_LOADED:
+					//loop through all arts in activity and update them and adapters
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+						boolean notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								artsList.get(i).setArtText(a.getArtText());
+								//artsList.set(i, a);
 								notFound = false;
 							}
 						}

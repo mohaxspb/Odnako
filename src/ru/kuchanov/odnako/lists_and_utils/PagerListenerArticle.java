@@ -83,7 +83,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			//But we must notify all Fragments, so we can use receiver of savedState of art and switch by action
 			//Send intent with article to another activities to be able to update their data
 			Article a = act.getAllCatArtsInfo().get(categoryToLoad).get(position);
-			if (a.isReaden() == false)
+			if (a.isReaden() == false && !a.getArtText().equals(Const.EMPTY_STRING))
 			{
 				a.setReaden(true);
 				DataBaseHelper h = new DataBaseHelper(act);

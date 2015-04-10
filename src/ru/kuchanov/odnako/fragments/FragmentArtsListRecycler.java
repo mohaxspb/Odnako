@@ -865,9 +865,9 @@ public class FragmentArtsListRecycler extends Fragment
 						Article artInList = allArtsInfo.get(i);
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
-							//artInList = a;
-							allArtsInfo.set(i, a);
-							recyclerAdapter.updateArticle(a, i);
+							allArtsInfo.get(i).setReaden(a.isReaden());
+							//allArtsInfo.set(i, a);
+							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}
 					}
@@ -879,9 +879,9 @@ public class FragmentArtsListRecycler extends Fragment
 						Article artInList = allArtsInfo.get(i);
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
-							//artInList = a;
-							allArtsInfo.set(i, a);
-							recyclerAdapter.updateArticle(a, i);
+							allArtsInfo.get(i).setArtText(a.getArtText());
+							//allArtsInfo.set(i, a);
+							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}
 					}
