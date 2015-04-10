@@ -8,14 +8,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -257,16 +260,36 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						public void onClick(View v)
 						{
 							PopupMenu popup = new PopupMenu(act, v);
+							MenuInflater inflater = popup.getMenuInflater();
+							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
+							if (p.isReaden())
+							{
+								popup.getMenu().findItem(R.id.mark_as_read).setTitle("Отметить НЕ прочитанной");
+							}
+							else
+							{
+								popup.getMenu().findItem(R.id.mark_as_read).setTitle("Отметить прочитанной");
+							}
+							popup.show();
 							popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
 							{
-
 								public boolean onMenuItemClick(MenuItem item)
 								{
 									switch (item.getItemId())
 									{
 										case R.id.mark_as_read:
-											//TODO
-											Actions.markAsRead(p.getUrl(), act);
+											p.setReaden(!p.isReaden());
+											DataBaseHelper h = new DataBaseHelper(act);
+											Article.updateIsReaden(h, Article.getArticleIdByURL(h, p.getUrl()),
+											!p.isReaden());
+											h.close();
+
+											Intent intentGlobal = new Intent(Const.Action.ARTICLE_CHANGED);
+											intentGlobal.putExtra(Article.KEY_CURENT_ART, p);
+											intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED,
+											Const.Action.ARTICLE_READ);
+											LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
+											//Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
 											//TODO
@@ -281,9 +304,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 									}
 								}
 							});
-							MenuInflater inflater = popup.getMenuInflater();
-							inflater.inflate(R.menu.art_card_menu_ligth, popup.getMenu());
-							popup.show();
 						}
 					});
 					////End of popUp menu in cardView

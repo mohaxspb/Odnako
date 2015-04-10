@@ -87,7 +87,6 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			{
 				a.setReaden(true);
 				DataBaseHelper h = new DataBaseHelper(act);
-				//Log.e(a.getTitle(), "a.getId(): " + a.getId());
 				Article.updateIsReaden(h, Article.getArticleIdByURL(h, a.getUrl()), true);
 				h.close();
 
