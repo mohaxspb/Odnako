@@ -18,6 +18,12 @@ public final class Const
 		 * const for intent action for requesting data from service
 		 */
 		public static final String DATA_REQUEST = ACTION + ".DATA_REQUEST";
+		
+		/**
+		 * const for intent action for MULTIPLE data requesting from service
+		 */
+		public static final String DATA_REQUEST_MULTIPLE = ACTION + ".DATA_REQUEST_MULTIPLE";
+		
 		/**
 		 * const for intent action for requesting if some task is running
 		 */

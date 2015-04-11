@@ -33,6 +33,7 @@ import ru.kuchanov.odnako.callbacks.CallbackWriteFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackWriteFromTop;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
@@ -736,6 +737,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		if (newQuont.equals("более 30"))
 		{
+			newQuont = "30";
 			String[] events = new String[dataFromWeb.size()];
 			inboxStyle.setBigContentTitle("Новые статьи:");
 			// Moves events into the expanded layout
@@ -771,15 +773,23 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		// Sets up the Snooze and Dismiss action buttons that will appear in the
 		// big view of the notification.
-		Intent dismissIntent = new Intent(this, ActivityMain.class);
-		dismissIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		PendingIntent piDismiss = PendingIntent.getActivity(this, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		Intent downloadArtsIntent = new Intent(this, ServiceArticle.class);
+		downloadArtsIntent.setAction(Const.Action.DATA_REQUEST_MULTIPLE);
+		ArrayList<String> urls = new ArrayList<String>();
+		for (int i = 0; i < Integer.parseInt(newQuont); i++)
+		{
+			urls.add(dataFromWeb.get(i).getUrl());
+		}
+		downloadArtsIntent.putStringArrayListExtra(FragmentArticle.ARTICLE_URL, urls);
+		downloadArtsIntent.putExtra("startDownload", true);
+		PendingIntent pendingIntentDownloadArts = PendingIntent.getService(this, 0, downloadArtsIntent,
+		PendingIntent.FLAG_UPDATE_CURRENT);
 
 		Intent snoozeIntent = new Intent(this, ServiceRSS.class);
 		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-		builder.addAction(R.drawable.ic_save_white_48dp,
-		"Save", piDismiss);
+		builder.addAction(R.drawable.ic_save_grey600_24dp,
+		"Загрузить статьи", pendingIntentDownloadArts);
 		builder.addAction(R.drawable.ic_share_white_48dp,
 		"Share", piSnooze);
 		///////////////

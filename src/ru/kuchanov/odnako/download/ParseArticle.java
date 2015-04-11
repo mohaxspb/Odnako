@@ -9,11 +9,9 @@ package ru.kuchanov.odnako.download;
 import java.util.Date;
 
 import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.callbacks.CallbackDownloadArticle;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-import ru.kuchanov.odnako.db.ServiceArticle;
-
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -22,16 +20,23 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 	private final static String LOG = ParseArticle.class.getSimpleName() + "/";
 
 	private String url;
-	private Context ctx;
 	private DataBaseHelper h;
 	boolean forceDownLoad;
+	boolean isMultipleTask;
+	CallbackDownloadArticle callback;
+	int iterator;
+	int quontity;
 
-	public ParseArticle(Context ctx, String url, DataBaseHelper h, boolean forceDownLoad)
+	public ParseArticle(String url, DataBaseHelper h, boolean forceDownLoad, boolean isMultipleTask,
+	CallbackDownloadArticle callback, int iterator, int quontity)
 	{
-		this.ctx = ctx;
 		this.url = url;
 		this.h = h;
 		this.forceDownLoad = forceDownLoad;
+		this.isMultipleTask = isMultipleTask;
+		this.callback = callback;
+		this.iterator = iterator;
+		this.quontity = quontity;
 	}
 
 	protected Article doInBackground(Void... arg)
@@ -107,7 +112,7 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 			//Log.e(LOG + getUrl(), "Catched Exception: " + e.toString());
 			e.printStackTrace();
 		}
-		
+
 		return article;
 	}
 
@@ -116,20 +121,12 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		//check internet
 		if (article != null)
 		{
-			//			if (this.f != null)
-			//			{
-			//				this.f.update(article);
-			//				this.h.close();
-			//			}
-			//			else
-			//			{
-			ServiceArticle.sendDownloadedData(ctx, article, url);
-			//			}
+			this.callback.onDoneDownloadingArticle(article, isMultipleTask, iterator, quontity);
 		}
 		//NO internet
 		else
 		{
-			ServiceArticle.sendErrorMsg(ctx, url, Const.Error.CONNECTION_ERROR);
+			this.callback.onErrorWhileDownloadingArticle(Const.Error.CONNECTION_ERROR, url, isMultipleTask, iterator, quontity);
 			Log.e(LOG + getUrl(), Const.Error.CONNECTION_ERROR);
 		}
 	}// Событие по окончанию парсинга
