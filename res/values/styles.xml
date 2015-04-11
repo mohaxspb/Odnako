@@ -49,6 +49,7 @@
         <item name="authorIcon">@drawable/ic_person_white_48dp</item>
         <item name="authorsMoreIcon">@drawable/ic_group_add_white_48dp</item>
         <item name="downloadIcon">@drawable/ic_file_download_white_48dp</item>
+        <item name="saveIcon">@drawable/ic_save_white_48dp</item>
         <item name="asListIcon">@drawable/ic_list_white_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_white_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_white_48dp</item>
@@ -152,6 +153,7 @@
         <item name="authorIcon">@drawable/ic_person_grey600_48dp</item>
         <item name="authorsMoreIcon">@drawable/ic_group_add_grey600_48dp</item>
         <item name="downloadIcon">@drawable/ic_file_download_grey600_48dp</item>
+        <item name="saveIcon">@drawable/ic_save_grey600_48dp</item>
         <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_grey600_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_grey600_48dp</item>

@@ -12,7 +12,7 @@ import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
-import ru.kuchanov.odnako.db.ServiceArticle;
+import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArticleFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -184,11 +184,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	{
 		this.swipeRef.setRefreshing(true);
 
-		Intent intent = new Intent(this.act, ServiceArticle.class);
-		intent.setAction(Const.Action.DATA_REQUEST);
-		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
-		intent.putExtra("startDownload", startDownload);
-		this.act.startService(intent);
+		Actions.startDownLoadArticle(this.curArticle.getUrl(), this.act, startDownload);
+		//		Intent intent = new Intent(this.act, ServiceArticle.class);
+		//		intent.setAction(Const.Action.DATA_REQUEST);
+		//		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
+		//		intent.putExtra("startDownload", startDownload);
+		//		this.act.startService(intent);
 	}
 
 	@Override

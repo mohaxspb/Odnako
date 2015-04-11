@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
@@ -15,6 +16,8 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.ServiceArticle;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 
@@ -461,13 +464,11 @@ public class Actions
 
 	public static void shareUrl(String url, Context ctx)
 	{
-		//		Toast.makeText(ctx, "share!", Toast.LENGTH_SHORT).show();
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
 		sendIntent.setType("text/plain");
 		ctx.startActivity(Intent.createChooser(sendIntent, ctx.getResources().getText(R.string.share_link)));
-		//ctx.startActivity(sendIntent);
 	}
 
 	public static void showComments(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
@@ -776,5 +777,23 @@ public class Actions
 
 			act.startActivity(intent);
 		}
+	}
+
+	public static void shareArtText(String textToShare, Context ctx)
+	{
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
+		sendIntent.setType("text/plain");
+		ctx.startActivity(Intent.createChooser(sendIntent, ctx.getResources().getText(R.string.get_art_text)));
+	}
+
+	public static void startDownLoadArticle(String url, Context ctx, boolean startDownload)
+	{
+		Intent intent = new Intent(ctx, ServiceArticle.class);
+		intent.setAction(Const.Action.DATA_REQUEST);
+		intent.putExtra(FragmentArticle.ARTICLE_URL, url);
+		intent.putExtra("startDownload", startDownload);
+		ctx.startService(intent);
 	}
 }

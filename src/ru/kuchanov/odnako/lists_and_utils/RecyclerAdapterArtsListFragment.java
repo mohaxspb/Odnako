@@ -394,10 +394,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					//SaveImg
 					if (!p.getArtText().equals(Const.EMPTY_STRING))
 					{
-						LayoutParams params = (LayoutParams) holderMain.save.getLayoutParams();
-						params.height = (int) DipToPx.convert(25, act);
-						params.width = (int) DipToPx.convert(25, act);
-						holderMain.save.setLayoutParams(params);
+						holderMain.save.setContentDescription(act.getResources().getString(R.string.get_art_text));
 						if (nightMode == true)
 						{
 							holderMain.save.setImageResource(R.drawable.ic_save_white_48dp);
@@ -406,14 +403,32 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						{
 							holderMain.save.setImageResource(R.drawable.ic_save_grey600_48dp);
 						}
+						holderMain.save.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View v)
+							{
+								Actions.shareArtText(p.getArtText(), act);
+							}
+						});
 					}
 					else
 					{
-						LayoutParams params = (LayoutParams) holderMain.save.getLayoutParams();
-						params.height = 0;
-						params.width = 0;
-						holderMain.save.setLayoutParams(params);
-						holderMain.save.setImageResource(android.R.color.transparent);
+						holderMain.save.setContentDescription(act.getResources().getString(R.string.download_article));
+						if (nightMode == true)
+						{
+							holderMain.save.setImageResource(R.drawable.ic_file_download_white_48dp);
+						}
+						else
+						{
+							holderMain.save.setImageResource(R.drawable.ic_file_download_grey600_48dp);
+						}
+						holderMain.save.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View v)
+							{
+								Actions.startDownLoadArticle(p.getUrl(), act, true);
+							}
+						});
 					}
 					////end SaveImg
 
@@ -467,7 +482,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					{
 						public void onClick(View v)
 						{
-							//TODO
 							Actions.shareUrl(p.getUrl(), act);
 						}
 					});
