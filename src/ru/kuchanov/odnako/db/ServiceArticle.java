@@ -64,14 +64,7 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		{
 			ArrayList<String> urls = intent.getStringArrayListExtra(FragmentArticle.ARTICLE_URL);
 			int quontity = urls.size();
-			NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-			mBuilder.setContentTitle("Загрузка статей")
-			.setContentText("Идёт загрузка")
-			.setSmallIcon(R.drawable.ic_file_download_white_48dp);
-			mBuilder.setProgress(quontity, 0, false);
-			// Displays the progress bar for the first time.
-			mNotifyManager.notify(NOTIFICATION_ARTICLES_DOWNLOAD_ID, mBuilder.build());
+			this.updateNotification(0, quontity);
 			for (int i = 0; i < quontity; i++)
 			{
 				String url = urls.get(i);
@@ -193,37 +186,7 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		}
 		else
 		{
-			//update notification
-			NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-			//check if it was last task
-			if (iterator == quontity - 1)
-			{
-				if (this.numOfErrors == 0)
-				{
-					mBuilder.setContentTitle("Загрузка завершена!")
-					.setContentText("Все статьи загружены")
-					.setSmallIcon(R.drawable.ic_file_download_white_48dp);
-					mBuilder.setProgress(0, 0, false);
-				}
-				else
-				{
-					mBuilder.setContentTitle("Загрузка завершена!")
-					.setContentText("Не удалось загрузить " + this.numOfErrors + " статей")
-					.setSmallIcon(R.drawable.ic_file_download_white_48dp);
-					mBuilder.setProgress(0, 0, false);
-					this.numOfErrors = 0;
-				}
-			}
-			else
-			{
-				mBuilder.setContentTitle("Загрузка статей")
-				.setContentText("Загружено: " + String.valueOf(iterator + 1) + "/" + quontity)
-				.setSmallIcon(R.drawable.ic_file_download_white_48dp);
-				mBuilder.setProgress(quontity, iterator, false);
-			}
-			// Displays the progress bar for the first time.
-			mNotifyManager.notify(NOTIFICATION_ARTICLES_DOWNLOAD_ID, mBuilder.build());
+			this.updateNotification(iterator, quontity);
 		}
 		Intent intent = new Intent(downloadedArticle.getUrl());
 		intent.putExtra(Article.KEY_CURENT_ART, downloadedArticle);
@@ -234,6 +197,41 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		intentGlobal.putExtra(Article.KEY_CURENT_ART, downloadedArticle);
 		intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_LOADED);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentGlobal);
+	}
+
+	private void updateNotification(int iterator, int quontity)
+	{
+		//update notification
+		NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+		//check if it was last task
+		if (iterator == quontity - 1)
+		{
+			if (this.numOfErrors == 0)
+			{
+				mBuilder.setContentTitle("Загрузка завершена!")
+				.setContentText("Все статьи загружены")
+				.setSmallIcon(R.drawable.ic_file_download_white_48dp);
+				mBuilder.setProgress(0, 0, false);
+			}
+			else
+			{
+				mBuilder.setContentTitle("Загрузка завершена!")
+				.setContentText("Не удалось загрузить " + this.numOfErrors + " статей")
+				.setSmallIcon(R.drawable.ic_file_download_white_48dp);
+				mBuilder.setProgress(0, 0, false);
+				this.numOfErrors = 0;
+			}
+		}
+		else
+		{
+			mBuilder.setContentTitle("Загрузка статей")
+			.setContentText("Загружено: " + String.valueOf(iterator + 1) + "/" + quontity)
+			.setSmallIcon(R.drawable.ic_file_download_white_48dp);
+			mBuilder.setProgress(quontity, iterator, false);
+		}
+		// Displays the progress bar for the first time.
+		mNotifyManager.notify(NOTIFICATION_ARTICLES_DOWNLOAD_ID, mBuilder.build());
 	}
 
 	@Override
@@ -260,6 +258,7 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		else
 		{
 			this.numOfErrors++;
+			this.updateNotification(iterator, quontity);
 		}
 		Intent intent = new Intent(url);
 		intent.putExtra(Msg.ERROR, error);
