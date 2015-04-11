@@ -788,7 +788,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		Intent snoozeIntent = new Intent(this, ServiceRSS.class);
 		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-		builder.addAction(R.drawable.ic_save_grey600_24dp,
+		builder.addAction(R.drawable.ic_file_download_grey600_24dp,
 		"Загрузить статьи", pendingIntentDownloadArts);
 		builder.addAction(R.drawable.ic_share_white_48dp,
 		"Share", piSnooze);
