@@ -111,10 +111,10 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/service_article" />
         <service
-            android:name="ru.kuchanov.odnako.utils.OverScreenService"
+            android:name="ru.kuchanov.odnako.utils.ServiceTTS"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/downloads" />
+            android:label="@string/service_tts" />
 
         <receiver
             android:name="ru.kuchanov.odnako.receivers.ReciverBoot"

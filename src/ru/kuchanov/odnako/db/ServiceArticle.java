@@ -30,7 +30,7 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 {
 	final private static String LOG = ServiceArticle.class.getSimpleName() + "/";
 
-	final static int NOTIFICATION_ARTICLES_DOWNLOAD_ID = 42;
+	public final static int NOTIFICATION_ARTICLES_DOWNLOAD_ID = 42;
 
 	private DataBaseHelper dataBaseHelper;
 

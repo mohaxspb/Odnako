@@ -37,6 +37,7 @@
     <string name="service_db">Работа с базой данных статей</string>
     <string name="service_rss">Обновление даты и краткого содержания статей</string>
     <string name="service_article">Загрузка текста статей</string>
+    <string name="service_tts">Озвучивание статей</string>
     <string name="check_new">Поиск новых статей</string>
     <string name="auto_load">Автозагрузка статей</string>
     <!--  -->

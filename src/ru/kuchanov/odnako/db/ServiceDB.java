@@ -34,6 +34,7 @@ import ru.kuchanov.odnako.callbacks.CallbackWriteFromTop;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.utils.ServiceTTS;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
@@ -50,6 +51,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -64,6 +66,8 @@ public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackA
 CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 {
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
+
+	public final static int NOTIFICATION_NEW_ARTICLES_ID = 1;
 
 	private DataBaseHelper dataBaseHelper;
 
@@ -771,8 +775,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		// Content title, which appears in large type at the top of the notification
 		builder.setContentTitle("Новые статьи: " + newQuont);
 
-		// Sets up the Snooze and Dismiss action buttons that will appear in the
-		// big view of the notification.
+		//Sets up the action buttons that will appear in the big view of the notification.
+		//add download new articles action
 		Intent downloadArtsIntent = new Intent(this, ServiceArticle.class);
 		downloadArtsIntent.setAction(Const.Action.DATA_REQUEST_MULTIPLE);
 		ArrayList<String> urls = new ArrayList<String>();
@@ -785,13 +789,17 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		PendingIntent pendingIntentDownloadArts = PendingIntent.getService(this, 0, downloadArtsIntent,
 		PendingIntent.FLAG_UPDATE_CURRENT);
 
-		Intent snoozeIntent = new Intent(this, ServiceRSS.class);
-		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
 		builder.addAction(R.drawable.ic_file_download_grey600_24dp,
 		"Загрузить статьи", pendingIntentDownloadArts);
-		builder.addAction(R.drawable.ic_share_white_48dp,
-		"Share", piSnooze);
+		//add TTS of new arts
+		Intent intentTTS = new Intent(this, ServiceTTS.class);
+		intentTTS.setAction("init");
+		ArrayList<Article> dataToTTS = new ArrayList<Article>(dataFromWeb.subList(0, Integer.parseInt(newQuont)));
+		intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, dataToTTS);
+		PendingIntent piSnooze = PendingIntent.getService(this, 0, intentTTS, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp,
+		"Прочитать статьи вслух", piSnooze);
 		///////////////
 
 		//Vibration
@@ -812,7 +820,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		// Will display the notification in the notification bar
-		notificationManager.notify(1, builder.build());
+		notificationManager.notify(NOTIFICATION_NEW_ARTICLES_ID, builder.build());
 	}
 
 	@Override
