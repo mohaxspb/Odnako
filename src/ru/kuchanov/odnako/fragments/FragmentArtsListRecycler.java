@@ -854,6 +854,17 @@ public class FragmentArtsListRecycler extends Fragment
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			if (allArtsInfo == null)
+			{
+				Log.e(LOG + categoryToLoad, "allArtsInfo==null in onReceive");
+				return;
+			}
+			if (intent.getParcelableExtra(Article.KEY_CURENT_ART) == null)
+			{
+				Log.e(LOG + categoryToLoad, "intent.getParcelableExtra(Article.KEY_CURENT_ART)==null in onReceive");
+				return;
+			}
+
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 			boolean notFound = true;
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))

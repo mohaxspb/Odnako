@@ -691,6 +691,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 					break;
 				}
 			}
+			else
+			{
+				sendBroadcastWithResult(this, resultMessage, dataFromWeb, categoryToLoad, pageToLoad);
+			}
 		}
 		else
 		{
@@ -735,9 +739,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		builder.setAutoCancel(true);
 
-		///////////////
 		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
 		if (newQuont.equals("более 30"))
 		{
 			newQuont = "30";
@@ -753,7 +755,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 		else
 		{
-			//TODO to test
+			//XXX to test
 			newQuont = "10";
 			String[] events = new String[Integer.parseInt(newQuont)];
 			// Sets a title for the Inbox in expanded layout
@@ -791,28 +793,21 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		builder.addAction(R.drawable.ic_file_download_grey600_24dp,
 		"Загрузить статьи", pendingIntentDownloadArts);
 		//add TTS of new arts
-		
+
 		Intent intentTTS = new Intent(this.getApplicationContext(), ServiceTTS.class);
 		intentTTS.setAction("init");
 		ArrayList<Article> dataToTTS = new ArrayList<Article>(dataFromWeb.subList(0, Integer.parseInt(newQuont)));
 		intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, dataToTTS);
-//		//FIRSTLY check if it is already running and kill it!
-//		if(CheckIfServiceIsRunning.check(ctx, "ServiceTTS"))
-//		{
-//			this.stopService(intentTTS);
-//		}
-		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		PendingIntent piSnooze = PendingIntent.getService(this.getApplicationContext(), 0, intentTTS, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent piSnooze = PendingIntent.getService(this.getApplicationContext(), 0, intentTTS,
+		PendingIntent.FLAG_CANCEL_CURRENT);
 
 		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "Прочитать статьи вслух", piSnooze);
-		///////////////
 
 		//Vibration
 		if (this.pref.getBoolean(ActivityPreference.PREF_KEY_NOTIF_VIBRATION, false))
 		{
 			builder.setVibrate(new long[] { 500, 500, 500, 500, 500 });
 		}
-
 		//LED
 		builder.setLights(Color.WHITE, 3000, 3000);
 		//Sound

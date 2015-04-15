@@ -28,6 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
 public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
@@ -113,15 +114,15 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			case "init":
 				ArrayList<Article> artList = intent.getParcelableArrayListExtra(FragmentArticle.ARTICLE_URL);
 
-				//XXX for test cut arts text to 270 chars
-				for (Article a : artList)
-				{
-					TextView tv = new TextView(this);
-					tv.setText(Html.fromHtml(a.getArtText()));
-					String articlesTextWithoutHtml = tv.getText().toString();
-					String cutedText = articlesTextWithoutHtml.substring(0, 270);
-					a.setArtText(cutedText);
-				}
+				//for test cut arts text to 270 chars
+				//				for (Article a : artList)
+				//				{
+				//					TextView tv = new TextView(this);
+				//					tv.setText(Html.fromHtml(a.getArtText()));
+				//					String articlesTextWithoutHtml = tv.getText().toString();
+				//					String cutedText = articlesTextWithoutHtml.substring(0, 270);
+				//					a.setArtText(cutedText);
+				//				}
 
 				this.artList = artList;
 				this.currentArtPosition = 0;
@@ -136,8 +137,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			case "play":
 				Log.e(LOG, "play");
 				this.isPaused = false;
-				this.speekPart();
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				this.speekPart();
 			break;
 			case "pause":
 				Log.e(LOG, "pause");
@@ -145,8 +146,46 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				mTTS.stop();
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
+			case "forward":
+				Log.e(LOG, "forward");
+				if (this.currentArtPosition != this.artList.size() - 1)
+				{
+					this.isPaused = true;
+					mTTS.stop();
+					this.currentArtPosition++;
+					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
+					this.curArtTextListPosition = 0;
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				}
+				else
+				{
+					Toast.makeText(this, "Дальше не выйдет - это последняя статья в списке!", Toast.LENGTH_SHORT)
+					.show();
+				}
+			break;
+			case "rewind":
+				Log.e(LOG, "rewind");
+				if (this.currentArtPosition != 0)
+				{
+					this.isPaused = true;
+					mTTS.stop();
+					this.currentArtPosition--;
+					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
+					this.curArtTextListPosition = 0;
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				}
+				else
+				{
+					Toast.makeText(this, "Дальше не выйдет - это первая статья в списке!", Toast.LENGTH_SHORT)
+					.show();
+				}
+			break;
 			case "close":
+				this.mTTS.stop();
+				this.mTTS.shutdown();
+				this.mTTS = null;
 				this.stopForeground(true);
+				this.stopSelf();
 			break;
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -169,7 +208,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 					//set text to the start
 					this.curArtTextListPosition = 0;
 					this.isPaused = true;
-					//TODO update notification to "paused" state;
+					//update notification to "paused" state;
 					this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 				}
 				else
@@ -177,14 +216,16 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 					this.currentArtPosition++;
 					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(currentArtPosition));
 					this.curArtTextListPosition = 0;
-					//TODO update notif and play new article
+					//update notif and play new article
 					this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 					this.speekPart();
 				}
 			}
 			else
 			{
+				//we are still reading article
 				this.curArtTextListPosition++;
+				this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 				this.speekPart();
 			}
 		}
@@ -219,6 +260,12 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		if (curArt.getArtText().equals(Const.EMPTY_STRING))
 		{
 			//TODO load article and show progress
+			//We must create progress notification
+
+			//here we must register receiver for cur art url and start to load it;
+			//in onReceive we must unregister receiver, update artList with artText,
+			//fill articles parts and if(!isPaused) start to speekText();
+
 		}
 		else
 		{
@@ -259,13 +306,31 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			builder.setContentTitle("Озвучивание статей " + String.valueOf(this.currentArtPosition + 1) + "/"
 			+ this.artList.size());
 
-			//Sets up the action buttons that will appear in the big view of the notification.
+			//rewind btn
+			if (this.currentArtPosition == 0)
+			{
+				//Close button
+				Intent closeIntent = new Intent(this, ServiceTTS.class);
+				closeIntent.setAction("close");
+				PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_highlight_remove_grey600_48dp, "", piClose);
+			}
+			else
+			{
+				Intent rewindIntent = new Intent(this, ServiceTTS.class);
+				rewindIntent.setAction("rewind");
+				PendingIntent piRewind = PendingIntent.getService(this, 0, rewindIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_fast_rewind_grey600_48dp, "", piRewind);
+			}
+			//Play/pause btn
 			if (this.isPaused)
 			{
 				Intent playIntent = new Intent(this, ServiceTTS.class);
 				playIntent.setAction("play");
 				PendingIntent piPlay = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-				builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "", piPlay);
+				builder.addAction(R.drawable.ic_play_arrow_grey600_48dp, "", piPlay);
 			}
 			else
 			{
@@ -273,13 +338,27 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				pauseIntent.setAction("pause");
 				PendingIntent piPause = PendingIntent.getService(this, 0, pauseIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
-				builder.addAction(R.drawable.ic_pause_grey600_24dp, "", piPause);
+				builder.addAction(R.drawable.ic_pause_grey600_48dp, "", piPause);
 			}
 
-			Intent closeIntent = new Intent(this, ServiceTTS.class);
-			closeIntent.setAction("close");
-			PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-			builder.addAction(R.drawable.ic_launcher, "", piClose);
+			if (this.currentArtPosition == this.artList.size() - 1)
+			{
+				//Close button
+				Intent closeIntent = new Intent(this, ServiceTTS.class);
+				closeIntent.setAction("close");
+				PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_highlight_remove_grey600_48dp, "", piClose);
+			}
+			else
+			{
+				//forward btn
+				Intent forwardIntent = new Intent(this, ServiceTTS.class);
+				forwardIntent.setAction("forward");
+				PendingIntent piForward = PendingIntent.getService(this, 0, forwardIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_fast_forward_grey600_48dp, "", piForward);
+			}
 		}
 		// Displays the progress bar for the first time.
 		//		mNotifyManager.notify(NOTIFICATION_TTS_ID, builder.build());
@@ -332,19 +411,24 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		tv.setText(Html.fromHtml(article.getArtText()));
 		String articlesTextWithoutHtml = tv.getText().toString();
 
-		int numOfParts = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
+		int numOfParts;// = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
+		if (articlesTextWithoutHtml.length() <= MAX_TTS_STRING_LENGTH)
+		{
+			numOfParts = 1;
+		}
+		else
+		{
+			numOfParts = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
+		}
 		int startChar = 0;
 		int endChar = MAX_TTS_STRING_LENGTH;
-		//		Log.d(LOG, "startChar/endChar: " + startChar + "/" + endChar);
 		for (int i = 0; i < numOfParts; i++)
 		{
 			//check if it's last iteration
 			if (i == numOfParts - 1)
 			{
 				String part = articlesTextWithoutHtml.substring(startChar, articlesTextWithoutHtml.length());
-				//				Log.d(LOG, "part: " + part);
 				artTextAsList.add(part);
-				//				Log.d(LOG, "startChar/endChar: " + startChar + "/" + String.valueOf(articlesTextWithoutHtml.length()));
 			}
 			else
 			{
@@ -353,11 +437,22 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				artTextAsList.add(part);
 				startChar = MAX_TTS_STRING_LENGTH * (i + 1);
 				endChar = (MAX_TTS_STRING_LENGTH * (i + 2));
-
-				//				Log.d(LOG, "startChar/endChar: " + startChar + "/" + endChar);
 			}
 		}
 
 		return artTextAsList;
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		Log.d(LOG, "onDestroy");
+		if (this.mTTS != null)
+		{
+			this.mTTS.stop();
+			this.mTTS.shutdown();
+			this.mTTS = null;
+		}
+		super.onDestroy();
 	}
 }
