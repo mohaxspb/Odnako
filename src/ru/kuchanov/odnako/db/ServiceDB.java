@@ -51,7 +51,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -792,14 +791,20 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		builder.addAction(R.drawable.ic_file_download_grey600_24dp,
 		"Загрузить статьи", pendingIntentDownloadArts);
 		//add TTS of new arts
-		Intent intentTTS = new Intent(this, ServiceTTS.class);
+		
+		Intent intentTTS = new Intent(this.getApplicationContext(), ServiceTTS.class);
 		intentTTS.setAction("init");
 		ArrayList<Article> dataToTTS = new ArrayList<Article>(dataFromWeb.subList(0, Integer.parseInt(newQuont)));
 		intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, dataToTTS);
-		PendingIntent piSnooze = PendingIntent.getService(this, 0, intentTTS, PendingIntent.FLAG_UPDATE_CURRENT);
+//		//FIRSTLY check if it is already running and kill it!
+//		if(CheckIfServiceIsRunning.check(ctx, "ServiceTTS"))
+//		{
+//			this.stopService(intentTTS);
+//		}
+		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent piSnooze = PendingIntent.getService(this.getApplicationContext(), 0, intentTTS, PendingIntent.FLAG_CANCEL_CURRENT);
 
-		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp,
-		"Прочитать статьи вслух", piSnooze);
+		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "Прочитать статьи вслух", piSnooze);
 		///////////////
 
 		//Vibration

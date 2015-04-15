@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import ru.kuchanov.odnako.Const;
@@ -21,20 +22,33 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
+import android.widget.TextView;
 
+@SuppressWarnings("deprecation")
 public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 {
 	final private static String LOG = ServiceTTS.class.getSimpleName() + "/";
 
 	public final static int NOTIFICATION_TTS_ID = 99;
 
-	ArrayList<Article> artList;
+	public final static int MAX_TTS_STRING_LENGTH = 250;
+	public final static int MAX_TITLE_LENGTH = 30;
+
+	NotificationManager mNotifyManager;
+
+	private ArrayList<Article> artList;
+	private int currentArtPosition = 0;
+	private ArrayList<String> curArtTextList;
+	private int curArtTextListPosition = 0;
 
 	private TextToSpeech mTTS;
+
+	private boolean isPaused = true;
 
 	@Override
 	public void onCreate()
@@ -43,34 +57,53 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		super.onCreate();
 
 		mTTS = new TextToSpeech(this, this);
-		mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener()
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)
 		{
+			mTTS.setOnUtteranceProgressListener(uPL);
+		}
+		else
+		{
+			mTTS.setOnUtteranceCompletedListener(oUCL);
+		}
 
-			@Override
-			public void onStart(String utteranceId)
-			{
-				// TODO Auto-generated method stub
-				Log.i(LOG, "onStart");
-			}
-
-			@Override
-			@Deprecated
-			public void onError(String utteranceId)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onDone(String utteranceId)
-			{
-				// TODO Auto-generated method stub
-				Log.i(LOG, "onDone");
-			}
-		});
+		mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
-	@SuppressWarnings("deprecation")
+	UtteranceProgressListener uPL = new UtteranceProgressListener()
+	{
+		@Override
+		public void onStart(String utteranceId)
+		{
+			Log.i(LOG, "onStart");
+		}
+
+		@Override
+		@Deprecated
+		public void onError(String utteranceId)
+		{
+			Log.e(LOG, "onError");
+		}
+
+		@Override
+		public void onDone(String utteranceId)
+		{
+			Log.i(LOG, "onDone");
+			onCompletePartReading();
+			mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+		}
+	};
+
+	OnUtteranceCompletedListener oUCL = new OnUtteranceCompletedListener()
+	{
+		@Override
+		public void onUtteranceCompleted(String utteranceId)
+		{
+			Log.i(LOG, "onUtteranceCompleted");
+			onCompletePartReading();
+			mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+		}
+	};
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
@@ -79,114 +112,178 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		{
 			case "init":
 				ArrayList<Article> artList = intent.getParcelableArrayListExtra(FragmentArticle.ARTICLE_URL);
+
+				//XXX for test cut arts text to 270 chars
+				for (Article a : artList)
+				{
+					TextView tv = new TextView(this);
+					tv.setText(Html.fromHtml(a.getArtText()));
+					String articlesTextWithoutHtml = tv.getText().toString();
+					String cutedText = articlesTextWithoutHtml.substring(0, 270);
+					a.setArtText(cutedText);
+				}
+
 				this.artList = artList;
-				NotificationCompat.Builder builder = this.createNotification(artList.get(0), 0, 1, false);
-				this.startForeground(NOTIFICATION_TTS_ID, builder.build());
+				this.currentArtPosition = 0;
+
+				this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
+				this.curArtTextListPosition = 0;
+
+				this.isPaused = true;
+
+				this.startForeground(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
 			case "play":
 				Log.e(LOG, "play");
-				this.updateNotification(this.artList.get(0), 0, 1);
-
-				String text = "I'm a TTS service, hurray!";//this.artList.get(0).getArtText()
-				text = this.artList.get(0).getArtText();
-				text = Html.fromHtml(text.substring(0, 500)).toString();//
-				Log.i(LOG, text);
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-				{
-					mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, "test");
-				}
-				else
-				{
-					mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-				}
+				this.isPaused = false;
+				this.speekPart();
+				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
 			case "pause":
+				Log.e(LOG, "pause");
+				this.isPaused = true;
 				mTTS.stop();
-				this.updateNotification(this.artList.get(0), 0, 100);
+				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+			break;
+			case "close":
+				this.stopForeground(true);
 			break;
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	//	private NotificationCompat.Builder createNotification(ArrayList<Article> arts)
-	private NotificationCompat.Builder createNotification(Article art, int iterator, int quont, boolean isPaying)
+	private void onCompletePartReading()
 	{
-		// Use NotificationCompat.Builder to set up our notification.
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-		//icon appears in device notification bar and right hand corner of notification
-		builder.setSmallIcon(R.drawable.ic_radio_button_off_white_48dp);
-
-		// Large icon appears on the left of the notification
-		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
-
-		// The subtext, which appears under the text on newer devices.
-		// This will show-up in the devices with Android 4.2 and above only
-		builder.setSubText("Всего новых статей:");
-
-		builder.setAutoCancel(false);
-
-		///////////////
-		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
-		if (!art.getPreview().equals(Const.EMPTY_STRING))
+		if (this.isPaused)
 		{
-			inboxStyle.addLine(art.getPreview());
-		}
-		//			builder.setNumber(art);
-
-		// Moves the expanded layout object into the notification object.
-		builder.setStyle(inboxStyle);
-		////////////
-		// Content title, which appears in large type at the top of the notification
-		builder.setContentTitle("Новые статьи: ");
-
-		//Sets up the action buttons that will appear in the big view of the notification.
-		//add TTS of new arts
-		Intent snoozeIntent = new Intent(this, ServiceTTS.class);
-		snoozeIntent.setAction("play");
-		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp,
-		"", piSnooze);
-		///////////////
-
-		return builder;
-	}
-
-	private void updateNotification(Article art, int iterator, int quontity)
-	{
-		//update notification
-		NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-		builder.setSmallIcon(R.drawable.ic_radio_button_off_white_48dp);
-		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
-		builder.setSubText("Всего новых статей:");
-		builder.setAutoCancel(false);
-		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-		if (!art.getPreview().equals(Const.EMPTY_STRING))
-		{
-			inboxStyle.addLine(art.getPreview());
-		}
-		builder.setStyle(inboxStyle);
-		builder.setContentTitle("Новые статьи: ");
-
-		//Sets up the action buttons that will appear in the big view of the notification.
-		//add TTS of new arts
-		Intent snoozeIntent = new Intent(this, ServiceTTS.class);
-		if (quontity == 100)
-		{
-			snoozeIntent.setAction("play");
+			//Nothing to do...
 		}
 		else
 		{
-			snoozeIntent.setAction("pause");
+			if (this.curArtTextListPosition == this.curArtTextList.size() - 1)
+			{
+				//so we've already read last part of article
+				if (this.currentArtPosition == this.artList.size() - 1)
+				{
+					//so we've already read the last article from given list
+					//set text to the start
+					this.curArtTextListPosition = 0;
+					this.isPaused = true;
+					//TODO update notification to "paused" state;
+					this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				}
+				else
+				{
+					this.currentArtPosition++;
+					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(currentArtPosition));
+					this.curArtTextListPosition = 0;
+					//TODO update notif and play new article
+					this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+					this.speekPart();
+				}
+			}
+			else
+			{
+				this.curArtTextListPosition++;
+				this.speekPart();
+			}
 		}
-		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		builder.addAction(R.drawable.ic_pause_grey600_24dp, "", piSnooze);
+	}
+
+	private void speekPart()
+	{
+		String text = this.curArtTextList.get(this.curArtTextListPosition);
+		Log.i(LOG, text);
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+		{
+			mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, "test");
+		}
+		else
+		{
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "test");
+			mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, params);
+		}
+	}
+
+	private NotificationCompat.Builder getNotification()
+	{
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+		builder.setSmallIcon(R.drawable.ic_play_arrow_grey600_24dp);
+		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
+		builder.setAutoCancel(false);
+
+		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+		Article curArt = this.artList.get(currentArtPosition);
+		if (curArt.getArtText().equals(Const.EMPTY_STRING))
+		{
+			//TODO load article and show progress
+		}
+		else
+		{
+			//split title to parts with lenght==30 to fit notif lines
+			ArrayList<String> titlePartsList = new ArrayList<String>();
+			int numOfParts = (curArt.getTitle().length() / MAX_TITLE_LENGTH) + 1;
+			int startChar = 0;
+			int endChar = MAX_TITLE_LENGTH;
+
+			for (int i = 0; i < numOfParts; i++)
+			{
+				//check if it's last iteration
+				if (i == numOfParts - 1)
+				{
+					String part = curArt.getTitle().substring(startChar, curArt.getTitle().length());
+					titlePartsList.add(part);
+				}
+				else
+				{
+					String part = curArt.getTitle().substring(startChar, endChar);
+					titlePartsList.add(part);
+					startChar = MAX_TITLE_LENGTH * (i + 1);
+					endChar = (MAX_TITLE_LENGTH * (i + 2));
+				}
+			}
+			for (String s : titlePartsList)
+			{
+				inboxStyle.addLine(s);
+			}
+			builder.setStyle(inboxStyle);
+
+			int curPos = this.curArtTextListPosition;
+			int size = this.curArtTextList.size() - 1;
+			size = (size == 0) ? 1 : size;
+			int percent = curPos * 100;
+			percent = percent / size;
+			builder.setSubText("Прочитано: " + percent + "%");
+			builder.setContentTitle("Озвучивание статей " + String.valueOf(this.currentArtPosition + 1) + "/"
+			+ this.artList.size());
+
+			//Sets up the action buttons that will appear in the big view of the notification.
+			if (this.isPaused)
+			{
+				Intent playIntent = new Intent(this, ServiceTTS.class);
+				playIntent.setAction("play");
+				PendingIntent piPlay = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "", piPlay);
+			}
+			else
+			{
+				Intent pauseIntent = new Intent(this, ServiceTTS.class);
+				pauseIntent.setAction("pause");
+				PendingIntent piPause = PendingIntent.getService(this, 0, pauseIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.addAction(R.drawable.ic_pause_grey600_24dp, "", piPause);
+			}
+
+			Intent closeIntent = new Intent(this, ServiceTTS.class);
+			closeIntent.setAction("close");
+			PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.addAction(R.drawable.ic_launcher, "", piClose);
+		}
 		// Displays the progress bar for the first time.
-		mNotifyManager.notify(NOTIFICATION_TTS_ID, builder.build());
+		//		mNotifyManager.notify(NOTIFICATION_TTS_ID, builder.build());
+		return builder;
 	}
 
 	@Override
@@ -204,7 +301,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			Locale locale = new Locale("ru");
 
 			int result = mTTS.setLanguage(locale);
-			//int result = mTTS.setLanguage(Locale.getDefault());
 
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 			{
@@ -226,5 +322,42 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		{
 			Log.e("TTS", "Ошибка!");
 		}
+	}
+
+	private ArrayList<String> createArtTextListFromArticle(Article article)
+	{
+		ArrayList<String> artTextAsList = new ArrayList<String>();
+
+		TextView tv = new TextView(this);
+		tv.setText(Html.fromHtml(article.getArtText()));
+		String articlesTextWithoutHtml = tv.getText().toString();
+
+		int numOfParts = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
+		int startChar = 0;
+		int endChar = MAX_TTS_STRING_LENGTH;
+		//		Log.d(LOG, "startChar/endChar: " + startChar + "/" + endChar);
+		for (int i = 0; i < numOfParts; i++)
+		{
+			//check if it's last iteration
+			if (i == numOfParts - 1)
+			{
+				String part = articlesTextWithoutHtml.substring(startChar, articlesTextWithoutHtml.length());
+				//				Log.d(LOG, "part: " + part);
+				artTextAsList.add(part);
+				//				Log.d(LOG, "startChar/endChar: " + startChar + "/" + String.valueOf(articlesTextWithoutHtml.length()));
+			}
+			else
+			{
+				String part = articlesTextWithoutHtml.substring(startChar, endChar);
+				//				Log.d(LOG, "part: " + part);
+				artTextAsList.add(part);
+				startChar = MAX_TTS_STRING_LENGTH * (i + 1);
+				endChar = (MAX_TTS_STRING_LENGTH * (i + 2));
+
+				//				Log.d(LOG, "startChar/endChar: " + startChar + "/" + endChar);
+			}
+		}
+
+		return artTextAsList;
 	}
 }

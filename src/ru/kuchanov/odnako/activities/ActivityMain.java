@@ -115,45 +115,6 @@ public class ActivityMain extends ActivityBase
 	private boolean isKeyboardOpened = false;
 	private final static String KEY_IS_KEYBOARD_OPENED = "isKeyboardOpened";
 
-	//	boolean bound = false;
-	//	ServiceDB serviceDB;
-	//
-	//	public ServiceDB getServiceDB()
-	//	{
-	//		return this.serviceDB;
-	//	}
-	//
-	//	public ServiceConnection sConn = new ServiceConnection()
-	//	{
-	//		public void onServiceConnected(ComponentName name, IBinder binder)
-	//		{
-	//			Log.d(LOG, "onServiceConnected");
-	//			bound = true;
-	//			LocalBinder localBinder = (LocalBinder) binder;
-	//			serviceDB = (ServiceDB) localBinder.getService();
-	//			
-	//			allCatArtsInfo = serviceDB.getAllCatArtsInfo();
-	//		}
-	//
-	//		public void onServiceDisconnected(ComponentName name)
-	//		{
-	//			Log.d(LOG, "onServiceDisconnected");
-	//			bound = false;
-	//			serviceDB = null;
-	//		}
-	//	};
-
-	//	public void onDestroy()
-	//	{
-	//		Log.d(LOG, "onDestroy");
-	//		if (bound)
-	//		{
-	//			this.act.unbindService(sConn);
-	//			bound = false;
-	//		}
-	//		super.onDestroy();
-	//	}
-
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		Log.e(LOG, "ActivityMain onCreate called");
@@ -424,28 +385,41 @@ public class ActivityMain extends ActivityBase
 
 		//Check if autoload alarm is seted
 		Intent intent2check;
-		intent2check = new Intent(this, ReceiverTimer.class);
+		intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
 		boolean alarmUp = (PendingIntent.getBroadcast(this, 0, intent2check, PendingIntent.FLAG_NO_CREATE) != null);
-
+		boolean notifOn = pref.getBoolean(ActivityPreference.PREF_KEY_NOTIFICATION, false);
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
+		intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 		if (alarmUp)
 		{
 			//Log.d("myTag", "Alarm is already active");
 			System.out.println("Alarm is already active");
-		}
-		else
-		{
-			Log.i(LOG, "Alarm IS NOT active");
-			boolean notifOn = pref.getBoolean("notification", false);
 
 			if (notifOn)
 			{
 				Log.i(LOG, "And MUST be active");
-				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-				Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
-				intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
+			}
+			else
+			{
+				Log.i(LOG, "And must NOT be active");
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
+				Log.e(LOG, "Canceling alarm");
+				am.cancel(pendingIntent);
+			}
+		}
+		else
+		{
+			Log.i(LOG, "Alarm IS NOT active");
+
+			if (notifOn)
+			{
+				Log.i(LOG, "And MUST be active");
+
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
 				//test less interval in 1 min
 				checkPeriod = 60 * 1000;
