@@ -458,40 +458,30 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	private ArrayList<String> createArtTextListFromArticle(Article article)
 	{
 		ArrayList<String> artTextAsList = new ArrayList<String>();
+		
+		artTextAsList.add(article.getTitle()+" \n");
 
 		TextView tv = new TextView(this);
 		tv.setText(Html.fromHtml(article.getArtText()));
 		String articlesTextWithoutHtml = tv.getText().toString();
 
-		int numOfParts;// = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
 		if (articlesTextWithoutHtml.length() <= MAX_TTS_STRING_LENGTH)
 		{
-			numOfParts = 1;
+			artTextAsList.add(articlesTextWithoutHtml);
+			return artTextAsList;
 		}
-		else
+		while (articlesTextWithoutHtml.length() > MAX_TTS_STRING_LENGTH)
 		{
-			numOfParts = (articlesTextWithoutHtml.length() / MAX_TTS_STRING_LENGTH) + 1;
+			String maxPart = articlesTextWithoutHtml.substring(0, MAX_TTS_STRING_LENGTH);
+			int lastSpaceIndexInPart = maxPart.lastIndexOf(" ");
+			String part = maxPart.substring(0, lastSpaceIndexInPart);
+			artTextAsList.add(part);
+			articlesTextWithoutHtml = articlesTextWithoutHtml.replace(part, "");
 		}
-		int startChar = 0;
-		int endChar = MAX_TTS_STRING_LENGTH;
-		for (int i = 0; i < numOfParts; i++)
+		if (articlesTextWithoutHtml.length() != 0)
 		{
-			//check if it's last iteration
-			if (i == numOfParts - 1)
-			{
-				String part = articlesTextWithoutHtml.substring(startChar, articlesTextWithoutHtml.length());
-				artTextAsList.add(part);
-			}
-			else
-			{
-				String part = articlesTextWithoutHtml.substring(startChar, endChar);
-				//				Log.d(LOG, "part: " + part);
-				artTextAsList.add(part);
-				startChar = MAX_TTS_STRING_LENGTH * (i + 1);
-				endChar = (MAX_TTS_STRING_LENGTH * (i + 2));
-			}
+			artTextAsList.add(articlesTextWithoutHtml);
 		}
-
 		return artTextAsList;
 	}
 
