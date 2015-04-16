@@ -13,18 +13,23 @@ import java.util.Locale;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.lists_and_utils.Actions;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 import android.widget.TextView;
@@ -39,6 +44,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 
 	public final static int MAX_TTS_STRING_LENGTH = 250;
 	public final static int MAX_TITLE_LENGTH = 30;
+
+	private Context ctx;
 
 	NotificationManager mNotifyManager;
 
@@ -56,6 +63,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	{
 		Log.d(LOG, "onCreate");
 		super.onCreate();
+
+		this.ctx = this;
 
 		mTTS = new TextToSpeech(this, this);
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -138,7 +147,12 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				Log.e(LOG, "play");
 				this.isPaused = false;
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-				this.speekPart();
+				//if article is not loaded, notif shows progress and starts to download it
+				//so check it and speek only if we have text
+				if (!this.artList.get(currentArtPosition).getArtText().equals(Const.EMPTY_STRING))
+				{
+					this.speekPart();
+				}
 			break;
 			case "pause":
 				Log.e(LOG, "pause");
@@ -214,11 +228,15 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				else
 				{
 					this.currentArtPosition++;
-					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(currentArtPosition));
 					this.curArtTextListPosition = 0;
-					//update notif and play new article
 					this.mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-					this.speekPart();
+					//check if next article has text and speek it
+					if (!this.artList.get(currentArtPosition).getArtText().equals(Const.EMPTY_STRING))
+					{
+						this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(currentArtPosition));
+						//update notif and play new article
+						this.speekPart();
+					}
 				}
 			}
 			else
@@ -248,6 +266,34 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		}
 	}
 
+	private BroadcastReceiver articleReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.e(LOG, "articleReceiver onReceive");
+			if (intent.getExtras().containsKey(Msg.ERROR))
+			{
+				//set to paused state, update notif to default state and Toast error
+				isPaused = true;
+				mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+				Toast.makeText(ctx, intent.getStringExtra(Msg.ERROR), Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+				artList.get(currentArtPosition).setArtText(a.getArtText());
+				curArtTextList = createArtTextListFromArticle(artList.get(currentArtPosition));
+				mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+				if (!isPaused)
+				{
+					speekPart();
+				}
+				LocalBroadcastManager.getInstance(ctx).unregisterReceiver(articleReceiver);
+			}
+		}
+	};
+
 	private NotificationCompat.Builder getNotification()
 	{
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -255,20 +301,27 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
 		builder.setAutoCancel(false);
 
-		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 		Article curArt = this.artList.get(currentArtPosition);
-		if (curArt.getArtText().equals(Const.EMPTY_STRING))
+		if (curArt.getArtText().equals(Const.EMPTY_STRING) && !isPaused)
 		{
-			//TODO load article and show progress
+			//load article and show progress
 			//We must create progress notification
+			builder.setContentTitle(curArt.getTitle());
+			builder.setContentText("Загружаю...");
+			builder.setProgress(0, 0, true);
 
 			//here we must register receiver for cur art url and start to load it;
 			//in onReceive we must unregister receiver, update artList with artText,
 			//fill articles parts and if(!isPaused) start to speekText();
+			LocalBroadcastManager.getInstance(this).unregisterReceiver(articleReceiver);
+			LocalBroadcastManager.getInstance(this)
+			.registerReceiver(articleReceiver, new IntentFilter(curArt.getUrl()));
 
+			Actions.startDownLoadArticle(curArt.getUrl(), ctx, false);
 		}
 		else
 		{
+			NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 			//split title to parts with lenght==30 to fit notif lines
 			ArrayList<String> titlePartsList = new ArrayList<String>();
 			int numOfParts = (curArt.getTitle().length() / MAX_TITLE_LENGTH) + 1;
@@ -361,7 +414,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			}
 		}
 		// Displays the progress bar for the first time.
-		//		mNotifyManager.notify(NOTIFICATION_TTS_ID, builder.build());
 		return builder;
 	}
 
@@ -452,6 +504,11 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			this.mTTS.stop();
 			this.mTTS.shutdown();
 			this.mTTS = null;
+		}
+		if (articleReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(ctx).unregisterReceiver(articleReceiver);
+			articleReceiver = null;
 		}
 		super.onDestroy();
 	}

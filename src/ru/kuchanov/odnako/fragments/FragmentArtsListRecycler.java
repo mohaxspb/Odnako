@@ -224,21 +224,25 @@ public class FragmentArtsListRecycler extends Fragment
 			//updateLists in Service
 			if (act.getServiceDB() != null)
 			{
+
 				Set<String> keySet = act.getServiceDB().getAllCatArtsInfo().keySet();
 				for (String key : keySet)
 				{
 					ArrayList<Article> artsList = act.getServiceDB().getAllCatArtsInfo().get(key);
-					for (Article artFromRss : rssData)
+					if (artsList != null)
 					{
-						boolean notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
+						for (Article artFromRss : rssData)
 						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(artFromRss.getUrl()))
+							boolean notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
 							{
-								artInList.setPreview(artFromRss.getPreview());
-								artInList.setPubDate(artFromRss.getPubDate());
-								notFound = false;
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(artFromRss.getUrl()))
+								{
+									artInList.setPreview(artFromRss.getPreview());
+									artInList.setPubDate(artFromRss.getPubDate());
+									notFound = false;
+								}
 							}
 						}
 					}
