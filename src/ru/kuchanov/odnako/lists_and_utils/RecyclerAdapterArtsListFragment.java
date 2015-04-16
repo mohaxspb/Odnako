@@ -9,11 +9,13 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
+import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -292,12 +294,18 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											//Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
-											//TODO
 											Actions.shareUrl(p.getUrl(), act);
 											return true;
 										case R.id.show_comments:
 											Actions.showComments(artsInfo, positionInAllArtsInfo,
 											artsListFrag.getCategoryToLoad(), act);
+											return true;
+										case R.id.speeck:
+											Intent intentTTS = new Intent(act.getApplicationContext(), ServiceTTS.class);
+											intentTTS.setAction("init");
+											intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, artsInfo);
+											intentTTS.putExtra("position", positionInAllArtsInfo);
+											act.startService(intentTTS);
 											return true;
 										default:
 											return false;

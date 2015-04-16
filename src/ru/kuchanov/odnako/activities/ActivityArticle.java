@@ -19,6 +19,7 @@ import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,8 +35,6 @@ public class ActivityArticle extends ActivityBase
 
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter;
-
-	//	private String categoryToLoad = Const.EMPTY_STRING;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -142,7 +141,7 @@ public class ActivityArticle extends ActivityBase
 		this.AddAds();
 		//end of adMob
 	}
-	
+
 	@Override
 	public void onPause()
 	{
@@ -269,6 +268,26 @@ public class ActivityArticle extends ActivityBase
 					this.pref.edit().putBoolean("night_mode", true).commit();
 				}
 				this.recreate();
+				return super.onOptionsItemSelected(item);
+
+			case R.id.speeck:
+				Intent intentTTS = new Intent(act.getApplicationContext(), ServiceTTS.class);
+				intentTTS.setAction("init");
+				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+				{
+					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
+					.findFragmentByTag(FragmentArticle.LOG);
+					ArrayList<Article> artList = new ArrayList<Article>();
+					artList.add(upperArtFrag.getArticle());
+					intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, artList);
+					intentTTS.putExtra("position", 0);
+				}
+				else
+				{
+					intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, this.curAllArtsInfo);
+					intentTTS.putExtra("position", this.getCurArtPosition());
+				}
+				act.startService(intentTTS);
 				return super.onOptionsItemSelected(item);
 			default:
 				return super.onOptionsItemSelected(item);

@@ -798,6 +798,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		intentTTS.setAction("init");
 		ArrayList<Article> dataToTTS = new ArrayList<Article>(dataFromWeb.subList(0, Integer.parseInt(newQuont)));
 		intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, dataToTTS);
+		intentTTS.putExtra("position", 0);
 		PendingIntent piSnooze = PendingIntent.getService(this.getApplicationContext(), 0, intentTTS,
 		PendingIntent.FLAG_CANCEL_CURRENT);
 

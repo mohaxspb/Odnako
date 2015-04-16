@@ -14,6 +14,12 @@
                 android:orderInCategory="100"
                 android:title="@string/action_settings"
                 app:showAsAction="always"/>
+            <item
+                android:id="@+id/speeck"
+                android:icon="?arrowPlayIcon"
+                android:orderInCategory="110"
+                android:title="@string/speek_aloud"
+                app:showAsAction="always"/>
 
             <group
                 android:id="@+id/theme"
@@ -39,6 +45,6 @@
         android:orderInCategory="110"
         android:title="@string/share"
         app:showAsAction="always"/>
-   <!-- android:actionProviderClass="android.widget.ShareActionProvider" -->
+    <!-- android:actionProviderClass="android.widget.ShareActionProvider" -->
 
 </menu>

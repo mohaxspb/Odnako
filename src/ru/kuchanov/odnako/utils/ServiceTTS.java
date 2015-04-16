@@ -134,7 +134,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				//				}
 
 				this.artList = artList;
-				this.currentArtPosition = 0;
+				this.currentArtPosition = intent.getIntExtra("position", 0);
 
 				this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
 				this.curArtTextListPosition = 0;
@@ -142,6 +142,11 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				this.isPaused = true;
 
 				this.startForeground(NOTIFICATION_TTS_ID, this.getNotification().build());
+				
+				//And start playing
+				Intent playIntent = new Intent(this, ServiceTTS.class);
+				playIntent.setAction("play");
+				this.startService(playIntent);
 			break;
 			case "play":
 				Log.e(LOG, "play");
@@ -458,8 +463,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	private ArrayList<String> createArtTextListFromArticle(Article article)
 	{
 		ArrayList<String> artTextAsList = new ArrayList<String>();
-		
-		artTextAsList.add(article.getTitle()+" \n");
+
+		artTextAsList.add(article.getTitle() + " \n");
 
 		TextView tv = new TextView(this);
 		tv.setText(Html.fromHtml(article.getArtText()));
