@@ -383,10 +383,11 @@ public class ActivityMain extends ActivityBase
 		//send report
 		YandexMetrica.reportEvent("Current app statistics", eventAttributes);
 
-		//Check if autoload alarm is seted
-		Intent intent2check;
-		intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
-		boolean alarmUp = (PendingIntent.getBroadcast(this, 0, intent2check, PendingIntent.FLAG_NO_CREATE) != null);
+		//Check if autoload alarm is set
+		Intent intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
+		intent2check.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
+		boolean alarmUp = (PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent2check,
+		PendingIntent.FLAG_NO_CREATE) != null);
 		boolean notifOn = pref.getBoolean(ActivityPreference.PREF_KEY_NOTIFICATION, false);
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
@@ -403,8 +404,9 @@ public class ActivityMain extends ActivityBase
 			else
 			{
 				Log.i(LOG, "And must NOT be active");
-				PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
+				intentToTimerReceiver,
+				PendingIntent.FLAG_CANCEL_CURRENT);
 
 				Log.e(LOG, "Canceling alarm");
 				am.cancel(pendingIntent);
@@ -422,7 +424,7 @@ public class ActivityMain extends ActivityBase
 				PendingIntent.FLAG_UPDATE_CURRENT);
 				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
 				//test less interval in 1 min
-				checkPeriod = 60 * 1000;
+				//checkPeriod = 60 * 1000;
 
 				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
 			}
@@ -660,7 +662,6 @@ public class ActivityMain extends ActivityBase
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
-						//TODO
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);

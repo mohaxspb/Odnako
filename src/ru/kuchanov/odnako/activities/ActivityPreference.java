@@ -269,21 +269,23 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
 			intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intentToTimerReceiver,
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intentToTimerReceiver,
 			PendingIntent.FLAG_UPDATE_CURRENT);
 
 			if (notifOn)
 			{
 				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
 				//test less interval in 1 min
-				checkPeriod = 60 * 1000;
+				//checkPeriod = 60 * 1000;
 
 				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
 			}
 			else
 			{
 				Log.e(LOG, "Canceling alarm");
-				am.cancel(pendingIntent);
+				PendingIntent pendingIntentToDelete = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intentToTimerReceiver,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+				am.cancel(pendingIntentToDelete);
 			}
 		}
 	}

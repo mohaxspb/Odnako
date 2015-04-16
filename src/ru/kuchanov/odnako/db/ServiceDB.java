@@ -677,14 +677,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 				{
 					case (Msg.NO_NEW):
 						Log.d(LOG + "NOTIF", "Новых статей не обнаружено!");
-						//TODO delete it. It's for test omly!
-						sendNotification("15", dataFromWeb);
+					//XXX It's for test omly!
+					//sendNotification("15", dataFromWeb);
 					//nothing to notify
 					break;
 					case (Msg.NEW_QUONT):
-						Log.d(LOG + "NOTIF", "Обнаружено " + resultMessage[1] + " новых статей");
-						sendNotification(resultMessage[1], dataFromWeb);
-					break;
 					case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 						Log.d(LOG + "NOTIF", "Обнаружено " + resultMessage[1] + " новых статей");
 						sendNotification(resultMessage[1], dataFromWeb);
@@ -756,7 +753,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		else
 		{
 			//XXX to test
-			newQuont = "10";
+			//newQuont = "10";
 			String[] events = new String[Integer.parseInt(newQuont)];
 			// Sets a title for the Inbox in expanded layout
 			inboxStyle.setBigContentTitle("Новые статьи:");
