@@ -677,7 +677,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 				{
 					case (Msg.NO_NEW):
 						Log.d(LOG + "NOTIF", "Новых статей не обнаружено!");
-					//XXX It's for test omly!
+					//XXX It's for test only!
 					//sendNotification("15", dataFromWeb);
 					//nothing to notify
 					break;

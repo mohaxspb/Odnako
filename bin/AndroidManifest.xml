@@ -124,13 +124,17 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        
         <receiver
             android:name="ru.kuchanov.odnako.receivers.ReceiverTimer"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
                 <action android:name="ru.kuchanov.odnako.RECEIVER_TIMER" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="ru.kuchanov.odnako.receivers.ReceiverPhone" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 
