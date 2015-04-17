@@ -51,7 +51,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 
 	private ArrayList<Article> artList;
 	private int currentArtPosition = 0;
-	private ArrayList<String> curArtTextList;
+	private ArrayList<String> curArtTextList=new ArrayList<String>();
 	private int curArtTextListPosition = 0;
 
 	private TextToSpeech mTTS;
@@ -163,6 +163,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				Log.e(LOG, "pause");
 				this.isPaused = true;
 				mTTS.stop();
+				
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
 			case "forward":
@@ -307,7 +308,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		builder.setAutoCancel(false);
 
 		Article curArt = this.artList.get(currentArtPosition);
-		if (curArt.getArtText().equals(Const.EMPTY_STRING) && !isPaused)
+		if (!isPaused && curArt.getArtText().equals(Const.EMPTY_STRING))
 		{
 			//load article and show progress
 			//We must create progress notification

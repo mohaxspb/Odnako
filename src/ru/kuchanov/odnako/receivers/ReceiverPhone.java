@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 public class ReceiverPhone extends BroadcastReceiver
 {
@@ -41,19 +40,19 @@ public class ReceiverPhone extends BroadcastReceiver
 			{
 				case TelephonyManager.CALL_STATE_IDLE:
 					Log.d("DEBUG", "IDLE");
-					Toast.makeText(ctx, "IDLE", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(ctx, "IDLE", Toast.LENGTH_SHORT).show();
 				break;
 				case TelephonyManager.CALL_STATE_OFFHOOK:
 					Log.d("DEBUG", "OFFHOOK");
-					Toast.makeText(ctx, "OFFHOOK", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(ctx, "OFFHOOK", Toast.LENGTH_SHORT).show();
 				break;
 				case TelephonyManager.CALL_STATE_RINGING:
 					Log.d("DEBUG", "RINGING");
-					Toast.makeText(ctx, "RINGING", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(ctx, "RINGING", Toast.LENGTH_SHORT).show();
 				break;
 			}
 			//if we are running sertviceTTS we must pause it
-			if (CheckIfServiceIsRunning.check(ctx, ServiceTTS.class.getSimpleName()))
+			if (CheckIfServiceIsRunning.check(ctx, "ServiceTTS"))
 			{
 				Intent intentTTS = new Intent(ctx.getApplicationContext(), ServiceTTS.class);
 				intentTTS.setAction("pause");
