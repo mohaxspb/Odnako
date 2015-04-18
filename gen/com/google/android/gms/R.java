@@ -76,38 +76,38 @@ public final class R {
 		public static final int wallet_secondary_text_holo_dark = 0x7f080089;
 	}
 	public static final class drawable {
-		public static final int common_full_open_on_phone = 0x7f020035;
-		public static final int common_ic_googleplayservices = 0x7f020036;
-		public static final int common_signin_btn_icon_dark = 0x7f020037;
-		public static final int common_signin_btn_icon_disabled_dark = 0x7f020038;
-		public static final int common_signin_btn_icon_disabled_focus_dark = 0x7f020039;
-		public static final int common_signin_btn_icon_disabled_focus_light = 0x7f02003a;
-		public static final int common_signin_btn_icon_disabled_light = 0x7f02003b;
-		public static final int common_signin_btn_icon_focus_dark = 0x7f02003c;
-		public static final int common_signin_btn_icon_focus_light = 0x7f02003d;
-		public static final int common_signin_btn_icon_light = 0x7f02003e;
-		public static final int common_signin_btn_icon_normal_dark = 0x7f02003f;
-		public static final int common_signin_btn_icon_normal_light = 0x7f020040;
-		public static final int common_signin_btn_icon_pressed_dark = 0x7f020041;
-		public static final int common_signin_btn_icon_pressed_light = 0x7f020042;
-		public static final int common_signin_btn_text_dark = 0x7f020043;
-		public static final int common_signin_btn_text_disabled_dark = 0x7f020044;
-		public static final int common_signin_btn_text_disabled_focus_dark = 0x7f020045;
-		public static final int common_signin_btn_text_disabled_focus_light = 0x7f020046;
-		public static final int common_signin_btn_text_disabled_light = 0x7f020047;
-		public static final int common_signin_btn_text_focus_dark = 0x7f020048;
-		public static final int common_signin_btn_text_focus_light = 0x7f020049;
-		public static final int common_signin_btn_text_light = 0x7f02004a;
-		public static final int common_signin_btn_text_normal_dark = 0x7f02004b;
-		public static final int common_signin_btn_text_normal_light = 0x7f02004c;
-		public static final int common_signin_btn_text_pressed_dark = 0x7f02004d;
-		public static final int common_signin_btn_text_pressed_light = 0x7f02004e;
-		public static final int ic_plusone_medium_off_client = 0x7f020096;
-		public static final int ic_plusone_small_off_client = 0x7f020097;
-		public static final int ic_plusone_standard_off_client = 0x7f020098;
-		public static final int ic_plusone_tall_off_client = 0x7f020099;
-		public static final int powered_by_google_dark = 0x7f0200d1;
-		public static final int powered_by_google_light = 0x7f0200d2;
+		public static final int common_full_open_on_phone = 0x7f020039;
+		public static final int common_ic_googleplayservices = 0x7f02003a;
+		public static final int common_signin_btn_icon_dark = 0x7f02003b;
+		public static final int common_signin_btn_icon_disabled_dark = 0x7f02003c;
+		public static final int common_signin_btn_icon_disabled_focus_dark = 0x7f02003d;
+		public static final int common_signin_btn_icon_disabled_focus_light = 0x7f02003e;
+		public static final int common_signin_btn_icon_disabled_light = 0x7f02003f;
+		public static final int common_signin_btn_icon_focus_dark = 0x7f020040;
+		public static final int common_signin_btn_icon_focus_light = 0x7f020041;
+		public static final int common_signin_btn_icon_light = 0x7f020042;
+		public static final int common_signin_btn_icon_normal_dark = 0x7f020043;
+		public static final int common_signin_btn_icon_normal_light = 0x7f020044;
+		public static final int common_signin_btn_icon_pressed_dark = 0x7f020045;
+		public static final int common_signin_btn_icon_pressed_light = 0x7f020046;
+		public static final int common_signin_btn_text_dark = 0x7f020047;
+		public static final int common_signin_btn_text_disabled_dark = 0x7f020048;
+		public static final int common_signin_btn_text_disabled_focus_dark = 0x7f020049;
+		public static final int common_signin_btn_text_disabled_focus_light = 0x7f02004a;
+		public static final int common_signin_btn_text_disabled_light = 0x7f02004b;
+		public static final int common_signin_btn_text_focus_dark = 0x7f02004c;
+		public static final int common_signin_btn_text_focus_light = 0x7f02004d;
+		public static final int common_signin_btn_text_light = 0x7f02004e;
+		public static final int common_signin_btn_text_normal_dark = 0x7f02004f;
+		public static final int common_signin_btn_text_normal_light = 0x7f020050;
+		public static final int common_signin_btn_text_pressed_dark = 0x7f020051;
+		public static final int common_signin_btn_text_pressed_light = 0x7f020052;
+		public static final int ic_plusone_medium_off_client = 0x7f02009a;
+		public static final int ic_plusone_small_off_client = 0x7f02009b;
+		public static final int ic_plusone_standard_off_client = 0x7f02009c;
+		public static final int ic_plusone_tall_off_client = 0x7f02009d;
+		public static final int powered_by_google_dark = 0x7f0200d5;
+		public static final int powered_by_google_light = 0x7f0200d6;
 	}
 	public static final class id {
 		public static final int adjust_height = 0x7f0b0020;
@@ -135,7 +135,7 @@ public final class R {
 		public static final int wrap_content = 0x7f0b0009;
 	}
 	public static final class integer {
-		public static final int google_play_services_version = 0x7f0a0001;
+		public static final int google_play_services_version = 0x7f0a0003;
 	}
 	public static final class raw {
 		public static final int gtm_analytics = 0x7f060000;
@@ -178,11 +178,11 @@ public final class R {
 		public static final int wallet_buy_button_place_holder = 0x7f0c0032;
 	}
 	public static final class style {
-		public static final int Theme_IAPTheme = 0x7f0d00f4;
-		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0d00f7;
-		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0d00f6;
-		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0d00f5;
-		public static final int WalletFragmentDefaultStyle = 0x7f0d00f8;
+		public static final int Theme_IAPTheme = 0x7f0d0101;
+		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0d0104;
+		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0d0103;
+		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0d0102;
+		public static final int WalletFragmentDefaultStyle = 0x7f0d0105;
 	}
 	public static final class styleable {
 		public static final int[] AdsAttrs = { 0x7f0100cd, 0x7f0100ce, 0x7f0100cf };
