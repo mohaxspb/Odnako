@@ -14,15 +14,19 @@ import ru.kuchanov.odnako.animations.RecyclerCommentsOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Msg;
+import ru.kuchanov.odnako.db.ServiceComments;
 import ru.kuchanov.odnako.download.CommentInfo;
-import ru.kuchanov.odnako.download.DownloadCommentsLoader;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterCommentsFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
@@ -37,19 +41,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayList<CommentInfo>>
+public class FragmentComments extends Fragment
 {
 	public final static String LOG = FragmentComments.class.getSimpleName() + "/";
-
-	private static final int LOADER_COMMENTS_ID = 1;
 
 	private ActionBarActivity act;
 
 	private Article article;
 
+	public final static String KEY_COMMENTS_DATA = "commentsData";
 	private ArrayList<CommentInfo> commentsInfoList;
 
-	public final static String KEY_URL_TO_LOAD = "categoryToLoad";
+	public final static String KEY_URL_TO_LOAD = "urlToLoad";
 	public int pageToLoad = 1;
 	public final static String KEY_PAGE_TO_LOAD = "pageToLoad";
 	public boolean isLoading = false;
@@ -79,11 +82,71 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 			this.pageToLoad = savedState.getInt(KEY_PAGE_TO_LOAD);
 		}
 
-		Bundle b = new Bundle();
-		b.putInt("pageToLoad", pageToLoad);
-		b.putString(KEY_URL_TO_LOAD, this.article.getUrl());
-		getLoaderManager().initLoader(LOADER_COMMENTS_ID, b, this);
+		LocalBroadcastManager.getInstance(this.act).registerReceiver(commentsDataReceiver,
+		new IntentFilter(this.article.getUrl() + LOG));
 	}
+
+	private BroadcastReceiver commentsDataReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.i(LOG, "commentsDataReceiver onReceive");
+
+			if (!isAdded())
+			{
+				Log.e(LOG, "fragment not added! RETURN!");
+				return;
+			}
+
+			String msg = intent.getStringExtra(Msg.MSG);
+			int page = intent.getIntExtra(KEY_PAGE_TO_LOAD, 1);
+			pageToLoad = page;
+			switch (msg)
+			{
+				case Const.EMPTY_STRING:
+					ArrayList<CommentInfo> downloadedComments = intent.getParcelableArrayListExtra(KEY_COMMENTS_DATA);
+
+					if (pageToLoad == 1)
+					{
+						commentsInfoList = downloadedComments;
+						recyclerAdapter = new RecyclerAdapterCommentsFragment(act, article, commentsInfoList);
+						recycler.setAdapter(recyclerAdapter);
+					}
+					else
+					{
+						commentsInfoList.addAll(downloadedComments);
+						((RecyclerAdapterCommentsFragment) recycler.getAdapter()).addCommentsInfo(downloadedComments);
+						recycler.getAdapter().notifyItemRangeInserted(
+						recycler.getAdapter().getItemCount() - downloadedComments.size(), downloadedComments.size());
+						//we can get 0 comments, so we must decrement page
+						if (downloadedComments.size() == 0)
+						{
+							pageToLoad--;
+						}
+					}
+				break;
+				case Const.Error.CONNECTION_ERROR:
+					Toast.makeText(act, Const.Error.CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
+					if (pageToLoad != 1)
+					{
+						pageToLoad--;
+					}
+				break;
+			}
+			swipeRef.setRefreshing(false);
+			isLoading = false;
+
+			//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
+			//as I understand before onResume of Activity
+			TypedValue typed_value = new TypedValue();
+			getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value,
+			true);
+
+			//this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
+			swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
+		}
+	};
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -167,7 +230,8 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 			@Override
 			public void onLoadMore()
 			{
-				if (!swipeRef.isRefreshing())
+				//				if (!swipeRef.isRefreshing())
+				if (!isLoading)
 				{
 					pageToLoad++;
 					startDownload();
@@ -215,12 +279,10 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 		}
 		else
 		{
-			Loader<ArrayList<CommentInfo>> loader;
-			Bundle b = new Bundle();
-			b.putInt(KEY_PAGE_TO_LOAD, pageToLoad);
-			b.putString(KEY_URL_TO_LOAD, this.article.getUrl());
-			loader = getLoaderManager().restartLoader(LOADER_COMMENTS_ID, b, this);
-			loader.forceLoad();
+			Intent intent = new Intent(this.act, ServiceComments.class);
+			intent.putExtra(KEY_PAGE_TO_LOAD, pageToLoad);
+			intent.putExtra(KEY_URL_TO_LOAD, this.article.getUrl());
+			this.act.startService(intent);
 			this.isLoading = true;
 		}
 	}
@@ -255,63 +317,15 @@ public class FragmentComments extends Fragment implements LoaderCallbacks<ArrayL
 	}
 
 	@Override
-	public Loader<ArrayList<CommentInfo>> onCreateLoader(int id, Bundle b)
+	public void onDestroy()
 	{
-		Loader<ArrayList<CommentInfo>> loader = null;
-		if (id == LOADER_COMMENTS_ID)
+		// If the DownloadStateReceiver still exists, unregister it and set it to null
+		if (commentsDataReceiver != null)
 		{
-			loader = new DownloadCommentsLoader(this.act, b);
-			Log.d(LOG, "onCreateLoader: " + loader.hashCode());
+			LocalBroadcastManager.getInstance(act).unregisterReceiver(commentsDataReceiver);
+			commentsDataReceiver = null;
 		}
-		return loader;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<ArrayList<CommentInfo>> loader, ArrayList<CommentInfo> downloadedComments)
-	{
-		Log.d(LOG, "onLoadFinished: " + loader.hashCode());
-
-		if (downloadedComments != null)
-		{
-			if (((DownloadCommentsLoader) loader).pageToLoad == 1)
-			{
-				this.commentsInfoList = downloadedComments;
-				this.recyclerAdapter = new RecyclerAdapterCommentsFragment(act, article, commentsInfoList);
-				this.recycler.setAdapter(recyclerAdapter);
-			}
-			else
-			{
-				this.commentsInfoList.addAll(downloadedComments);
-				((RecyclerAdapterCommentsFragment) this.recycler.getAdapter()).addCommentsInfo(commentsInfoList);
-				this.recycler.getAdapter().notifyItemRangeInserted(
-				this.recycler.getAdapter().getItemCount() - downloadedComments.size(), downloadedComments.size());
-			}
-		}
-		else
-		{
-			Toast.makeText(act, Const.Error.CONNECTION_ERROR, Toast.LENGTH_SHORT).show();
-			if (this.pageToLoad != 1)
-			{
-				this.pageToLoad--;
-			}
-		}
-
-		this.swipeRef.setRefreshing(false);
-		this.isLoading = false;
-
-		//workaround to fix issue with not showing refreshing indicator before swipeRef.onMesure() was called
-		//as I understand before onResume of Activity
-		TypedValue typed_value = new TypedValue();
-		getActivity().getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, typed_value, true);
-
-		//this.swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
-		this.swipeRef
-		.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId) + 15);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<ArrayList<CommentInfo>> arg0)
-	{
-
+		// Must always call the super method at the end.
+		super.onDestroy();
 	}
 }

@@ -3087,35 +3087,35 @@ containing a value of this type.
         /**  Content description for the Toolbar icon used to collapse an expanded action mode. [CHAR LIMIT=NONE] 
          */
         public static final int abc_toolbar_collapse_description=0x7f0d0004;
-        public static final int about=0x7f0d0065;
+        public static final int about=0x7f0d0066;
         public static final int accept=0x7f0d0012;
         public static final int action_settings=0x7f0d0048;
-        public static final int ads_on_advantages=0x7f0d008c;
-        public static final int allLoadInfoMessage=0x7f0d006c;
+        public static final int ads_on_advantages=0x7f0d008d;
+        public static final int allLoadInfoMessage=0x7f0d006d;
         public static final int also_by_theme=0x7f0d003f;
         public static final int also_to_read=0x7f0d0040;
         /**   
          */
         public static final int app_name=0x7f0d0038;
-        public static final int art_text_scale=0x7f0d0074;
+        public static final int art_text_scale=0x7f0d0075;
         public static final int article=0x7f0d0039;
-        public static final int article_loading=0x7f0d007f;
+        public static final int article_loading=0x7f0d0080;
         public static final int arts_list=0x7f0d004d;
-        public static final int artslist_min=0x7f0d0080;
-        public static final int artslist_mina=0x7f0d0081;
-        public static final int artslist_minb=0x7f0d0082;
-        public static final int artslist_minc=0x7f0d0083;
-        public static final int artslist_mind=0x7f0d0084;
-        public static final int artslist_mine=0x7f0d0085;
-        public static final int artslist_ming=0x7f0d0086;
+        public static final int artslist_min=0x7f0d0081;
+        public static final int artslist_mina=0x7f0d0082;
+        public static final int artslist_minb=0x7f0d0083;
+        public static final int artslist_minc=0x7f0d0084;
+        public static final int artslist_mind=0x7f0d0085;
+        public static final int artslist_mine=0x7f0d0086;
+        public static final int artslist_ming=0x7f0d0087;
         public static final int author=0x7f0d003d;
         public static final int author_descr=0x7f0d004c;
-        public static final int auto_load=0x7f0d0057;
-        public static final int category=0x7f0d0066;
-        public static final int check_new=0x7f0d0056;
-        public static final int choose_time_btn=0x7f0d006b;
+        public static final int auto_load=0x7f0d0058;
+        public static final int category=0x7f0d0067;
+        public static final int check_new=0x7f0d0057;
+        public static final int choose_time_btn=0x7f0d006c;
         public static final int comments=0x7f0d0050;
-        public static final int comments_text_scale=0x7f0d0075;
+        public static final int comments_text_scale=0x7f0d0076;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
          */
         public static final int common_android_wear_notification_needs_update_text=0x7f0d0019;
@@ -3217,78 +3217,79 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f0d0030;
         public static final int create_calendar_message=0x7f0d0015;
         public static final int create_calendar_title=0x7f0d0014;
-        public static final int dark=0x7f0d0070;
+        public static final int dark=0x7f0d0071;
         public static final int date=0x7f0d003b;
         public static final int decline=0x7f0d0013;
-        public static final int deleteBtn=0x7f0d006a;
+        public static final int deleteBtn=0x7f0d006b;
         public static final int design=0x7f0d004e;
         /**   
          */
-        public static final int divider_vertical=0x7f0d0077;
-        public static final int downBtn=0x7f0d0068;
-        public static final int download_all=0x7f0d0069;
-        public static final int download_article=0x7f0d005b;
+        public static final int divider_vertical=0x7f0d0078;
+        public static final int downBtn=0x7f0d0069;
+        public static final int download_all=0x7f0d006a;
+        public static final int download_article=0x7f0d005c;
         public static final int downloads=0x7f0d0051;
-        public static final int drawer_close=0x7f0d0088;
-        public static final int drawer_open=0x7f0d0087;
-        public static final int email=0x7f0d007c;
-        public static final int feature_login=0x7f0d007d;
-        public static final int fio=0x7f0d007b;
-        public static final int get_art_text=0x7f0d005a;
+        public static final int drawer_close=0x7f0d0089;
+        public static final int drawer_open=0x7f0d0088;
+        public static final int email=0x7f0d007d;
+        public static final int feature_login=0x7f0d007e;
+        public static final int fio=0x7f0d007c;
+        public static final int get_art_text=0x7f0d005b;
         /**   
          */
-        public static final int hello_world=0x7f0d0058;
-        public static final int help_me=0x7f0d008b;
-        public static final int img=0x7f0d0078;
+        public static final int hello_world=0x7f0d0059;
+        public static final int help_me=0x7f0d008c;
+        public static final int img=0x7f0d0079;
         /**   
          */
-        public static final int light=0x7f0d006f;
-        public static final int loading=0x7f0d007e;
-        public static final int mail_to_me_summary=0x7f0d008a;
+        public static final int light=0x7f0d0070;
+        public static final int loading=0x7f0d007f;
+        public static final int mail_to_me_summary=0x7f0d008b;
         public static final int mark_as_read=0x7f0d0041;
         public static final int mark_as_read_unread=0x7f0d0043;
         public static final int mark_as_unread=0x7f0d0042;
-        public static final int more_actions=0x7f0d0059;
-        public static final int name=0x7f0d007a;
-        public static final int night_mode=0x7f0d0072;
-        public static final int notifications=0x7f0d0060;
-        public static final int notifications_period=0x7f0d0061;
-        public static final int notifications_settings=0x7f0d005f;
+        public static final int more_actions=0x7f0d005a;
+        public static final int name=0x7f0d007b;
+        public static final int night_mode=0x7f0d0073;
+        public static final int notifications=0x7f0d0061;
+        public static final int notifications_period=0x7f0d0062;
+        public static final int notifications_settings=0x7f0d0060;
         public static final int num_of_comms=0x7f0d004a;
         public static final int num_of_shares=0x7f0d004b;
-        public static final int off=0x7f0d006e;
-        public static final int on=0x7f0d006d;
+        public static final int off=0x7f0d006f;
+        public static final int on=0x7f0d006e;
         public static final int preview=0x7f0d003c;
-        public static final int pro_ver_adv=0x7f0d008d;
-        public static final int quontity=0x7f0d0067;
+        public static final int pro_ver_adv=0x7f0d008e;
+        public static final int quontity=0x7f0d0068;
         public static final int refresh=0x7f0d004f;
-        public static final int search=0x7f0d005d;
-        public static final int search_author=0x7f0d005c;
-        public static final int sending_app=0x7f0d0079;
+        public static final int search=0x7f0d005e;
+        public static final int search_author=0x7f0d005d;
+        public static final int sending_app=0x7f0d007a;
         public static final int service_article=0x7f0d0054;
+        public static final int service_comments=0x7f0d0055;
         /**  services 
          */
         public static final int service_db=0x7f0d0052;
         public static final int service_rss=0x7f0d0053;
-        public static final int service_tts=0x7f0d0055;
+        public static final int service_tts=0x7f0d0056;
         public static final int settings=0x7f0d0049;
-        public static final int settings_title=0x7f0d0089;
-        public static final int share=0x7f0d005e;
+        public static final int settings_title=0x7f0d008a;
+        public static final int share=0x7f0d005f;
         public static final int share_link=0x7f0d0044;
         public static final int show_comments=0x7f0d0045;
-        public static final int sound=0x7f0d0063;
+        public static final int sound=0x7f0d0064;
         public static final int speek_aloud=0x7f0d0046;
         public static final int store_picture_message=0x7f0d0011;
         public static final int store_picture_title=0x7f0d0010;
-        public static final int system_settings=0x7f0d0064;
+        public static final int system_settings=0x7f0d0065;
         public static final int tags=0x7f0d003e;
-        public static final int text_scale=0x7f0d0076;
-        public static final int theme=0x7f0d0071;
+        public static final int text_scale=0x7f0d0077;
+        public static final int theme=0x7f0d0072;
         public static final int title=0x7f0d003a;
-        public static final int ui_text_scale=0x7f0d0073;
-        public static final int version_history=0x7f0d008f;
-        public static final int version_history_summary=0x7f0d008e;
-        public static final int vibration=0x7f0d0062;
+        public static final int ui_text_scale=0x7f0d0074;
+        public static final int version_history=0x7f0d0090;
+        public static final int version_history_summary=0x7f0d008f;
+        public static final int vibration=0x7f0d0063;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */

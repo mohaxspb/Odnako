@@ -111,6 +111,11 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/service_article" />
         <service
+            android:name="ru.kuchanov.odnako.db.ServiceComments"
+            android:enabled="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_comments" />
+        <service
             android:name="ru.kuchanov.odnako.utils.ServiceTTS"
             android:enabled="true"
             android:icon="@drawable/ic_launcher"
