@@ -2,6 +2,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -518,7 +519,13 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 	public static void showCommView(ActionBarActivity act, CommentInfo p)
 	{
-		CommentDialogFragment newFragment = CommentDialogFragment.newInstance(p);
-		newFragment.show(act.getSupportFragmentManager(), "dialog");
+//		CommentDialogFragment newFragment = CommentDialogFragment.newInstance(p);
+//		newFragment.show(act.getSupportFragmentManager(), "dialog");
+		boolean wrapInScrollView = true;
+		new MaterialDialog.Builder(act)
+		        .title(R.string.title)
+		        .customView(R.layout.comment_card_view, wrapInScrollView)
+		        .positiveText(R.string.hello_world)
+		        .show();
 	}
 }
