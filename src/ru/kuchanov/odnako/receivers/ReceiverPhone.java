@@ -6,12 +6,14 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.receivers;
 
+import ru.kuchanov.odnako.utils.CheckIfServiceIsRunning;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class ReceiverPhone extends BroadcastReceiver
 {
@@ -50,7 +52,16 @@ public class ReceiverPhone extends BroadcastReceiver
 					intentTTS.setAction("pause");
 				break;
 			}
-			ctx.startService(intentTTS);
+			if(CheckIfServiceIsRunning.check(ctx.getApplicationContext(), ServiceTTS.class.getName()))
+			{
+				Log.d(LOG, "CheckIfServiceIsRunning: true");
+				ctx.startService(intentTTS);
+			}
+			else
+			{
+				Log.d(LOG, "CheckIfServiceIsRunning: false");
+			}
+			
 		}
 	}
 }
