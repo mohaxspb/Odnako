@@ -250,6 +250,7 @@ public class ActivityBase extends ActionBarActivity
 		// to be our ActionBar
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Now retrieve the DrawerLayout so that we can set the status bar color.
 		// This only takes effect on Lollipop, or when using translucentStatusBar

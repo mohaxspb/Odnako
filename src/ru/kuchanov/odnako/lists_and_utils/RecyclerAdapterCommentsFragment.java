@@ -521,11 +521,11 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 	{
 //		CommentDialogFragment newFragment = CommentDialogFragment.newInstance(p);
 //		newFragment.show(act.getSupportFragmentManager(), "dialog");
-		boolean wrapInScrollView = true;
+		boolean wrapInScrollView = false;
 		new MaterialDialog.Builder(act)
-		        .title(R.string.title)
+//		        .title(R.string.title)
 		        .customView(R.layout.comment_card_view, wrapInScrollView)
-		        .positiveText(R.string.hello_world)
+//		        .positiveText(R.string.hello_world)
 		        .show();
 	}
 }

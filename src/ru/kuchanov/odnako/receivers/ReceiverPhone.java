@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class ReceiverPhone extends BroadcastReceiver
 {
@@ -24,7 +23,6 @@ public class ReceiverPhone extends BroadcastReceiver
 	public void onReceive(Context context, Intent intent)
 	{
 		//Log.d(LOG, "onReceive " + intent.getAction());
-
 		this.ctx = context;
 		MyPhoneStateListener phoneListener = new MyPhoneStateListener();
 		TelephonyManager telephony = (TelephonyManager)
@@ -52,16 +50,16 @@ public class ReceiverPhone extends BroadcastReceiver
 					intentTTS.setAction("pause");
 				break;
 			}
-			if(CheckIfServiceIsRunning.check(ctx.getApplicationContext(), ServiceTTS.class.getName()))
+			if (CheckIfServiceIsRunning.check(ctx.getApplicationContext(), ServiceTTS.class.getName()))
 			{
-				Log.d(LOG, "CheckIfServiceIsRunning: true");
+				//Log.d(LOG, "CheckIfServiceIsRunning: true");
 				ctx.startService(intentTTS);
 			}
 			else
 			{
-				Log.d(LOG, "CheckIfServiceIsRunning: false");
+				//Log.d(LOG, "CheckIfServiceIsRunning: false");
 			}
-			
+
 		}
 	}
 }

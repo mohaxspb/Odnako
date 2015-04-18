@@ -629,6 +629,7 @@ public class Actions
 			//So it's article activity
 			//replace havburger icon to backArrow
 			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
+			act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 		else
 		{
