@@ -6,24 +6,22 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.receivers;
 
-import ru.kuchanov.odnako.utils.CheckIfServiceIsRunning;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class ReceiverPhone extends BroadcastReceiver
 {
-	private static final String LOG = ReceiverPhone.class.getSimpleName();
+	static final String LOG = ReceiverPhone.class.getSimpleName();
 	private Context ctx;
 
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		Log.d(LOG, "onReceive " + intent.getAction());
+		//Log.d(LOG, "onReceive " + intent.getAction());
 
 		this.ctx = context;
 		MyPhoneStateListener phoneListener = new MyPhoneStateListener();
@@ -36,28 +34,23 @@ public class ReceiverPhone extends BroadcastReceiver
 	{
 		public void onCallStateChanged(int state, String incomingNumber)
 		{
+			Intent intentTTS = new Intent(ctx.getApplicationContext(), ServiceTTS.class);
 			switch (state)
 			{
 				case TelephonyManager.CALL_STATE_IDLE:
-					Log.d("DEBUG", "IDLE");
-					//Toast.makeText(ctx, "IDLE", Toast.LENGTH_SHORT).show();
+					//Log.d(LOG, "IDLE");
+					intentTTS.setAction("play");
 				break;
 				case TelephonyManager.CALL_STATE_OFFHOOK:
-					Log.d("DEBUG", "OFFHOOK");
-					//Toast.makeText(ctx, "OFFHOOK", Toast.LENGTH_SHORT).show();
+					//Log.d(LOG, "OFFHOOK");
+					intentTTS.setAction("pause");
 				break;
 				case TelephonyManager.CALL_STATE_RINGING:
-					Log.d("DEBUG", "RINGING");
-					//Toast.makeText(ctx, "RINGING", Toast.LENGTH_SHORT).show();
+					//Log.d(LOG, "RINGING");
+					intentTTS.setAction("pause");
 				break;
 			}
-			//if we are running sertviceTTS we must pause it
-			if (CheckIfServiceIsRunning.check(ctx, "ServiceTTS"))
-			{
-				Intent intentTTS = new Intent(ctx.getApplicationContext(), ServiceTTS.class);
-				intentTTS.setAction("pause");
-				ctx.startService(intentTTS);
-			}
+			ctx.startService(intentTTS);
 		}
 	}
 }

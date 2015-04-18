@@ -51,7 +51,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 
 	private ArrayList<Article> artList;
 	private int currentArtPosition = 0;
-	private ArrayList<String> curArtTextList=new ArrayList<String>();
+	private ArrayList<String> curArtTextList = new ArrayList<String>();
 	private int curArtTextListPosition = 0;
 
 	private TextToSpeech mTTS;
@@ -84,20 +84,20 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		@Override
 		public void onStart(String utteranceId)
 		{
-			Log.i(LOG, "onStart");
+			//Log.i(LOG, "onStart");
 		}
 
 		@Override
 		@Deprecated
 		public void onError(String utteranceId)
 		{
-			Log.e(LOG, "onError");
+			//Log.e(LOG, "onError");
 		}
 
 		@Override
 		public void onDone(String utteranceId)
 		{
-			Log.i(LOG, "onDone");
+			//Log.i(LOG, "onDone");
 			onCompletePartReading();
 			mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
 		}
@@ -108,7 +108,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		@Override
 		public void onUtteranceCompleted(String utteranceId)
 		{
-			Log.i(LOG, "onUtteranceCompleted");
+			//Log.i(LOG, "onUtteranceCompleted");
 			onCompletePartReading();
 			mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
 		}
@@ -142,14 +142,14 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				this.isPaused = true;
 
 				this.startForeground(NOTIFICATION_TTS_ID, this.getNotification().build());
-				
+
 				//And start playing
 				Intent playIntent = new Intent(this, ServiceTTS.class);
 				playIntent.setAction("play");
 				this.startService(playIntent);
 			break;
 			case "play":
-				Log.e(LOG, "play");
+				//Log.e(LOG, "play");
 				this.isPaused = false;
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 				//if article is not loaded, notif shows progress and starts to download it
@@ -160,14 +160,14 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				}
 			break;
 			case "pause":
-				Log.e(LOG, "pause");
+				//Log.e(LOG, "pause");
 				this.isPaused = true;
 				mTTS.stop();
-				
+
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
 			case "forward":
-				Log.e(LOG, "forward");
+				//Log.e(LOG, "forward");
 				if (this.currentArtPosition != this.artList.size() - 1)
 				{
 					this.isPaused = true;
@@ -184,7 +184,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				}
 			break;
 			case "rewind":
-				Log.e(LOG, "rewind");
+				//Log.e(LOG, "rewind");
 				if (this.currentArtPosition != 0)
 				{
 					this.isPaused = true;
@@ -258,7 +258,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	private void speekPart()
 	{
 		String text = this.curArtTextList.get(this.curArtTextListPosition);
-		Log.i(LOG, text);
+		//		Log.i(LOG, text);
 
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
 		{
