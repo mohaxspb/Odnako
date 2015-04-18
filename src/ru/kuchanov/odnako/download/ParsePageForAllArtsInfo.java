@@ -9,8 +9,6 @@ package ru.kuchanov.odnako.download;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.http.client.methods.HttpGet;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.db.Article;
@@ -38,7 +36,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 
 	DataBaseHelper h;
 
-	public HttpGet get;
+//	public HttpGet get;
 
 	private boolean cyrillicError = false;
 
