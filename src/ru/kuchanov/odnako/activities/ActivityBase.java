@@ -24,7 +24,6 @@ import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
-import ru.kuchanov.odnako.utils.AddAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.ComponentName;
@@ -53,7 +52,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ActivityBase extends ActionBarActivity
@@ -63,7 +61,7 @@ public class ActivityBase extends ActionBarActivity
 	protected boolean twoPane;
 	protected SharedPreferences pref;
 
-	AdView adView;
+//	AdView adView;
 
 	//Toolbar
 	Toolbar toolbar;
@@ -154,10 +152,10 @@ public class ActivityBase extends ActionBarActivity
 			this.act.unbindService(sConn);
 			bound = false;
 		}
-		if (this.adView != null)
-		{
-			adView.destroy();
-		}
+//		if (this.adView != null)
+//		{
+//			adView.destroy();
+//		}
 		super.onDestroy();
 	}
 
@@ -170,10 +168,11 @@ public class ActivityBase extends ActionBarActivity
 	protected void AddAds()
 	{
 		//adMob
-		adView = (AdView) this.findViewById(R.id.adView);
-		AddAds addAds = new AddAds(this, this.adView);
-		addAds.addAd();
-		//end of adMob
+		//XXX remove now;
+//		adView = (AdView) this.findViewById(R.id.adView);
+//		AddAds addAds = new AddAds(this, this.adView);
+//		addAds.addAd();
+//		//end of adMob
 	}
 
 	@Override
@@ -206,7 +205,7 @@ public class ActivityBase extends ActionBarActivity
 	@Override
 	public void onPause()
 	{
-		adView.pause();
+//		adView.pause();
 		super.onPause();
 	}
 

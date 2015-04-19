@@ -34,6 +34,7 @@
     <string name="refresh">Обновить</string>
     <string name="comments">Комментарии</string>
     <string name="downloads">Загрузки</string>
+    <string name="crash_toast_text">Отчёт об ошибке отправлен разработчику</string>
     <!-- services -->
     <string name="service_db">Работа с базой данных статей</string>
     <string name="service_rss">Обновление даты и краткого содержания статей</string>

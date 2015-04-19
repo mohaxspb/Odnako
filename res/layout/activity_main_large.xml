@@ -13,21 +13,24 @@
         android:layout_height="match_parent"
         android:baselineAligned="true" >
 
-        <com.google.android.gms.ads.AdView
+        <!--
+             <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
+        -->
 
         <LinearLayout
             android:id="@+id/main_lin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/adView"
             android:baselineAligned="false"
             android:orientation="horizontal" >
+
+            <!-- android:layout_above="@id/adView" -->
 
             <FrameLayout
                 android:id="@+id/container_left"

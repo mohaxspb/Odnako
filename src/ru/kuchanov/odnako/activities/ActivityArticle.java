@@ -146,7 +146,7 @@ public class ActivityArticle extends ActivityBase
 	public void onPause()
 	{
 		YandexMetrica.onPauseActivity(this);
-		adView.pause();
+//		adView.pause();
 		super.onPause();
 	}
 

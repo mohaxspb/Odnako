@@ -9,7 +9,6 @@ package ru.kuchanov.odnako.activities;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Map;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -363,25 +362,25 @@ public class ActivityMain extends ActivityBase
 		YandexMetrica.onResumeActivity(this);
 
 		//report setting
-		Map<String, Object> eventAttributes = new HashMap<String, Object>();
-		//app package
-		eventAttributes.put("Application", this.getPackageName());
-		//ads settings
-		eventAttributes.put(ActivityPreference.PREF_KEY_ADS_IS_ON,
-		this.pref.getBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false));
-		//design settings
-		eventAttributes.put(ActivityPreference.PREF_KEY_TWO_PANE,
-		this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false));
-		eventAttributes.put(ActivityPreference.PREF_KEY_NIGHT_MODE,
-		this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false));
-		eventAttributes.put(ActivityPreference.PREF_KEY_UI_SCALE,
-		this.pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "0.75"));
-		eventAttributes.put(ActivityPreference.PREF_KEY_ART_SCALE,
-		this.pref.getString(ActivityPreference.PREF_KEY_ART_SCALE, "0.75"));
-		eventAttributes.put(ActivityPreference.PREF_KEY_COMMENTS_SCALE,
-		this.pref.getString(ActivityPreference.PREF_KEY_COMMENTS_SCALE, "0.75"));
-		//send report
-		YandexMetrica.reportEvent("Current app statistics", eventAttributes);
+//		Map<String, Object> eventAttributes = new HashMap<String, Object>();
+//		//app package
+//		eventAttributes.put("Application", this.getPackageName());
+//		//ads settings
+//		eventAttributes.put(ActivityPreference.PREF_KEY_ADS_IS_ON,
+//		this.pref.getBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false));
+//		//design settings
+//		eventAttributes.put(ActivityPreference.PREF_KEY_TWO_PANE,
+//		this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false));
+//		eventAttributes.put(ActivityPreference.PREF_KEY_NIGHT_MODE,
+//		this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false));
+//		eventAttributes.put(ActivityPreference.PREF_KEY_UI_SCALE,
+//		this.pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "0.75"));
+//		eventAttributes.put(ActivityPreference.PREF_KEY_ART_SCALE,
+//		this.pref.getString(ActivityPreference.PREF_KEY_ART_SCALE, "0.75"));
+//		eventAttributes.put(ActivityPreference.PREF_KEY_COMMENTS_SCALE,
+//		this.pref.getString(ActivityPreference.PREF_KEY_COMMENTS_SCALE, "0.75"));
+//		//send report
+//		YandexMetrica.reportEvent("Current app statistics", eventAttributes);
 
 		//Check if autoload alarm is set
 		Intent intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
@@ -440,7 +439,7 @@ public class ActivityMain extends ActivityBase
 	{
 		Log.e(LOG, "onPause");
 		YandexMetrica.onPauseActivity(this);
-		adView.pause();
+//		adView.pause();
 		super.onPause();
 	}
 
