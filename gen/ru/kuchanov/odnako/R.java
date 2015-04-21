@@ -3094,7 +3094,7 @@ containing a value of this type.
         public static final int action_settings=0x7f0b00b9;
         public static final int action_settings_all=0x7f0b00ba;
         public static final int activity_chooser_view_content=0x7f0b0037;
-        public static final int adView=0x7f0b0056;
+        public static final int adView=0x7f0b005a;
         public static final int adjust_height=0x7f0b0020;
         public static final int adjust_width=0x7f0b0021;
         public static final int also_main=0x7f0b0062;
@@ -3159,7 +3159,7 @@ containing a value of this type.
         public static final int comments_container=0x7f0b005b;
         public static final int comments_img=0x7f0b0074;
         public static final int container_left=0x7f0b005f;
-        public static final int container_right=0x7f0b0057;
+        public static final int container_right=0x7f0b0056;
         public static final int content=0x7f0b00a3;
         public static final int contentListView=0x7f0b00a6;
         public static final int contentListViewFrame=0x7f0b00a5;
@@ -3213,7 +3213,7 @@ containing a value of this type.
         public static final int none=0x7f0b000f;
         public static final int normal=0x7f0b000b;
         public static final int pager_left=0x7f0b005e;
-        public static final int pager_right=0x7f0b0058;
+        public static final int pager_right=0x7f0b0057;
         public static final int production=0x7f0b0027;
         public static final int progress_circular=0x7f0b0007;
         public static final int progress_horizontal=0x7f0b0008;
@@ -3248,7 +3248,7 @@ containing a value of this type.
         public static final int speeck=0x7f0b00b8;
         public static final int split_action_bar=0x7f0b0004;
         public static final int start=0x7f0b001f;
-        public static final int start_drawer=0x7f0b005a;
+        public static final int start_drawer=0x7f0b0059;
         public static final int strict_sandbox=0x7f0b0029;
         public static final int submit_area=0x7f0b0052;
         public static final int swipe_refresh=0x7f0b00a0;
@@ -3261,7 +3261,7 @@ containing a value of this type.
         public static final int time_city=0x7f0b0090;
         public static final int title=0x7f0b003d;
         public static final int titleFrame=0x7f0b00ad;
-        public static final int toolbar=0x7f0b0059;
+        public static final int toolbar=0x7f0b0058;
         public static final int toolbar_right=0x7f0b0060;
         public static final int top_img=0x7f0b009e;
         public static final int top_img_cover=0x7f0b008a;

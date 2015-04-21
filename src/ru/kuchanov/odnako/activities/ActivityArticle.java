@@ -31,7 +31,7 @@ import android.view.MenuItem;
 
 public class ActivityArticle extends ActivityBase
 {
-	static final String LOG = ActivityArticle.class.getSimpleName();
+	private static final String LOG = ActivityArticle.class.getSimpleName();
 
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter;

@@ -752,7 +752,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 		else
 		{
-			//XXX to test
+			//to test
 			//newQuont = "10";
 			String[] events = new String[Integer.parseInt(newQuont)];
 			// Sets a title for the Inbox in expanded layout

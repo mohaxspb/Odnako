@@ -28,6 +28,8 @@
 
     <!-- for overscreen icon -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
+    <!-- for ACRA -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
     <!-- other -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

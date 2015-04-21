@@ -11,21 +11,22 @@
         android:layout_height="match_parent"
         android:baselineAligned="true" >
 
-        <com.google.android.gms.ads.AdView
+       <!--  <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/ARTICLE_AD_UNIT_ID" />
+            ads:adUnitId="@string/ARTICLE_AD_UNIT_ID" /> -->
 
         <FrameLayout
             android:id="@+id/container_right"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/adView"
-            android:layout_marginLeft="5dp"
+             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp" >
+            <!-- android:layout_above="@id/adView" -->
+           
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager_right"

@@ -6,6 +6,9 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+
+import org.acra.ACRA;
+
 import ru.kuchanov.odnako.R;
 import android.content.Intent;
 import android.os.Bundle;
@@ -95,16 +98,14 @@ public class ActivityDownloads extends ActivityBase
 		{
 			case R.id.refresh:
 				System.out.println("refresh");
-				// TODO
-//				try
-//				{
-//					throw new RuntimeException("Exception from Downloading activity from refresh button");
-//				} catch (Throwable error)
-//				{
-//					YandexMetrica.reportError("Error while parsing some integer number", error);
-//				}
-				throw new RuntimeException("Exception from Downloading activity from refresh button");
-				//return true;
+				ACRA.getErrorReporter().handleSilentException(
+				new RuntimeException("Exception from Downloading activity from refresh button"));
+				return true;
+			case R.id.action_search:
+//				String url = "http://kuchanov.ru/acra/test.php";
+//				TestPhp testPhp = new TestPhp(act, url);
+//				testPhp.execute();
+				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
