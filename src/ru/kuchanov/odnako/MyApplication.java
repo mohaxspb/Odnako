@@ -25,7 +25,7 @@ import android.app.Application;
 //formUri = "http://kuchanov.ru/acra/report.php",
 //formUriBasicAuthLogin = "test", // optional
 //formUriBasicAuthPassword = "test", // optional
-formUri = "http://kuchanov.ru/acra/test.php",
+formUri = MyApplication.FROM_URI_DEFAULT,//"http://kuchanov.ru/acra/test.php",
 customReportContent = {
 		ReportField.SHARED_PREFERENCES,
 		ReportField.APP_VERSION_CODE,
@@ -51,6 +51,8 @@ public class MyApplication extends Application
 {
 	static final String LOG = MyApplication.class.getSimpleName();
 
+	public static final String FROM_URI_DEFAULT = "http://kuchanov.ru/acra/test.php";
+
 	private static final String API_KEY = "39630";
 
 	@Override
@@ -58,11 +60,9 @@ public class MyApplication extends Application
 	{
 		// The following line triggers the initialization of ACRA
 		ACRA.init(this);
-		AcraReportSender yourSender = new AcraReportSender();
-		//		ACRA.getErrorReporter().removeAllReportSenders();
-		//		ACRA.getErrorReporter().addReportSender(yourSender);
+		AcraReportSender yourSender = new AcraReportSender(FROM_URI_DEFAULT);
 		ACRA.getErrorReporter().setReportSender(yourSender);
-		
+
 		//Initialize YandexMetrika
 		YandexMetrica.initialize(getApplicationContext(), API_KEY);
 		super.onCreate();

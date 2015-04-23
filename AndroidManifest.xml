@@ -24,7 +24,8 @@
         android:name="ru.kuchanov.odnako.LINT_PREVENT_PERMISSION"
         android:protectionLevel="normal" />
 
-    <uses-permission android:name="com.yourpage.permission.YOUR_PERMISSION" />
+    <!-- <uses-permission android:name="com.yourpage.permission.YOUR_PERMISSION" /> -->
+    <uses-permission android:name="ru.kuchanov.odnako.LINT_PREVENT_PERMISSION" />
 
     <!-- for overscreen icon -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->

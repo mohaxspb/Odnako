@@ -9,11 +9,12 @@ package ru.kuchanov.odnako.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.collector.CrashReportData;
 import org.acra.sender.ReportSender;
 import org.acra.sender.ReportSenderException;
+
+import ru.kuchanov.odnako.MyApplication;
 
 import android.content.Context;
 import android.util.Log;
@@ -28,9 +29,11 @@ public class AcraReportSender implements ReportSender
 {
 	private final static String LOG = AcraReportSender.class.getSimpleName() + "/";
 
-	public AcraReportSender()
+	String url;
+
+	public AcraReportSender(String url)
 	{
-		// initialize your sender with needed parameters
+		this.url = url;
 	}
 
 	@Override
@@ -53,8 +56,18 @@ public class AcraReportSender implements ReportSender
 
 		RequestBody formBody = builder.build();
 
+		if (report.get(ReportField.STACK_TRACE).contains(ReporterSettings.THROWABLE_ADS_ON))
+		{
+			this.url = ReporterSettings.FORM_URI_ADS_ON;
+		}
+		else
+		{
+			this.url = MyApplication.FROM_URI_DEFAULT;
+		}
+
 		Request request = new Request.Builder()
-		.url(ACRA.getConfig().formUri())
+		//		.url(ACRA.getConfig().formUri())
+		.url(this.url)
 		.post(formBody)
 		.build();
 
