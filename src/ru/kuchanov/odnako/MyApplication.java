@@ -9,7 +9,6 @@ package ru.kuchanov.odnako;
 import org.acra.*;
 import org.acra.annotation.*;
 
-import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.utils.AcraReportSender;
 
 import com.yandex.metrica.YandexMetrica;
@@ -44,27 +43,26 @@ customReportContent = {
 		ReportField.USER_APP_START_DATE,
 		ReportField.USER_CRASH_DATE,
 		ReportField.USER_IP,
+		ReportField.CUSTOM_DATA,
 		ReportField.LOGCAT },
 mode = ReportingInteractionMode.TOAST,
 resToastText = R.string.crash_toast_text)
 public class MyApplication extends Application
 {
-	static final String LOG = ActivityArticle.class.getSimpleName();
+	static final String LOG = MyApplication.class.getSimpleName();
 
 	private static final String API_KEY = "39630";
 
 	@Override
 	public void onCreate()
 	{
-
 		// The following line triggers the initialization of ACRA
 		ACRA.init(this);
 		AcraReportSender yourSender = new AcraReportSender();
 		//		ACRA.getErrorReporter().removeAllReportSenders();
 		//		ACRA.getErrorReporter().addReportSender(yourSender);
 		ACRA.getErrorReporter().setReportSender(yourSender);
-
-		//Log.e(LOG, ReportField.ANDROID_VERSION.toString());
+		
 		//Initialize YandexMetrika
 		YandexMetrica.initialize(getApplicationContext(), API_KEY);
 		super.onCreate();

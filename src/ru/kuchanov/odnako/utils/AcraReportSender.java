@@ -70,3 +70,65 @@ public class AcraReportSender implements ReportSender
 		}
 	}
 }
+
+//BACKEND PHP CODE
+
+//<?php
+//$user="p211659_db";
+//$pass="DO YOU REALLY EXPECTED TO SEE HERE MY PASSWORD?.. REALLY?..";
+//
+//$db="p211659_db";
+//$host="p211659.mysql.ihc.ru";
+//$charset="utf-8";
+//
+//$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+//$opt = array
+//(
+//	PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+//	PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+//);
+//$pdo = new PDO($dsn, $user, $pass, $opt);
+//
+//$table = "acra_reports";
+//try 
+//{
+//	 $sql ="CREATE TABLE IF NOT EXISTS $table (
+//	 ID INT( 11 ) AUTO_INCREMENT PRIMARY KEY,";
+//	foreach($_POST as $key => $value)
+//	{
+//		$sql.=" $key TEXT( 2000 ), ";
+//	}
+//	$sql = substr($sql, 0, -2);
+//	$sql.=" );";
+//	//echo $sql;
+//	$pdo->exec($sql);
+//print("Created $table Table.\n");
+//} catch(PDOException $e) 
+//{
+//	echo $e->getMessage();//Remove or change message in production code
+//}
+//
+//$sql = "INSERT INTO $table (";
+//
+//foreach($_POST as $key => $value)
+//{
+//	$sql.=" $key,";
+//}
+//$sql = substr($sql, 0, -1);
+//$sql.=" ) VALUES (";
+//foreach($_POST as $key => $value)
+//{
+//	$sql.=" :$key,";
+//}
+//$sql = substr($sql, 0, -1);
+//$sql.=" )";
+//                                      
+//$stmt = $pdo->prepare($sql);
+//
+//foreach($_POST as $key => $value)
+//{
+//	$var=":".$key;
+//	$stmt->bindParam($var, $_POST[$key], PDO::PARAM_STR);
+//}
+//$stmt->execute(); 
+//?>
