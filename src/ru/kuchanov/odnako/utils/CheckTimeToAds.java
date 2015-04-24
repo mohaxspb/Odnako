@@ -34,6 +34,8 @@ public class CheckTimeToAds
 
 	InterstitialAd mInterstitialAd;
 
+	UncaughtExceptionHandler deafultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+
 	public CheckTimeToAds(Context ctx, InterstitialAd mInterstitialAd)
 	{
 		this.ctx = ctx;
@@ -87,6 +89,22 @@ public class CheckTimeToAds
 		{
 			this.requestNewInterstitial();
 		}
+
+		this.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		{
+			public Thread.UncaughtExceptionHandler oldHandler = deafultUncaughtExceptionHandler;//Thread.getDefaultUncaughtExceptionHandler();
+
+			@Override
+			public void uncaughtException(Thread thread, Throwable ex)
+			{
+				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
+				onPause();
+				if (oldHandler != null)
+				{
+					oldHandler.uncaughtException(thread, ex);
+				}
+			}
+		});
 	}
 
 	public void onPause()
@@ -108,20 +126,43 @@ public class CheckTimeToAds
 		}
 		else
 		{
-			inAppPeriod = inAppPeriod + alreadyStoredInAppPeriod - getMaxInAppPeriod(this.ctx);
+			inAppPeriod = 0;//inAppPeriod + alreadyStoredInAppPeriod - getMaxInAppPeriod(this.ctx);
 			this.pref.edit().putBoolean(PREF_NEED_TO_SHOW_ADS, true).commit();
 			this.pref.edit().putLong(PREF_IN_APP_PERIOD, inAppPeriod).commit();
 			Log.e(LOG, "onPause, MORE then max");
 			Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
 			Log.e(LOG, "onPause, getMaxInAppPeriod(this.ctx): " + getMaxInAppPeriod(this.ctx));
 		}
+
+		this.setUncaughtExceptionHandler(deafultUncaughtExceptionHandler);
+	}
+
+	private void setUncaughtExceptionHandler(UncaughtExceptionHandler handler)
+	{
+		//this.myUncaughtExceptionHandler = handler;
+		Thread.setDefaultUncaughtExceptionHandler(handler);
+		//		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		//		{
+		//			public Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+		//
+		//			@Override
+		//			public void uncaughtException(Thread thread, Throwable ex)
+		//			{
+		//				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
+		//				onPause();
+		//				if (oldHandler != null)
+		//				{
+		//					oldHandler.uncaughtException(thread, ex);
+		//				}
+		//			}
+		//		});
 	}
 
 	private void init()
 	{
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		this.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
 		{
-			Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+			public Thread.UncaughtExceptionHandler oldHandler = deafultUncaughtExceptionHandler;//Thread.getDefaultUncaughtExceptionHandler();
 
 			@Override
 			public void uncaughtException(Thread thread, Throwable ex)
@@ -134,6 +175,22 @@ public class CheckTimeToAds
 				}
 			}
 		});
+
+		//		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		//		{
+		//			Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+		//
+		//			@Override
+		//			public void uncaughtException(Thread thread, Throwable ex)
+		//			{
+		//				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
+		//				onPause();
+		//				if (oldHandler != null)
+		//				{
+		//					oldHandler.uncaughtException(thread, ex);
+		//				}
+		//			}
+		//		});
 
 		mInterstitialAd = new InterstitialAd(ctx);
 		mInterstitialAd.setAdUnitId(ctx.getResources().getString(R.string.AD_UNIT_ID_FULL_SCREEN));
@@ -176,9 +233,9 @@ public class CheckTimeToAds
 				CheckTimeToAds.adsShown(ctx);
 			}
 		});
-//		if (CheckTimeToAds.isTimeToShowAds(ctx))
-//		{
-//			this.requestNewInterstitial();
-//		}
+		//		if (CheckTimeToAds.isTimeToShowAds(ctx))
+		//		{
+		//			this.requestNewInterstitial();
+		//		}
 	}
 }
