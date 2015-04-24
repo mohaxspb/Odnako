@@ -8,7 +8,11 @@ package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.yandex.metrica.YandexMetrica;
 
 import ru.kuchanov.odnako.R;
@@ -19,10 +23,13 @@ import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import ru.kuchanov.odnako.utils.CheckTimeToAds;
+import ru.kuchanov.odnako.utils.DeviceID;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -35,6 +42,22 @@ public class ActivityArticle extends ActivityBase
 
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter;
+	
+	InterstitialAd mInterstitialAd;
+	
+	private void requestNewInterstitial()
+	{
+		Log.e(LOG, "requestNewInterstitial");
+		//get EMULATOR deviceID
+		String android_id = Settings.Secure.getString(act.getContentResolver(), Settings.Secure.ANDROID_ID);
+		String deviceId = DeviceID.md5(android_id).toUpperCase(Locale.ENGLISH);
+
+		AdRequest adRequest = new AdRequest.Builder()
+		.addTestDevice(deviceId)
+		.build();
+
+		mInterstitialAd.loadAd(adRequest);
+	}
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -48,6 +71,56 @@ public class ActivityArticle extends ActivityBase
 		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 		//end of get default settings to get all settings later
+		
+		//ADS
+		this.checkTimeAds = new CheckTimeToAds(this);
+
+		//ADS
+		mInterstitialAd = new InterstitialAd(this);
+		mInterstitialAd.setAdUnitId(this.getResources().getString(R.string.AD_UNIT_ID_FULL_SCREEN));
+		mInterstitialAd.setAdListener(new AdListener()
+		{
+			@Override
+			public void onAdClosed()
+			{
+				//must reset needToShowAds
+				CheckTimeToAds.adsShown(act);
+			}
+
+			public void onAdLeftApplication()
+			{
+				//must reset needToShowAds
+				CheckTimeToAds.adsShown(act);
+			}
+
+			@Override
+			public void onAdLoaded()
+			{
+				Log.e(LOG, "onAdLoaded");
+				if (CheckTimeToAds.isTimeToShowAds(act))
+				{
+					mInterstitialAd.show();
+				}
+			}
+
+			public void onAdFailedToLoad(int errorCode)
+			{
+				Log.e(LOG, "onAdFailedToLoad with errorCode " + errorCode);
+				requestNewInterstitial();
+			}
+
+			// Сохраняет состояние приложения перед переходом к оверлею объявления.
+			@Override
+			public void onAdOpened()
+			{
+				//must reset needToShowAds
+				CheckTimeToAds.adsShown(act);
+			}
+		});
+		if (CheckTimeToAds.isTimeToShowAds(act))
+		{
+			requestNewInterstitial();
+		}
 
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
@@ -146,6 +219,8 @@ public class ActivityArticle extends ActivityBase
 	public void onPause()
 	{
 		YandexMetrica.onPauseActivity(this);
+		
+		this.checkTimeAds.onPause();
 //		adView.pause();
 		super.onPause();
 	}
@@ -155,6 +230,8 @@ public class ActivityArticle extends ActivityBase
 	{
 		super.onResume();
 		YandexMetrica.onResumeActivity(this);
+		
+		this.checkTimeAds.onResume();
 		//TODO find why here we have default title of ActionBar;
 		ActivityArticle articleActivity = (ActivityArticle) this.act;
 		String categotiesTitle = "";
