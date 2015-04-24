@@ -34,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -406,8 +407,29 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				}
 				//style="height:697px; width:500px"
 				String style = articlesTags[positionInArticlesTags].getAttributeByName("style");
-				int imgW = Integer.parseInt(style.substring(style.indexOf("width") + 6, style.lastIndexOf("px")));
-				int imgH = Integer.parseInt(style.substring(style.indexOf("height") + 7, style.indexOf("px")));
+				Log.e(LOG, style);
+				style = style.replaceAll(" ", "").replaceAll(":", "").replaceAll("px", "");
+				String[] widthHeightArr = style.split(";");
+				int imgW;// = Integer.parseInt(widthHeightArr[0]);
+				int imgH;// = Integer.parseInt(widthHeightArr[1]);
+				if (widthHeightArr[0].contains("width"))
+				{
+					widthHeightArr[0] = widthHeightArr[0].replaceAll("width", "");
+					widthHeightArr[1] = widthHeightArr[1].replaceAll("height", "");
+					imgW = Integer.parseInt(widthHeightArr[0]);
+					imgH = Integer.parseInt(widthHeightArr[1]);
+				}
+				else
+				{
+					widthHeightArr[1] = widthHeightArr[1].replaceAll("width", "");
+					widthHeightArr[0] = widthHeightArr[0].replaceAll("height", "");
+					imgW = Integer.parseInt(widthHeightArr[1]);
+					imgH = Integer.parseInt(widthHeightArr[0]);
+				}
+				//				int imgW = Integer.parseInt(style.substring(style.indexOf("width") + 6, style.lastIndexOf("px")));
+				//				int imgH = Integer.parseInt(style.substring(style.indexOf("height") + 7, style.indexOf("px")));
+				//				int imgW = Integer.parseInt(widthHeightArr[0]);
+				//				int imgH = Integer.parseInt(widthHeightArr[1]);
 				float imgScale = (float) (imgH) / (float) (imgW);
 				int height = (int) (width * imgScale);
 				android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
