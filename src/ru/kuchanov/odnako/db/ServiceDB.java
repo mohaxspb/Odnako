@@ -732,7 +732,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		// The subtext, which appears under the text on newer devices.
 		// This will show-up in the devices with Android 4.2 and above only
-		builder.setSubText("Всего новых статей:");
+		builder.setSubText(dataFromWeb.get(0).getTitle());//"Всего новых статей:");
 
 		builder.setAutoCancel(true);
 

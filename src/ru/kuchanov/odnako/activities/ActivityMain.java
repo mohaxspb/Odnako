@@ -122,15 +122,15 @@ public class ActivityMain extends ActivityBase
 		this.bindService();
 
 		//ADS
-		//XXX test for 1 min;
-		CheckTimeToAds.setMaxInAppPeriod(act, 60L * 1000L);
+		//XXX test for 60 min;
+		CheckTimeToAds.setMaxInAppPeriod(act, 60L * 60L * 1000L);
 		this.checkTimeAds = new CheckTimeToAds(this, this.mInterstitialAd);
 
 		this.twoPane = this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		//set theme before super and set content to apply it
-		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
-		if (nightModeIsOn == true)
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true;
+		if (nightModeIsOn)
 		{
 			this.setTheme(R.style.ThemeDark);
 		}
