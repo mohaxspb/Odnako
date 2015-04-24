@@ -6,21 +6,15 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import java.util.Locale;
-
 import org.acra.ACRA;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
-import ru.kuchanov.odnako.utils.DeviceID;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,25 +25,11 @@ public class ActivityDownloads extends ActivityBase
 
 	InterstitialAd mInterstitialAd;
 
-	private void requestNewInterstitial()
-	{
-		Log.e(LOG, "requestNewInterstitial");
-		//get EMULATOR deviceID
-		String android_id = Settings.Secure.getString(act.getContentResolver(), Settings.Secure.ANDROID_ID);
-		String deviceId = DeviceID.md5(android_id).toUpperCase(Locale.ENGLISH);
-
-		AdRequest adRequest = new AdRequest.Builder()
-		.addTestDevice(deviceId)
-		.build();
-
-		mInterstitialAd.loadAd(adRequest);
-	}
-
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		System.out.println("ActivityDownloads onCreate");
 		this.act = this;
-
+		
 		//get default settings to get all settings later
 		PreferenceManager.setDefaultValues(this, R.xml.pref_design, true);
 		PreferenceManager.setDefaultValues(this, R.xml.pref_notifications, true);
@@ -59,54 +39,7 @@ public class ActivityDownloads extends ActivityBase
 		//end of get default settings to get all settings later
 
 		//ADS
-		this.checkTimeAds = new CheckTimeToAds(this);
-
-		//ADS
-		mInterstitialAd = new InterstitialAd(this);
-		mInterstitialAd.setAdUnitId(this.getResources().getString(R.string.AD_UNIT_ID_FULL_SCREEN));
-		mInterstitialAd.setAdListener(new AdListener()
-		{
-			@Override
-			public void onAdClosed()
-			{
-				//must reset needToShowAds
-				CheckTimeToAds.adsShown(act);
-			}
-
-			public void onAdLeftApplication()
-			{
-				//must reset needToShowAds
-				CheckTimeToAds.adsShown(act);
-			}
-
-			@Override
-			public void onAdLoaded()
-			{
-				Log.e(LOG, "onAdLoaded");
-				if (CheckTimeToAds.isTimeToShowAds(act))
-				{
-					mInterstitialAd.show();
-				}
-			}
-
-			public void onAdFailedToLoad(int errorCode)
-			{
-				Log.e(LOG, "onAdFailedToLoad with errorCode " + errorCode);
-				requestNewInterstitial();
-			}
-
-			// Сохраняет состояние приложения перед переходом к оверлею объявления.
-			@Override
-			public void onAdOpened()
-			{
-				//must reset needToShowAds
-				CheckTimeToAds.adsShown(act);
-			}
-		});
-		if (CheckTimeToAds.isTimeToShowAds(act))
-		{
-			requestNewInterstitial();
-		}
+		this.checkTimeAds = new CheckTimeToAds(this, this.mInterstitialAd);
 
 		//set theme before super and set content to apply it
 		if (pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true)
