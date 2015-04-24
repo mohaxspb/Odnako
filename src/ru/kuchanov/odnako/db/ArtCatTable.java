@@ -333,6 +333,8 @@ public class ArtCatTable
 			ArtCatTable a = h.getDaoArtCatTable().queryForId(id);
 			String nextArtUrl = a.getNextArtUrl();
 
+			//Log.e(LOG, nextArtUrl);
+			
 			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
 			.queryForFirst();
 			nextArtCatId = h.getDaoArtCatTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())

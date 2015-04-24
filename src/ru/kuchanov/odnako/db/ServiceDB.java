@@ -189,7 +189,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		}
 
 		//We use actionName to check if some task is alredy running.
-		//Maybe we can do it in frgment itself as we do it in comments fragment;
+		//Maybe we can do it in fragment itself as we do it in comments fragment;
 		//		String action = intent.getAction();
 		//		if (action.equals(Const.Action.IS_LOADING))
 		//		{
@@ -316,6 +316,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		//AND WEBVIEW NEEDS UI THREAD
 		if (catToLoad.contains("_"))
 		{
+			Log.e(LOG + catToLoad, "WARNING!!! '_' in domain!!!!");
+
 			final WebView webView = new WebView(this);
 
 			webView.getSettings().setJavaScriptEnabled(true);

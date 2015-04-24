@@ -82,6 +82,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		if (this.curArticle != null)
 		{
+			//Log.e(LOG, curArticle.getUrl());
+			
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
 

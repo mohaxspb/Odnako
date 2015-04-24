@@ -870,6 +870,9 @@ public class FragmentArtsListRecycler extends Fragment
 			}
 
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			
+			//Log.e(LOG, a.getUrl());
+			
 			boolean notFound = true;
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
 			{

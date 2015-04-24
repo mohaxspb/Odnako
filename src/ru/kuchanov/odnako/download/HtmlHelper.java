@@ -1,8 +1,5 @@
 package ru.kuchanov.odnako.download;
 
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -11,6 +8,10 @@ import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import android.text.Html;
 import android.util.Log;
@@ -57,16 +58,19 @@ public class HtmlHelper
 		String regularExpression = "^[а-яА-ЯёЁ]+$";
 		if (subDomain.matches(regularExpression))
 		{
-			String encoded = URLEncoder.encode(subDomain, "utf-8");
-			url = htmlPage;
-			url = url.replace(subDomain, encoded);
+			//			String encoded = URLEncoder.encode(subDomain, "utf-8");
+			//			url = htmlPage;
+			//			url = url.replace(subDomain, encoded);
 			// throw error here and FUCK it!
 			throw new Exception(Const.Error.CYRILLIC_ERROR);
 		}
 		else
 		{
-			url = URLDecoder.decode(htmlPage, "utf-8");
+			//			url = URLDecoder.decode(htmlPage, "utf-8");
 		}
+
+		this.url = htmlPage;
+
 		try
 		{
 			cleaner = new HtmlCleaner();
@@ -77,83 +81,26 @@ public class HtmlHelper
 			props.setRecognizeUnicodeChars(true);
 			props.setOmitComments(true);
 
-			rootNode = cleaner.clean(new URL(url));
+			//XXX TEST
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder()
+			.url(htmlPage)
+			.build();
+			Response response = client.newCall(request).execute();
+			String htmlBody = response.body().string();
+			rootNode = cleaner.clean(htmlBody);
+			/////////////////
+
+			//			rootNode = cleaner.clean(new URL(url));
 			htmlString = cleaner.getInnerHtml(rootNode);
+
+			//Log.e(LOG, htmlString);
 		} catch (HtmlCleanerException e)
 		{
 			//System.out.println(e.getMessage());
 			Log.e(LOG, "Error in HtmlHelper while try to clean HTML. May be FileNot found or NOconnection exception");
 		}
 	}
-
-//	public static String connect(String url)
-//	{
-//		String result = null;
-//		HttpClient httpclient = new DefaultHttpClient();
-//
-//		// Prepare a request object
-//		HttpGet httpget = new HttpGet(url);
-//
-//		// Execute the request
-//		HttpResponse response;
-//		try
-//		{
-//			response = httpclient.execute(httpget);
-//			// Examine the response status
-//			Log.i("Praeda", response.getStatusLine().toString());
-//
-//			// Get hold of the response entity
-//			HttpEntity entity = response.getEntity();
-//			// If the response does not enclose an entity, there is no need
-//			// to worry about connection release
-//
-//			if (entity != null)
-//			{
-//
-//				// A Simple JSON Response Read
-//				InputStream instream = entity.getContent();
-//				result = convertStreamToString(instream);
-//				// now you have the string representation of the HTML request
-//				instream.close();
-//			}
-//
-//		} catch (Exception e)
-//		{
-//		}
-//		return result;
-//	}
-
-//	private static String convertStreamToString(InputStream is)
-//	{
-//		/* To convert the InputStream to String we use the
-//		 * BufferedReader.readLine() method. We iterate until the BufferedReader
-//		 * return null which means there's no more data to read. Each line will
-//		 * appended to a StringBuilder and returned as String. */
-//		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-//		StringBuilder sb = new StringBuilder();
-//
-//		String line = null;
-//		try
-//		{
-//			while ((line = reader.readLine()) != null)
-//			{
-//				sb.append(line + "\n");
-//			}
-//		} catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		} finally
-//		{
-//			try
-//			{
-//				is.close();
-//			} catch (IOException e)
-//			{
-//				e.printStackTrace();
-//			}
-//		}
-//		return sb.toString();
-//	}
 
 	public boolean isAuthor()
 	{

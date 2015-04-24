@@ -189,6 +189,7 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 			this.updateNotification(iterator, quontity);
 		}
 		Intent intent = new Intent(downloadedArticle.getUrl());
+		Log.e(LOG, downloadedArticle.getUrl());
 		intent.putExtra(Article.KEY_CURENT_ART, downloadedArticle);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
