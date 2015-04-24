@@ -303,7 +303,7 @@ public class ActivityBase extends ActionBarActivity
 		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
 		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
 		ImageLoader imgLoader = MyUIL.get(act);
-		imgLoader.displayImage("drawable://" + R.drawable.dev_ava, ava,
+		imgLoader.displayImage("http://www.odnako.org/i/75_75/users/7160/7160-1481-7160.jpg", ava,
 		MyUIL.getTransparentBackgroundROUNDOptions(act));
 		ava.setOnClickListener(new OnClickListener()
 		{

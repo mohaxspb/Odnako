@@ -642,7 +642,8 @@ public class FragmentArtsListRecycler extends Fragment
 				String fullResName = catImgsFilesNames[i];
 				String resName = fullResName.substring(0, fullResName.length() - 4);
 				int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-				imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
+				//imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
+				topImg.setImageResource(resId);
 				break;
 			}
 		}
