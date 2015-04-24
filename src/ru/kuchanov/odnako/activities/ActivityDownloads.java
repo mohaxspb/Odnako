@@ -13,11 +13,13 @@ import ru.kuchanov.odnako.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class ActivityDownloads extends ActivityBase
 {
+	private static final String LOG = ActivityDownloads.class.getSimpleName();
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -59,8 +61,15 @@ public class ActivityDownloads extends ActivityBase
 	@Override
 	protected void onResume()
 	{
-		System.out.println("ActivityDownloads onResume");
+		Log.e(LOG, "onResume");
 		super.onResume();
+	}
+	
+	@Override
+	public void onPause()
+	{
+		Log.e(LOG, "onPause");
+		super.onPause();
 	}
 
 	@Override
@@ -105,7 +114,8 @@ public class ActivityDownloads extends ActivityBase
 //				String url = "http://kuchanov.ru/acra/test.php";
 //				TestPhp testPhp = new TestPhp(act, url);
 //				testPhp.execute();
-				return true;
+				throw new RuntimeException("Exception from Downloading activity from action_search button");
+				//return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
@@ -116,5 +126,4 @@ public class ActivityDownloads extends ActivityBase
 				return super.onOptionsItemSelected(item);
 		}
 	}
-
 }

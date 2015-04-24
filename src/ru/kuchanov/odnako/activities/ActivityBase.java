@@ -24,6 +24,7 @@ import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.ComponentName;
@@ -61,7 +62,8 @@ public class ActivityBase extends ActionBarActivity
 	protected boolean twoPane;
 	protected SharedPreferences pref;
 
-//	AdView adView;
+	//	AdView adView;
+	protected CheckTimeToAds checkTimeAds;
 
 	//Toolbar
 	Toolbar toolbar;
@@ -152,10 +154,10 @@ public class ActivityBase extends ActionBarActivity
 			this.act.unbindService(sConn);
 			bound = false;
 		}
-//		if (this.adView != null)
-//		{
-//			adView.destroy();
-//		}
+		//		if (this.adView != null)
+		//		{
+		//			adView.destroy();
+		//		}
 		super.onDestroy();
 	}
 
@@ -169,10 +171,10 @@ public class ActivityBase extends ActionBarActivity
 	{
 		//adMob
 		//XXX remove now;
-//		adView = (AdView) this.findViewById(R.id.adView);
-//		AddAds addAds = new AddAds(this, this.adView);
-//		addAds.addAd();
-//		//end of adMob
+		//		adView = (AdView) this.findViewById(R.id.adView);
+		//		AddAds addAds = new AddAds(this, this.adView);
+		//		addAds.addAd();
+		//		//end of adMob
 	}
 
 	@Override
@@ -205,7 +207,7 @@ public class ActivityBase extends ActionBarActivity
 	@Override
 	public void onPause()
 	{
-//		adView.pause();
+		//		adView.pause();
 		super.onPause();
 	}
 

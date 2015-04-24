@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Checks if this app was updated from 2.30 versions and sends prefs to server;
@@ -51,22 +50,21 @@ public class ReporterSettings
 		//			Log.i(LOG, key + ": " + prefsMap.get(key).toString());
 		//		}
 
-		
 		//For test we add adsOn pref to prefs
-//		prefs.edit().putBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false).commit();
-//		prefs.edit().putBoolean(SETTINGS_REPORT_SENDED, false).commit();
+		//		prefs.edit().putBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false).commit();
+		//		prefs.edit().putBoolean(SETTINGS_REPORT_SENDED, false).commit();
 
 		boolean isUpdatedFromVersion230 = (prefs.contains(ActivityPreference.PREF_KEY_ADS_IS_ON));
 
 		if (isUpdatedFromVersion230)
 		{
 			Log.i(LOG, "IS updated from version 230");
-			Toast.makeText(ctx, "IS updated from version 230", Toast.LENGTH_LONG).show();
+			//Toast.makeText(ctx, "IS updated from version 230", Toast.LENGTH_LONG).show();
 			reportSettings(ctx);
 		}
 		else
 		{
-			Toast.makeText(ctx, "Is NOT updated from version 230", Toast.LENGTH_LONG).show();
+			//Toast.makeText(ctx, "Is NOT updated from version 230", Toast.LENGTH_LONG).show();
 			Log.i(LOG, "Is NOT updated from version 230");
 		}
 	}
@@ -76,12 +74,12 @@ public class ReporterSettings
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		if (prefs.getBoolean(SETTINGS_REPORT_SENDED, false) == true)
 		{
-			Toast.makeText(ctx, "SETTINGS REPORT already SENDED", Toast.LENGTH_LONG).show();
+			//Toast.makeText(ctx, "SETTINGS REPORT already SENDED", Toast.LENGTH_LONG).show();
 			Log.i(LOG, "SETTINGS REPORT already SENDED");
 		}
 		else
 		{
-			Toast.makeText(ctx, "SETTINGS REPORT not SENDED so send it", Toast.LENGTH_LONG).show();
+			//Toast.makeText(ctx, "SETTINGS REPORT not SENDED so send it", Toast.LENGTH_LONG).show();
 			Log.i(LOG, "SETTINGS REPORT not SENDED so send it");
 			boolean adsOn = prefs.getBoolean(ActivityPreference.PREF_KEY_ADS_IS_ON, false) == true;
 			String adsOnValue = (adsOn) ? "1" : "0";
