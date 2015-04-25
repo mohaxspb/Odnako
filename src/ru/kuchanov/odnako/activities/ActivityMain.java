@@ -44,7 +44,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -1023,23 +1022,20 @@ public class ActivityMain extends ActivityBase
 				toolbarRight.setTitle("Статья");
 			}
 			//remove fragment
-			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
-			//this.getSupportFragmentManager().beginTransaction().detach(artFrag).commit();
-			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-			artFrag=null;
-			this.getSupportFragmentManager().popBackStack();
-//			
-//			this.findViewById(R.id.container_right).refreshDrawableState();
-			
+//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+//			artFrag=null;
+//			this.getSupportFragmentManager().popBackStack();
+			super.onBackPressed();
+			this.recreate();
 			return;
 		}
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			toolbarRight.setNavigationIcon(null);
-			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
-			//this.getSupportFragmentManager().beginTransaction().detach(artFrag).commit();
-			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-			artFrag=null;
+//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+//			artFrag=null;
 			//restore title of toolbar via calling to onPageSelected of pager's listener
 			String currentCategory;
 			switch (this.pagerType)
@@ -1063,6 +1059,8 @@ public class ActivityMain extends ActivityBase
 			}
 			int selectedArt = this.allCatListsSelectedArtPosition.get(currentCategory);
 			PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, selectedArt);
+			super.onBackPressed();
+			this.recreate();
 			return;
 		}
 
