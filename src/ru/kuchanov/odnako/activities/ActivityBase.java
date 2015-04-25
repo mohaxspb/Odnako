@@ -491,8 +491,8 @@ public class ActivityBase extends ActionBarActivity
 				//check if we have also article frag in manager and if not - show hamburger
 				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
 				{
-					mDrawerToggle.setDrawerIndicatorEnabled(true);
-					this.mDrawerToggle.syncState();
+//					mDrawerToggle.setDrawerIndicatorEnabled(true);
+//					this.mDrawerToggle.syncState();
 					//restore title of toolbar via calling to onPageSelected of pager's listener
 					PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
 				}
@@ -515,8 +515,8 @@ public class ActivityBase extends ActionBarActivity
 			}
 			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 			{
-				mDrawerToggle.setDrawerIndicatorEnabled(true);
-				this.mDrawerToggle.syncState();
+//				mDrawerToggle.setDrawerIndicatorEnabled(true);
+//				this.mDrawerToggle.syncState();
 
 				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
 				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();

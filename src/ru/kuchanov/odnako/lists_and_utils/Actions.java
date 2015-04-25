@@ -627,7 +627,7 @@ public class Actions
 		if (!twoPane)
 		{
 			//So it's article activity
-			//replace havburger icon to backArrow
+			//replace hamburger icon to backArrow
 			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 			act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}

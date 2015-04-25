@@ -117,6 +117,10 @@ public class ActivityArticle extends ActivityBase
 
 		//drawer settings
 		this.setNavDrawer();
+//		//set arrow; It'll be better
+//		this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
+		act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		////End of drawer settings
 
 		//setting toolbar
@@ -181,6 +185,9 @@ public class ActivityArticle extends ActivityBase
 				break;
 			}
 		}
+		
+		//set arrow; It'll be better
+//				this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/** Called whenever we call supportInvalidateOptionsMenu() */
