@@ -17,13 +17,10 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceDB.LocalBinder;
-import ru.kuchanov.odnako.fragments.FragmentArticle;
-import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
-import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -33,10 +30,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -46,7 +40,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -429,111 +422,6 @@ public class ActivityBase extends ActionBarActivity
 		}
 
 		return curentPosition;
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		if (this.act.getClass().getSimpleName().equals("ActivityMain"))
-		{
-			if (mDrawerLayout.isDrawerOpen(Gravity.START))
-			{
-				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
-			}
-			else
-			{
-				//check if we have only one page in Left ViewPager
-				//if so - we must show initial state of app
-				//else - check if it's second time of pressing back
-				ViewPager leftPager = (ViewPager) this.act.findViewById(R.id.pager_left);
-				if (leftPager.getAdapter().getCount() == 1)
-				{
-					this.act.finish();
-					Intent intent = new Intent(this.act, ActivityMain.class);
-					this.act.startActivity(intent);
-				}
-				else
-				{
-					//else - check if it's second time of pressing back
-					if (this.backPressedQ == 1)
-					{
-						this.backPressedQ = 0;
-						super.onBackPressed();
-						this.finish();
-					}
-					else
-					{
-						this.backPressedQ++;
-						Toast.makeText(this, "Нажмите ещё раз, чтобы выйти", Toast.LENGTH_SHORT).show();
-					}
-				}
-			}
-
-			//Обнуление счётчика через 5 секунд
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					// Do something after 5s = 5000ms
-					backPressedQ = 0;
-					//checkNew();
-				}
-			}, 5000);
-		}
-		else
-		{
-			if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
-			{
-				final Toolbar toolbar;
-				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
-				//check if we have also article frag in manager and if not - show hamburger
-				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
-				{
-//					mDrawerToggle.setDrawerIndicatorEnabled(true);
-//					this.mDrawerToggle.syncState();
-					//restore title of toolbar via calling to onPageSelected of pager's listener
-					PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
-				}
-				else
-				{
-					//set toolbar title
-					toolbar.setTitle("Статья");
-				}
-				//remove comments fragment
-				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
-				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-				//show previously hided comments and share buttons				
-				Menu menu = toolbar.getMenu();
-				MenuItem comments = menu.findItem(R.id.comments);
-				MenuItem share = menu.findItem(R.id.share);
-				comments.setVisible(true);
-				share.setVisible(true);
-
-				return;
-			}
-			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
-			{
-//				mDrawerToggle.setDrawerIndicatorEnabled(true);
-//				this.mDrawerToggle.syncState();
-
-				Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
-				this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-				//restore toolbars title
-				PagerListenerArticle.setTitleToToolbar(currentCategory, this, twoPane, this.getCurArtPosition());
-				return;
-			}
-			if (mDrawerLayout.isDrawerOpen(Gravity.START))
-			{
-				this.mDrawerLayout.closeDrawer(Gravity.LEFT);
-				return;
-			}
-			else
-			{
-				super.onBackPressed();
-			}
-		}
 	}
 
 	public int getCurArtPosition()

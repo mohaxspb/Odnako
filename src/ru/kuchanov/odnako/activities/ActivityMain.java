@@ -323,7 +323,7 @@ public class ActivityMain extends ActivityBase
 					@Override
 					public void onClick(View v)
 					{
-						act.onBackPressed();
+						/*act.*/onBackPressed();
 					}
 				});
 			}
@@ -336,7 +336,7 @@ public class ActivityMain extends ActivityBase
 					@Override
 					public void onClick(View v)
 					{
-						act.onBackPressed();
+						/*act.*/onBackPressed();
 					}
 				});
 			}
@@ -971,6 +971,8 @@ public class ActivityMain extends ActivityBase
 	@Override
 	public void onBackPressed()
 	{
+		Log.d(LOG, "onBackPressed");
+		
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();
 		if (searchView.isIconified() == false)
@@ -1022,14 +1024,22 @@ public class ActivityMain extends ActivityBase
 			}
 			//remove fragment
 			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+			//this.getSupportFragmentManager().beginTransaction().detach(artFrag).commit();
 			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			artFrag=null;
+			this.getSupportFragmentManager().popBackStack();
+//			
+//			this.findViewById(R.id.container_right).refreshDrawableState();
+			
 			return;
 		}
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			toolbarRight.setNavigationIcon(null);
 			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+			//this.getSupportFragmentManager().beginTransaction().detach(artFrag).commit();
 			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			artFrag=null;
 			//restore title of toolbar via calling to onPageSelected of pager's listener
 			String currentCategory;
 			switch (this.pagerType)

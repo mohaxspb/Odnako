@@ -43,11 +43,12 @@ import android.widget.Toast;
 
 public class FragmentComments extends Fragment
 {
-	public final static String LOG = FragmentComments.class.getSimpleName() + "/";
+//	public final static String LOG = FragmentComments.class.getSimpleName() + "/";
+	public final static String LOG = "FragmentComments/";
 
 	private ActionBarActivity act;
 
-	private Article article;
+	public Article article;
 
 	public final static String KEY_COMMENTS_DATA = "commentsData";
 	private ArrayList<CommentInfo> commentsInfoList;
@@ -85,6 +86,8 @@ public class FragmentComments extends Fragment
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(commentsDataReceiver,
 		new IntentFilter(this.article.getUrl() + LOG));
 	}
+	
+//	public void setAdapter()
 
 	private BroadcastReceiver commentsDataReceiver = new BroadcastReceiver()
 	{
@@ -152,7 +155,7 @@ public class FragmentComments extends Fragment
 	{
 		//Log.i(LOG, "onCreateView");
 		View v = inflater.inflate(R.layout.fragment_comments_list, container, false);
-
+		
 		//find all views
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);
 
@@ -217,6 +220,8 @@ public class FragmentComments extends Fragment
 		}
 		else
 		{
+			this.recyclerAdapter = new RecyclerAdapterCommentsFragment(act, article, commentsInfoList);
+			this.recycler.setAdapter(recyclerAdapter);
 			startDownload();
 		}
 
@@ -282,7 +287,8 @@ public class FragmentComments extends Fragment
 			Intent intent = new Intent(this.act, ServiceComments.class);
 			intent.putExtra(KEY_PAGE_TO_LOAD, pageToLoad);
 			intent.putExtra(KEY_URL_TO_LOAD, this.article.getUrl());
-			this.act.startService(intent);
+//			this.act.startService(intent);
+			this.getActivity().startService(intent);
 			this.isLoading = true;
 		}
 	}
@@ -319,12 +325,13 @@ public class FragmentComments extends Fragment
 	@Override
 	public void onDestroy()
 	{
+		Log.e(LOG, "onDestroy");
 		// If the DownloadStateReceiver still exists, unregister it and set it to null
 		if (commentsDataReceiver != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(commentsDataReceiver);
 			commentsDataReceiver = null;
-		}
+		}		
 		// Must always call the super method at the end.
 		super.onDestroy();
 	}

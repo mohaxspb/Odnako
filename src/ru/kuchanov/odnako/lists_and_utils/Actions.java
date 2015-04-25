@@ -621,7 +621,9 @@ public class Actions
 		newFragment.setArguments(b);
 
 		FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.container_right, newFragment, FragmentComments.LOG);
+//		ft.add(R.id.container_right, newFragment, FragmentComments.LOG);
+		ft.replace(R.id.container_right, newFragment, FragmentComments.LOG);
+		ft.addToBackStack(null);
 		ft.commit();
 
 		if (!twoPane)

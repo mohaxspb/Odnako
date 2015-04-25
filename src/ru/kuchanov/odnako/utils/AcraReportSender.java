@@ -44,6 +44,8 @@ public class AcraReportSender implements ReportSender
 		// you need with each pair of ReportField key / String value
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 
+		Request.Builder request = new Request.Builder();
+
 		ArrayList<ReportField> rfs = new ArrayList<ReportField>(report.keySet());
 		ArrayList<String> props = new ArrayList<String>();
 		for (int i = 0; i < rfs.size(); i++)
@@ -53,8 +55,11 @@ public class AcraReportSender implements ReportSender
 			props.add(prop);
 			builder.add(rf.toString(), prop);
 		}
-
-		RequestBody formBody = builder.build();
+		if (rfs.size() > 0)
+		{
+			RequestBody formBody = builder.build();
+			request.post(formBody);
+		}
 
 		if (report.get(ReportField.STACK_TRACE).contains(ReporterSettings.THROWABLE_ADS_ON))
 		{
@@ -65,17 +70,14 @@ public class AcraReportSender implements ReportSender
 			this.url = MyApplication.FROM_URI_DEFAULT;
 		}
 
-		Request request = new Request.Builder()
-		//		.url(ACRA.getConfig().formUri())
-		.url(this.url)
-		.post(formBody)
-		.build();
+		request.url(this.url);
+		//request.build();
 
 		try
 		{
 			OkHttpClient client = new OkHttpClient();
 			Response response;
-			response = client.newCall(request).execute();
+			response = client.newCall(request.build()).execute();
 			Log.e(LOG, response.body().string());
 		} catch (IOException e)
 		{

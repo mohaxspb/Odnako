@@ -505,6 +505,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 
 								FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
 								ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
+								ft.addToBackStack(null);
 								ft.commit();
 
 								//setBackButton to toolbar and its title

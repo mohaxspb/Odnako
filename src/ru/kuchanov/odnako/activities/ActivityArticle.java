@@ -26,7 +26,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -117,8 +119,8 @@ public class ActivityArticle extends ActivityBase
 
 		//drawer settings
 		this.setNavDrawer();
-//		//set arrow; It'll be better
-//		this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//		//set arrow; It'll be better
+		//		this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 		act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		////End of drawer settings
@@ -185,9 +187,9 @@ public class ActivityArticle extends ActivityBase
 				break;
 			}
 		}
-		
+
 		//set arrow; It'll be better
-//				this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//				this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/** Called whenever we call supportInvalidateOptionsMenu() */
@@ -337,5 +339,60 @@ public class ActivityArticle extends ActivityBase
 
 		this.allCatAndAutTitles = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_TITLES_LIST);
 		this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		Log.e(LOG, "onBackPressed");
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
+		{
+			Log.e(LOG, "findFragmentByTag(FragmentComments.LOG) != null");
+			final Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+			//check if we have also article frag in manager and if not - show hamburger
+			if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) == null)
+			{
+				//restore title of toolbar via calling to onPageSelected of pager's listener
+				PagerListenerArticle.setTitleToToolbar(this.getCurrentCategory(), this, twoPane,
+				this.getCurArtPosition());
+			}
+			else
+			{
+				//set toolbar title
+				toolbar.setTitle("Статья");
+			}
+
+			//show previously hided comments and share buttons				
+			Menu menu = toolbar.getMenu();
+			MenuItem comments = menu.findItem(R.id.comments);
+			MenuItem share = menu.findItem(R.id.share);
+			comments.setVisible(true);
+			share.setVisible(true);
+
+			super.onBackPressed();
+			this.recreate();
+			return;
+		}
+		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+		{
+			Log.e(LOG, "findFragmentByTag(FragmentArticle.LOG) != null");
+			//restore toolbars title
+			PagerListenerArticle.setTitleToToolbar(getCurrentCategory(), this, twoPane, this.getCurArtPosition());
+
+			super.onBackPressed();
+			this.recreate();
+			return;
+		}
+		if (mDrawerLayout.isDrawerOpen(Gravity.START))
+		{
+			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+			return;
+		}
+		else
+		{
+			Log.e(LOG, "mDrawerLayout.isDrawerOpen(Gravity.START)=false");
+			this.finish();
+			return;
+		}
 	}
 }

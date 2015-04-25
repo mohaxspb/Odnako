@@ -113,7 +113,7 @@ public class ParseComments extends AsyncTask<Void, Void, ArrayList<CommentInfo>>
 			}
 			else
 			{
-				//TODO no comments
+				//no comments
 				output = new ArrayList<CommentInfo>();
 				if (this.pageToLoad == 1)
 				{
