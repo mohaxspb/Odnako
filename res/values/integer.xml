@@ -2,6 +2,6 @@
 <resources>
 
     <integer name="checkPeriod">240</integer>
-    <integer name="db_version">68</integer>
+    <integer name="db_version">69</integer>
 
 </resources>

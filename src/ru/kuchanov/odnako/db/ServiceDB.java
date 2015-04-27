@@ -28,12 +28,14 @@ import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.callbacks.AllArtsInfoCallback;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackAskDBFromTop;
+import ru.kuchanov.odnako.callbacks.CallbackGetDownloaded;
 import ru.kuchanov.odnako.callbacks.CallbackWriteArticles;
 import ru.kuchanov.odnako.callbacks.CallbackWriteFromBottom;
 import ru.kuchanov.odnako.callbacks.CallbackWriteFromTop;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 
 import android.annotation.SuppressLint;
@@ -43,6 +45,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -62,7 +65,7 @@ import android.webkit.WebViewClient;
 
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackAskDBFromTop, CallbackAskDBFromBottom,
-CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
+CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGetDownloaded
 {
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
@@ -75,62 +78,9 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	private int pageToNotify;
 
 	Context ctx;
-
 	SharedPreferences pref;
 
 	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
-
-	//	List<String> categoriesToCheck;
-
-	protected BroadcastReceiver receiverArticleLoaded = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			Log.i(LOG, "receiverArticleLoaded onReceive called");
-			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			Set<String> keySet = getAllCatArtsInfo().keySet();
-			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
-			{
-				case Const.Action.ARTICLE_READ:
-					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
-					{
-						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-						boolean notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
-						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
-							{
-								artsList.get(i).setReaden(a.isReaden());
-								//artsList.set(i, a);
-								notFound = false;
-							}
-						}
-					}
-				break;
-				case Const.Action.ARTICLE_LOADED:
-					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
-					{
-						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-						boolean notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
-						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
-							{
-								artsList.get(i).setArtText(a.getArtText());
-								//artsList.set(i, a);
-								notFound = false;
-							}
-						}
-					}
-				break;
-			}
-		}
-	};
 
 	public void onCreate()
 	{
@@ -148,25 +98,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 
 		this.getHelper();
 
-		//		this.allCatArtsInfo = new HashMap<String, ArrayList<Article>>();
-
-		//		categoriesToCheck = new ArrayList<String>();
-		//		String[] menuUrls = CatData.getMenuLinks(this);
-		//		//Onotole
-		//		categoriesToCheck.add(menuUrls[2]);
-		//		//Ideology
-		//		categoriesToCheck.add(menuUrls[4]);
-		//		//first author (Olga A Agarcove) as I remember
-		//		Author firstAuthorOrderedByName;
-		//		try
-		//		{
-		//			firstAuthorOrderedByName = this.getHelper().getDaoAuthor().queryBuilder()
-		//			.orderBy(Author.NAME_FIELD_NAME, true).queryForFirst();
-		//			categoriesToCheck.add(Author.getURLwithoutSlashAtTheEnd(firstAuthorOrderedByName.getBlog_url()));
-		//		} catch (SQLException e)
-		//		{
-		//			e.printStackTrace();
-		//		}
+		LocalBroadcastManager.getInstance(ctx).registerReceiver(receiverArticleLoaded,
+		new IntentFilter(Const.Action.ARTICLE_CHANGED));
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -177,69 +110,80 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 			Log.e(LOG, "intent=null!!! WTF?!");
 			return super.onStartCommand(intent, flags, startId);
 		}
-		//firstly: if we load from top or not? Get it by pageToLoad
 		int pageToLoad = intent.getIntExtra("pageToLoad", 1);
 		String categoryToLoad = intent.getStringExtra("categoryToLoad");
-		boolean startDownload = intent.getBooleanExtra("startDownload", false);
-		this.notify = intent.getBooleanExtra("notify", false);
-		if (notify)
+
+		String action = intent.getAction();
+		switch (action)
 		{
-			this.catToNotify = categoryToLoad;
-			this.pageToNotify = pageToLoad;
+			case Const.Action.DATA_REQUEST:
+				boolean startDownload = intent.getBooleanExtra("startDownload", false);
+				this.notify = intent.getBooleanExtra("notify", false);
+				if (notify)
+				{
+					this.catToNotify = categoryToLoad;
+					this.pageToNotify = pageToLoad;
+				}
+
+				if (pageToLoad == 1)
+				{
+					//if pageToLoad=1 we load from top
+					//get timeStamp
+					Long timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
+					Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
+					cal.setTimeInMillis(timeStamp);
+
+					//if there is flag to download we do not need to go to DB
+					//we simply start download
+					if (startDownload)
+					{
+						this.startDownLoad(categoryToLoad, pageToLoad);
+					}
+					else
+					{
+						AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper,
+						categoryToLoad, cal,
+						pageToLoad, this);
+						askFromTop.execute();
+					}
+				}
+				else
+				{
+					//if pageToLoad!=1 we load from bottom
+					//Log.d(LOG, "LOAD FROM BOTTOM!");
+					AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(dataBaseHelper,
+					categoryToLoad,
+					pageToLoad, this);
+					askFromBottom.execute();
+				}
+			break;
+			case Const.Action.DATA_DOWNLOAD:
+			//TODO
+			break;
+			case Const.Action.GET_DOWNLOADED:
+				//TODO
+				AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(), categoryToLoad,
+				pageToLoad, this);
+				getDownloaded.execute();
+			break;
 		}
 
-		//We use actionName to check if some task is alredy running.
-		//Maybe we can do it in fragment itself as we do it in comments fragment;
-		//		String action = intent.getAction();
-		//		if (action.equals(Const.Action.IS_LOADING))
-		//		{
-		//			for (ParsePageForAllArtsInfo a : this.currentTasks)
-		//			{
-		//				if (categoryToLoad.equals(a.getCategoryToLoad()) && (pageToLoad == a.getPageToLoad())
-		//				&& (a.getStatus() == AsyncTask.Status.RUNNING))
-		//				{
-		//					Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
-		//					intentIsLoading.putExtra(Const.Action.IS_LOADING, true);
-		//					LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-		//					return super.onStartCommand(intent, flags, startId);
-		//				}
-		//			}
-		//			Intent intentIsLoading = new Intent(categoryToLoad + Const.Action.IS_LOADING);
-		//			intentIsLoading.putExtra(Const.Action.IS_LOADING, false);
-		//			LocalBroadcastManager.getInstance(this).sendBroadcast(intentIsLoading);
-		//			return super.onStartCommand(intent, flags, startId);
-		//		}
+		return super.onStartCommand(intent, flags, startId);
+	}
 
-		if (pageToLoad == 1)
+	@Override
+	public void onGetDownloaded(ArrayList<Article> dataFromDB, String categoryToLoad, int pageToLoad)
+	{
+		String[] result = { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
+		if (dataFromDB != null && dataFromDB.size() != 0)
 		{
-			//if pageToLoad=1 we load from top
-			//get timeStamp
-			Long timeStamp = intent.getLongExtra("timeStamp", System.currentTimeMillis());
-			Calendar cal = Calendar.getInstance(TimeZone.getDefault(), new Locale("ru"));
-			cal.setTimeInMillis(timeStamp);
-
-			//if there is flag to download we do not need to go to DB
-			//we simply start download
-			if (startDownload)
-			{
-				this.startDownLoad(categoryToLoad, pageToLoad);
-			}
-			else
-			{
-				AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, categoryToLoad, cal,
-				pageToLoad, this);
-				askFromTop.execute();
-			}
+			this.sendBroadcastWithResult(ctx, result, dataFromDB, categoryToLoad, pageToLoad);
 		}
 		else
 		{
-			//if pageToLoad!=1 we load from bottom
-			//Log.d(LOG, "LOAD FROM BOTTOM!");
-			AsyncTaskAskDBFromBottom askFromBottom = new AsyncTaskAskDBFromBottom(dataBaseHelper, categoryToLoad,
-			pageToLoad, this);
-			askFromBottom.execute();
+			result = new String[] { Msg.ERROR, "Сохранённых статей не обнаружено" };
+			this.sendBroadcastWithResult(ctx, result, dataFromDB, categoryToLoad, pageToLoad);
 		}
-		return super.onStartCommand(intent, flags, startId);
 	}
 
 	public static void doItMotherfucker(DataBaseHelper h, String categoryToLoad, int pageToLoad,
@@ -549,6 +493,12 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 	{
 		super.onDestroy();
 		Log.d(LOG, "onDestroy");
+
+		if (this.receiverArticleLoaded != null)
+		{
+			LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiverArticleLoaded);
+			this.receiverArticleLoaded = null;
+		}
 		if (dataBaseHelper != null)
 		{
 			OpenHelperManager.releaseHelper();
@@ -903,4 +853,66 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles
 		Log.d(LOG, "MyService onUnbind");
 		return super.onUnbind(intent);
 	}
+
+	protected BroadcastReceiver receiverArticleLoaded = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+			Set<String> keySet = getAllCatArtsInfo().keySet();
+			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
+			{
+				case Const.Action.ARTICLE_READ:
+					//loop through all arts in activity and update them and adapters
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+						boolean notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								artsList.get(i).setReaden(a.isReaden());
+								//artsList.set(i, a);
+								notFound = false;
+							}
+						}
+					}
+				break;
+				case Const.Action.ARTICLE_LOADED:
+					//loop through all arts in activity and update them and adapters
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+						boolean notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								artsList.get(i).setArtText(a.getArtText());
+								//pubDate
+								if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+								{
+									artsList.get(i).setPubDate(a.getPubDate());
+								}
+								//set preview
+								artsList.get(i).setPreview(a.getPreview());
+								//artsList.set(i, a);
+								notFound = false;
+							}
+						}
+					}
+					String[] menuLinks = CatData.getMenuLinks(ctx);
+					AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
+					menuLinks[menuLinks.length - 1],
+					1, ServiceDB.this);
+					getDownloaded.execute();
+				break;
+			}
+		}
+	};
 }

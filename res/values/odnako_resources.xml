@@ -5,7 +5,6 @@
     <string-array name="menu_items">
         <item>Авторы</item>
         <item>Категории</item>
-        <item>Загрузки</item>
         <item>Настройки</item>
     </string-array>
     <string-array name="authors">
@@ -43,6 +42,7 @@
         <item>Лента обновлений</item>
         <item>Новости</item>
         <item>Все категории</item>
+        <item>Загруженные статьи</item>
     </string-array>
     <string-array name="categories_links">
         <item>http://ideologiya.odnako.org</item>
@@ -55,6 +55,7 @@
         <item>http://odnako.org/blogs</item>
         <item>http://novosti.odnako.org</item>
         <item>all_categories</item>
+        <item>all_downloaded</item>
     </string-array>
     <string-array name="categories_descriptions">
         <item>empty</item>
@@ -79,6 +80,7 @@
         <item>empty</item>
         <item>empty</item>
         <item>empty</item>
+        <item>empty</item>
     </string-array>
     <string-array name="categories_imgs_urls">
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
@@ -90,6 +92,7 @@
         <item><![CDATA[/i/940_255/tags_img/20/miroporyadok-1770-1-20.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/i/940_255/tags_img/4/novosti-1770-1-4.jpg]]></item>
+        <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
     </string-array>
     <string-array name="categories_imgs_files_names">
@@ -103,6 +106,7 @@
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[novosti_1770_1_4.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
+         <item><![CDATA[agr_dummy.jpg]]></item>
     </string-array>
     <!-- End of menu categories -->
     <!-- all categories -->

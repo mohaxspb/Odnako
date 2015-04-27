@@ -20,9 +20,9 @@
     <!-- These is need for removing lint -->
     <!-- warning : Exported receiver does not require permission -->
     <!-- @see http://stackoverflow.com/a/17597416/3212712 -->
-    <permission
+    <!-- <permission
         android:name="ru.kuchanov.odnako.LINT_PREVENT_PERMISSION"
-        android:protectionLevel="normal" />
+        android:protectionLevel="normal" /> -->
 
     <!-- <uses-permission android:name="com.yourpage.permission.YOUR_PERMISSION" /> -->
     <uses-permission android:name="ru.kuchanov.odnako.LINT_PREVENT_PERMISSION" />

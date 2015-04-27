@@ -4,78 +4,48 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 
 public class FillMenuList
-{	
-//	ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
-//	ArrayList<String> children1 = new ArrayList<String>();
-//	ArrayList<String> children2 = new ArrayList<String>();
-//	ArrayList<String> children3 = new ArrayList<String>();
-//	ArrayList<String> children4 = new ArrayList<String>();
-//	ArrayList<String> children5 = new ArrayList<String>();
-//	
-//	ArrayList<String> children6 = new ArrayList<String>();
-
+{
 	ArrayList<ArrayList<String>> groupsLinks = new ArrayList<ArrayList<String>>();
 	ArrayList<String> children1Links = new ArrayList<String>();
 	ArrayList<String> children2Links = new ArrayList<String>();
 
-	ActionBarActivity act;
+	Context ctx;
 
-//	public void setActivity(ActionBarActivity act)
-//	{
-//		this.act = act;
-//	}
-
-	public static ArrayList<ArrayList<String>> getGroups(ActionBarActivity act)
+	public static ArrayList<ArrayList<String>> getGroups(Context ctx)
 	{
 		ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
 		ArrayList<String> children1 = new ArrayList<String>();
 		ArrayList<String> children2 = new ArrayList<String>();
 		ArrayList<String> children3 = new ArrayList<String>();
-		ArrayList<String> children4 = new ArrayList<String>();
-		ArrayList<String> children5 = new ArrayList<String>();
-		
-		ArrayList<String> children6 = new ArrayList<String>();
-		
-		String[] menuCat = act.getResources().getStringArray(R.array.menu_items);
+
+		String[] menuCat = ctx.getResources().getStringArray(R.array.menu_items);
 		for (int i = 0; i < menuCat.length; i++)
 		{
-			if (i == 0)
+			//authors
+			switch (i)
 			{
-				String[] firstCat = act.getResources().getStringArray(R.array.authors);
-				for (int ii = 0; ii < firstCat.length; ii++)
-				{
-					children1.add(firstCat[ii]);
-				}
-				groups.add(children1);
-			}
-			else if (i == 1)
-			{
-				String[] secondCat = act.getResources().getStringArray(R.array.categories);
-				for (int ii = 0; ii < secondCat.length; ii++)
-				{
-					children2.add(secondCat[ii]);
-				}
-				groups.add(children2);
-			}
-			else if (i == 2)
-			{
-				groups.add(children3);
-			}
-			else if (i == 3)
-			{
-				groups.add(children4);
-			}
-			else if (i==4)
-			{
-				groups.add(children5);
-			}
-			///test
-			else if (i==5)
-			{
-				groups.add(children6);
+				case 0:
+					String[] firstCat = ctx.getResources().getStringArray(R.array.authors);
+					for (int ii = 0; ii < firstCat.length; ii++)
+					{
+						children1.add(firstCat[ii]);
+					}
+					groups.add(children1);
+				break;
+				case 1:
+					String[] secondCat = ctx.getResources().getStringArray(R.array.categories);
+					for (int ii = 0; ii < secondCat.length; ii++)
+					{
+						children2.add(secondCat[ii]);
+					}
+					groups.add(children2);
+				break;
+				case 2:
+					groups.add(children3);
+				break;
 			}
 			///test
 		}
@@ -83,13 +53,13 @@ public class FillMenuList
 	}
 
 	public ArrayList<ArrayList<String>> getGroupsLinks()
-	{       
-		String[] menuCatLinks = act.getResources().getStringArray(R.array.menu_items);
+	{
+		String[] menuCatLinks = ctx.getResources().getStringArray(R.array.menu_items);
 		for (int i = 0; i < menuCatLinks.length; i++)
 		{
 			if (i == 0)
 			{
-				String[] firstCat = act.getResources().getStringArray(R.array.authors_links);
+				String[] firstCat = ctx.getResources().getStringArray(R.array.authors_links);
 				for (int ii = 0; ii < firstCat.length; ii++)
 				{
 					children1Links.add(firstCat[ii]);
@@ -98,7 +68,7 @@ public class FillMenuList
 			}
 			else if (i == 1)
 			{
-				String[] secondCat = act.getResources().getStringArray(R.array.categories_links);
+				String[] secondCat = ctx.getResources().getStringArray(R.array.categories_links);
 				for (int ii = 0; ii < secondCat.length; ii++)
 				{
 					children2Links.add(secondCat[ii]);

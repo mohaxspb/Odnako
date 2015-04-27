@@ -13,17 +13,17 @@ public final class Const
 	public final static class Action
 	{
 		private static final String ACTION = "ru.kuchanov.odnako.Const.Action";
-		
+
 		/**
 		 * const for intent action for requesting data from service
 		 */
 		public static final String DATA_REQUEST = ACTION + ".DATA_REQUEST";
-		
+
 		/**
 		 * const for intent action for MULTIPLE data requesting from service
 		 */
 		public static final String DATA_REQUEST_MULTIPLE = ACTION + ".DATA_REQUEST_MULTIPLE";
-		
+
 		/**
 		 * const for intent action for requesting if some task is running
 		 */
@@ -40,6 +40,16 @@ public final class Const
 		 * const for intent action for notifying that article is read;
 		 */
 		public static final String ARTICLE_READ = ACTION + ".ARTICLE_READ";
+
+		/**
+		 * const for downloading articles
+		 */
+		public static final String DATA_DOWNLOAD = ACTION + ".DATA_DOWNLOAD";
+
+		/**
+		 * const for requset for downloaded articles
+		 */
+		public static final String GET_DOWNLOADED = ACTION + ".GET_DOWNLOADED";
 	}
 
 	public static class Error

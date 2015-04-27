@@ -107,7 +107,7 @@ public class FragmentArtsListRecycler extends Fragment
 		Bundle fromArgs = this.getArguments();
 		if (fromArgs != null)
 		{
-			this.setCategoryToLoad(fromArgs.getString("categoryToLoad"));
+			this.categoryToLoad = fromArgs.getString("categoryToLoad");
 			this.position = fromArgs.getInt("position");
 		}
 
@@ -205,26 +205,30 @@ public class FragmentArtsListRecycler extends Fragment
 			Log.i(LOG + categoryToLoad, "receiverForRSS onReceive()");
 			ArrayList<Article> rssData = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
 			//update activities artList
-			//TODO update all lists
-			ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(categoryToLoad);
-			for (Article a : rssData)
+			//update all lists
+			Set<String> keySetActivity = act.getAllCatArtsInfo().keySet();
+			for (String key : keySetActivity)
 			{
-				boolean findIt = false;
-				for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
+				//				ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(categoryToLoad);
+				ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(key);
+				for (Article a : rssData)
 				{
-					Article b = activitiesData.get(i);
-					if (a.getUrl().equals(b.getUrl()))
+					boolean findIt = false;
+					for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
 					{
-						findIt = true;
-						b.setPreview(a.getPreview());
-						b.setPubDate(a.getPubDate());
+						Article b = activitiesData.get(i);
+						if (a.getUrl().equals(b.getUrl()))
+						{
+							findIt = true;
+							b.setPreview(a.getPreview());
+							b.setPubDate(a.getPubDate());
+						}
 					}
 				}
 			}
 			//updateLists in Service
 			if (act.getServiceDB() != null)
 			{
-
 				Set<String> keySet = act.getServiceDB().getAllCatArtsInfo().keySet();
 				for (String key : keySet)
 				{
@@ -770,7 +774,11 @@ public class FragmentArtsListRecycler extends Fragment
 		setLoading(true);
 
 		Intent intent = new Intent(this.act, ServiceDB.class);
-		intent.setAction(Const.Action.DATA_REQUEST);
+		String[] menuLinks = CatData.getMenuLinks(act);
+		String action = this.getCategoryToLoad().equals(menuLinks[menuLinks.length - 1]) ? Const.Action.GET_DOWNLOADED
+		: Const.Action.DATA_REQUEST;
+		//		intent.setAction(Const.Action.DATA_REQUEST);
+		intent.setAction(action);
 		intent.putExtra("categoryToLoad", this.getCategoryToLoad());
 		intent.putExtra("pageToLoad", this.pageToLoad);
 		intent.putExtra("timeStamp", System.currentTimeMillis());
@@ -871,9 +879,9 @@ public class FragmentArtsListRecycler extends Fragment
 			}
 
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			
+
 			//Log.e(LOG, a.getUrl());
-			
+
 			boolean notFound = true;
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
 			{
@@ -899,6 +907,13 @@ public class FragmentArtsListRecycler extends Fragment
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
 							allArtsInfo.get(i).setArtText(a.getArtText());
+							//pubDate
+							if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+							{
+								allArtsInfo.get(i).setPubDate(a.getPubDate());
+							}
+							//set preview
+							allArtsInfo.get(i).setPreview(a.getPreview());
 							//allArtsInfo.set(i, a);
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;

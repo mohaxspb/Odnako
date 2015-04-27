@@ -34,21 +34,16 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 {
 
 	private ArrayList<ArrayList<String>> mGroups;
-	ActionBarActivity act;
-	String[] cat;
+	private ActionBarActivity act;
+	private String[] cat;
 	SharedPreferences pref;
 	private Drawable drawableArrrowDown;
 	private Drawable drawableArrowUp;
-	Drawable drawableArrrowLeft;
-	Drawable drawableArrrowRight;
-	private Drawable drawableDownload;
+	private Drawable drawableSaved;
 	private Drawable drawableSettings;
-	Drawable drawableAsList;
 	private Drawable drawableSubject;
 	private Drawable drawableCategoriesMore;
-	Drawable drawableAuthor;
 	private Drawable drawableAuthorsMore;
-	
 
 	public ExpListAdapter(ActionBarActivity act, ArrayList<ArrayList<String>> groups)
 	{
@@ -58,7 +53,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		cat = this.act.getResources().getStringArray(R.array.menu_items);
 
 		this.setThemeDependedDrawables();
-
 	}
 
 	private void setThemeDependedDrawables()
@@ -73,30 +67,15 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		ta = this.act.obtainStyledAttributes(attrs);
 		drawableArrowUp = ta.getDrawable(0);
 		ta.recycle();
-		//set arrowLeftIcon by theme
-		attrs = new int[] { R.attr.arrowLeftIcon };
-		ta = this.act.obtainStyledAttributes(attrs);
-		drawableArrrowLeft = ta.getDrawable(0);
-		ta.recycle();
-		//set arrowRightIcon by theme
-		attrs = new int[] { R.attr.arrowRightIcon };
-		ta = this.act.obtainStyledAttributes(attrs);
-		drawableArrrowRight = ta.getDrawable(0);
-		ta.recycle();
 		//set downloadIcon by theme
-		attrs = new int[] { R.attr.downloadIcon };
+		attrs = new int[] { R.attr.saveIcon };
 		ta = this.act.obtainStyledAttributes(attrs);
-		drawableDownload = ta.getDrawable(0);
+		drawableSaved = ta.getDrawable(0);
 		ta.recycle();
 		//set settingsIcon by theme
 		attrs = new int[] { R.attr.settingsIcon };
 		ta = this.act.obtainStyledAttributes(attrs);
 		drawableSettings = ta.getDrawable(0);
-		ta.recycle();
-		//set asListIcon by theme
-		attrs = new int[] { R.attr.asListIcon };
-		ta = this.act.obtainStyledAttributes(attrs);
-		drawableAsList = ta.getDrawable(0);
 		ta.recycle();
 		//set subjectIcon by theme
 		attrs = new int[] { R.attr.subjectIcon };
@@ -107,11 +86,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		attrs = new int[] { R.attr.categoriesMoreIcon };
 		ta = this.act.obtainStyledAttributes(attrs);
 		drawableCategoriesMore = ta.getDrawable(0);
-		ta.recycle();
-		//set personIcon by theme
-		attrs = new int[] { R.attr.authorIcon };
-		ta = this.act.obtainStyledAttributes(attrs);
-		drawableAuthor = ta.getDrawable(0);
 		ta.recycle();
 		//set authorsMoreIcon by theme
 		attrs = new int[] { R.attr.authorsMoreIcon };
@@ -188,7 +162,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		{
 			parent.setBackgroundColor(storedValueInTheme1.data);
 		}
-		
+
 		///light checked item
 		if (this.act instanceof ActivityDownloads && groupPosition == 2)
 		{
@@ -208,7 +182,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				view.setBackgroundColor(storedValueInTheme.data);
 			}
 		}
-		///////
 
 		holderMain.text.setText(this.cat[groupPosition]);
 
@@ -261,16 +234,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 					holderMain.right.setImageDrawable(drawableArrrowDown);
 				}
 			break;
-			//downloads
-			case 2:
-				//Left img
-				holderMain.left.setImageDrawable(drawableDownload);
-
-				//Right img
-				holderMain.right.setImageDrawable(null);
-			break;
 			//settings
-			case 3:
+			case 2:
 				//Left img
 				holderMain.left.setImageDrawable(drawableSettings);
 
@@ -323,7 +288,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				{
 					view.setBackgroundColor(storedValueInTheme.data);
 				}
-//				view.setBackgroundColor(Color.TRANSPARENT);
+				//				view.setBackgroundColor(Color.TRANSPARENT);
 			}
 		}
 		else
@@ -334,7 +299,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			{
 				view.setBackgroundColor(storedValueInTheme.data);
 			}
-//			view.setBackgroundColor(Color.TRANSPARENT);
+			//			view.setBackgroundColor(Color.TRANSPARENT);
 		}
 
 		//test
@@ -360,14 +325,14 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 
 		/////////
 		//text and it's size
-		String drawerItemTitle=mGroups.get(groupPosition).get(childPosition);
+		String drawerItemTitle = mGroups.get(groupPosition).get(childPosition);
 		holderMain.text.setText(drawerItemTitle);
 		String scaleFactorString = pref.getString("scale", "1");
 		float scaleFactor = Float.valueOf(scaleFactorString);
 		holderMain.text.setTextSize(21 * scaleFactor);
 
 		//left and right imgs
-//		holderMain.right.setImageDrawable(drawableArrrowRight);
+		//		holderMain.right.setImageDrawable(drawableArrrowRight);
 		holderMain.right.setImageDrawable(null);
 		switch (groupPosition)
 		{
@@ -378,24 +343,32 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				}
 				else
 				{
-//					holderMain.left.setImageDrawable(drawableAuthor);
+					//holderMain.left.setImageDrawable(drawableAuthor);
 					//get and display author's avatar
 					ImageLoader imageLoader = MyUIL.get(act);
-					DataBaseHelper helper=new DataBaseHelper(act);
-					String imageUri=Author.getAvatarUrlByName(helper, drawerItemTitle);
-					imageLoader.displayImage(imageUri, holderMain.left, MyUIL.getTransparentBackgroundROUNDOptions(act));
+					DataBaseHelper helper = new DataBaseHelper(act);
+					String imageUri = Author.getAvatarUrlByName(helper, drawerItemTitle);
+					imageLoader
+					.displayImage(imageUri, holderMain.left, MyUIL.getTransparentBackgroundROUNDOptions(act));
 				}
 
 			break;
 			case (1):
 				if (isLastChild)
 				{
-					holderMain.left.setImageDrawable(drawableCategoriesMore);
+					//holderMain.left.setImageDrawable(drawableCategoriesMore);
+					holderMain.left.setImageDrawable(drawableSaved);
 				}
 				else
 				{
-//					holderMain.left.setImageDrawable(drawableAsList);
-					holderMain.left.setImageDrawable(null);
+					if (childPosition == this.getChildrenCount(groupPosition) - 1 - 1)
+					{
+						holderMain.left.setImageDrawable(drawableCategoriesMore);
+					}
+					else
+					{
+						holderMain.left.setImageDrawable(null);
+					}
 				}
 			break;
 		}

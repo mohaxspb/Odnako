@@ -92,8 +92,9 @@ public class AsyncTaskWriteArticlesToDB extends AsyncTask<Void, Void, ArrayList<
 			}//article do not exists
 			else
 			{
-				//check if date of existing ==0
-				if (existingArt.getPubDate().getTime() == 0 && a.getPubDate().getTime() != 0)
+				//check if date of existing == 0
+//				if (existingArt.getPubDate().getTime() == 0 && a.getPubDate().getTime() != 0)
+				if (existingArt.getPubDate().getTime() < a.getPubDate().getTime())
 				{
 					Article.updatePubDate(h, existingArt.getId(), a.getPubDate());
 				}
