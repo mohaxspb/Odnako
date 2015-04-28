@@ -4,8 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:layout_height="match_parent" >
+
+    <!--
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false" >
+    -->
 
     <RelativeLayout
         android:id="@+id/main_layout"
@@ -13,24 +17,35 @@
         android:layout_height="match_parent"
         android:baselineAligned="true" >
 
+        <View
+            android:id="@+id/fakeStatusBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:background="@android:color/transparent" />
+
         <android.support.v4.view.ViewPager
             android:id="@+id/pager_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/adView" />
+            android:layout_below="@id/fakeStatusBar" />
+        <!-- android:layout_above="@id/adView" /> -->
 
-       <!--  <com.google.android.gms.ads.AdView
+
+        <!--
+             <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/MAIN_AD_UNIT_ID" /> -->
+            ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
+        -->
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/fakeStatusBar"
             android:background="?colorPrimary"
             android:minHeight="?attr/actionBarSize" />
     </RelativeLayout>

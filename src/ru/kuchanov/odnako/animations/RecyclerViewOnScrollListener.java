@@ -16,11 +16,10 @@ import android.widget.ImageView;
 
 public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 {
-	static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
+	static final String LOG = RecyclerViewOnScrollListener.class.getSimpleName();
 
 	private AppCompatActivity act;
 
-//	FragmentArtsListRecycler frag;
 	private String categoryToLoad;
 
 	private int initialDistance = -100000;
@@ -39,16 +38,12 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(AppCompatActivity act, String categoryToLoad, ImageView topImg, int toolbarId
-	/*FragmentArtsListRecycler frag*/)
+	public RecyclerViewOnScrollListener(AppCompatActivity act, String categoryToLoad, ImageView topImg, int toolbarId)
 	{
 		this.act = act;
-		toolbar = (Toolbar) act.findViewById(toolbarId);
+		this.toolbar = (Toolbar) act.findViewById(toolbarId);
 		this.topImg = topImg;
-
 		this.categoryToLoad = categoryToLoad;
-
-//		this.frag = frag;
 	}
 
 	public void onScrollStateChanged(RecyclerView recyclerView, int newState)
@@ -58,7 +53,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 		switch (newState)
 		{
 			case (RecyclerView.SCROLL_STATE_DRAGGING):
-				//				System.out.println("dragging");
 				//mesuring initialDistance between actionBar and 1-st item
 				if (initialDistance == -100000)
 				{
@@ -70,7 +64,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			break;
 			//scroll finished
 			case (RecyclerView.SCROLL_STATE_IDLE):
-				//				System.out.println("SCROLL_STATE_IDLE");
 				if (topImg.getY() > 0)
 				{
 					topImg.setY(0);
@@ -83,20 +76,25 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 					}
 				}
 				//save position to frag
-				//				this.frag.setTopImgYCoord((int) this.topImg.getY());
-				//				this.frag.setToolbarYCoord((int) this.toolbar.getY());
-				//				this.frag.setInitialDistance(this.initialDistance);
 				//save coord to ActivityMain
 				ActivityMain actM = (ActivityMain) act;
-				//				actM.updateAllCatToolbarTopImgYCoord(frag.getCategoryToLoad(),
-				//				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 				actM.updateAllCatToolbarTopImgYCoord(this.categoryToLoad,
 				new int[] { (int) toolbar.getY(), (int) topImg.getY(), initialDistance, curentDistance });
 			break;
 			case (RecyclerView.SCROLL_STATE_SETTLING):
-			//				System.out.println("SCROLL_STATE_SETTLING");
 			break;
 		}
+	}
+
+	public int getStatusBarHeight()
+	{
+		int result = 0;
+		int resourceId = act.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0)
+		{
+			result = act.getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
 	}
 
 	@Override
@@ -166,6 +164,12 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			}
 		}
 		////End of move picture
+		
+		//as we have translusent status bar we must plus statusBar height to toolbar's Ycoord
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+//				{
+//					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
+//				}
 
 		//move light actionBar
 		if (scrollToUp)
@@ -202,7 +206,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			//do it only while it's not moved
 			//and we are on the top of our list
 			//					System.out.println("firstVisPos ==0: "+String.valueOf(manager.findFirstVisibleItemPosition()==0));
-			if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
+			if (toolbar.getY() == 0)
 			{
 				if (manager.findFirstVisibleItemPosition() == 0)
 				{
@@ -213,7 +217,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 					toolbar.getBackground().setAlpha(newAlpha);
 				}
 				else
-				// if(toolbar.getBackground().getAlpha()<1)
 				{
 					toolbar.getBackground().setAlpha(255);
 				}
@@ -228,11 +231,20 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			}
 			else
 			{
-				toolbar.setY(0);
+				//as we have translusent status bar we must plus statusBar height to toolbar's Ycoord
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+//				{
+////					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
+//					toolbar.setY(0 + getStatusBarHeight());
+//				}else
+//				{
+					toolbar.setY(0);
+//				}
+				
 			}
 
 			//light actionBar
-			if (toolbar.getY() == 0)// && manager.findFirstVisibleItemPosition()==0)
+			if (toolbar.getY() == 0)
 			{
 				if (manager.findFirstVisibleItemPosition() == 0)
 				{
@@ -246,7 +258,6 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 					}
 				}
 				else
-				// if(toolbar.getBackground().getAlpha()<1)
 				{
 					toolbar.getBackground().setAlpha(255);
 				}

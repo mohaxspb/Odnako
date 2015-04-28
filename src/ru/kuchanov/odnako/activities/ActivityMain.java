@@ -322,7 +322,7 @@ public class ActivityMain extends ActivityBase
 					@Override
 					public void onClick(View v)
 					{
-						/*act.*/onBackPressed();
+						/* act. */onBackPressed();
 					}
 				});
 			}
@@ -335,7 +335,7 @@ public class ActivityMain extends ActivityBase
 					@Override
 					public void onClick(View v)
 					{
-						/*act.*/onBackPressed();
+						onBackPressed();
 					}
 				});
 			}
@@ -347,6 +347,30 @@ public class ActivityMain extends ActivityBase
 		{
 			this.queryToSave = this.getSearchText();
 		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+//		{
+//			Window w = getWindow(); // in Activity's onCreate() for instance
+//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//
+//			View fakeStatusBar = this.findViewById(R.id.fakeStatusBar);
+//			LayoutParams params = (LayoutParams) fakeStatusBar.getLayoutParams();
+//			params.height = getStatusBarHeight();
+//			fakeStatusBar.setLayoutParams(params);
+//		}
+	}
+
+	public int getStatusBarHeight()
+	{
+		int result = 0;
+		int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0)
+		{
+			result = getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
 	}
 
 	@Override
@@ -971,7 +995,7 @@ public class ActivityMain extends ActivityBase
 	public void onBackPressed()
 	{
 		Log.d(LOG, "onBackPressed");
-		
+
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();
 		if (searchView.isIconified() == false)
@@ -1022,10 +1046,10 @@ public class ActivityMain extends ActivityBase
 				toolbarRight.setTitle("Статья");
 			}
 			//remove fragment
-//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
-//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-//			artFrag=null;
-//			this.getSupportFragmentManager().popBackStack();
+			//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG);
+			//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			//			artFrag=null;
+			//			this.getSupportFragmentManager().popBackStack();
 			super.onBackPressed();
 			this.recreate();
 			return;
@@ -1033,9 +1057,9 @@ public class ActivityMain extends ActivityBase
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 		{
 			toolbarRight.setNavigationIcon(null);
-//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
-//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
-//			artFrag=null;
+			//			Fragment artFrag = this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG);
+			//			this.getSupportFragmentManager().beginTransaction().remove(artFrag).commit();
+			//			artFrag=null;
 			//restore title of toolbar via calling to onPageSelected of pager's listener
 			String currentCategory;
 			switch (this.pagerType)

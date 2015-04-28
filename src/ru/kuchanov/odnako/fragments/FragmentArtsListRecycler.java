@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
@@ -50,6 +51,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -85,8 +87,6 @@ public class FragmentArtsListRecycler extends Fragment
 
 	private String categoryToLoad;
 	private ArrayList<Article> allArtsInfo;
-	//TODO check if we need it
-	//	private ArtInfo curArtInfo;
 	private int position = 0;
 
 	private final static String KEY_IS_LOADING = "isLoading";
@@ -143,7 +143,6 @@ public class FragmentArtsListRecycler extends Fragment
 		this.isLoading = isLoading;
 		if (isLoading)
 		{
-			//			if (pageToLoad == 1)
 			if (this.isLoadingFromTop)
 			{
 				int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
@@ -152,7 +151,7 @@ public class FragmentArtsListRecycler extends Fragment
 				TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
 				int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
 				a.recycle();
-				//			this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
+				//this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
 				swipeRef.setProgressViewEndTarget(false, actionBarSize);
 			}
 			else
@@ -178,7 +177,7 @@ public class FragmentArtsListRecycler extends Fragment
 			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
 			int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
 			a.recycle();
-			//			this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
+			//this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
 			swipeRef.setProgressViewEndTarget(false, actionBarSize);
 			swipeRef.setRefreshing(false);
 		}
@@ -504,18 +503,7 @@ public class FragmentArtsListRecycler extends Fragment
 				break;
 			}
 
-			setOnScrollListener();
-
-			//			if (swipeRef.isRefreshing())
-			//			{
-			//				TypedValue typed_value = new TypedValue();
-			//				act.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize,
-			//				typed_value, true);
-			//				swipeRef.setProgressViewOffset(false, 0, getResources().getDimensionPixelSize(typed_value.resourceId));
-			//
-			//				swipeRef.setProgressViewEndTarget(false, getResources().getDimensionPixelSize(typed_value.resourceId));
-			//				swipeRef.setRefreshing(false);
-			//			}
+			//setOnScrollListener();
 
 			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false) && isDisplayed;
 			if (refreshRightToolbarAndPager)
@@ -711,18 +699,15 @@ public class FragmentArtsListRecycler extends Fragment
 
 		if (this.act.getServiceDB() != null)
 		{
-			//Log.e(LOG, "this.act.getServiceDB() != null");
 			this.allArtsInfo = this.act.getServiceDB().getAllCatArtsInfo().get(this.categoryToLoad);
 		}
 		else
 		{
-			//Log.e(LOG, "this.act.getServiceDB() == null");
 			this.allArtsInfo = this.act.getAllCatArtsInfo().get(this.categoryToLoad);
 		}
 
 		if (this.allArtsInfo == null)
 		{
-			//Log.e(LOG, "this.allArtsInfo == null");
 			if (this.isLoading == false)
 			{
 				this.getAllArtsInfo(false);
@@ -730,26 +715,15 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 		else
 		{
-			//Log.e(LOG, "this.allArtsInfo != null");
 			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, allArtsInfo, this);
 			this.recycler.setAdapter(recyclerAdapter);
-			//this.recyclerAdapter.notifyDataSetChanged();
 		}
 
-		//set onScrollListener
-		setOnScrollListener();
-
-		return v;
-	}
-
-	private void setOnScrollListener()
-	{
 		this.recycler.addOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
 		this.toolbarId)
 		{
 			public void onLoadMore()
 			{
-				//				if (!swipeRef.isRefreshing())
 				if (isLoading == false)
 				{
 					pageToLoad++;
@@ -758,6 +732,20 @@ public class FragmentArtsListRecycler extends Fragment
 				}
 			}
 		});
+
+		FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+		fab.attachToRecyclerView(recycler);
+		fab.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Log.i(LOG, "FAB clicked!");
+				
+			}
+		});
+
+		return v;
 	}
 
 	private void getAllArtsInfo(boolean startDownload)

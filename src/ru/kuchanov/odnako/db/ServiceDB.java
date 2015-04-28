@@ -86,7 +86,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 	{
 		Log.d(LOG, "onCreate");
 		super.onCreate();
-
+		
 		this.ctx = this;
 
 		//get default settings to get all settings later

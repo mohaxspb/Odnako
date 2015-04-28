@@ -1,13 +1,13 @@
 <resources>
 
-    <!-- <style name="AppBaseTheme" parent="android:Theme.Light"></style> -->
-
-
     <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <!-- <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowContentOverlay">@null</item> -->
         <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -21,6 +21,9 @@
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/material_grey_900</item>
         <item name="colorAccent">@color/material_grey_400</item>
+        <!-- navigationBarColor -->
+        <item name="android:navigationBarColor">@color/material_grey_900</item>
+        <!-- <item name="android:navigationBarColor">@color/transparent</item> -->
         <item name="actionMenuTextAppearance">@color/material_grey_400</item>
         <item name="android:textColor">@color/material_grey_300</item>
         <item name="searchViewStyle">@style/DarkSearchViewStyle</item>
@@ -50,6 +53,7 @@
         <item name="authorIcon">@drawable/ic_person_white_48dp</item>
         <item name="authorsMoreIcon">@drawable/ic_group_add_white_48dp</item>
         <item name="downloadIcon">@drawable/ic_file_download_white_48dp</item>
+        <item name="downloadIconSmall">@drawable/ic_file_download_white_24dp</item>
         <item name="saveIcon">@drawable/ic_save_white_48dp</item>
         <item name="asListIcon">@drawable/ic_list_white_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_white_48dp</item>
@@ -114,6 +118,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <!-- <item name="android:windowTranslucentNavigation">true</item> -->
         <!--  -->
         <item name="android:windowBackground">@color/material_grey_200</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -126,6 +131,8 @@
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/material_grey_500</item>
         <item name="colorAccent">@color/material_grey_800</item>
+        <item name="android:navigationBarColor">@color/material_grey_500</item>
+        <!-- <item name="android:navigationBarColor">@color/material_grey_200</item> -->
         <item name="android:textColorSecondary">@color/material_grey_700</item>
         <item name="actionMenuTextAppearance">@color/material_grey_800</item>
         <item name="android:textColor">@color/material_grey_800</item>
@@ -155,6 +162,7 @@
         <item name="authorIcon">@drawable/ic_person_grey600_48dp</item>
         <item name="authorsMoreIcon">@drawable/ic_group_add_grey600_48dp</item>
         <item name="downloadIcon">@drawable/ic_file_download_grey600_48dp</item>
+        <item name="downloadIconSmall">@drawable/ic_file_download_grey600_24dp</item>
         <item name="saveIcon">@drawable/ic_save_grey600_48dp</item>
         <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
         <item name="subjectIcon">@drawable/ic_subject_grey600_48dp</item>
