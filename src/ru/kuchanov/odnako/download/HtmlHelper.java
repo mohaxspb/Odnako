@@ -483,8 +483,12 @@ public class HtmlHelper
 		//refreshed, numOfComments, numOfSharings, artText, authorDescr, tegs_main, 
 		//tegs_all, share_quont, to_read_main, to_read_more, img_author, author
 
+//		String preview = this.rootNode
+//		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
+//		.getAttributeByName("content");
+		//Replace to another tag, because in one case it do not contains '"' symbol and HTMLCleaner do not cut attr
 		String preview = this.rootNode
-		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
+		.findElementByAttValue("name", "Description", isRecursive, isCaseSensitive)
 		.getAttributeByName("content");
 		String title = this.rootNode
 		.findElementByAttValue("property", "og:title", isRecursive, isCaseSensitive).getAttributeByName("content");
