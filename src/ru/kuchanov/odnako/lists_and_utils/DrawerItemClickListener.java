@@ -7,7 +7,7 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ExpandableListView;
 
@@ -15,11 +15,11 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 {
 	private DrawerLayout mDrawerLayout;
 	private ExpandableListView mDrawerList;
-	ActionBarActivity act;
+	AppCompatActivity act;
 
 	ViewPager viewPager;
 
-	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, ActionBarActivity act)
+	public DrawerItemClickListener(DrawerLayout mDrawerLayout, ExpandableListView mDrawerList, AppCompatActivity act)
 	{
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;

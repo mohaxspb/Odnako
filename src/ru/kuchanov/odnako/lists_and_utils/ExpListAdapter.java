@@ -19,7 +19,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +34,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 {
 
 	private ArrayList<ArrayList<String>> mGroups;
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 	private String[] cat;
 	SharedPreferences pref;
 	private Drawable drawableArrrowDown;
@@ -45,7 +45,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	private Drawable drawableCategoriesMore;
 	private Drawable drawableAuthorsMore;
 
-	public ExpListAdapter(ActionBarActivity act, ArrayList<ArrayList<String>> groups)
+	public ExpListAdapter(AppCompatActivity act, ArrayList<ArrayList<String>> groups)
 	{
 		this.act = act;
 		pref = PreferenceManager.getDefaultSharedPreferences(this.act);

@@ -316,7 +316,7 @@ public class FragmentAllAuthors extends Fragment
 		this.recyclerView.setLayoutManager(new LinearLayoutManager(act));
 
 		//set onScrollListener
-		this.recyclerView.setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
+		this.recyclerView.addOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
 		this.topImg));
 
 		return v;

@@ -5,19 +5,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 {
-	ActionBarActivity act;
+	Context ctx;
 	String imgAdress;
 
-	public DownloadImageTask(ActionBarActivity act)
+	public DownloadImageTask(Context ctx)
 	{
-		this.act = act;
+		this.ctx = ctx;
 	}
 
 	protected Bitmap doInBackground(String... urls)
@@ -60,7 +60,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 
 	protected void write(Bitmap result)
 	{
-		String dirToWrite = act.getFilesDir().getAbsolutePath();
+		String dirToWrite = ctx.getFilesDir().getAbsolutePath();
 		String formatedImgAdress;
 		formatedImgAdress = this.imgAdress.substring(imgAdress.lastIndexOf("/") + 1);
 		formatedImgAdress=formatedImgAdress.replace("-", "_");

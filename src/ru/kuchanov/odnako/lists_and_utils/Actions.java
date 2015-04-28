@@ -19,8 +19,6 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.ServiceArticle;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
-import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +27,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +45,7 @@ public class Actions
 	 * @param act
 	 *            for switching action depend on activity
 	 */
-	public static void showAllAuthorsArticles(String authorBlogUrlFUCK, final ActionBarActivity act)
+	public static void showAllAuthorsArticles(String authorBlogUrlFUCK, final AppCompatActivity act)
 	{
 		final String authorBlogUrl = Author.getURLwithoutSlashAtTheEnd(authorBlogUrlFUCK);
 		if (!authorBlogUrl.equals("empty") && !authorBlogUrl.equals(""))
@@ -270,7 +268,7 @@ public class Actions
 		}
 	}
 
-	public static void showAllCategoriesArticles(String categoryUrlFUCK, final ActionBarActivity act)
+	public static void showAllCategoriesArticles(String categoryUrlFUCK, final AppCompatActivity act)
 	{
 		Log.d(LOG + categoryUrlFUCK, "show all categories articles!");
 		final String categoryUrl = Author.getURLwithoutSlashAtTheEnd(categoryUrlFUCK);
@@ -472,7 +470,7 @@ public class Actions
 	}
 
 	public static void showComments(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
-	ActionBarActivity act)
+	AppCompatActivity act)
 	{
 		Log.d(LOG, "showComments!");
 		//check if it's large screen
@@ -610,7 +608,7 @@ public class Actions
 		}
 	}
 
-	public static void addCommentsFrgament(Article article, final ActionBarActivity act)
+	public static void addCommentsFrgament(Article article, final AppCompatActivity act)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
@@ -651,7 +649,7 @@ public class Actions
 	}
 
 	public static void showArticle(ArrayList<Article> allArtsInfo, int positionOfArticle, String categoryToLoad,
-	final ActionBarActivity act)
+	final AppCompatActivity act)
 	{
 		Log.d(LOG, "showArticle!");
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);

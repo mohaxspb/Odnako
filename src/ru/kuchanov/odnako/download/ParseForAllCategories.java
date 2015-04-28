@@ -2,16 +2,16 @@ package ru.kuchanov.odnako.download;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<ArrayList<String>>>
 {
-	ActionBarActivity act;
+	Context ctx;
 
-	public ParseForAllCategories(ActionBarActivity act)
+	public ParseForAllCategories(Context ctx)
 	{
-		this.act = act;
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<
 		try
 		{
 			HtmlHelper hh = new HtmlHelper(url[0]);
-			output=hh.getAllCategoriesAsList();
+			output = hh.getAllCategoriesAsList();
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -33,28 +33,28 @@ public class ParseForAllCategories extends AsyncTask<String, Integer, ArrayList<
 	{
 		System.out.println("ParseForAllCategories onPostExecute");
 		//check if there is no internet and so nothing to parse
-		if(output!=null)
+		if (output != null)
 		{
-			if(!output.get(0).get(0).equals("empty"))
+			if (!output.get(0).get(0).equals("empty"))
 			{
-				String date=(String.valueOf(System.currentTimeMillis()));
-				
-				String dataToWrite="<html name='all_categories_titles' date='"+date+"'>\n";
-				for(int i=0; i<output.size(); i++)
+				String date = (String.valueOf(System.currentTimeMillis()));
+
+				String dataToWrite = "<html name='all_categories_titles' date='" + date + "'>\n";
+				for (int i = 0; i < output.size(); i++)
 				{
-					dataToWrite=dataToWrite.concat("<item>"+output.get(i).get(0)+"</item>\n");
+					dataToWrite = dataToWrite.concat("<item>" + output.get(i).get(0) + "</item>\n");
 				}
-				dataToWrite=dataToWrite.concat("</html>");
-				WriteFile write=new WriteFile(dataToWrite, "allCategories", "all_categories_titles.txt", act);
+				dataToWrite = dataToWrite.concat("</html>");
+				WriteFile write = new WriteFile(dataToWrite, "allCategories", "all_categories_titles.txt", ctx);
 				write.execute();
-				
-				String dataToWrite1="<html name='all_categories_urls' date='"+date+"'>\n";
-				for(int i=0; i<output.size(); i++)
+
+				String dataToWrite1 = "<html name='all_categories_urls' date='" + date + "'>\n";
+				for (int i = 0; i < output.size(); i++)
 				{
-					dataToWrite1=dataToWrite1.concat("<item>"+output.get(i).get(1)+"</item>\n");
+					dataToWrite1 = dataToWrite1.concat("<item>" + output.get(i).get(1) + "</item>\n");
 				}
-				dataToWrite1=dataToWrite1.concat("</html>");
-				WriteFile write1=new WriteFile(dataToWrite1, "allCategories", "all_categories_urls.txt", act);
+				dataToWrite1 = dataToWrite1.concat("</html>");
+				WriteFile write1 = new WriteFile(dataToWrite1, "allCategories", "all_categories_urls.txt", ctx);
 				write1.execute();
 			}
 			else

@@ -8,7 +8,7 @@ package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 
 public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
 {
-	ActionBarActivity act;
+	AppCompatActivity act;
 
 	String categoryToLoad;
 
@@ -31,7 +31,7 @@ public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListenerALLAUTHORS(ActionBarActivity act, String categoryToLoad, ImageView topImg)
+	public RecyclerViewOnScrollListenerALLAUTHORS(AppCompatActivity act, String categoryToLoad, ImageView topImg)
 	{
 		this.act = act;
 		toolbar = (Toolbar) act.findViewById(R.id.toolbar);

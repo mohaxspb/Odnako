@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -57,7 +57,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 	public static final int CARD_TAGS_ALL = 6;
 	public static final int CARD_ALSO_TO_READ = 7;
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	Article article;
 
@@ -71,7 +71,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 
 	private TagNode[] articlesTags;
 
-	public RecyclerAdapterArticleFragment(ActionBarActivity act, Article article)
+	public RecyclerAdapterArticleFragment(AppCompatActivity act, Article article)
 	{
 		this.act = act;
 

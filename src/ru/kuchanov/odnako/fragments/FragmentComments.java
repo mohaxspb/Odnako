@@ -29,7 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +46,7 @@ public class FragmentComments extends Fragment
 //	public final static String LOG = FragmentComments.class.getSimpleName() + "/";
 	public final static String LOG = "FragmentComments/";
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	public Article article;
 
@@ -69,7 +69,7 @@ public class FragmentComments extends Fragment
 		super.onCreate(savedState);
 		//System.out.println("CommentsFragment onCreate");
 
-		this.act = (ActionBarActivity) this.getActivity();
+		this.act = (AppCompatActivity) this.getActivity();
 
 		if (this.getArguments() != null)
 		{
@@ -230,7 +230,7 @@ public class FragmentComments extends Fragment
 			this.swipeRef.setRefreshing(true);
 		}
 
-		this.recycler.setOnScrollListener(new RecyclerCommentsOnScrollListener()
+		this.recycler.addOnScrollListener(new RecyclerCommentsOnScrollListener()
 		{
 			@Override
 			public void onLoadMore()

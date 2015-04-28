@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,7 +29,7 @@ import com.nostra13.universalimageloader.utils.L;
 public class MyUIL
 {
 
-	public static ImageLoader get(ActionBarActivity act)
+	public static ImageLoader get(Context act)
 	{
 		//UniversalImageLoader
 		File cacheDir = new File(Environment.getExternalStorageDirectory(), "Odnako/Cache");
@@ -126,7 +125,7 @@ public class MyUIL
 		.build();
 	}
 
-	public static DisplayImageOptions getTransparentBackgroundROUNDOptions(ActionBarActivity act)
+	public static DisplayImageOptions getTransparentBackgroundROUNDOptions(Context act)
 	{
 		int imageOnLoading;
 		int imageForEmptyUri;

@@ -6,29 +6,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class WriteFile extends AsyncTask<String, Void, String>
 {
 	String pathToFile = "";
-	ActionBarActivity act;
+	Context ctx;
 	String data;
 	String dirToWrite;
 	String fileName;
 
-	public WriteFile(String data, String dirToWrite, String fileName, ActionBarActivity act)
+	public WriteFile(String data, String dirToWrite, String fileName, Context ctx)
 	{
 		this.data = data;
 		this.dirToWrite = dirToWrite;
 		this.fileName = fileName;
-		this.act = act;
+		this.ctx = ctx;
 	}
 
 	protected String doInBackground(String... str)
 	{
 		String storagePath;// = Environment.getExternalStorageDirectory().getPath();
-		storagePath = act.getFilesDir().getAbsolutePath();
+		storagePath = ctx.getFilesDir().getAbsolutePath();
 		File dirToWriteFile = new File(storagePath + "/" + dirToWrite);
 		if (!dirToWriteFile.exists())
 		{

@@ -1,17 +1,17 @@
 package ru.kuchanov.odnako.download;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class ParseAuthorForBigImgAndWho extends AsyncTask<Void, Integer, String[][]>
 {
 
-	ActionBarActivity act;
+	Context ctx;
 	String[] allAuthorsUrls;
 
-	public ParseAuthorForBigImgAndWho(ActionBarActivity act, String[] allAuthorsUrls)
+	public ParseAuthorForBigImgAndWho(Context ctx, String[] allAuthorsUrls)
 	{
-		this.act = act;
+		this.ctx = ctx;
 		this.allAuthorsUrls = allAuthorsUrls;
 	}
 
@@ -53,7 +53,7 @@ public class ParseAuthorForBigImgAndWho extends AsyncTask<Void, Integer, String[
 				dataToWrite = dataToWrite.concat("<item><![CDATA[" + output[0][i] + "]]></item>\n");
 			}
 			dataToWrite = dataToWrite.concat("</html>");
-			WriteFile write = new WriteFile(dataToWrite, "allAuthors", "all_authors_who.txt", act);
+			WriteFile write = new WriteFile(dataToWrite, "allAuthors", "all_authors_who.txt", ctx);
 			write.execute();
 
 			String dataToWrite1 = "<html name='all_authors_big_imgs' date='" + date + "'>\n";
@@ -62,7 +62,7 @@ public class ParseAuthorForBigImgAndWho extends AsyncTask<Void, Integer, String[
 				dataToWrite1 = dataToWrite1.concat("<item><![CDATA[" + output[1][i] + "]]></item>\n");
 			}
 			dataToWrite1 = dataToWrite1.concat("</html>");
-			WriteFile write1 = new WriteFile(dataToWrite1, "allAuthors", "all_authors_big_imgs.txt", act);
+			WriteFile write1 = new WriteFile(dataToWrite1, "allAuthors", "all_authors_big_imgs.txt", ctx);
 			write1.execute();
 		}
 		else

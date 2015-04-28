@@ -26,7 +26,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +43,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 	final public static String ARTICLE_URL = "article_url";
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	SwipeRefreshLayout swipeRef;
 
@@ -63,7 +63,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		super.onCreate(savedState);
 		//Log.i(LOG, "ArticleFragment onCreate");
 
-		this.act = (ActionBarActivity) this.getActivity();
+		this.act = (AppCompatActivity) this.getActivity();
 
 		//restore info
 		Bundle stateFromArgs = this.getArguments();

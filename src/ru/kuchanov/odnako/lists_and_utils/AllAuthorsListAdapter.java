@@ -16,7 +16,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -40,7 +40,7 @@ public class AllAuthorsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private static final int HEADER = 0;
 	private static final int ADS = 1;
 	private static final int AUTHOR = 2;
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	private ImageLoader imageLoader;
 	private SharedPreferences pref;

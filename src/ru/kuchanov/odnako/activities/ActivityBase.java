@@ -32,8 +32,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -48,10 +48,10 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class ActivityBase extends ActionBarActivity
+public class ActivityBase extends AppCompatActivity
 {
 	static final String LOG = ActivityBase.class.getSimpleName();
-	protected ActionBarActivity act;
+	protected AppCompatActivity act;
 	protected boolean twoPane;
 	protected SharedPreferences pref;
 

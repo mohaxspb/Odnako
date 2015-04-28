@@ -199,7 +199,7 @@ public class FragmentAllCategories extends Fragment
 		this.getArtsList().setLayoutManager(new LinearLayoutManager(act));
 
 		//set onScrollListener
-		this.getArtsList().setOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
+		this.getArtsList().addOnScrollListener(new RecyclerViewOnScrollListenerALLAUTHORS(act, this.categoryToLoad,
 		this.topImg));
 
 		return v;

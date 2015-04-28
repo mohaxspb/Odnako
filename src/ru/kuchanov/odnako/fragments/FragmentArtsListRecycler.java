@@ -744,7 +744,7 @@ public class FragmentArtsListRecycler extends Fragment
 
 	private void setOnScrollListener()
 	{
-		this.recycler.setOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
+		this.recycler.addOnScrollListener(new RecyclerViewOnScrollListener(act, this.categoryToLoad, this.topImg,
 		this.toolbarId)
 		{
 			public void onLoadMore()

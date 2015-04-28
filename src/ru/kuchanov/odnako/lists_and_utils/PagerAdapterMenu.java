@@ -14,16 +14,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * PagerAdapter for mainActivity, which shows main menu Categories
  */
 public class PagerAdapterMenu extends FragmentStatePagerAdapter
 {
-	ActionBarActivity act;
+	AppCompatActivity act;
 
-	public PagerAdapterMenu(FragmentManager fm, ActionBarActivity act)
+	public PagerAdapterMenu(FragmentManager fm, AppCompatActivity act)
 	{
 		super(fm);
 		this.act = act;

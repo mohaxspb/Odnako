@@ -12,17 +12,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * PagerAdapter for mainActivity, which shows One given category
  */
 public class PagerAdapterSingleCategory extends FragmentStatePagerAdapter
 {
-	ActionBarActivity act;
+	AppCompatActivity act;
 	String categoryToLoad;
 
-	public PagerAdapterSingleCategory(FragmentManager fm, ActionBarActivity act, String categoryToLoad)
+	public PagerAdapterSingleCategory(FragmentManager fm, AppCompatActivity act, String categoryToLoad)
 	{
 		super(fm);
 		this.act = act;

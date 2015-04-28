@@ -14,23 +14,23 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout.LayoutParams;
 
 public class AddAds
 {
-	ActionBarActivity act;
+	AppCompatActivity act;
 	AdView adView;
 
 	boolean isTestDevice;
 
-	public AddAds(ActionBarActivity act, AdView adView)
+	public AddAds(AppCompatActivity act, AdView adView)
 	{
 		this.act = act;
 		this.adView = adView;
 	}
 
-//	public static boolean isTimeToShowAds(ActionBarActivity act2)
+//	public static boolean isTimeToShowAds(AppCompatActivity act2)
 //	{
 //		//TODO
 //		return false;

@@ -21,7 +21,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +45,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 	private static final int HEADER = 0;
 	private static final int ARTICLE = 1;
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	private ImageLoader imageLoader;
 	private final DisplayImageOptions options;
@@ -59,7 +59,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 	private FragmentArtsListRecycler artsListFrag;
 
-	public RecyclerAdapterArtsListFragment(ActionBarActivity act, ArrayList<Article> artsInfo,
+	public RecyclerAdapterArtsListFragment(AppCompatActivity act, ArrayList<Article> artsInfo,
 	FragmentArtsListRecycler artsListFrag)
 	{
 		this.act = act;

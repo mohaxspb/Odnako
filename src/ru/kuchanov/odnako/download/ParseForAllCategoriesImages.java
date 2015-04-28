@@ -1,18 +1,18 @@
 package ru.kuchanov.odnako.download;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class ParseForAllCategoriesImages extends AsyncTask<String, Integer, String>
 {
-	ActionBarActivity act;
+	Context ctx;
 	
 	String catUrl;
 	String cataImgUrl;
 
-	public ParseForAllCategoriesImages(ActionBarActivity act)
+	public ParseForAllCategoriesImages(Context ctx)
 	{
-		this.act = act;
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -49,10 +49,10 @@ public class ParseForAllCategoriesImages extends AsyncTask<String, Integer, Stri
 			
 			
 			String dataToWrite = "<item><![CDATA[" + output + "]]></item>\n";
-			WriteFile write = new WriteFile(dataToWrite, "allCategoriesImgs", "all_category_imgs.txt", act);
+			WriteFile write = new WriteFile(dataToWrite, "allCategoriesImgs", "all_category_imgs.txt", ctx);
 			write.execute();
 			
-			DownloadImageTask downImg=new DownloadImageTask(act);
+			DownloadImageTask downImg=new DownloadImageTask(ctx);
 			downImg.execute(output);
 		}
 		else

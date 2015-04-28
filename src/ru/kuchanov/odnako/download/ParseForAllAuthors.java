@@ -1,17 +1,18 @@
 package ru.kuchanov.odnako.download;
 
 import java.util.ArrayList;
+
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 
 public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<ArrayList<String>>>
 {
 
-	ActionBarActivity act;
+	Context ctx;
 
-	public ParseForAllAuthors(ActionBarActivity act)
+	public ParseForAllAuthors(Context ctx)
 	{
-		this.act = act;
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 					dataToWrite = dataToWrite.concat("<item><![CDATA[" + output.get(i).get(0) + "]]></item>\n");
 				}
 				dataToWrite = dataToWrite.concat("</html>");
-				WriteFile write = new WriteFile(dataToWrite, "allAuthors", "all_authors_names.txt", act);
+				WriteFile write = new WriteFile(dataToWrite, "allAuthors", "all_authors_names.txt", ctx);
 				write.execute();
 				////
 				//url
@@ -56,7 +57,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 					dataToWrite1 = dataToWrite1.concat("<item><![CDATA[" + output.get(i).get(1) + "]]></item>\n");
 				}
 				dataToWrite1 = dataToWrite1.concat("</html>");
-				WriteFile write1 = new WriteFile(dataToWrite1, "allAuthors", "all_authors_urls.txt", act);
+				WriteFile write1 = new WriteFile(dataToWrite1, "allAuthors", "all_authors_urls.txt", ctx);
 				write1.execute();
 				////
 				//img
@@ -66,7 +67,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 					dataToWrite2 = dataToWrite2.concat("<item><![CDATA[" + output.get(i).get(2) + "]]></item>\n");
 				}
 				dataToWrite2 = dataToWrite2.concat("</html>");
-				WriteFile write2 = new WriteFile(dataToWrite2, "allAuthors", "all_authors_imgs.txt", act);
+				WriteFile write2 = new WriteFile(dataToWrite2, "allAuthors", "all_authors_imgs.txt", ctx);
 				write2.execute();
 				////
 				//description
@@ -76,7 +77,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 					dataToWrite3 = dataToWrite3.concat("<item><![CDATA[" + output.get(i).get(3) + "]]></item>\n");
 				}
 				dataToWrite3 = dataToWrite3.concat("</html>");
-				WriteFile write3 = new WriteFile(dataToWrite3, "allAuthors", "all_authors_descriptions.txt", act);
+				WriteFile write3 = new WriteFile(dataToWrite3, "allAuthors", "all_authors_descriptions.txt", ctx);
 				write3.execute();
 				////
 
@@ -86,7 +87,7 @@ public class ParseForAllAuthors extends AsyncTask<Void, Integer, ArrayList<Array
 				{
 					allAuthorsUrls[i]=output.get(i).get(1);
 				}
-				ParseAuthorForBigImgAndWho parse = new ParseAuthorForBigImgAndWho(act, allAuthorsUrls);
+				ParseAuthorForBigImgAndWho parse = new ParseAuthorForBigImgAndWho(ctx, allAuthorsUrls);
 				parse.execute();
 			}
 			else

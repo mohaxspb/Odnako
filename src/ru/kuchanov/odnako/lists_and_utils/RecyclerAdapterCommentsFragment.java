@@ -19,7 +19,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -43,7 +43,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 	public static final int CARD_ARTICLE_TITLE = 1;
 	public static final int COMMENT = 2;
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	private Article article;
 	private ArrayList<CommentInfo> commentsInfoList;
@@ -56,7 +56,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 	private boolean artAuthorDescrIsShown = false;
 
-	public RecyclerAdapterCommentsFragment(ActionBarActivity act, Article article,
+	public RecyclerAdapterCommentsFragment(AppCompatActivity act, Article article,
 	ArrayList<CommentInfo> commentsInfoList)
 	{
 		this.act = act;
@@ -516,7 +516,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 		}
 	}
 
-	public static void showCommView(ActionBarActivity act, ArrayList<CommentInfo> allComm, int position)
+	public static void showCommView(AppCompatActivity act, ArrayList<CommentInfo> allComm, int position)
 	{
 		CommentDialogFragment newFragment = CommentDialogFragment.newInstance(allComm.get(position));
 		newFragment.show(act.getSupportFragmentManager(), "dialog");

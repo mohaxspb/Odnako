@@ -7,7 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.animations;
 
 import ru.kuchanov.odnako.activities.ActivityMain;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +18,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 {
 	static final String TAG = RecyclerViewOnScrollListener.class.getSimpleName();
 
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 //	FragmentArtsListRecycler frag;
 	private String categoryToLoad;
@@ -39,7 +39,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 	/**
 	 * 
 	 */
-	public RecyclerViewOnScrollListener(ActionBarActivity act, String categoryToLoad, ImageView topImg, int toolbarId
+	public RecyclerViewOnScrollListener(AppCompatActivity act, String categoryToLoad, ImageView topImg, int toolbarId
 	/*FragmentArtsListRecycler frag*/)
 	{
 		this.act = act;

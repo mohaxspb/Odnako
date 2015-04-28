@@ -17,7 +17,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 public class CommentDialogFragment extends DialogFragment
 {
-	private ActionBarActivity act;
+	private AppCompatActivity act;
 
 	private CommentInfo curCommentInfo;
 
@@ -47,7 +47,7 @@ public class CommentDialogFragment extends DialogFragment
 		super.onCreate(savedState);
 		System.out.println("CommentDialogFragment onCreate");
 
-		this.act = (ActionBarActivity) this.getActivity();
+		this.act = (AppCompatActivity) this.getActivity();
 
 		this.curCommentInfo = this.getArguments().getParcelable(CommentInfo.KEY_COMMENT);
 	}
