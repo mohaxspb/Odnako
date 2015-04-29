@@ -20,6 +20,8 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceRSS;
@@ -741,7 +743,29 @@ public class FragmentArtsListRecycler extends Fragment
 			public void onClick(View v)
 			{
 				Log.i(LOG, "FAB clicked!");
-				
+				ArrayList<Category> allCategories = new ArrayList<Category>();
+				ArrayList<Author> allAuthors = new ArrayList<Author>();
+				boolean isCategory = true;
+				switch (act.getPagerType())
+				{
+					case ActivityMain.PAGER_TYPE_AUTHORS:
+						isCategory = false;
+						allAuthors = ((PagerAdapterAllAuthors) act.artsListPager.getAdapter()).getAllAuthorsList();
+					break;
+					case ActivityMain.PAGER_TYPE_CATEGORIES:
+						isCategory = true;
+						allCategories = ((PagerAdapterAllCategories) act.artsListPager.getAdapter())
+						.getAllCategoriesList();
+					break;
+					case ActivityMain.PAGER_TYPE_MENU:
+					case ActivityMain.PAGER_TYPE_SINGLE:
+						isCategory = true;
+					break;
+				}
+				int positionInList = act.getCurentCategoryPosition();
+				FragmentDownloadsDialog frag = FragmentDownloadsDialog.newInstance(allCategories, allAuthors,
+				isCategory, positionInList);
+				frag.show(act.getSupportFragmentManager(), FragmentDownloadsDialog.class.getSimpleName());
 			}
 		});
 

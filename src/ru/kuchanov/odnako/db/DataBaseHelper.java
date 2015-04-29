@@ -125,20 +125,23 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		String[] img_urlsM = ctx.getResources().getStringArray(R.array.categories_imgs_urls);
 		String[] img_files_namesM = ctx.getResources().getStringArray(R.array.categories_imgs_files_names);
 
-		//we loop through urlsM.length-1, because of ALL_CATEGORIES
-		int lengthM = urlsM.length - 1;
+		//XXX we loop through urlsM.length-1, because of ALL_CATEGORIES
+		int lengthM = urlsM.length/* - 1 */;
 		for (int i = 0; i < lengthM; i++)
 		{
-			try
+			if (!urlsM[i].equals("all_categories"))
 			{
-				this.daoCategory = this.getDaoCategory();
-				String[] stringData = { urlsM[i], titlesM[i], descriptionsM[i], img_urlsM[i], img_files_namesM[i] };
-				Date[] dateData = { new Date(0), new Date(0) };
-				Category category = new Category(stringData, dateData);
-				this.daoCategory.create(category);
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					this.daoCategory = this.getDaoCategory();
+					String[] stringData = { urlsM[i], titlesM[i], descriptionsM[i], img_urlsM[i], img_files_namesM[i] };
+					Date[] dateData = { new Date(0), new Date(0) };
+					Category category = new Category(stringData, dateData);
+					this.daoCategory.create(category);
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		////

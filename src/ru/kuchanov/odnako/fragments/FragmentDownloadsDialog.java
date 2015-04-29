@@ -6,37 +6,49 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.download.CommentInfo;
-import ru.kuchanov.odnako.utils.MyUIL;
+import ru.kuchanov.odnako.db.Author;
+import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.lists_and_utils.CatData;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 public class FragmentDownloadsDialog extends DialogFragment
 {
+	final static String LOG = FragmentDownloadsDialog.class.getSimpleName();
+
+	final static String KEY_CATEGORIES = "KEY_CATEGORIES";
+	final static String KEY_AUTHORS = "KEY_AUTHORS";
+	final static String KEY_POSITION = "KEY_POSITION";
+	final static String KEY_IS_CATEGORY = "KEY_IS_CATEGORY";
+
 	private AppCompatActivity act;
 
-	private CommentInfo curCommentInfo;
+	private ArrayList<Category> allCategories;
+	private ArrayList<Author> allAuthors;
+	private int position;
+	private boolean isCategory;
 
-	public static FragmentDownloadsDialog newInstance(CommentInfo curCommentInfo)
+	public static FragmentDownloadsDialog newInstance(ArrayList<Category> allCategories, ArrayList<Author> allAuthors,
+	boolean isCategory, int positionInList)
 	{
 		FragmentDownloadsDialog frag = new FragmentDownloadsDialog();
 		Bundle args = new Bundle();
-		args.putParcelable(CommentInfo.KEY_COMMENT, curCommentInfo);
+		args.putParcelableArrayList(KEY_CATEGORIES, allCategories);
+		args.putParcelableArrayList(KEY_AUTHORS, allAuthors);
+		args.putInt(KEY_POSITION, positionInList);
+		args.putBoolean(KEY_IS_CATEGORY, isCategory);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -45,84 +57,75 @@ public class FragmentDownloadsDialog extends DialogFragment
 	public void onCreate(Bundle savedState)
 	{
 		super.onCreate(savedState);
-		System.out.println("CommentDialogFragment onCreate");
-
+		Log.i(LOG, "onCreate");
 		this.act = (AppCompatActivity) this.getActivity();
 
-		this.curCommentInfo = this.getArguments().getParcelable(CommentInfo.KEY_COMMENT);
+		Bundle args = this.getArguments();
+
+		this.allAuthors = args.getParcelableArrayList(KEY_AUTHORS);
+		this.allCategories = args.getParcelableArrayList(KEY_CATEGORIES);
+		this.isCategory = args.getBoolean(KEY_IS_CATEGORY, false);
+		this.position = args.getInt(KEY_POSITION, 0);
 	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
-		System.out.println("CommentDialogFragment onCreateDialog");
-		
+		Log.i(LOG, "onCreateDialog");
+
 		boolean wrapInScrollView = true;
 		MaterialDialog dialog = new MaterialDialog.Builder(act)
-		.title("Комментарий")// + (position + 1) + "/" + allComm.size())
-		.customView(R.layout.comment_card_view, wrapInScrollView)
+		.title("Загрузка статей")
+		.customView(R.layout.fragment_dialog_downloads, wrapInScrollView)
 		.positiveText(R.string.close).build();
-		
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 
-		String scaleFactorCommentsString = pref.getString("scale_comments", "1");
-		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
+		Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
+		ArrayAdapter<String> adapter;
 
-		final CommentInfo p = curCommentInfo;
+		if (this.allAuthors.size() == 0 && this.allCategories.size() == 0)
+		{
+			//so it's main or single pager
+			ArrayList<String> urls = CatData.getMenuLinksWithoutSystem(act);
+			ArrayList<String> names = CatData.getMenuNamesWithoutSystem(act);
+			adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, names);
+		}
+		else
+		{
 
-		TextView name;
-		TextView txt;
-		ImageView flag;
-		TextView time_city;
-		TextView like;
-		TextView dislike;
-		ImageView avaImg;
+			ArrayList<String> allCatUrls = new ArrayList<String>();
+			ArrayList<String> allCatTitles = new ArrayList<String>();
+			for (int i = 0; i < this.allCategories.size(); i++)
+			{
+				allCatUrls.add(allCategories.get(i).getUrl());
+				allCatTitles.add(allCategories.get(i).getTitle());
+			}
 
-		name = (TextView) dialog.findViewById(R.id.name);
-		txt = (TextView) dialog.findViewById(R.id.comm_text);
-		flag = (ImageView) dialog.findViewById(R.id.flag);
-		time_city = (TextView) dialog.findViewById(R.id.time_city);
-		like = (TextView) dialog.findViewById(R.id.like);
-		dislike = (TextView) dialog.findViewById(R.id.dislike);
-		avaImg = (ImageView) dialog.findViewById(R.id.ava);
+			ArrayList<String> allAutUrls = new ArrayList<String>();
+			ArrayList<String> allAutTitles = new ArrayList<String>();
+			for (int i = 0; i < this.allAuthors.size(); i++)
+			{
+				allAutUrls.add(allAuthors.get(i).getBlog_url());
+				allAutTitles.add(allAuthors.get(i).getName());
+			}
 
-		name.setTextSize(23 * scaleFactorComments);
-		txt.setTextSize(21 * scaleFactorComments);
-		time_city.setTextSize(17 * scaleFactorComments);
-		like.setTextSize(17 * scaleFactorComments);
-		dislike.setTextSize(17 * scaleFactorComments);
+			if (this.isCategory)
+			{
+				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, allCatTitles);
+			}
+			else
+			{
+				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, allAutTitles);
+			}
+		}
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerCategory.setAdapter(adapter);
+		// заголовок
+		spinnerCategory.setPrompt("Title");
+		// выделяем элемент 
+		spinnerCategory.setSelection(this.position);
 
-		//set name
-		Spanned spannedContentName = Html.fromHtml(p.name);
-		name.setText(spannedContentName);
-
-		//setText
-		String commentText;
-		commentText = p.txt;// "<p>" + p.txt + "</p>";
-		Spanned spannedContent = Html.fromHtml(commentText);
-		txt.setText(spannedContent);
-		txt.setMovementMethod(LinkMovementMethod.getInstance());
-
-		// FLAG
-		ImageLoader imageLoader = MyUIL.get(act);
-		imageLoader.displayImage(p.flag, flag);
-
-		// AVA
-		imageLoader.displayImage(p.avaImg, avaImg);
-
-		time_city.setText(p.time + " " + p.city);
-
-		// Karma
-		//set karma's parent gravity to bottom, for known issue in Dialog
-		LinearLayout vg = (LinearLayout) like.getParent();
-		android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
-		android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-		android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
-		vg.setLayoutParams(params);
-		vg.setGravity(Gravity.RIGHT);
-		like.setText(p.like);
-		dislike.setText(p.dislike);
 		return dialog;
 	}
 }

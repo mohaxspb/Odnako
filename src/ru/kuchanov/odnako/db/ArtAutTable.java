@@ -355,6 +355,10 @@ public class ArtAutTable
 		{
 			//e.printStackTrace();
 		}
+		catch(NullPointerException e)
+		{
+			//e.printStackTrace();
+		}
 		return nextArtAutId;
 	}
 

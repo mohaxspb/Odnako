@@ -78,11 +78,11 @@ public class ActivityMain extends ActivityBase
 	private int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
-	ViewPager artCommsPager;
-	PagerAdapter pagerAdapter;
+//	ViewPager artCommsPager;
+//	PagerAdapter pagerAdapter;
 
 	//ViewPager and it's adapter for artsLists
-	ViewPager artsListPager;
+	public ViewPager artsListPager;
 
 	Toolbar toolbarRight;
 
@@ -242,7 +242,7 @@ public class ActivityMain extends ActivityBase
 		this.artsListPager = (ViewPager) this.findViewById(R.id.pager_left);
 		if (this.twoPane)
 		{
-			this.artCommsPager = (ViewPager) this.findViewById(R.id.pager_right);
+			//this.artCommsPager = (ViewPager) this.findViewById(R.id.pager_right);
 			this.toolbarRight = (Toolbar) this.findViewById(R.id.toolbar_right);
 		}
 

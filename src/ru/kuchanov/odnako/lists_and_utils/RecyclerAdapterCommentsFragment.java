@@ -11,7 +11,7 @@ import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.download.CommentInfo;
-import ru.kuchanov.odnako.fragments.FragmentCommentDialog;
+import ru.kuchanov.odnako.fragments.FragmentDialogComment;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -518,7 +518,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 
 	public static void showCommView(AppCompatActivity act, ArrayList<CommentInfo> allComm, int position)
 	{
-		FragmentCommentDialog newFragment = FragmentCommentDialog.newInstance(allComm.get(position));
+		FragmentDialogComment newFragment = FragmentDialogComment.newInstance(allComm.get(position));
 		newFragment.show(act.getSupportFragmentManager(), "dialog");
 	}
 }
