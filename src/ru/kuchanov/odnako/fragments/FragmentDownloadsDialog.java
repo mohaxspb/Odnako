@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.fragments;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
@@ -87,9 +88,36 @@ public class FragmentDownloadsDialog extends DialogFragment
 		if (this.allAuthors.size() == 0 && this.allCategories.size() == 0)
 		{
 			//so it's main or single pager
-			ArrayList<String> urls = CatData.getMenuLinksWithoutSystem(act);
-			ArrayList<String> names = CatData.getMenuNamesWithoutSystem(act);
-			adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, names);
+			if (((ActivityMain) this.act).getPagerType() == ActivityMain.PAGER_TYPE_SINGLE)
+			{
+				ArrayList<String> urls = new ArrayList<String>();
+				urls.add(((ActivityMain) this.act).getCurrentCategory());
+
+				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, urls);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinnerCategory.setAdapter(adapter);
+				spinnerCategory.setSelection(this.position);
+			}
+			else
+			{
+				ArrayList<String> urls = CatData.getMenuLinksWithoutSystem(act);
+				ArrayList<String> names = CatData.getMenuNamesWithoutSystem(act);
+
+				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, names);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinnerCategory.setAdapter(adapter);
+				//as we have system frags in MenuPager we must correct position
+				int correctedPosition;
+				if (this.position < 3)
+				{
+					correctedPosition = this.position;
+				}
+				else
+				{
+					correctedPosition = this.position - 1;
+				}
+				spinnerCategory.setSelection(correctedPosition);
+			}
 		}
 		else
 		{
@@ -118,13 +146,24 @@ public class FragmentDownloadsDialog extends DialogFragment
 			{
 				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, allAutTitles);
 			}
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinnerCategory.setAdapter(adapter);
+			spinnerCategory.setSelection(this.position);
 		}
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinnerCategory.setAdapter(adapter);
-		// заголовок
-		spinnerCategory.setPrompt("Title");
-		// выделяем элемент 
-		spinnerCategory.setSelection(this.position);
+
+		Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
+		ArrayList<String> quonts = new ArrayList<String>();
+		quonts.add("5");
+		quonts.add("10");
+		quonts.add("15");
+		quonts.add("20");
+		quonts.add("30");
+		quonts.add("Все");
+		ArrayAdapter<String> adapterQuont = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item,
+		quonts);
+		adapterQuont.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerQuont.setAdapter(adapterQuont);
+		spinnerQuont.setSelection(1);
 
 		return dialog;
 	}

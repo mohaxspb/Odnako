@@ -43,7 +43,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="?downloadIconSmall"
-        fab:fab_colorNormal="?colorPrimary"
+        fab:fab_colorNormal="?colorAccent"
         fab:fab_colorPressed="?colorPrimaryDark"
         fab:fab_colorRipple="?colorPrimaryDark" />
 
