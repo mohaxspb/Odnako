@@ -5,9 +5,11 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <!-- <item name="android:windowTranslucentNavigation">true</item>
+        <!--
+        <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item> -->
+        <item name="android:windowContentOverlay">@null</item>
+        -->
         <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -15,6 +17,11 @@
         <item name="android:textColorPrimaryInverse">@color/material_grey_300</item>
         <item name="android:textColorSecondary">@color/material_grey_400</item>
         <item name="actionMenuTextColor">@color/material_grey_400</item>
+        <!--  -->
+        <item name="md_positive_color">@color/material_grey_900</item>
+        <!-- <item name="md_btn_positive_selector">@drawable/positive_selector</item> -->
+        <item name="green">@color/green</item>
+        <item name="greenDark">@color/green_dark</item>
 
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/material_grey_800</item>
@@ -125,6 +132,12 @@
         <item name="android:textColorPrimary">@color/material_grey_800</item>
         <item name="android:textColorPrimaryInverse">@color/material_grey_800</item>
         <item name="actionMenuTextColor">@color/material_grey_800</item>
+
+        <!-- MaterialDailog attrs -->
+        <item name="md_positive_color">@color/material_grey_900</item>
+        <!-- <item name="md_btn_positive_selector">@drawable/positive_selector</item> -->
+        <item name="greenDark">@color/green_dark</item>
+        <item name="green">@color/green</item>
 
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/material_grey_400</item>

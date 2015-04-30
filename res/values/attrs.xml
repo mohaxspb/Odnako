@@ -43,6 +43,9 @@
     <attr name="unreadenIcon" format="reference" />
     <attr name="searchIconOdnako" format="reference" />
     <attr name="default_image" format="reference" />
+    
+    <attr name="green" format="reference|color" />
+    <attr name="greenDark" format="reference|color" />
     <!-- arrows -->
     <attr name="arrowLeftIcon" format="reference" />
     <attr name="arrowRightIcon" format="reference" />

@@ -860,6 +860,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			try
+			{
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 			Set<String> keySet = getAllCatArtsInfo().keySet();
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
@@ -912,6 +914,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 					1, ServiceDB.this);
 					getDownloaded.execute();
 				break;
+			}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 	};

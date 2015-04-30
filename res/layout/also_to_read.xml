@@ -6,7 +6,7 @@
     app:cardBackgroundColor="?cardBackGroundColor"
     app:cardCornerRadius="6dp"
     app:cardElevation="5dp"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true" >
 
     <LinearLayout
         android:id="@+id/also_main"
@@ -14,16 +14,6 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:orientation="vertical" >
-
-        <!-- <TextView
-            android:id="@+id/also_main_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="@string/also_to_read"
-            android:textColor="?android:textColorPrimary"
-            android:textStyle="bold"
-            android:textSize="23sp" /> -->
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

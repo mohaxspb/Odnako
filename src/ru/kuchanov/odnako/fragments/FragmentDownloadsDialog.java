@@ -8,11 +8,13 @@ package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
+import ru.kuchanov.odnako.utils.MaterialRippleLayout;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,9 +22,14 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class FragmentDownloadsDialog extends DialogFragment
@@ -40,6 +47,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 	private ArrayList<Author> allAuthors;
 	private int position;
 	private boolean isCategory;
+
+	private ArrayList<String> urls;
 
 	public static FragmentDownloadsDialog newInstance(ArrayList<Category> allCategories, ArrayList<Author> allAuthors,
 	boolean isCategory, int positionInList)
@@ -74,15 +83,46 @@ public class FragmentDownloadsDialog extends DialogFragment
 	{
 		Log.i(LOG, "onCreateDialog");
 
+		final ArrayList<String> quonts = new ArrayList<String>();
+		quonts.add("5");
+		quonts.add("10");
+		quonts.add("15");
+		quonts.add("20");
+		quonts.add("30");
+		//quonts.add("Все");
+
 		boolean wrapInScrollView = true;
 		MaterialDialog dialog = new MaterialDialog.Builder(act)
 		.title("Загрузка статей")
 		.customView(R.layout.fragment_dialog_downloads, wrapInScrollView)
-		.positiveText(R.string.close).build();
+		.positiveText(R.string.go_pro)
+		.negativeText(R.string.download)
+		.callback(new MaterialDialog.ButtonCallback()
+		{
+			@Override
+			public void onPositive(MaterialDialog dialog)
+			{
+				Log.e(LOG, "Go PRO!");
+			}
+
+			@Override
+			public void onNegative(MaterialDialog dialog)
+			{
+				Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
+				Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
+				int quont = 10;
+				quont = Integer.parseInt(quonts.get(spinnerQuont.getSelectedItemPosition()));
+				String url = urls.get(spinnerCategory.getSelectedItemPosition());
+				Log.e(LOG, "Download url/quont: " + url + "/" + quont);
+			}
+		})
+		.build();
+
+		dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 
-		Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
+		final Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
 		ArrayAdapter<String> adapter;
 
 		if (this.allAuthors.size() == 0 && this.allCategories.size() == 0)
@@ -93,6 +133,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 				ArrayList<String> urls = new ArrayList<String>();
 				urls.add(((ActivityMain) this.act).getCurrentCategory());
 
+				this.urls = urls;
+
 				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, urls);
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				spinnerCategory.setAdapter(adapter);
@@ -102,6 +144,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 			{
 				ArrayList<String> urls = CatData.getMenuLinksWithoutSystem(act);
 				ArrayList<String> names = CatData.getMenuNamesWithoutSystem(act);
+
+				this.urls = urls;
 
 				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, names);
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -141,29 +185,46 @@ public class FragmentDownloadsDialog extends DialogFragment
 			if (this.isCategory)
 			{
 				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, allCatTitles);
+				this.urls = allCatUrls;
 			}
 			else
 			{
 				adapter = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item, allAutTitles);
+				this.urls = allAutUrls;
 			}
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spinnerCategory.setAdapter(adapter);
 			spinnerCategory.setSelection(this.position);
 		}
 
-		Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
-		ArrayList<String> quonts = new ArrayList<String>();
-		quonts.add("5");
-		quonts.add("10");
-		quonts.add("15");
-		quonts.add("20");
-		quonts.add("30");
-		quonts.add("Все");
+		final Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
 		ArrayAdapter<String> adapterQuont = new ArrayAdapter<String>(this.act, android.R.layout.simple_spinner_item,
 		quonts);
 		adapterQuont.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerQuont.setAdapter(adapterQuont);
 		spinnerQuont.setSelection(1);
+
+		spinnerQuont.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+			{
+				if (Const.IS_PRO == false)
+				{
+					if (position > 1)
+					{
+						Toast.makeText(act, "Только в Однако+ версии", Toast.LENGTH_SHORT).show();
+						spinnerQuont.setSelection(1);
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{
+				spinnerQuont.setSelection(1);
+			}
+		});
 
 		return dialog;
 	}

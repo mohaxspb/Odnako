@@ -3,15 +3,14 @@
     <!-- for rippleEffect -->
     <color name="transparent">#00FFFFFF</color>
 
-    <!-- <color name="my_color_dark">#ff33B5E5</color>
-    <color name="my_color_light">#ff355689</color> -->
     <color name="odnako">#ff333333</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <!-- <color name="cur_theme">#ff33B5E5</color> -->
     <color name="blue">#7ecce8</color>
     <color name="red">#ff0000</color>
-    <color name="green">#00ff00</color>
+    <color name="green">#ff00ff00</color>
+    <color name="green_dark">#ff33ff33</color>
     <!-- material_grey_colors -->
     <color name="material_grey_900">#212121</color>
     <color name="material_grey_900_transparent">#00212121</color>
