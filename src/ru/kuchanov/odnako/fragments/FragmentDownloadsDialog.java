@@ -159,10 +159,14 @@ public class FragmentDownloadsDialog extends DialogFragment
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				spinnerCategory.setAdapter(adapter);
 				//as we have system frags in MenuPager we must correct position
-				int correctedPosition;
+				int correctedPosition = 10;
 				if (this.position < 3)
 				{
 					correctedPosition = this.position;
+				}
+				else if (this.position > urls.size() - 1)
+				{
+					correctedPosition = 10;
 				}
 				else
 				{

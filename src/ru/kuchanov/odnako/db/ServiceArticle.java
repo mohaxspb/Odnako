@@ -198,6 +198,11 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		intentGlobal.putExtra(Article.KEY_CURENT_ART, downloadedArticle);
 		intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_LOADED);
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentGlobal);
+
+		//TODO here we can start deleting articles if we have !IS_PRO and >10 arts.getArtText().equals(Const.EMPTY_STRING)
+		AsyncTaskDeleteArticlesText deleteTask = new AsyncTaskDeleteArticlesText(ctx,
+		AsyncTaskDeleteArticlesText.REQUEST_TYPE_STANDART);
+		deleteTask.execute();
 	}
 
 	private void updateNotification(int iterator, int quontity)

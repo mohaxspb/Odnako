@@ -39,6 +39,10 @@ public final class Const
 		 */
 		public static final String ARTICLE_LOADED = ACTION + ".ARTICLE_LOADED";
 		/**
+		 * const for intent action for notifying that article loaded;
+		 */
+		public static final String ARTICLE_DELETED = ACTION + ".ARTICLE_DELETED";
+		/**
 		 * const for intent action for notifying that article is read;
 		 */
 		public static final String ARTICLE_READ = ACTION + ".ARTICLE_READ";

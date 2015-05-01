@@ -7,7 +7,9 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.fragments;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -131,8 +133,8 @@ public class FragmentArtsListRecycler extends Fragment
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
 		//reciver for scrolling and highligting selected position
-//		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverForRSS,
-//		new IntentFilter(this.getCategoryToLoad() + "_rss"));
+		//		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverForRSS,
+		//		new IntentFilter(this.getCategoryToLoad() + "_rss"));
 
 		//receiver for updating savedState (if artsText is loaded)
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverArticleLoaded,
@@ -197,65 +199,65 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 	};
 
-//	private BroadcastReceiver receiverForRSS = new BroadcastReceiver()
-//	{
-//		@Override
-//		public void onReceive(Context context, Intent intent)
-//		{
-//			Log.i(LOG + categoryToLoad, "receiverForRSS onReceive()");
-//			ArrayList<Article> rssData = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
-//			//update activities artList
-//			//update all lists
-//			Set<String> keySetActivity = act.getAllCatArtsInfo().keySet();
-//			for (String key : keySetActivity)
-//			{
-//				ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(key);
-//				for (Article a : rssData)
-//				{
-//					boolean findIt = false;
-//					for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
-//					{
-//						Article b = activitiesData.get(i);
-//						if (a.getUrl().equals(b.getUrl()))
-//						{
-//							findIt = true;
-//							b.setPreview(a.getPreview());
-//							b.setPubDate(a.getPubDate());
-//						}
-//					}
-//				}
-//			}
-//			//updateLists in Service
-//			if (act.getServiceDB() != null)
-//			{
-//				Set<String> keySet = act.getServiceDB().getAllCatArtsInfo().keySet();
-//				for (String key : keySet)
-//				{
-//					ArrayList<Article> artsList = act.getServiceDB().getAllCatArtsInfo().get(key);
-//					if (artsList != null)
-//					{
-//						for (Article artFromRss : rssData)
-//						{
-//							boolean notFound = true;
-//							for (int i = 0; i < artsList.size() && notFound; i++)
-//							{
-//								Article artInList = artsList.get(i);
-//								if (artInList.getUrl().equals(artFromRss.getUrl()))
-//								{
-//									artInList.setPreview(artFromRss.getPreview());
-//									artInList.setPubDate(artFromRss.getPubDate());
-//									notFound = false;
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//			//after  updating Articles from activities HashMap
-//			//we update adapter
-//			recycler.getAdapter().notifyDataSetChanged();
-//		}
-//	};
+	//	private BroadcastReceiver receiverForRSS = new BroadcastReceiver()
+	//	{
+	//		@Override
+	//		public void onReceive(Context context, Intent intent)
+	//		{
+	//			Log.i(LOG + categoryToLoad, "receiverForRSS onReceive()");
+	//			ArrayList<Article> rssData = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
+	//			//update activities artList
+	//			//update all lists
+	//			Set<String> keySetActivity = act.getAllCatArtsInfo().keySet();
+	//			for (String key : keySetActivity)
+	//			{
+	//				ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(key);
+	//				for (Article a : rssData)
+	//				{
+	//					boolean findIt = false;
+	//					for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
+	//					{
+	//						Article b = activitiesData.get(i);
+	//						if (a.getUrl().equals(b.getUrl()))
+	//						{
+	//							findIt = true;
+	//							b.setPreview(a.getPreview());
+	//							b.setPubDate(a.getPubDate());
+	//						}
+	//					}
+	//				}
+	//			}
+	//			//updateLists in Service
+	//			if (act.getServiceDB() != null)
+	//			{
+	//				Set<String> keySet = act.getServiceDB().getAllCatArtsInfo().keySet();
+	//				for (String key : keySet)
+	//				{
+	//					ArrayList<Article> artsList = act.getServiceDB().getAllCatArtsInfo().get(key);
+	//					if (artsList != null)
+	//					{
+	//						for (Article artFromRss : rssData)
+	//						{
+	//							boolean notFound = true;
+	//							for (int i = 0; i < artsList.size() && notFound; i++)
+	//							{
+	//								Article artInList = artsList.get(i);
+	//								if (artInList.getUrl().equals(artFromRss.getUrl()))
+	//								{
+	//									artInList.setPreview(artFromRss.getPreview());
+	//									artInList.setPubDate(artFromRss.getPubDate());
+	//									notFound = false;
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//			//after  updating Articles from activities HashMap
+	//			//we update adapter
+	//			recycler.getAdapter().notifyDataSetChanged();
+	//		}
+	//	};
 
 	/**
 	 * receives intent with Articles data and updates list, toolbar and toast in
@@ -845,11 +847,11 @@ public class FragmentArtsListRecycler extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
 			artsDataReceiver = null;
 		}
-//		if (receiverForRSS != null)
-//		{
-//			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverForRSS);
-//			receiverForRSS = null;
-//		}
+		//		if (receiverForRSS != null)
+		//		{
+		//			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverForRSS);
+		//			receiverForRSS = null;
+		//		}
 		if (receiverArticleLoaded != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverArticleLoaded);
@@ -889,7 +891,7 @@ public class FragmentArtsListRecycler extends Fragment
 			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 
 			//Log.e(LOG, a.getUrl());
-
+			Set<String> keySet = act.getAllCatArtsInfo().keySet();
 			boolean notFound = true;
 			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
 			{
@@ -909,6 +911,30 @@ public class FragmentArtsListRecycler extends Fragment
 				break;
 				case Const.Action.ARTICLE_LOADED:
 					//loop through all arts in activity and update them and adapters
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
+						notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								if (a.getArtText().equals(Const.EMPTY_STRING))
+								{
+									allArtsInfo.get(i).setArtText(a.getArtText());
+								}
+								//pubDate
+								if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+								{
+									allArtsInfo.get(i).setPubDate(a.getPubDate());
+								}
+								//set preview
+								allArtsInfo.get(i).setPreview(a.getPreview());
+								notFound = false;
+							}
+						}
+					}
 					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 					{
 						Article artInList = allArtsInfo.get(i);
@@ -925,7 +951,36 @@ public class FragmentArtsListRecycler extends Fragment
 							}
 							//set preview
 							allArtsInfo.get(i).setPreview(a.getPreview());
-							//allArtsInfo.set(i, a);
+							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
+							notFound = false;
+						}
+					}
+				break;
+				case Const.Action.ARTICLE_DELETED:
+					//loop through all arts in activity and update them and adapters
+					
+					for (String key : keySet)
+					{
+						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
+						notFound = true;
+						for (int i = 0; i < artsList.size() && notFound; i++)
+						{
+							Article artInList = artsList.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								artsList.get(i).setArtText(Const.EMPTY_STRING);
+								artsList.get(i).setRefreshed(new Date(0));
+								notFound = false;
+							}
+						}
+					}
+					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					{
+						Article artInList = allArtsInfo.get(i);
+						if (artInList.getUrl().equals(a.getUrl()))
+						{
+							allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
+							allArtsInfo.get(i).setRefreshed(new Date(0));
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}

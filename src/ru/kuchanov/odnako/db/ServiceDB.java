@@ -927,6 +927,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			String[] menuLinks = CatData.getMenuLinks(ctx);
+			AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
+			menuLinks[menuLinks.length - 1],
+			1, ServiceDB.this);
 			try
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
@@ -975,10 +979,27 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 								}
 							}
 						}
-						String[] menuLinks = CatData.getMenuLinks(ctx);
-						AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
-						menuLinks[menuLinks.length - 1],
-						1, ServiceDB.this);
+						//update all_downloaded category
+						getDownloaded.execute();
+					break;
+					case Const.Action.ARTICLE_DELETED:
+						//loop through all arts in activity and update them and adapters
+						for (String key : keySet)
+						{
+							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+							boolean notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
+							{
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(a.getUrl()))
+								{
+									artsList.get(i).setArtText(Const.EMPTY_STRING);
+									artsList.get(i).setRefreshed(new Date(0));
+									notFound = false;
+								}
+							}
+						}
+						//update all_downloaded category
 						getDownloaded.execute();
 					break;
 				}
