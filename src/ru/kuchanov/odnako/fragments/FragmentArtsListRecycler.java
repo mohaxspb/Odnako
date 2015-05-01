@@ -505,8 +505,6 @@ public class FragmentArtsListRecycler extends Fragment
 				break;
 			}
 
-			//setOnScrollListener();
-
 			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false) && isDisplayed;
 			if (refreshRightToolbarAndPager)
 			{

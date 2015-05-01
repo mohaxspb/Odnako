@@ -16,61 +16,38 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.util.Log;
 
 public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Article>>
 {
 	private final static String LOG = ParsePageForAllArtsInfo.class.getSimpleName() + "/";
 
-	AllArtsInfoCallback callback;
+	private AllArtsInfoCallback callback;
 
 	String link;
 
 	private String categoryToLoad;
-	int page;
+	private int page;
 
-	Context ctx;
+	private DataBaseHelper h;
 
-	DataBaseHelper h;
-
-//	public HttpGet get;
+	//	public HttpGet get;
 
 	private boolean cyrillicError = false;
 
-	public ParsePageForAllArtsInfo(String category, int page, Context ctx, AllArtsInfoCallback callback,
+	public ParsePageForAllArtsInfo(String category, int page, AllArtsInfoCallback callback,
 	DataBaseHelper h)
 	{
 		this.callback = callback;
-
 		this.categoryToLoad = category;
 		this.page = page;
-
-		this.ctx = ctx;
-
 		this.h = h;
 	}
 
 	public void setLink(String link)
 	{
 		this.link = link;
-	}
-
-	public void test()
-	{
-		if (Looper.myLooper() == Looper.getMainLooper())
-		{
-			Log.e(
-			LOG,
-			"Looper.myLooper() == Looper.getMainLooper(): "
-			+ String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
-		}
-		else
-		{
-			Log.e(LOG, "Looper.myLooper() == Looper.getMainLooper(): false");
-		}
 	}
 
 	protected ArrayList<Article> doInBackground(Void... arg)
@@ -98,7 +75,6 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 			if (hh.isAuthor())
 			{
 				output = hh.getAllArtsInfoFromAUTHORPage();
-
 				//write new Author to DB if it don't exists
 				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
@@ -114,7 +90,7 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 				//write new Author if it don't exists
 				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
-					//TODO create new entry in Category
+					//create new entry in Category
 					Category c = hh.getCategoryFromHtml();
 					h.getDaoCategory().create(c);
 				}

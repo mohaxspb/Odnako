@@ -483,9 +483,9 @@ public class HtmlHelper
 		//refreshed, numOfComments, numOfSharings, artText, authorDescr, tegs_main, 
 		//tegs_all, share_quont, to_read_main, to_read_more, img_author, author
 
-//		String preview = this.rootNode
-//		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
-//		.getAttributeByName("content");
+		//		String preview = this.rootNode
+		//		.findElementByAttValue("property", "og:description", isRecursive, isCaseSensitive)
+		//		.getAttributeByName("content");
 		//Replace to another tag, because in one case it do not contains '"' symbol and HTMLCleaner do not cut attr
 		String preview = this.rootNode
 		.findElementByAttValue("name", "Description", isRecursive, isCaseSensitive)
@@ -511,8 +511,9 @@ public class HtmlHelper
 		}
 
 		//<div class="date l-t-right l-right">12 марта 2015</div>
-		Date pubDate = DateParse.parse(this.rootNode
-		.findElementByAttValue("class", "date l-t-right l-right", isRecursive, isCaseSensitive).getText().toString());
+		TagNode tagDate = this.rootNode.findElementByAttValue("class", "date l-t-right l-right", isRecursive,
+		isCaseSensitive);
+		Date pubDate = (tagDate == null) ? new Date(0) : DateParse.parse(tagDate.getText().toString());
 
 		//AUTHOR
 		//<div class="author-teaser clearfix">
@@ -581,7 +582,7 @@ public class HtmlHelper
 		TagNode mainTagDiv = this.rootNode.findElementByAttValue("class", "biggest-tag l-left", isRecursive,
 		isCaseSensitive);
 		String tagMain = Const.EMPTY_STRING;
-		if (mainTagDiv.hasChildren())
+		if (mainTagDiv != null && mainTagDiv.hasChildren())
 		{
 			TagNode[] allTagsArr = mainTagDiv.getElementsByName("a", isRecursive);
 			tagMain = "";
@@ -605,6 +606,11 @@ public class HtmlHelper
 		TagNode articlesTextTagNode = this.rootNode
 		.findElementByAttValue("class", "post-content l-post-text-offset break l-white clearfix outlined-hard-bot",
 		isRecursive, isCaseSensitive);
+		if (articlesTextTagNode == null)
+		{
+			articlesTextTagNode = this.rootNode.findElementByAttValue("class",
+			"post-content l-post-text-offset l-white clearfix", isRecursive, isCaseSensitive);
+		}
 		TagNode[] artTextTagNodeChildren = articlesTextTagNode.getChildTags();
 		ArrayList<TagNode> tagsToRemove = new ArrayList<TagNode>();
 		for (int i = 0; i < artTextTagNodeChildren.length; i++)

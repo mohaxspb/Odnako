@@ -13,12 +13,11 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-import ru.kuchanov.odnako.utils.MaterialRippleLayout;
 import android.app.Dialog;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -103,6 +102,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 			public void onPositive(MaterialDialog dialog)
 			{
 				Log.e(LOG, "Go PRO!");
+				//TODO
 			}
 
 			@Override
@@ -114,13 +114,21 @@ public class FragmentDownloadsDialog extends DialogFragment
 				quont = Integer.parseInt(quonts.get(spinnerQuont.getSelectedItemPosition()));
 				String url = urls.get(spinnerCategory.getSelectedItemPosition());
 				Log.e(LOG, "Download url/quont: " + url + "/" + quont);
+
+				Intent intent = new Intent(act, ServiceDB.class);
+				String action = Const.Action.DATA_DOWNLOAD;
+				intent.setAction(action);
+				intent.putExtra("categoryToLoad", url);
+				intent.putExtra("pageToLoad", 1);
+				intent.putExtra("quont", quont);
+				intent.putExtra("timeStamp", System.currentTimeMillis());
+				intent.putExtra("startDownload", true);
+				act.startService(intent);
 			}
 		})
 		.build();
 
 		dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
-
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		final Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
 		ArrayAdapter<String> adapter;

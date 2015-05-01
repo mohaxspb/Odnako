@@ -6,12 +6,9 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
-
-import com.google.android.gms.ads.InterstitialAd;
-import com.yandex.metrica.YandexMetrica;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RotationPageTransformer;
@@ -22,21 +19,20 @@ import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
-import ru.kuchanov.odnako.lists_and_utils.PagerAdapterMenu;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
-import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterMenu;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterSingleCategory;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ReporterSettings;
-import ru.kuchanov.odnako.lists_and_utils.PagerListenerMenu;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -46,7 +42,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.SearchView;
@@ -62,6 +57,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.InterstitialAd;
+import com.yandex.metrica.YandexMetrica;
 
 public class ActivityMain extends ActivityBase
 {

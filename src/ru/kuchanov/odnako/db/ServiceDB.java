@@ -82,11 +82,13 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 
 	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
 
+	private int quontToDownload = 10;
+
 	public void onCreate()
 	{
 		Log.d(LOG, "onCreate");
 		super.onCreate();
-		
+
 		this.ctx = this;
 
 		//get default settings to get all settings later
@@ -158,7 +160,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				}
 			break;
 			case Const.Action.DATA_DOWNLOAD:
-			//TODO
+				//TODO
+				this.quontToDownload = intent.getIntExtra("quont", 10);
+				LocalBroadcastManager.getInstance(this).registerReceiver(artsDataReceiver,
+				new IntentFilter(categoryToLoad));
+				this.startDownLoad(categoryToLoad, 1);
 			break;
 			case Const.Action.GET_DOWNLOADED:
 				//TODO
@@ -170,6 +176,58 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 
 		return super.onStartCommand(intent, flags, startId);
 	}
+
+	private BroadcastReceiver artsDataReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			Log.e(LOG, "onReceive artsDataReceiver");
+			LocalBroadcastManager.getInstance(ctx).unregisterReceiver(artsDataReceiver);
+			//get result message
+			String[] msg = intent.getStringArrayExtra(Msg.MSG);
+
+			switch (msg[0])
+			{
+				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
+				case Msg.DB_ANSWER_FROM_BOTTOM_INFO_SENDED_TO_FRAG:
+				//CANT be as we load only 30;
+				break;
+				case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
+				case Msg.NO_NEW:
+				case Msg.NEW_QUONT:
+				case Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES:
+				case Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT:
+					//start multiple load of articles
+					Intent downloadArtsIntent = new Intent(ctx, ServiceArticle.class);
+					downloadArtsIntent.setAction(Const.Action.DATA_REQUEST_MULTIPLE);
+					ArrayList<String> urls = new ArrayList<String>();
+					ArrayList<Article> dataFromWeb = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
+					for (int i = 0; i < quontToDownload; i++)
+					{
+						urls.add(dataFromWeb.get(i).getUrl());
+					}
+					downloadArtsIntent.putStringArrayListExtra(FragmentArticle.ARTICLE_URL, urls);
+					downloadArtsIntent.putExtra("startDownload", true);
+					ctx.startService(downloadArtsIntent);
+				break;
+				case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
+					//we catch publishing lag from bottom, so we'll toast unsinked status
+					//and start download from top (pageToLoad=1)
+					Log.d(LOG, "Синхронизирую базу данных. Загружаю новые статьи");
+				break;
+				case (Msg.DB_ANSWER_NO_ARTS_IN_CATEGORY):
+					Log.e(LOG, "Ни одной статьи не обнаружено!");
+				break;
+				case (Msg.ERROR):
+					Log.e(LOG, msg[1]);
+				break;
+				default:
+					Log.e(LOG, "непредвиденный ответ базы данных");
+				break;
+			}
+		}
+	};
 
 	@Override
 	public void onGetDownloaded(ArrayList<Article> dataFromDB, String categoryToLoad, int pageToLoad)
@@ -311,7 +369,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		if (this.currentTasks.size() < 4)
 		{
 			//Everything is OK. Just add it and execute
-			ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this,
+			ParsePageForAllArtsInfo parse = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this,
 			this.getHelper());
 			parse.execute();
 			this.currentTasks.add(parse);
@@ -328,7 +386,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				this.onError("загрузка прервана", removedParse.getCategoryToLoad(), removedParse.getPageToLoad());
 			}
 
-			ParsePageForAllArtsInfo parseToAdd = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this, this,
+			ParsePageForAllArtsInfo parseToAdd = new ParsePageForAllArtsInfo(catToLoad, pageToLoad, this,
 			this.getHelper());
 			parseToAdd.execute();
 
@@ -498,6 +556,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		{
 			LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiverArticleLoaded);
 			this.receiverArticleLoaded = null;
+		}
+		if (this.artsDataReceiver != null)
+		{
+			LocalBroadcastManager.getInstance(ctx).unregisterReceiver(artsDataReceiver);
+			this.artsDataReceiver = null;
 		}
 		if (dataBaseHelper != null)
 		{
@@ -800,7 +863,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 	 * map with lists of articles info for all categories and authors, witch
 	 * keys gets from BD
 	 */
-	private HashMap<String, ArrayList<Article>> allCatArtsInfo;// = new HashMap<String, ArrayList<Article>>();
+	private HashMap<String, ArrayList<Article>> allCatArtsInfo;
 
 	public HashMap<String, ArrayList<Article>> getAllCatArtsInfo()
 	{
@@ -862,61 +925,61 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			Log.i(LOG, "receiverArticleLoaded onReceive called");
 			try
 			{
-			Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-			Set<String> keySet = getAllCatArtsInfo().keySet();
-			switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
-			{
-				case Const.Action.ARTICLE_READ:
-					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
-					{
-						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-						boolean notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
+				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+				Set<String> keySet = getAllCatArtsInfo().keySet();
+				switch (intent.getStringExtra(Const.Action.ARTICLE_CHANGED))
+				{
+					case Const.Action.ARTICLE_READ:
+						//loop through all arts in activity and update them and adapters
+						for (String key : keySet)
 						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
+							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+							boolean notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
 							{
-								artsList.get(i).setReaden(a.isReaden());
-								//artsList.set(i, a);
-								notFound = false;
-							}
-						}
-					}
-				break;
-				case Const.Action.ARTICLE_LOADED:
-					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
-					{
-						ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-						boolean notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
-						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
-							{
-								artsList.get(i).setArtText(a.getArtText());
-								//pubDate
-								if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(a.getUrl()))
 								{
-									artsList.get(i).setPubDate(a.getPubDate());
+									artsList.get(i).setReaden(a.isReaden());
+									//artsList.set(i, a);
+									notFound = false;
 								}
-								//set preview
-								artsList.get(i).setPreview(a.getPreview());
-								//artsList.set(i, a);
-								notFound = false;
 							}
 						}
-					}
-					String[] menuLinks = CatData.getMenuLinks(ctx);
-					AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
-					menuLinks[menuLinks.length - 1],
-					1, ServiceDB.this);
-					getDownloaded.execute();
-				break;
+					break;
+					case Const.Action.ARTICLE_LOADED:
+						//loop through all arts in activity and update them and adapters
+						for (String key : keySet)
+						{
+							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
+							boolean notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
+							{
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(a.getUrl()))
+								{
+									artsList.get(i).setArtText(a.getArtText());
+									//pubDate
+									if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+									{
+										artsList.get(i).setPubDate(a.getPubDate());
+									}
+									//set preview
+									artsList.get(i).setPreview(a.getPreview());
+									//artsList.set(i, a);
+									notFound = false;
+								}
+							}
+						}
+						String[] menuLinks = CatData.getMenuLinks(ctx);
+						AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
+						menuLinks[menuLinks.length - 1],
+						1, ServiceDB.this);
+						getDownloaded.execute();
+					break;
+				}
 			}
-			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
