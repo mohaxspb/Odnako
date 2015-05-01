@@ -700,6 +700,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 					case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 						Log.d(LOG + "NOTIF", "Обнаружено " + resultMessage[1] + " новых статей");
 						sendNotification(resultMessage[1], dataFromWeb);
+						//and start download RSS to update pubDate and preview
+						Intent intentRSS = new Intent(this, ServiceRSS.class);
+						intentRSS.putExtra("categoryToLoad", categoryToLoad);
+						this.startService(intentRSS);
 					break;
 				}
 			}
