@@ -31,9 +31,7 @@ public class HtmlHelper
 
 	public TagNode rootNode;
 	public String htmlString;
-
 	private String url;
-
 	HtmlCleaner cleaner;
 
 	//vars for HTMLCleaner methods params
@@ -755,6 +753,9 @@ public class HtmlHelper
 		//		a.setToReadMain(toReadMain);
 		a.setToReadMore(toReadMore);
 		//		a.setShareQuont(shareQuont);
+
+		a.setRefreshed(new Date(System.currentTimeMillis()));
+
 		return a;
 	}
 

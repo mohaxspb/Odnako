@@ -46,6 +46,7 @@ public class Article implements Parcelable
 	public final static String FIELD_NAME_PREVIEW = "preview";
 	public final static String FIELD_NAME_ART_TEXT = "artText";
 	public final static String FIELD_IS_READEN = "isReaden";
+	public final static String FIELD_REFRESHED_DATE = "refreshed";
 
 	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
 	private int id;
@@ -144,7 +145,6 @@ public class Article implements Parcelable
 
 		//date; here can be 2 different ways of storing date, that we recive from site, so get them from util
 		this.pubDate = DateParse.parse(artInfoArr[6]);
-		//end of date
 
 		this.numOfComments = Integer.parseInt(artInfoArr[7]);
 		this.numOfSharings = Integer.parseInt(artInfoArr[8]);
@@ -160,18 +160,11 @@ public class Article implements Parcelable
 		//refreshed date
 		//set it only if we have not null or Const.EMPTY_STRING artText value
 		//and, ofcours not null given Date refreshed
-		if (this.artText != null)
+		if (!this.artText.equals(Const.EMPTY_STRING))
 		{
-			if (!this.artText.equals(Const.EMPTY_STRING))
+			if (refreshed != null)
 			{
-				if (refreshed != null)
-				{
-					this.refreshed = refreshed;
-				}
-				else
-				{
-					this.refreshed = new Date(0);
-				}
+				this.refreshed = refreshed;
 			}
 			else
 			{
@@ -569,6 +562,21 @@ public class Article implements Parcelable
 			updateBuilder = h.getDaoArticle().updateBuilder();
 			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_PUB_DATE, d);
+			updateBuilder.update();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void updateRefreshedDate(DataBaseHelper h, int articleId, Date d)
+	{
+		UpdateBuilder<Article, Integer> updateBuilder;
+		try
+		{
+			updateBuilder = h.getDaoArticle().updateBuilder();
+			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_REFRESHED_DATE, d);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{

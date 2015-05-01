@@ -85,14 +85,15 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 						//and if it's not we must return bigger date to DB entry
 						//This is because downloaded date always bigger then zero date
 						//and always smaller, if inDB date has HH:mm bigger then 00:00
-						if (downLoadedDate.getTime() < dBDate.getTime())
+						if (downLoadedDate.getTime() > dBDate.getTime())
 						{
-							Article.updatePubDate(h, artInDB.getId(), dBDate);
+							Article.updatePubDate(h, artInDB.getId(), downLoadedDate);
 						}
 						if (!previewDB.equals(Const.EMPTY_STRING))
 						{
-							Article.updatePreview(h, artInDB.getId(), previewDB);
+							Article.updatePreview(h, artInDB.getId(), article.getPreview());
 						}
+						Article.updateRefreshedDate(h, artInDB.getId(), article.getRefreshed());
 					}
 				}
 				else
@@ -126,7 +127,8 @@ public class ParseArticle extends AsyncTask<Void, Void, Article>
 		//NO internet
 		else
 		{
-			this.callback.onErrorWhileDownloadingArticle(Const.Error.CONNECTION_ERROR, url, isMultipleTask, iterator, quontity);
+			this.callback.onErrorWhileDownloadingArticle(Const.Error.CONNECTION_ERROR, url, isMultipleTask, iterator,
+			quontity);
 			Log.e(LOG + getUrl(), Const.Error.CONNECTION_ERROR);
 		}
 	}// Событие по окончанию парсинга
