@@ -2,9 +2,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
@@ -38,6 +35,9 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 	final static String LOG = RecyclerAdapterArtsListFragment.class.getSimpleName();
@@ -64,6 +64,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
+//		ActivityMain main=(ActivityMain)act;
+//		this.artsInfo = main.getAllCatArtsInfo().get(artsListFrag.getCategoryToLoad());
 
 		this.artsListFrag = artsListFrag;
 		this.isInLeftPager = this.artsListFrag.isInLeftPager();
@@ -402,6 +404,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					//SaveImg
 					if (!p.getArtText().equals(Const.EMPTY_STRING))
 					{
+						//Log.e(LOG, p.getUrl()+" /text is NOT empty");
 						holderMain.save.setContentDescription(act.getResources().getString(R.string.get_art_text));
 						if (nightMode == true)
 						{
@@ -421,6 +424,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					}
 					else
 					{
+						//Log.e(LOG, p.getUrl()+" /text IS empty");
 						holderMain.save.setContentDescription(act.getResources().getString(R.string.download_article));
 						if (nightMode == true)
 						{

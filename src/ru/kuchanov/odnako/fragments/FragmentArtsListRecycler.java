@@ -199,66 +199,6 @@ public class FragmentArtsListRecycler extends Fragment
 		}
 	};
 
-	//	private BroadcastReceiver receiverForRSS = new BroadcastReceiver()
-	//	{
-	//		@Override
-	//		public void onReceive(Context context, Intent intent)
-	//		{
-	//			Log.i(LOG + categoryToLoad, "receiverForRSS onReceive()");
-	//			ArrayList<Article> rssData = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
-	//			//update activities artList
-	//			//update all lists
-	//			Set<String> keySetActivity = act.getAllCatArtsInfo().keySet();
-	//			for (String key : keySetActivity)
-	//			{
-	//				ArrayList<Article> activitiesData = act.getAllCatArtsInfo().get(key);
-	//				for (Article a : rssData)
-	//				{
-	//					boolean findIt = false;
-	//					for (int i = 0; i < activitiesData.size() && (findIt == false); i++)
-	//					{
-	//						Article b = activitiesData.get(i);
-	//						if (a.getUrl().equals(b.getUrl()))
-	//						{
-	//							findIt = true;
-	//							b.setPreview(a.getPreview());
-	//							b.setPubDate(a.getPubDate());
-	//						}
-	//					}
-	//				}
-	//			}
-	//			//updateLists in Service
-	//			if (act.getServiceDB() != null)
-	//			{
-	//				Set<String> keySet = act.getServiceDB().getAllCatArtsInfo().keySet();
-	//				for (String key : keySet)
-	//				{
-	//					ArrayList<Article> artsList = act.getServiceDB().getAllCatArtsInfo().get(key);
-	//					if (artsList != null)
-	//					{
-	//						for (Article artFromRss : rssData)
-	//						{
-	//							boolean notFound = true;
-	//							for (int i = 0; i < artsList.size() && notFound; i++)
-	//							{
-	//								Article artInList = artsList.get(i);
-	//								if (artInList.getUrl().equals(artFromRss.getUrl()))
-	//								{
-	//									artInList.setPreview(artFromRss.getPreview());
-	//									artInList.setPubDate(artFromRss.getPubDate());
-	//									notFound = false;
-	//								}
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//			//after  updating Articles from activities HashMap
-	//			//we update adapter
-	//			recycler.getAdapter().notifyDataSetChanged();
-	//		}
-	//	};
-
 	/**
 	 * receives intent with Articles data and updates list, toolbar and toast in
 	 * some cases, based on message from DB. Also, if this is main list
@@ -847,11 +787,6 @@ public class FragmentArtsListRecycler extends Fragment
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(artsDataReceiver);
 			artsDataReceiver = null;
 		}
-		//		if (receiverForRSS != null)
-		//		{
-		//			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverForRSS);
-		//			receiverForRSS = null;
-		//		}
 		if (receiverArticleLoaded != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(receiverArticleLoaded);
@@ -876,7 +811,8 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG, "receiverArticleLoaded onReceive called");
+//			Log.i(LOG+categoryToLoad, "receiverArticleLoaded onReceive");
+//			Log.i(LOG+categoryToLoad, intent.getStringExtra(Const.Action.ARTICLE_CHANGED));
 			if (allArtsInfo == null)
 			{
 				Log.e(LOG + categoryToLoad, "allArtsInfo==null in onReceive");
@@ -903,7 +839,6 @@ public class FragmentArtsListRecycler extends Fragment
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
 							allArtsInfo.get(i).setReaden(a.isReaden());
-							//allArtsInfo.set(i, a);
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}
@@ -920,27 +855,28 @@ public class FragmentArtsListRecycler extends Fragment
 							Article artInList = artsList.get(i);
 							if (artInList.getUrl().equals(a.getUrl()))
 							{
-								if (a.getArtText().equals(Const.EMPTY_STRING))
+								if (!a.getArtText().equals(Const.EMPTY_STRING))
 								{
-									allArtsInfo.get(i).setArtText(a.getArtText());
+									artsList.get(i).setArtText(a.getArtText());
 								}
 								//pubDate
-								if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+								if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
 								{
-									allArtsInfo.get(i).setPubDate(a.getPubDate());
+									artsList.get(i).setPubDate(a.getPubDate());
 								}
 								//set preview
-								allArtsInfo.get(i).setPreview(a.getPreview());
+								artsList.get(i).setPreview(a.getPreview());
 								notFound = false;
 							}
 						}
 					}
+					notFound = true;
 					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 					{
 						Article artInList = allArtsInfo.get(i);
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
-							if (a.getArtText().equals(Const.EMPTY_STRING))
+							if (!a.getArtText().equals(Const.EMPTY_STRING))
 							{
 								allArtsInfo.get(i).setArtText(a.getArtText());
 							}
@@ -951,14 +887,15 @@ public class FragmentArtsListRecycler extends Fragment
 							}
 							//set preview
 							allArtsInfo.get(i).setPreview(a.getPreview());
+//							recyclerAdapter.notifyDataSetChanged();
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}
 					}
 				break;
 				case Const.Action.ARTICLE_DELETED:
+					//Log.e(LOG+categoryToLoad, Const.Action.ARTICLE_DELETED);
 					//loop through all arts in activity and update them and adapters
-					
 					for (String key : keySet)
 					{
 						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
@@ -974,13 +911,16 @@ public class FragmentArtsListRecycler extends Fragment
 							}
 						}
 					}
+					notFound = true;
 					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 					{
 						Article artInList = allArtsInfo.get(i);
 						if (artInList.getUrl().equals(a.getUrl()))
 						{
+							//Log.e(LOG, a.getUrl());
 							allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
 							allArtsInfo.get(i).setRefreshed(new Date(0));
+//							recyclerAdapter.notifyDataSetChanged();
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}

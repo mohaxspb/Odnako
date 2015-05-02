@@ -926,7 +926,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			Log.i(LOG, "receiverArticleLoaded onReceive called");
+			//Log.i(LOG, "receiverArticleLoaded onReceive called");
 			String[] menuLinks = CatData.getMenuLinks(ctx);
 			AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(),
 			menuLinks[menuLinks.length - 1],
@@ -949,7 +949,6 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 								if (artInList.getUrl().equals(a.getUrl()))
 								{
 									artsList.get(i).setReaden(a.isReaden());
-									//artsList.set(i, a);
 									notFound = false;
 								}
 							}
@@ -966,7 +965,10 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 								Article artInList = artsList.get(i);
 								if (artInList.getUrl().equals(a.getUrl()))
 								{
-									artsList.get(i).setArtText(a.getArtText());
+									if (!a.getArtText().equals(Const.EMPTY_STRING))
+									{
+										artsList.get(i).setArtText(a.getArtText());
+									}
 									//pubDate
 									if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
 									{

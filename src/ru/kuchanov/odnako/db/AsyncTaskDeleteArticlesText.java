@@ -49,7 +49,7 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 	@Override
 	protected ArrayList<Article> doInBackground(Void... arg)
 	{
-		ArrayList<Article> artsToDelete = null;
+		ArrayList<Article> artsToDelete = new ArrayList<Article>();
 
 		switch (this.type)
 		{
@@ -64,16 +64,25 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 					qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
 					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
 
-					artsToDelete = (ArrayList<Article>) qb.query();
-					if (artsToDelete.size() > 10)
-					{
-						for (int i = 10; i < artsToDelete.size(); i++)
-						{
-							Article.updateArtText(h, artsToDelete.get(i).getId(), Const.EMPTY_STRING);
-							Article.updateRefreshedDate(h, artsToDelete.get(i).getId(), new Date(0));
+					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
+//					artsToDelete = (ArrayList<Article>) qb.query();
 
-							artsToDelete.get(i).setArtText(Const.EMPTY_STRING);
-							artsToDelete.get(i).setRefreshed(new Date(0));
+//					Log.e(LOG, "artsToDelete.size: " + allDownloadedArts.size());
+//					for (Article a : allDownloadedArts)
+//					{
+//						Log.d(LOG, a.getTitle() + " /" + a.getRefreshed());
+//					}
+
+					if (allDownloadedArts.size() > 10)
+					{
+						for (int i = 10; i < allDownloadedArts.size(); i++)
+						{
+							Article.updateArtText(h, allDownloadedArts.get(i).getId(), Const.EMPTY_STRING);
+							Article.updateRefreshedDate(h, allDownloadedArts.get(i).getId(), new Date(0));
+
+							allDownloadedArts.get(i).setArtText(Const.EMPTY_STRING);
+							allDownloadedArts.get(i).setRefreshed(new Date(0));
+							artsToDelete.add(allDownloadedArts.get(i));
 						}
 					}
 				} catch (SQLException e)

@@ -651,7 +651,7 @@ public class HtmlHelper
 		}
 		else
 		{
-			Log.e(LOG, "allTagsElement is  null!");
+			//Log.e(LOG, "allTagsElement is  null!");
 		}
 
 		//ALSO BY THEME
