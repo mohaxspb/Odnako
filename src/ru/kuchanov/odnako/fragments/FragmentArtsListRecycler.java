@@ -26,6 +26,7 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceRSS;
+import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
@@ -733,6 +734,32 @@ public class FragmentArtsListRecycler extends Fragment
 	}
 
 	@Override
+	public void onResume()
+	{
+		super.onResume();
+		//check if we connected to service
+		if (this.act.getServiceDB() != null)
+		{
+			List<ParsePageForAllArtsInfo> currentTasks = this.act.getServiceDB().currentTasks;
+			//check if we have NOT running task with this frags category
+			boolean noCategoryInService = true;
+			for (ParsePageForAllArtsInfo parse : currentTasks)
+			{
+				if (parse.getCategoryToLoad().equals(categoryToLoad))
+				{
+					noCategoryInService = false;
+					break;
+				}
+			}
+			if (noCategoryInService)
+			{
+				this.isLoading = false;
+				this.swipeRef.setRefreshing(false);
+			}
+		}
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
 		//Log.d(LOG_TAG + categoryToLoad, "onSaveInstanceState called");
@@ -807,8 +834,8 @@ public class FragmentArtsListRecycler extends Fragment
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-//			Log.i(LOG+categoryToLoad, "receiverArticleLoaded onReceive");
-//			Log.i(LOG+categoryToLoad, intent.getStringExtra(Const.Action.ARTICLE_CHANGED));
+			//			Log.i(LOG+categoryToLoad, "receiverArticleLoaded onReceive");
+			//			Log.i(LOG+categoryToLoad, intent.getStringExtra(Const.Action.ARTICLE_CHANGED));
 			if (allArtsInfo == null)
 			{
 				Log.e(LOG + categoryToLoad, "allArtsInfo==null in onReceive");
@@ -883,7 +910,7 @@ public class FragmentArtsListRecycler extends Fragment
 							}
 							//set preview
 							allArtsInfo.get(i).setPreview(a.getPreview());
-//							recyclerAdapter.notifyDataSetChanged();
+							//							recyclerAdapter.notifyDataSetChanged();
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}
@@ -916,7 +943,7 @@ public class FragmentArtsListRecycler extends Fragment
 							//Log.e(LOG, a.getUrl());
 							allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
 							allArtsInfo.get(i).setRefreshed(new Date(0));
-//							recyclerAdapter.notifyDataSetChanged();
+							//							recyclerAdapter.notifyDataSetChanged();
 							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 							notFound = false;
 						}

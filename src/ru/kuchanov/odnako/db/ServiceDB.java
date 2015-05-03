@@ -80,7 +80,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 	Context ctx;
 	SharedPreferences pref;
 
-	private List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
+	public List<ParsePageForAllArtsInfo> currentTasks = new ArrayList<ParsePageForAllArtsInfo>();
 
 	private int quontToDownload = 10;
 
