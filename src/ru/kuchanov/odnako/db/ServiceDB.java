@@ -801,6 +801,11 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		{
 			urls.add(dataFromWeb.get(i).getUrl());
 		}
+		//check if !isPro and size is more then 10
+		if ((this.pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == false) && (urls.size() > 10))
+		{
+			urls = new ArrayList<String>(urls.subList(0, 10));
+		}
 		downloadArtsIntent.putStringArrayListExtra(FragmentArticle.ARTICLE_URL, urls);
 		downloadArtsIntent.putExtra("startDownload", true);
 		PendingIntent pendingIntentDownloadArts = PendingIntent.getService(this, 0, downloadArtsIntent,

@@ -4050,6 +4050,7 @@ containing a value of this type.
         public static final int version_history_210=0x7f0c00ab;
         public static final int version_history_220=0x7f0c00ac;
         public static final int version_history_230=0x7f0c00ad;
+        public static final int version_history_310=0x7f0c00ae;
         public static final int version_history_summary=0x7f0c00a2;
         public static final int vibration=0x7f0c0076;
         /**  Text on a placeholder buy button when Google Play services is not
