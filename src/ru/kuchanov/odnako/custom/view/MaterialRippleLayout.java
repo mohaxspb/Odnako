@@ -4,7 +4,7 @@ MaterialRippleLayout.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com
  */
-package ru.kuchanov.odnako.utils;
+package ru.kuchanov.odnako.custom.view;
 
 /*
  * Copyright (C) 2014 Balys Valentukevicius

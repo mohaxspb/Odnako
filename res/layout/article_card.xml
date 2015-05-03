@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <ru.kuchanov.odnako.utils.MaterialRippleLayout
+            <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:mrl_rippleColor="?colorPrimaryDark"
@@ -75,7 +75,7 @@
                                 android:textColor="?android:textColorSecondary" />
                         </LinearLayout>
 
-                        <ru.kuchanov.odnako.utils.MaterialRippleLayout
+                        <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_margin="5dp"
@@ -91,7 +91,7 @@
                                 android:contentDescription="@string/more_actions"
                                 android:scaleType="fitXY"
                                 android:src="?overflowIcon" />
-                        </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+                        </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
                     </LinearLayout>
 
                     <!-- preview -->
@@ -104,10 +104,10 @@
                         android:text="@string/preview"
                         android:textColor="?android:textColorPrimary" />
                 </LinearLayout>
-            </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+            </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
             <!-- authors name and img if is. Othervise - zero height -->
 
-            <ru.kuchanov.odnako.utils.MaterialRippleLayout
+            <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:mrl_rippleColor="?colorPrimaryDark"
@@ -138,7 +138,7 @@
                         android:text="@string/name"
                         android:textColor="?android:textColorPrimary" />
                 </LinearLayout>
-            </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+            </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
 
             <!-- bottom panel with share btn, save&read icons , comments btn -->
 
@@ -154,7 +154,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal" >
 
-                    <ru.kuchanov.odnako.utils.MaterialRippleLayout
+                    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
@@ -170,7 +170,7 @@
                             android:contentDescription="@string/share_link"
                             android:scaleType="fitXY"
                             android:src="?shareIcon" />
-                    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+                    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -180,7 +180,7 @@
                     android:gravity="center_horizontal"
                     android:orientation="horizontal" >
 
-                    <ru.kuchanov.odnako.utils.MaterialRippleLayout
+                    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:mrl_rippleColor="?colorPrimaryDark"
@@ -196,15 +196,17 @@
                             android:contentDescription="@string/get_art_text"
                             android:scaleType="fitXY"
                             android:src="?downloadIcon" />
-                    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
-</LinearLayout>
-<LinearLayout
+                    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal" >
-                    <ru.kuchanov.odnako.utils.MaterialRippleLayout
+
+                    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:mrl_rippleColor="?colorPrimaryDark"
@@ -220,7 +222,7 @@
                             android:contentDescription="@string/mark_as_read_unread"
                             android:scaleType="fitXY"
                             android:src="?readenIcon" />
-                    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+                    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -230,7 +232,7 @@
                     android:gravity="right"
                     android:orientation="horizontal" >
 
-                    <ru.kuchanov.odnako.utils.MaterialRippleLayout
+                    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
@@ -246,7 +248,7 @@
                             android:contentDescription="@string/comments"
                             android:scaleType="fitXY"
                             android:src="?commentsIcon" />
-                    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+                    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

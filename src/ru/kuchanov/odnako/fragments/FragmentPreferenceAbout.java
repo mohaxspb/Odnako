@@ -1,12 +1,10 @@
 package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.R;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -14,11 +12,18 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.widget.TextView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 
 public class FragmentPreferenceAbout extends PreferenceFragment
 {
+	final static String LOG = FragmentPreferenceAbout.class.getSimpleName();
+
 	PreferenceActivity act;
 
 	static String APP_NAME;
@@ -41,8 +46,8 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		addPreferencesFromResource(R.xml.pref_about);
 
 		///ads prefs
-		allAdsCheckBox = (CheckBoxPreference) findPreference("adsOn");
-		allAdsCheckBox.setOnPreferenceClickListener(onOfAllAds);
+		//		allAdsCheckBox = (CheckBoxPreference) findPreference("adsOn");
+		//		allAdsCheckBox.setOnPreferenceClickListener(onOfAllAds);
 		//end of ads prefs
 
 		//link_to_market
@@ -90,15 +95,35 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
-			try
+			MaterialDialog dialogGoPro;
+			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
+
+			dialogGoProBuilder.title(R.string.go_pro_title)
+			.content(R.string.go_pro_advantages)
+			.positiveText(R.string.go_pro_buy)
+			.callback(new MaterialDialog.ButtonCallback()
 			{
-				act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + LINK_TO_PRO)));
-			} catch (Exception e)
-			{
-				String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
-				System.out.println(marketErrMsg);
-				Toast.makeText(act, marketErrMsg, Toast.LENGTH_SHORT).show();
-			}
+				@Override
+				public void onPositive(MaterialDialog dialog)
+				{
+					try
+					{
+						act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
+						+ LINK_TO_PRO)));
+					} catch (Exception e)
+					{
+						String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
+						Log.e(LOG, marketErrMsg);
+						e.printStackTrace();
+						Toast.makeText(act, marketErrMsg, Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+			dialogGoPro = dialogGoProBuilder.build();
+			int textColor = act.getResources().getColor(R.color.black);
+			((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+			dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+			dialogGoPro.show();
 			return false;
 		}
 	};
@@ -139,32 +164,11 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		}
 	};
 
-	protected OnPreferenceClickListener onOfAllAds = new OnPreferenceClickListener()
-	{
-		public boolean onPreferenceClick(Preference preference)
-		{
-			if (!allAdsCheckBox.isChecked())
-			{
-				Toast.makeText(act, "Эх, не видать разработчику Крыма!.. ;-(", Toast.LENGTH_LONG)
-				.show();
-			}
-			else
-			{
-				Toast.makeText(act,
-				"Спасибо за поддержку! И за вклад в развитие туристического сектора экономики Крыма! =)",
-				Toast.LENGTH_LONG).show();
-			}
-			return false;
-		}
-	};
-
 	protected OnPreferenceClickListener versionHistoryCL = new OnPreferenceClickListener()
 	{
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
-			Dialog dialog = new Dialog(act);
-
 			PackageManager m = act.getPackageManager();
 			String app_ver = "";
 			try
@@ -176,31 +180,31 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 				// safe to exist on the system.
 				throw new AssertionError();
 			}
-			////
-			AlertDialog.Builder builder = new AlertDialog.Builder(act);
-			//set TV to message
-			final TextView messageTV = new TextView(act);
-			String message = act.getResources().getString(R.string.version_history);
-			messageTV.setText(message);
 
-			builder
-			.setMessage(message)
-			//.setView(messageTV)
-			.setTitle(APP_TITLE + ", версия " + app_ver)
-			.setIcon(act.getApplicationInfo().icon)
-			.setCancelable(true)
-			.setPositiveButton("Это было интересно!", new DialogInterface.OnClickListener()
+			String allVersionsDescriptionString;
+			String[] allVerArr = act.getResources().getStringArray(R.array.version_history_arr);
+			StringBuilder sb=new StringBuilder();
+			for(String s:allVerArr)
 			{
+				sb.append(s);				
+			}
+			allVersionsDescriptionString=sb.toString();
 
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					dialog.dismiss();
-				}
-			});
-			dialog = builder.create();
-
-			dialog.show();
+			MaterialDialog dialogGoPro;
+			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
+			dialogGoProBuilder.title(APP_TITLE + ", версия " + app_ver)
+			.content(allVersionsDescriptionString)
+			.positiveText("Это было интересно!");
+			dialogGoPro = dialogGoProBuilder.build();
+			//getColor
+			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
+			int indexOfAttrTextSize = 0;
+			TypedValue typedValue = new TypedValue();
+			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+			int textColor = a.getColor(indexOfAttrTextSize, 0);
+			a.recycle();
+			((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+			dialogGoPro.show();
 			return false;
 		}
 	};

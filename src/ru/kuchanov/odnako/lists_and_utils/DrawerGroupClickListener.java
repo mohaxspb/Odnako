@@ -1,6 +1,5 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
-import ru.kuchanov.odnako.activities.ActivityDownloads;
 import ru.kuchanov.odnako.activities.ActivityPreference;
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
@@ -25,22 +24,12 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 	public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
 	{
 		//test
-		final long packedPosition = parent.getExpandableListPosition(groupPosition);
-		final int groupPosition1 = ExpandableListView.getPackedPositionGroup(packedPosition);
-		System.out.println("onGroupClick_groupPosition1: "+groupPosition1);
-		//downloads
+		//		final long packedPosition = parent.getExpandableListPosition(groupPosition);
+		//		final int groupPosition1 = ExpandableListView.getPackedPositionGroup(packedPosition);
+		//		System.out.println("onGroupClick_groupPosition1: " + groupPosition1);
+		//settings
 		if (groupPosition == 2)
 		{
-			
-			
-			mDrawerLayout.closeDrawer(mDrawerList);
-			Intent intent = new Intent(act, ActivityDownloads.class);
-			act.startActivity(intent);
-		}
-		//settings
-		else if (groupPosition == 3)
-		{
-			//			mDrawerList.setItemChecked(groupPosition, true);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			Intent intent = new Intent(act, ActivityPreference.class);
 			act.startActivity(intent);
@@ -58,5 +47,4 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 		}
 		return true;
 	}
-
 }

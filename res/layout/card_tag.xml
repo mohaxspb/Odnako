@@ -8,7 +8,7 @@
     app:cardCornerRadius="6dp"
     app:cardElevation="5dp" >
 
-    <ru.kuchanov.odnako.utils.MaterialRippleLayout
+    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:mrl_rippleColor="?colorPrimaryDark"
@@ -24,6 +24,6 @@
             android:padding="2dp"
             android:textColor="?android:textColorPrimary"
             android:textSize="17sp" />
-    </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
 
 </android.support.v7.widget.CardView>

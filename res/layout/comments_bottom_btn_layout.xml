@@ -14,7 +14,7 @@
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true" >
 
-        <ru.kuchanov.odnako.utils.MaterialRippleLayout
+        <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:mrl_rippleColor="?colorPrimaryDark"
@@ -65,7 +65,7 @@
                         android:textSize="23sp" />
                 </FrameLayout>
             </LinearLayout>
-        </ru.kuchanov.odnako.utils.MaterialRippleLayout>
+        </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
     </android.support.v7.widget.CardView>
 
 </FrameLayout>

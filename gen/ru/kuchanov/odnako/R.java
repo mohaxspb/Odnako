@@ -70,6 +70,7 @@ public final class R {
         public static final int theme=0x7f0e001a;
         public static final int theme_str_arr=0x7f0e001c;
         public static final int theme_values=0x7f0e001b;
+        public static final int version_history_arr=0x7f0e0021;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -4038,7 +4039,17 @@ containing a value of this type.
         public static final int theme=0x7f0c0085;
         public static final int title=0x7f0c0046;
         public static final int ui_text_scale=0x7f0c0087;
-        public static final int version_history=0x7f0c00a3;
+        public static final int version_history_111=0x7f0c00a3;
+        public static final int version_history_120=0x7f0c00a4;
+        public static final int version_history_121=0x7f0c00a5;
+        public static final int version_history_130=0x7f0c00a6;
+        public static final int version_history_140=0x7f0c00a7;
+        public static final int version_history_145=0x7f0c00a8;
+        public static final int version_history_150=0x7f0c00a9;
+        public static final int version_history_200=0x7f0c00aa;
+        public static final int version_history_210=0x7f0c00ab;
+        public static final int version_history_220=0x7f0c00ac;
+        public static final int version_history_230=0x7f0c00ad;
         public static final int version_history_summary=0x7f0c00a2;
         public static final int vibration=0x7f0c0076;
         /**  Text on a placeholder buy button when Google Play services is not

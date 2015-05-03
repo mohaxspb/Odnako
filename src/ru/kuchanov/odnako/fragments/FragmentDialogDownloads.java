@@ -155,14 +155,12 @@ public class FragmentDialogDownloads extends DialogFragment
 				public void onPositive(MaterialDialog dialog)
 				{
 					Log.e(LOG, "Go PRO!");
-					//TODO
 					MaterialDialog dialogGoPro;
 					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 
 					dialogGoProBuilder.title(R.string.go_pro_title)
 					.content(R.string.go_pro_advantages)
 					.positiveText(R.string.go_pro_buy)
-					//.negativeText(R.string.close)
 					.callback(new MaterialDialog.ButtonCallback()
 					{
 						@Override
