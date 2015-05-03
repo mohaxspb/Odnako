@@ -132,10 +132,6 @@ public class FragmentArtsListRecycler extends Fragment
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(artSelectedReceiver,
 		new IntentFilter(this.getCategoryToLoad() + "art_position"));
 
-		//reciver for scrolling and highligting selected position
-		//		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverForRSS,
-		//		new IntentFilter(this.getCategoryToLoad() + "_rss"));
-
 		//receiver for updating savedState (if artsText is loaded)
 		LocalBroadcastManager.getInstance(this.act).registerReceiver(receiverArticleLoaded,
 		new IntentFilter(Const.Action.ARTICLE_CHANGED));
