@@ -11,16 +11,21 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -30,6 +35,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 
 public class FragmentDownloadsDialog extends DialogFragment
 {
@@ -46,6 +52,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 	private ArrayList<Author> allAuthors;
 	private int position;
 	private boolean isCategory;
+
+	private SharedPreferences pref;
 
 	private ArrayList<String> urls;
 
@@ -75,6 +83,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 		this.allCategories = args.getParcelableArrayList(KEY_CATEGORIES);
 		this.isCategory = args.getBoolean(KEY_IS_CATEGORY, false);
 		this.position = args.getInt(KEY_POSITION, 0);
+
+		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 	}
 
 	@Override
@@ -91,44 +101,90 @@ public class FragmentDownloadsDialog extends DialogFragment
 		//quonts.add("Все");
 
 		boolean wrapInScrollView = true;
-		MaterialDialog dialog = new MaterialDialog.Builder(act)
-		.title("Загрузка статей")
-		.customView(R.layout.fragment_dialog_downloads, wrapInScrollView)
-		.positiveText(R.string.go_pro)
-		.negativeText(R.string.download)
-		.callback(new MaterialDialog.ButtonCallback()
+		MaterialDialog dialog;
+		MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(act);
+		dialogBuilder.title("Загрузка статей")
+		.customView(R.layout.fragment_dialog_downloads, wrapInScrollView);
+
+		if (this.pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == true)
 		{
-			@Override
-			public void onPositive(MaterialDialog dialog)
+			dialogBuilder.positiveText(R.string.download)
+			.callback(new MaterialDialog.ButtonCallback()
 			{
-				Log.e(LOG, "Go PRO!");
-				//TODO
-			}
+				@Override
+				public void onPositive(MaterialDialog dialog)
+				{
+					Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
+					Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
+					int quont = 10;
+					quont = Integer.parseInt(quonts.get(spinnerQuont.getSelectedItemPosition()));
+					String url = urls.get(spinnerCategory.getSelectedItemPosition());
+					Log.e(LOG, "Download url/quont: " + url + "/" + quont);
 
-			@Override
-			public void onNegative(MaterialDialog dialog)
+					Intent intent = new Intent(act, ServiceDB.class);
+					String action = Const.Action.DATA_DOWNLOAD;
+					intent.setAction(action);
+					intent.putExtra("categoryToLoad", url);
+					intent.putExtra("pageToLoad", 1);
+					intent.putExtra("quont", quont);
+					intent.putExtra("timeStamp", System.currentTimeMillis());
+					intent.putExtra("startDownload", true);
+					act.startService(intent);
+				}
+			});
+			dialog = dialogBuilder.build();
+			//getColor
+			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
+			int indexOfAttrTextSize = 0;
+			TypedValue typedValue = new TypedValue();
+			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+			int textColor = a.getColor(indexOfAttrTextSize, 0);
+			a.recycle();
+			((MDButton) dialog.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+		}
+		else
+		{
+			dialogBuilder.positiveText(R.string.go_pro)
+			.negativeText(R.string.download)
+			.callback(new MaterialDialog.ButtonCallback()
 			{
-				Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
-				Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
-				int quont = 10;
-				quont = Integer.parseInt(quonts.get(spinnerQuont.getSelectedItemPosition()));
-				String url = urls.get(spinnerCategory.getSelectedItemPosition());
-				Log.e(LOG, "Download url/quont: " + url + "/" + quont);
+				@Override
+				public void onPositive(MaterialDialog dialog)
+				{
+					Log.e(LOG, "Go PRO!");
+					//TODO
+					new MaterialDialog.Builder(act)
+					.title(R.string.title)
+					.content(R.string.go_pro)
+					.positiveText(R.string.go_pro)
+					.negativeText(R.string.close)
+					.show();
+				}
 
-				Intent intent = new Intent(act, ServiceDB.class);
-				String action = Const.Action.DATA_DOWNLOAD;
-				intent.setAction(action);
-				intent.putExtra("categoryToLoad", url);
-				intent.putExtra("pageToLoad", 1);
-				intent.putExtra("quont", quont);
-				intent.putExtra("timeStamp", System.currentTimeMillis());
-				intent.putExtra("startDownload", true);
-				act.startService(intent);
-			}
-		})
-		.build();
+				@Override
+				public void onNegative(MaterialDialog dialog)
+				{
+					Spinner spinnerQuont = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_quont);
+					Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
+					int quont = 10;
+					quont = Integer.parseInt(quonts.get(spinnerQuont.getSelectedItemPosition()));
+					String url = urls.get(spinnerCategory.getSelectedItemPosition());
+					Log.e(LOG, "Download url/quont: " + url + "/" + quont);
 
-		dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+					Intent intent = new Intent(act, ServiceDB.class);
+					String action = Const.Action.DATA_DOWNLOAD;
+					intent.setAction(action);
+					intent.putExtra("categoryToLoad", url);
+					intent.putExtra("pageToLoad", 1);
+					intent.putExtra("quont", quont);
+					intent.putExtra("timeStamp", System.currentTimeMillis());
+					intent.putExtra("startDownload", true);
+					act.startService(intent);
+				}
+			});
+			dialog = dialogBuilder.build();
+			dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+		}
 
 		final Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);
 		ArrayAdapter<String> adapter;
@@ -221,7 +277,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
-				if (Const.IS_PRO == false)
+				if (pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == false)
 				{
 					if (position > 1)
 					{

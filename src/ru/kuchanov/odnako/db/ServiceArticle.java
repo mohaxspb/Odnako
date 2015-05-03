@@ -11,6 +11,7 @@ import java.util.List;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.callbacks.CallbackDownloadArticle;
 import ru.kuchanov.odnako.download.ParseArticle;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
@@ -18,8 +19,10 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -200,9 +203,13 @@ public class ServiceArticle extends Service implements CallbackDownloadArticle
 		LocalBroadcastManager.getInstance(ctx).sendBroadcast(intentGlobal);
 
 		//TODO here we can start deleting articles if we have !IS_PRO and >10 arts.getArtText().equals(Const.EMPTY_STRING)
-		AsyncTaskDeleteArticlesText deleteTask = new AsyncTaskDeleteArticlesText(ctx,
-		AsyncTaskDeleteArticlesText.REQUEST_TYPE_STANDART);
-		deleteTask.execute();
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		if (pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == false)
+		{
+			AsyncTaskDeleteArticlesText deleteTask = new AsyncTaskDeleteArticlesText(ctx,
+			AsyncTaskDeleteArticlesText.REQUEST_TYPE_STANDART);
+			deleteTask.execute();
+		}
 	}
 
 	private void updateNotification(int iterator, int quontity)

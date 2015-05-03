@@ -76,8 +76,8 @@ public class ActivityMain extends ActivityBase
 	private int pagerType = PAGER_TYPE_MENU;
 
 	//ViewPager and it's adapter for articles/comments
-//	ViewPager artCommsPager;
-//	PagerAdapter pagerAdapter;
+	//	ViewPager artCommsPager;
+	//	PagerAdapter pagerAdapter;
 
 	//ViewPager and it's adapter for artsLists
 	public ViewPager artsListPager;
@@ -113,7 +113,9 @@ public class ActivityMain extends ActivityBase
 		PreferenceManager.setDefaultValues(this, R.xml.pref_system, true);
 		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
-		//end of get default settings to get all settings later
+		//set IS_PRO pref
+		//TODO
+		pref.edit().putBoolean(ActivityPreference.PREF_KEY_IS_PRO, false).commit();
 
 		/////////
 		this.bindService();
@@ -345,19 +347,19 @@ public class ActivityMain extends ActivityBase
 		{
 			this.queryToSave = this.getSearchText();
 		}
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-//		{
-//			Window w = getWindow(); // in Activity's onCreate() for instance
-//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//
-//			View fakeStatusBar = this.findViewById(R.id.fakeStatusBar);
-//			LayoutParams params = (LayoutParams) fakeStatusBar.getLayoutParams();
-//			params.height = getStatusBarHeight();
-//			fakeStatusBar.setLayoutParams(params);
-//		}
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		//		{
+		//			Window w = getWindow(); // in Activity's onCreate() for instance
+		//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+		//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		//			w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+		//			WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		//
+		//			View fakeStatusBar = this.findViewById(R.id.fakeStatusBar);
+		//			LayoutParams params = (LayoutParams) fakeStatusBar.getLayoutParams();
+		//			params.height = getStatusBarHeight();
+		//			fakeStatusBar.setLayoutParams(params);
+		//		}
 	}
 
 	public int getStatusBarHeight()

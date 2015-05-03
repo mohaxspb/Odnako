@@ -10,7 +10,7 @@ public final class Const
 {
 	public static final String EMPTY_STRING = "empty";
 
-	public static boolean IS_PRO = false;
+	//public static boolean IS_PRO = false;
 
 	public final static class Action
 	{

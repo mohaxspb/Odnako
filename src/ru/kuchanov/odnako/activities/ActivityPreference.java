@@ -34,6 +34,8 @@ public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
 {
 	private static final String LOG = ActivityPreference.class.getSimpleName();
+	
+	public static final String PREF_KEY_IS_PRO = "isPro";
 
 	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
 	public static final String PREF_KEY_NIGHT_MODE = "night_mode";

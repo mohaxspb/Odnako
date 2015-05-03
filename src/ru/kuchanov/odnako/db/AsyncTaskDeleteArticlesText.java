@@ -65,13 +65,6 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
 
 					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
-//					artsToDelete = (ArrayList<Article>) qb.query();
-
-//					Log.e(LOG, "artsToDelete.size: " + allDownloadedArts.size());
-//					for (Article a : allDownloadedArts)
-//					{
-//						Log.d(LOG, a.getTitle() + " /" + a.getRefreshed());
-//					}
 
 					if (allDownloadedArts.size() > 10)
 					{
