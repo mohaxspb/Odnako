@@ -115,7 +115,18 @@ public class ActivityMain extends ActivityBase
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//set IS_PRO pref
 		//TODO
-		pref.edit().putBoolean(ActivityPreference.PREF_KEY_IS_PRO, false).commit();
+		boolean isProSeted = (this.pref.contains(ActivityPreference.PREF_KEY_IS_PRO));
+		if (!isProSeted)
+		{
+			if (this.getPackageName().equals("ru.kuchanov.odnakopro"))
+			{
+				pref.edit().putBoolean(ActivityPreference.PREF_KEY_IS_PRO, true).commit();
+			}
+			else
+			{
+				pref.edit().putBoolean(ActivityPreference.PREF_KEY_IS_PRO, false).commit();
+			}
+		}
 
 		/////////
 		this.bindService();

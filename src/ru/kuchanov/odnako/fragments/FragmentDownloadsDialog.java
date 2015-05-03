@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -45,6 +46,8 @@ public class FragmentDownloadsDialog extends DialogFragment
 	final static String KEY_AUTHORS = "KEY_AUTHORS";
 	final static String KEY_POSITION = "KEY_POSITION";
 	final static String KEY_IS_CATEGORY = "KEY_IS_CATEGORY";
+
+	final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
 
 	private AppCompatActivity act;
 
@@ -153,12 +156,36 @@ public class FragmentDownloadsDialog extends DialogFragment
 				{
 					Log.e(LOG, "Go PRO!");
 					//TODO
-					new MaterialDialog.Builder(act)
-					.title(R.string.title)
-					.content(R.string.go_pro)
-					.positiveText(R.string.go_pro)
-					.negativeText(R.string.close)
-					.show();
+					MaterialDialog dialogGoPro;
+					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
+
+					dialogGoProBuilder.title(R.string.go_pro_title)
+					.content(R.string.go_pro_advantages)
+					.positiveText(R.string.go_pro_buy)
+					//.negativeText(R.string.close)
+					.callback(new MaterialDialog.ButtonCallback()
+					{
+						@Override
+						public void onPositive(MaterialDialog dialog)
+						{
+							try
+							{
+								act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
+								+ LINK_TO_PRO)));
+							} catch (Exception e)
+							{
+								String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
+								Log.e(LOG, marketErrMsg);
+								e.printStackTrace();
+								Toast.makeText(act, marketErrMsg, Toast.LENGTH_SHORT).show();
+							}
+						}
+					});
+					dialogGoPro = dialogGoProBuilder.build();
+					int textColor=act.getResources().getColor(R.color.black);
+					((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+					dialogGoPro.show();
 				}
 
 				@Override

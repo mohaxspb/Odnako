@@ -47,6 +47,9 @@
     <!--  -->
     <string name="hello_world">Hello world!</string>
     <string name="go_pro">Однако+</string>
+    <string name="go_pro_title">Преимущества полной версии</string>
+    <string name="go_pro_advantages">В полной верии Однако+ вы получите неограниченные возможности офлайн-чтения, полное отсутствие рекламы, благодарность разработчика и удовлетворение от поддержки рублём отечественной ИТ отрасли!</string>
+    <string name="go_pro_buy">Купить за 99р</string>
     <string name="download">Загрузить</string>
     <string name="close">Закрыть</string>
     <string name="more_actions">Дополнительные действия</string>
