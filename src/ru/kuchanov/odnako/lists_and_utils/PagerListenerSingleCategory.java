@@ -8,7 +8,7 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.animations.RotationPageTransformer;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -79,7 +79,7 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 		{
 			pagerRight.setAdapter(new PagerAdapterArticles(act.getSupportFragmentManager(),
 			singleCategoryUrl, act));
-			pagerRight.setPageTransformer(true, new RotationPageTransformer());
+//			pagerRight.setPageTransformer(true, new RotationPageTransformer());
 			OnPageChangeListener listener = new PagerListenerArticle(this.act, singleCategoryUrl);
 			pagerRight.setOnPageChangeListener(listener);
 			int curPos = 0;

@@ -947,14 +947,17 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 						for (String key : keySet)
 						{
 							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-							boolean notFound = true;
-							for (int i = 0; i < artsList.size() && notFound; i++)
+							if (artsList != null)
 							{
-								Article artInList = artsList.get(i);
-								if (artInList.getUrl().equals(a.getUrl()))
+								boolean notFound = true;
+								for (int i = 0; i < artsList.size() && notFound; i++)
 								{
-									artsList.get(i).setReaden(a.isReaden());
-									notFound = false;
+									Article artInList = artsList.get(i);
+									if (artInList.getUrl().equals(a.getUrl()))
+									{
+										artsList.get(i).setReaden(a.isReaden());
+										notFound = false;
+									}
 								}
 							}
 						}
@@ -964,25 +967,28 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 						for (String key : keySet)
 						{
 							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-							boolean notFound = true;
-							for (int i = 0; i < artsList.size() && notFound; i++)
+							if (artsList != null)
 							{
-								Article artInList = artsList.get(i);
-								if (artInList.getUrl().equals(a.getUrl()))
+								boolean notFound = true;
+								for (int i = 0; i < artsList.size() && notFound; i++)
 								{
-									if (!a.getArtText().equals(Const.EMPTY_STRING))
+									Article artInList = artsList.get(i);
+									if (artInList.getUrl().equals(a.getUrl()))
 									{
-										artsList.get(i).setArtText(a.getArtText());
+										if (!a.getArtText().equals(Const.EMPTY_STRING))
+										{
+											artsList.get(i).setArtText(a.getArtText());
+										}
+										//pubDate
+										if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+										{
+											artsList.get(i).setPubDate(a.getPubDate());
+										}
+										//set preview
+										artsList.get(i).setPreview(a.getPreview());
+										//artsList.set(i, a);
+										notFound = false;
 									}
-									//pubDate
-									if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
-									{
-										artsList.get(i).setPubDate(a.getPubDate());
-									}
-									//set preview
-									artsList.get(i).setPreview(a.getPreview());
-									//artsList.set(i, a);
-									notFound = false;
 								}
 							}
 						}
@@ -994,15 +1000,18 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 						for (String key : keySet)
 						{
 							ArrayList<Article> artsList = getAllCatArtsInfo().get(key);
-							boolean notFound = true;
-							for (int i = 0; i < artsList.size() && notFound; i++)
+							if (artsList != null)
 							{
-								Article artInList = artsList.get(i);
-								if (artInList.getUrl().equals(a.getUrl()))
+								boolean notFound = true;
+								for (int i = 0; i < artsList.size() && notFound; i++)
 								{
-									artsList.get(i).setArtText(Const.EMPTY_STRING);
-									artsList.get(i).setRefreshed(new Date(0));
-									notFound = false;
+									Article artInList = artsList.get(i);
+									if (artInList.getUrl().equals(a.getUrl()))
+									{
+										artsList.get(i).setArtText(Const.EMPTY_STRING);
+										artsList.get(i).setRefreshed(new Date(0));
+										notFound = false;
+									}
 								}
 							}
 						}

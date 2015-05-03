@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.animations.RotationPageTransformer;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Category;
 import android.content.Intent;
 import android.preference.PreferenceManager;
@@ -116,7 +116,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				curentCategory, act);
 				pagerRight.setAdapter(pagerRightAdapter);
-				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(act, curentCategory);
 				pagerRight.setOnPageChangeListener(listener);
 

@@ -24,8 +24,9 @@ import android.util.Log;
 public class CheckTimeToAds
 {
 	final static String LOG = CheckTimeToAds.class.getSimpleName() + "/";
-	private final static String PREF_IN_APP_PERIOD = "inAppPeriod";
-	private final static String PREF_MAX_IN_APP_PERIOD = "maxInAppPeriod";
+
+	public final static String PREF_KEY_IN_APP_PERIOD = "inAppPeriod";
+	public final static String PREF_KEY_MAX_IN_APP_PERIOD = "maxInAppPeriod";
 	public final static String PREF_NEED_TO_SHOW_ADS = "needToShowAds";
 
 	Context ctx;
@@ -61,13 +62,13 @@ public class CheckTimeToAds
 	public static long getMaxInAppPeriod(Context ctx)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pref.getLong(PREF_MAX_IN_APP_PERIOD, (90L * 60L * 1000L));
+		return pref.getLong(PREF_KEY_MAX_IN_APP_PERIOD, (90L * 60L * 1000L));
 	}
 
 	public static void setMaxInAppPeriod(Context ctx, long period)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		pref.edit().putLong(PREF_MAX_IN_APP_PERIOD, period).commit();
+		pref.edit().putLong(PREF_KEY_MAX_IN_APP_PERIOD, period).commit();
 	}
 
 	public static boolean isTimeToShowAds(Context ctx)
@@ -112,13 +113,13 @@ public class CheckTimeToAds
 		long timeOnPause = System.currentTimeMillis();
 		long inAppPeriod = timeOnPause - this.timeOnResume;
 
-		long alreadyStoredInAppPeriod = this.pref.getLong(PREF_IN_APP_PERIOD, 0L);
+		long alreadyStoredInAppPeriod = this.pref.getLong(PREF_KEY_IN_APP_PERIOD, 0L);
 
 		//check if new inAppPeriod < max
 		if (inAppPeriod + alreadyStoredInAppPeriod < getMaxInAppPeriod(this.ctx))
 		{
 			inAppPeriod += alreadyStoredInAppPeriod;
-			this.pref.edit().putLong(PREF_IN_APP_PERIOD, inAppPeriod).commit();
+			this.pref.edit().putLong(PREF_KEY_IN_APP_PERIOD, inAppPeriod).commit();
 			Log.e(LOG, "onPause, less then max");
 
 			Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
@@ -128,7 +129,7 @@ public class CheckTimeToAds
 		{
 			inAppPeriod = 0;//inAppPeriod + alreadyStoredInAppPeriod - getMaxInAppPeriod(this.ctx);
 			this.pref.edit().putBoolean(PREF_NEED_TO_SHOW_ADS, true).commit();
-			this.pref.edit().putLong(PREF_IN_APP_PERIOD, inAppPeriod).commit();
+			this.pref.edit().putLong(PREF_KEY_IN_APP_PERIOD, inAppPeriod).commit();
 			Log.e(LOG, "onPause, MORE then max");
 			Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
 			Log.e(LOG, "onPause, getMaxInAppPeriod(this.ctx): " + getMaxInAppPeriod(this.ctx));

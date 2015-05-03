@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
@@ -133,7 +132,10 @@ public class ActivityMain extends ActivityBase
 
 		//ADS
 		//XXX test for 60 min;
-		CheckTimeToAds.setMaxInAppPeriod(act, 60L * 60L * 1000L);
+		if (!this.pref.contains(CheckTimeToAds.PREF_KEY_MAX_IN_APP_PERIOD))
+		{
+			CheckTimeToAds.setMaxInAppPeriod(act, 90L * 60L * 1000L);
+		}
 		this.checkTimeAds = new CheckTimeToAds(this, this.mInterstitialAd);
 
 		this.twoPane = this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
@@ -303,7 +305,7 @@ public class ActivityMain extends ActivityBase
 				this.setGroupChildPosition(-1, -1);
 			break;
 		}
-		this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+		//this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 		//try notify pager that item selected if it's 0 item
 		if (currentCategoryPosition == 0)
 		{
@@ -1128,7 +1130,7 @@ public class ActivityMain extends ActivityBase
 				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 			break;
@@ -1166,7 +1168,7 @@ public class ActivityMain extends ActivityBase
 				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 

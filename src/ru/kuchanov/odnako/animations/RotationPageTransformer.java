@@ -6,8 +6,8 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.animations;
 
-import android.view.View;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 public class RotationPageTransformer implements ViewPager.PageTransformer
 {

@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -61,7 +60,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				PagerAdapterAllAuthors pagerRightAdapter = new PagerAdapterAllAuthors(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
-				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
@@ -78,7 +77,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				PagerAdapterAllCategories pagerRightAdapter = new PagerAdapterAllCategories(
 				act.getSupportFragmentManager(), act);
 				pagerRight.setAdapter(pagerRightAdapter);
-				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerAllCategories(act,
 				pagerRightAdapter.getAllCategoriesList());
 				pagerRight.setOnPageChangeListener(listener);
@@ -96,7 +95,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				categoryForRightPager, act);
 				pagerRight.setAdapter(adapterLeft);
-				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(this.act, categoryForRightPager);
 				pagerRight.setOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);

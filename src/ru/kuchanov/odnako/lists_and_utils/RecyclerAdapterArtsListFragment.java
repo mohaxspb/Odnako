@@ -64,8 +64,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 	{
 		this.act = act;
 		this.artsInfo = artsInfo;
-//		ActivityMain main=(ActivityMain)act;
-//		this.artsInfo = main.getAllCatArtsInfo().get(artsListFrag.getCategoryToLoad());
 
 		this.artsListFrag = artsListFrag;
 		this.isInLeftPager = this.artsListFrag.isInLeftPager();

@@ -40,6 +40,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -191,8 +192,15 @@ public class FragmentArtsListRecycler extends Fragment
 			//Log.i(LOG + categoryToLoad, "artSelectedReceiver onReceive called");
 			position = intent.getIntExtra("position", 0);
 
-			setActivatedPosition(position);
-			recyclerAdapter.notifyDataSetChanged();
+			if (!isAdded())
+			{
+				return;
+			}
+			if (recyclerAdapter != null)
+			{
+				setActivatedPosition(position);
+				recyclerAdapter.notifyDataSetChanged();
+			}
 		}
 	};
 
@@ -649,6 +657,9 @@ public class FragmentArtsListRecycler extends Fragment
 			{
 				this.getAllArtsInfo(false);
 			}
+			//XXX
+			//			this.recyclerAdapter = new RecyclerAdapterArtsListFragment(act, allArtsInfo, this);
+			//			this.recycler.setAdapter(recyclerAdapter);
 		}
 		else
 		{
@@ -738,25 +749,40 @@ public class FragmentArtsListRecycler extends Fragment
 	{
 		super.onResume();
 		//check if we connected to service
-		if (this.act.getServiceDB() != null)
+		final Handler handler = new Handler();
+
+		final Runnable r = new Runnable()
 		{
-			List<ParsePageForAllArtsInfo> currentTasks = this.act.getServiceDB().currentTasks;
-			//check if we have NOT running task with this frags category
-			boolean noCategoryInService = true;
-			for (ParsePageForAllArtsInfo parse : currentTasks)
+			public void run()
 			{
-				if (parse.getCategoryToLoad().equals(categoryToLoad))
+				if (act.getServiceDB() != null)
 				{
-					noCategoryInService = false;
-					break;
+					List<ParsePageForAllArtsInfo> currentTasks = act.getServiceDB().currentTasks;
+					//check if we have NOT running task with this frags category
+					boolean noCategoryInService = true;
+					for (ParsePageForAllArtsInfo parse : currentTasks)
+					{
+						if (parse.getCategoryToLoad().equals(categoryToLoad))
+						{
+							noCategoryInService = false;
+							break;
+						}
+					}
+					if (noCategoryInService)
+					{
+						Log.e(LOG, "noCategoryInService = true");
+						isLoading = false;
+						swipeRef.setRefreshing(false);
+					}
+					else
+					{
+						Log.e(LOG, "noCategoryInService = false");
+					}
 				}
+				//handler.postDelayed(this, 3000);
 			}
-			if (noCategoryInService)
-			{
-				this.isLoading = false;
-				this.swipeRef.setRefreshing(false);
-			}
-		}
+		};
+		handler.postDelayed(r, 3000);
 	}
 
 	@Override
@@ -856,14 +882,17 @@ public class FragmentArtsListRecycler extends Fragment
 			{
 				case Const.Action.ARTICLE_READ:
 					//loop through all arts in activity and update them and adapters
-					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					if (allArtsInfo != null)
 					{
-						Article artInList = allArtsInfo.get(i);
-						if (artInList.getUrl().equals(a.getUrl()))
+						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 						{
-							allArtsInfo.get(i).setReaden(a.isReaden());
-							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-							notFound = false;
+							Article artInList = allArtsInfo.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								allArtsInfo.get(i).setReaden(a.isReaden());
+								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
+								notFound = false;
+							}
 						}
 					}
 				break;
@@ -872,47 +901,53 @@ public class FragmentArtsListRecycler extends Fragment
 					for (String key : keySet)
 					{
 						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
-						notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
+						if (artsList != null)
 						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
+							notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
 							{
-								if (!a.getArtText().equals(Const.EMPTY_STRING))
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(a.getUrl()))
 								{
-									artsList.get(i).setArtText(a.getArtText());
+									if (!a.getArtText().equals(Const.EMPTY_STRING))
+									{
+										artsList.get(i).setArtText(a.getArtText());
+									}
+									//pubDate
+									if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+									{
+										artsList.get(i).setPubDate(a.getPubDate());
+									}
+									//set preview
+									artsList.get(i).setPreview(a.getPreview());
+									notFound = false;
 								}
-								//pubDate
-								if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
-								{
-									artsList.get(i).setPubDate(a.getPubDate());
-								}
-								//set preview
-								artsList.get(i).setPreview(a.getPreview());
-								notFound = false;
 							}
 						}
 					}
 					notFound = true;
-					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					if (allArtsInfo != null)
 					{
-						Article artInList = allArtsInfo.get(i);
-						if (artInList.getUrl().equals(a.getUrl()))
+						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 						{
-							if (!a.getArtText().equals(Const.EMPTY_STRING))
+							Article artInList = allArtsInfo.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
 							{
-								allArtsInfo.get(i).setArtText(a.getArtText());
+								if (!a.getArtText().equals(Const.EMPTY_STRING))
+								{
+									allArtsInfo.get(i).setArtText(a.getArtText());
+								}
+								//pubDate
+								if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+								{
+									allArtsInfo.get(i).setPubDate(a.getPubDate());
+								}
+								//set preview
+								allArtsInfo.get(i).setPreview(a.getPreview());
+								//							recyclerAdapter.notifyDataSetChanged();
+								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
+								notFound = false;
 							}
-							//pubDate
-							if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
-							{
-								allArtsInfo.get(i).setPubDate(a.getPubDate());
-							}
-							//set preview
-							allArtsInfo.get(i).setPreview(a.getPreview());
-							//							recyclerAdapter.notifyDataSetChanged();
-							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-							notFound = false;
 						}
 					}
 				break;
@@ -922,30 +957,36 @@ public class FragmentArtsListRecycler extends Fragment
 					for (String key : keySet)
 					{
 						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
-						notFound = true;
-						for (int i = 0; i < artsList.size() && notFound; i++)
+						if (artsList != null)
 						{
-							Article artInList = artsList.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
+							notFound = true;
+							for (int i = 0; i < artsList.size() && notFound; i++)
 							{
-								artsList.get(i).setArtText(Const.EMPTY_STRING);
-								artsList.get(i).setRefreshed(new Date(0));
-								notFound = false;
+								Article artInList = artsList.get(i);
+								if (artInList.getUrl().equals(a.getUrl()))
+								{
+									artsList.get(i).setArtText(Const.EMPTY_STRING);
+									artsList.get(i).setRefreshed(new Date(0));
+									notFound = false;
+								}
 							}
 						}
 					}
 					notFound = true;
-					for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+					if (allArtsInfo != null)
 					{
-						Article artInList = allArtsInfo.get(i);
-						if (artInList.getUrl().equals(a.getUrl()))
+						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 						{
-							//Log.e(LOG, a.getUrl());
-							allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
-							allArtsInfo.get(i).setRefreshed(new Date(0));
-							//							recyclerAdapter.notifyDataSetChanged();
-							recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-							notFound = false;
+							Article artInList = allArtsInfo.get(i);
+							if (artInList.getUrl().equals(a.getUrl()))
+							{
+								//Log.e(LOG, a.getUrl());
+								allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
+								allArtsInfo.get(i).setRefreshed(new Date(0));
+								//							recyclerAdapter.notifyDataSetChanged();
+								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
+								notFound = false;
+							}
 						}
 					}
 				break;
