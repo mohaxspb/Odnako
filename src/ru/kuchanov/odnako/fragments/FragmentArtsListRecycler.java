@@ -697,9 +697,9 @@ public class FragmentArtsListRecycler extends Fragment
 					break;
 				}
 				int positionInList = act.getCurentCategoryPosition();
-				FragmentDownloadsDialog frag = FragmentDownloadsDialog.newInstance(allCategories, allAuthors,
+				FragmentDialogDownloads frag = FragmentDialogDownloads.newInstance(allCategories, allAuthors,
 				isCategory, positionInList);
-				frag.show(act.getSupportFragmentManager(), FragmentDownloadsDialog.class.getSimpleName());
+				frag.show(act.getSupportFragmentManager(), FragmentDialogDownloads.class.getSimpleName());
 			}
 		});
 

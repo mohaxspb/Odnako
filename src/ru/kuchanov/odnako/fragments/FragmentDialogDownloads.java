@@ -38,9 +38,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
 
-public class FragmentDownloadsDialog extends DialogFragment
+public class FragmentDialogDownloads extends DialogFragment
 {
-	final static String LOG = FragmentDownloadsDialog.class.getSimpleName();
+	final static String LOG = FragmentDialogDownloads.class.getSimpleName();
 
 	final static String KEY_CATEGORIES = "KEY_CATEGORIES";
 	final static String KEY_AUTHORS = "KEY_AUTHORS";
@@ -60,10 +60,10 @@ public class FragmentDownloadsDialog extends DialogFragment
 
 	private ArrayList<String> urls;
 
-	public static FragmentDownloadsDialog newInstance(ArrayList<Category> allCategories, ArrayList<Author> allAuthors,
+	public static FragmentDialogDownloads newInstance(ArrayList<Category> allCategories, ArrayList<Author> allAuthors,
 	boolean isCategory, int positionInList)
 	{
-		FragmentDownloadsDialog frag = new FragmentDownloadsDialog();
+		FragmentDialogDownloads frag = new FragmentDialogDownloads();
 		Bundle args = new Bundle();
 		args.putParcelableArrayList(KEY_CATEGORIES, allCategories);
 		args.putParcelableArrayList(KEY_AUTHORS, allAuthors);
@@ -182,7 +182,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 						}
 					});
 					dialogGoPro = dialogGoProBuilder.build();
-					int textColor=act.getResources().getColor(R.color.black);
+					int textColor = act.getResources().getColor(R.color.black);
 					((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
 					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
 					dialogGoPro.show();
@@ -219,6 +219,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 		if (this.allAuthors.size() == 0 && this.allCategories.size() == 0)
 		{
 			//so it's main or single pager
+			//single
 			if (((ActivityMain) this.act).getPagerType() == ActivityMain.PAGER_TYPE_SINGLE)
 			{
 				ArrayList<String> urls = new ArrayList<String>();
@@ -231,6 +232,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 				spinnerCategory.setAdapter(adapter);
 				spinnerCategory.setSelection(this.position);
 			}
+			//main
 			else
 			{
 				ArrayList<String> urls = CatData.getMenuLinksWithoutSystem(act);
@@ -247,7 +249,7 @@ public class FragmentDownloadsDialog extends DialogFragment
 				{
 					correctedPosition = this.position;
 				}
-				else if (this.position > urls.size() - 1)
+				else if (this.position > urls.size())
 				{
 					correctedPosition = 10;
 				}
