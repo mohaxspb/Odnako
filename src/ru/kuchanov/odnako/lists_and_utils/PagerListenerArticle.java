@@ -22,22 +22,17 @@ import android.util.Log;
 
 public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 {
-	final static String LOG = PagerListenerArticle.class.getSimpleName();
+	final static String LOG = PagerListenerArticle.class.getSimpleName()+"/";
 
 	private ActivityBase act;
-
 	private boolean twoPane;
-
 	private Toolbar toolbar;
-
 	private String categoryToLoad;
 
 	public PagerListenerArticle(ActivityBase act, String categoryToLoad)
 	{
 		this.act = act;
-
 		this.categoryToLoad = categoryToLoad;
-
 		this.twoPane = PreferenceManager.getDefaultSharedPreferences(this.act).getBoolean("twoPane", false);
 		this.toolbar = (Toolbar) act.findViewById(R.id.toolbar);
 	}
@@ -45,7 +40,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 	@Override
 	public void onPageSelected(int position)
 	{
-		Log.d(LOG, "onPageSelected in articlePager; position: " + position);
+		Log.d(LOG + this.categoryToLoad, "onPageSelected: " + position);
 		//on MainActivity it can be shown ONLY in tablet mode
 		//else it's ActivityArticle!
 		if (this.twoPane)
@@ -95,6 +90,10 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 				intentGlobal.putExtra(Const.Action.ARTICLE_CHANGED, Const.Action.ARTICLE_READ);
 				LocalBroadcastManager.getInstance(act).sendBroadcast(intentGlobal);
 			}
+		}
+		else
+		{
+			Log.e(LOG+categoryToLoad, "allArts=null");
 		}
 
 		setTitleToToolbar(categoryToLoad, act, twoPane, position);

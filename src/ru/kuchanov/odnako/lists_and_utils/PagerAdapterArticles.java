@@ -12,14 +12,17 @@ import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragArtUPD;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-public class PagerAdapterArticles extends FragmentStatePagerAdapter
+//public class PagerAdapterArticles extends FragmentStatePagerAdapter
+public class PagerAdapterArticles extends FragmentPagerAdapter
 {
 	static String LOG = PagerAdapterArticles.class.getSimpleName() + "/";
 
@@ -42,8 +45,11 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 	@Override
 	public void notifyDataSetChanged()
 	{
-		//Log.e(LOG_TAG + category, "notifyDataSetChanged called");
-		this.setAllArtsInfo(((ActivityBase) act).getAllCatArtsInfo().get(getCategoryToLoad()));
+		Log.e(LOG + category, "notifyDataSetChanged called");
+
+		ArrayList<Article> artList = ((ActivityBase) act).getAllCatArtsInfo().get(getCategoryToLoad());
+		//Log.e(LOG + category, "artList==null: " + String.valueOf(artList == null));
+		this.setAllArtsInfo(artList);
 		super.notifyDataSetChanged();
 	}
 
@@ -95,11 +101,17 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 		{
 			return POSITION_NONE;
 		}
+		//XXX test
+		//				else
+		//				{
+		//					return POSITION_NONE;
+		//				}
 		if (object instanceof FragArtUPD)
 		{
-			if (((Fragment) object).isAdded())
+			FragmentArticle artFrag = (FragmentArticle) object;
+			if (artFrag.isAdded())
 			{
-				if (((FragmentArticle) object).getPosition() >= this.getAllArtsInfo().size())
+				if (artFrag.getPosition() >= this.getAllArtsInfo().size())
 				{
 					//Log.e(LOG_TAG + category, "(FragmentArticle) object).getPosition()>=this.allArtsInfo.size()");
 					return POSITION_NONE;
@@ -108,7 +120,7 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 				{
 					try
 					{
-						FragmentArticle artFrag = (FragmentArticle) object;
+
 						((FragArtUPD) object).update(this.getAllArtsInfo().get(artFrag.getPosition()));
 					} catch (NullPointerException e)
 					{
@@ -122,6 +134,11 @@ public class PagerAdapterArticles extends FragmentStatePagerAdapter
 			else
 			{
 				//Log.e(LOG_TAG, "Fragment not added");
+				String articleUrl = this.getAllArtsInfo().get(artFrag.getPosition()).getUrl();
+				Intent intentToArticleFrag = new Intent(articleUrl + "frag_selected");
+				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToArticleFrag);
+
+				return POSITION_NONE;
 			}
 		}
 		//don't return POSITION_NONE, avoid fragment recreation. 

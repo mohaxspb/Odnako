@@ -11,9 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.melnykov.fab.FloatingActionButton;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
@@ -27,11 +24,11 @@ import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceRSS;
 import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
-import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -60,6 +57,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Fragment for artsList. We use it as main Fragment for menu categories instead
@@ -450,7 +450,8 @@ public class FragmentArtsListRecycler extends Fragment
 				break;
 			}
 
-			boolean refreshRightToolbarAndPager = isInLeftPager && pref.getBoolean("twoPane", false) && isDisplayed;
+			boolean refreshRightToolbarAndPager = isInLeftPager && (pref.getBoolean("twoPane", false) == true)
+			&& isDisplayed;
 			if (refreshRightToolbarAndPager)
 			{
 				updateRightPagerAndToolbar(msg);
@@ -498,12 +499,18 @@ public class FragmentArtsListRecycler extends Fragment
 				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(this.position);
 			case (Msg.NO_NEW):
 				pagerRight.getAdapter().notifyDataSetChanged();
 
 				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(this.position);
 			break;
 			case (Msg.NEW_QUONT):
 				pagerRight.getAdapter().notifyDataSetChanged();
@@ -521,6 +528,9 @@ public class FragmentArtsListRecycler extends Fragment
 				selectedArt = mainActivity.getAllCatListsSelectedArtPosition().get(this.categoryToLoad) + 1;
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
+
+				pagerRight.setOnPageChangeListener(listener);
+				listener.onPageSelected(this.position);
 			break;
 			case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
 				pagerRight.getAdapter().notifyDataSetChanged();
@@ -770,13 +780,13 @@ public class FragmentArtsListRecycler extends Fragment
 					}
 					if (noCategoryInService)
 					{
-						Log.e(LOG, "noCategoryInService = true");
+						//Log.e(LOG, "noCategoryInService = true");
 						isLoading = false;
 						swipeRef.setRefreshing(false);
 					}
 					else
 					{
-						Log.e(LOG, "noCategoryInService = false");
+						//Log.e(LOG, "noCategoryInService = false");
 					}
 				}
 				//handler.postDelayed(this, 3000);

@@ -13,6 +13,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
+import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArticleFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -83,7 +84,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		if (this.curArticle != null)
 		{
 			//Log.e(LOG, curArticle.getUrl());
-			
+
 			LocalBroadcastManager.getInstance(this.act).registerReceiver(articleReceiver,
 			new IntentFilter(this.curArticle.getUrl()));
 
@@ -98,8 +99,25 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			//Log.e(LOG, "articleReceiver onReceive");
+			Log.e(LOG, "fragSelectedReceiver onReceive");
+
+			if (!isAdded())
+			{
+				return;
+			}
 			((MyLinearLayoutManager) recycler.getLayoutManager()).setFirstScroll(true);
+			if (curArticle != null)
+			{
+				//				LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
+				//				LocalBroadcastManager.getInstance(act).registerReceiver(articleReceiver,
+				//				new IntentFilter(curArticle.getUrl()));
+				//
+				//				LocalBroadcastManager.getInstance(act).unregisterReceiver(fragSelectedReceiver);
+				//				LocalBroadcastManager.getInstance(act).registerReceiver(fragSelectedReceiver,
+				//				new IntentFilter(curArticle.getUrl() + "frag_selected"));
+
+				update(curArticle);
+			}
 		}
 	};
 
@@ -125,7 +143,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 				update(a);
 
-				//if it's currently displayed fra, we can notify, that it is readen now
+				//if it's currently displayed frag, we can notify, that it is readen now
 				ViewPager pager = (ViewPager) act.findViewById(R.id.pager_right);
 				if (a.isReaden() == false && position == pager.getCurrentItem())
 				{
@@ -187,11 +205,6 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.swipeRef.setRefreshing(true);
 
 		Actions.startDownLoadArticle(this.curArticle.getUrl(), this.act, startDownload);
-		//		Intent intent = new Intent(this.act, ServiceArticle.class);
-		//		intent.setAction(Const.Action.DATA_REQUEST);
-		//		intent.putExtra(ARTICLE_URL, this.curArticle.getUrl());
-		//		intent.putExtra("startDownload", startDownload);
-		//		this.act.startService(intent);
 	}
 
 	@Override
@@ -228,7 +241,25 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	public void update(Article article)
 	{
 		this.curArticle = article;
-		//Log.i(LOG + curArticle.getUrl(), "update called");
+		Log.e(LOG, "update called");
+
+		if (this.curArticle != null && !this.isSingle)
+		{
+			try
+			{
+				ViewPager pagerRight = (ViewPager) this.act.findViewById(R.id.pager_right);
+				PagerAdapterArticles pagerAdapter = (PagerAdapterArticles) pagerRight.getAdapter();
+				String urlFromPager = pagerAdapter.getAllArtsInfo().get(position).getUrl();
+				if (!this.curArticle.getUrl().equals(urlFromPager))
+				{
+					this.curArticle = pagerAdapter.getAllArtsInfo().get(position);
+				}
+			} catch (Exception e)
+			{
+
+			}
+		}
+
 		if (this.curArticle != null)
 		{
 			LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
@@ -265,6 +296,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		//long beforeTime = System.currentTimeMillis();
 		this.recyclerAdapter = new RecyclerAdapterArticleFragment(act, curArticle);
 		this.recycler.setAdapter(recyclerAdapter);
+		this.recycler.getAdapter().notifyDataSetChanged();
 		//Log.e(LOG, "update fragment. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}
 
@@ -293,7 +325,13 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			fragSelectedReceiver = null;
 		}
 		// Must always call the super method at the end.
-		super.onDestroy();
+		try
+		{
+			super.onDestroy();
+		} catch (Exception e)
+		{
+
+		}
 	}
 
 	public Article getArticle()
