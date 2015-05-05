@@ -34,7 +34,7 @@ public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
 {
 	private static final String LOG = ActivityPreference.class.getSimpleName();
-	
+
 	public static final String PREF_KEY_IS_PRO = "isPro";
 
 	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
@@ -48,6 +48,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_NOTIF_VIBRATION = "vibration";
 	public static final String PREF_KEY_NOTIF_SOUND = "sound";
 	public static final String PREF_KEY_NOTIF_PERIOD = "notif_period";
+	///
+	public static final String PREF_KEY_FIRST_LAUNCH = "firstLaunch";
 
 	private SharedPreferences pref;
 
@@ -271,7 +273,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
 			intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intentToTimerReceiver,
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
+			intentToTimerReceiver,
 			PendingIntent.FLAG_UPDATE_CURRENT);
 
 			if (notifOn)
@@ -285,7 +288,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 			else
 			{
 				Log.e(LOG, "Canceling alarm");
-				PendingIntent pendingIntentToDelete = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intentToTimerReceiver,
+				PendingIntent pendingIntentToDelete = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
+				intentToTimerReceiver,
 				PendingIntent.FLAG_CANCEL_CURRENT);
 				am.cancel(pendingIntentToDelete);
 			}

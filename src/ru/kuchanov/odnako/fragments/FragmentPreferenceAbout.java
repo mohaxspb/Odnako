@@ -12,6 +12,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -190,12 +191,12 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			}
 			allVersionsDescriptionString=sb.toString();
 
-			MaterialDialog dialogGoPro;
+			MaterialDialog dialogVersionHistory;
 			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 			dialogGoProBuilder.title(APP_TITLE + ", версия " + app_ver)
-			.content(allVersionsDescriptionString)
+			.content(Html.fromHtml(allVersionsDescriptionString))
 			.positiveText("Это было интересно!");
-			dialogGoPro = dialogGoProBuilder.build();
+			dialogVersionHistory = dialogGoProBuilder.build();
 			//getColor
 			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
 			int indexOfAttrTextSize = 0;
@@ -203,8 +204,10 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
 			int textColor = a.getColor(indexOfAttrTextSize, 0);
 			a.recycle();
-			((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
-			dialogGoPro.show();
+			((MDButton) dialogVersionHistory.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+			
+			dialogVersionHistory.show();
+			
 			return false;
 		}
 	};

@@ -31,6 +31,7 @@ import ru.kuchanov.odnako.lists_and_utils.PagerListenerSingleCategory;
 import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
+import ru.kuchanov.odnako.utils.NewVersionFeachersDialog;
 import ru.kuchanov.odnako.utils.ReporterSettings;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -259,7 +260,6 @@ public class ActivityMain extends ActivityBase
 			this.toolbarRight = (Toolbar) this.findViewById(R.id.toolbar_right);
 		}
 
-		/////////////////////////////
 		//setNavDraw
 		this.setNavDrawer();
 		//End of setNavDraw
@@ -373,6 +373,8 @@ public class ActivityMain extends ActivityBase
 		//			params.height = getStatusBarHeight();
 		//			fakeStatusBar.setLayoutParams(params);
 		//		}
+
+		NewVersionFeachersDialog.appLaunched(this);
 	}
 
 	public int getStatusBarHeight()
@@ -1130,7 +1132,7 @@ public class ActivityMain extends ActivityBase
 				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 			break;
@@ -1168,7 +1170,7 @@ public class ActivityMain extends ActivityBase
 				PagerAdapterMenu artsListPagerAdapter = new PagerAdapterMenu(
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
-//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerMenu(this);
 				this.artsListPager.setOnPageChangeListener(listener);
 

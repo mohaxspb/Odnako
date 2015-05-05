@@ -34,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 public class Actions
 {
@@ -792,7 +791,7 @@ public class Actions
 
 	public static void startDownLoadArticle(String url, Context ctx, boolean startDownload)
 	{
-		Toast.makeText(ctx, "Начинаю загрузку", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(ctx, "Начинаю загрузку", Toast.LENGTH_SHORT).show();
 
 		Intent intent = new Intent(ctx, ServiceArticle.class);
 		intent.setAction(Const.Action.DATA_REQUEST);
