@@ -15,6 +15,7 @@ import com.yandex.metrica.YandexMetrica;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentPreference;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceAbout;
+import ru.kuchanov.odnako.fragments.FragmentPreferenceDesign;
 import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -111,11 +112,18 @@ SharedPreferences.OnSharedPreferenceChangeListener
 
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
+	
+	public void onStop()
+	{		
+		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+		super.onStop();
+	}
 
 	@Override
 	public void onPause()
 	{
 		YandexMetrica.onPauseActivity(this);
+		
 		super.onPause();
 	}
 
@@ -212,7 +220,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	protected boolean isValidFragment(String fragmentName)
 	{
 		return FragmentPreference.class.getName().equals(fragmentName)
-		|| FragmentPreferenceAbout.class.getName().equals(fragmentName);
+		|| FragmentPreferenceAbout.class.getName().equals(fragmentName)
+		|| FragmentPreferenceDesign.class.getName().equals(fragmentName);
 	}
 
 	/**
@@ -247,52 +256,53 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		{
 			return false;
 		}
-
 	}
 
 	//here we will:
 	//change theme by restarting activity
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+	public void onSharedPreferenceChanged(SharedPreferences pref, String key)
 	{
-		System.out.println("key: " + key);
-		if (key.equals("theme"))
+		Log.i(LOG, "key: " + key);
+		switch (key)
 		{
-			System.out.println("key.equals('theme'): " + String.valueOf(key.equals("theme")));
-			this.recreate();
-		}
+			case PREF_KEY_TWO_PANE:
+				Log.i(LOG, "twoPane: " + String.valueOf(pref.getBoolean(key, false) == true));
+			break;
+			case PREF_KEY_NIGHT_MODE:
+				this.recreate();
+			break;
+			case PREF_KEY_NOTIFICATION:
+				//Запускаем\ отключаем сервис
+				boolean notifOn = pref.getBoolean(key, false);
 
-		///Запускаем\ отключаем сервис
+				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-		if (key.equals(PREF_KEY_NOTIFICATION))
-		{
-			boolean notifOn = sharedPreferences.getBoolean(key, false);
+				Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
+				intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
 
-			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-			Intent intentToTimerReceiver = new Intent(this.getApplicationContext(), ReceiverTimer.class);
-			intentToTimerReceiver.setAction("ru.kuchanov.odnako.RECEIVER_TIMER");
-
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
-			intentToTimerReceiver,
-			PendingIntent.FLAG_UPDATE_CURRENT);
-
-			if (notifOn)
-			{
-				long checkPeriod = Long.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
-				//test less interval in 1 min
-				//checkPeriod = 60 * 1000;
-
-				am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
-			}
-			else
-			{
-				Log.e(LOG, "Canceling alarm");
-				PendingIntent pendingIntentToDelete = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
 				intentToTimerReceiver,
-				PendingIntent.FLAG_CANCEL_CURRENT);
-				am.cancel(pendingIntentToDelete);
-			}
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+				if (notifOn)
+				{
+					long checkPeriod = Long
+					.valueOf(this.pref.getString(ActivityPreference.PREF_KEY_NOTIF_PERIOD, "60")) * 60L * 1000L;
+					//test less interval in 1 min
+					//checkPeriod = 60 * 1000;
+
+					am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), checkPeriod, pendingIntent);
+				}
+				else
+				{
+					Log.e(LOG, "Canceling alarm");
+					PendingIntent pendingIntentToDelete = PendingIntent.getBroadcast(this.getApplicationContext(), 0,
+					intentToTimerReceiver,
+					PendingIntent.FLAG_CANCEL_CURRENT);
+					am.cancel(pendingIntentToDelete);
+				}
+			break;
 		}
 	}
 }

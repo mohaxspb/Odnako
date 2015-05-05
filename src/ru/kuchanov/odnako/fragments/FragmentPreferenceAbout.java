@@ -123,7 +123,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			dialogGoPro = dialogGoProBuilder.build();
 			int textColor = act.getResources().getColor(R.color.black);
 			((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
-			dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+			dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
 			dialogGoPro.show();
 			return false;
 		}

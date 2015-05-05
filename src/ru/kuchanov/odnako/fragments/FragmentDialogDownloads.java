@@ -19,14 +19,12 @@ import ru.kuchanov.odnako.lists_and_utils.CatData;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -136,14 +134,6 @@ public class FragmentDialogDownloads extends DialogFragment
 				}
 			});
 			dialog = dialogBuilder.build();
-			//getColor
-			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
-			int indexOfAttrTextSize = 0;
-			TypedValue typedValue = new TypedValue();
-			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-			int textColor = a.getColor(indexOfAttrTextSize, 0);
-			a.recycle();
-			((MDButton) dialog.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
 		}
 		else
 		{
@@ -182,7 +172,7 @@ public class FragmentDialogDownloads extends DialogFragment
 					dialogGoPro = dialogGoProBuilder.build();
 					int textColor = act.getResources().getColor(R.color.black);
 					((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
-					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
 					dialogGoPro.show();
 				}
 
@@ -208,7 +198,7 @@ public class FragmentDialogDownloads extends DialogFragment
 				}
 			});
 			dialog = dialogBuilder.build();
-			dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape);
+			dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
 		}
 
 		final Spinner spinnerCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spiner_category);

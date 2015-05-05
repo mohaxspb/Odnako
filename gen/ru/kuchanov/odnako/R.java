@@ -3381,23 +3381,23 @@ containing a value of this type.
         public static final int md_btn_selector_ripple=0x7f0200ca;
         public static final int md_btn_selector_ripple_dark=0x7f0200cb;
         public static final int md_btn_shape=0x7f0200cc;
-        public static final int md_dialog_background=0x7f0200cd;
-        public static final int md_dialog_background_dark=0x7f0200ce;
-        public static final int md_item_selected=0x7f0200cf;
-        public static final int md_item_selected_dark=0x7f0200d0;
-        public static final int md_selector=0x7f0200d1;
-        public static final int md_selector_dark=0x7f0200d2;
-        public static final int md_transparent=0x7f0200d3;
-        public static final int menu_dropdown_panel=0x7f0200d4;
-        public static final int miroporyadok_1770_1_20=0x7f0200d5;
-        public static final int mirovoy_krizis_1770_1_41=0x7f0200d6;
-        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200d7;
-        public static final int novosti_1770_1_4=0x7f0200d8;
-        public static final int oboronnaya_politika=0x7f0200d9;
-        public static final int oboronnaya_politika_1770_1_18=0x7f0200da;
-        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200db;
-        public static final int odnako=0x7f0200dc;
-        public static final int positive_selector=0x7f0200dd;
+        public static final int md_btn_shape_green=0x7f0200cd;
+        public static final int md_dialog_background=0x7f0200ce;
+        public static final int md_dialog_background_dark=0x7f0200cf;
+        public static final int md_item_selected=0x7f0200d0;
+        public static final int md_item_selected_dark=0x7f0200d1;
+        public static final int md_selector=0x7f0200d2;
+        public static final int md_selector_dark=0x7f0200d3;
+        public static final int md_transparent=0x7f0200d4;
+        public static final int menu_dropdown_panel=0x7f0200d5;
+        public static final int miroporyadok_1770_1_20=0x7f0200d6;
+        public static final int mirovoy_krizis_1770_1_41=0x7f0200d7;
+        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200d8;
+        public static final int novosti_1770_1_4=0x7f0200d9;
+        public static final int oboronnaya_politika=0x7f0200da;
+        public static final int oboronnaya_politika_1770_1_18=0x7f0200db;
+        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200dc;
+        public static final int odnako=0x7f0200dd;
         public static final int powered_by_google_dark=0x7f0200de;
         public static final int powered_by_google_light=0x7f0200df;
         public static final int selectable_background_dark=0x7f0200e0;
@@ -3817,7 +3817,6 @@ containing a value of this type.
         public static final int about=0x7f0c0079;
         public static final int accept=0x7f0c001d;
         public static final int action_settings=0x7f0c0054;
-        public static final int ads_on_advantages=0x7f0c00a0;
         public static final int allLoadInfoMessage=0x7f0c0080;
         public static final int also_by_theme=0x7f0c004b;
         public static final int also_to_read=0x7f0c004c;
@@ -3973,7 +3972,6 @@ containing a value of this type.
         /**   
          */
         public static final int hello_world=0x7f0c0066;
-        public static final int help_me=0x7f0c009f;
         public static final int img=0x7f0c008c;
         /**  Author section 
          */
@@ -4011,7 +4009,7 @@ containing a value of this type.
         public static final int off=0x7f0c0082;
         public static final int on=0x7f0c0081;
         public static final int preview=0x7f0c0048;
-        public static final int pro_ver_adv=0x7f0c00a1;
+        public static final int pro_ver_adv=0x7f0c009f;
         public static final int quontity=0x7f0c007b;
         public static final int refresh=0x7f0c005b;
         public static final int search=0x7f0c0071;
@@ -4038,20 +4036,9 @@ containing a value of this type.
         public static final int text_scale=0x7f0c008a;
         public static final int theme=0x7f0c0085;
         public static final int title=0x7f0c0046;
+        public static final int two_pane_alert=0x7f0c00a1;
         public static final int ui_text_scale=0x7f0c0087;
-        public static final int version_history_111=0x7f0c00a3;
-        public static final int version_history_120=0x7f0c00a4;
-        public static final int version_history_121=0x7f0c00a5;
-        public static final int version_history_130=0x7f0c00a6;
-        public static final int version_history_140=0x7f0c00a7;
-        public static final int version_history_145=0x7f0c00a8;
-        public static final int version_history_150=0x7f0c00a9;
-        public static final int version_history_200=0x7f0c00aa;
-        public static final int version_history_210=0x7f0c00ab;
-        public static final int version_history_220=0x7f0c00ac;
-        public static final int version_history_230=0x7f0c00ad;
-        public static final int version_history_310=0x7f0c00ae;
-        public static final int version_history_summary=0x7f0c00a2;
+        public static final int version_history_summary=0x7f0c00a0;
         public static final int vibration=0x7f0c0076;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
