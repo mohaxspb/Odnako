@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
@@ -47,7 +48,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 
 	private Context ctx;
 
-	NotificationManager mNotifyManager;
+	private NotificationManager mNotifyManager;
 
 	private ArrayList<Article> artList;
 	private int currentArtPosition = 0;
@@ -57,6 +58,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	private TextToSpeech mTTS;
 
 	private boolean isPaused = true;
+
+	protected int askToClose = 0;
 
 	@Override
 	public void onCreate()
@@ -118,9 +121,20 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		String action = intent.getAction();
+		if (action == null)
+		{
+			Log.i(LOG, "action = null");
+			this.mTTS.stop();
+			this.mTTS.shutdown();
+			this.mTTS = null;
+			this.stopForeground(true);
+			this.stopSelf();
+			return super.onStartCommand(intent, flags, startId);
+		}
 		switch (action)
 		{
 			case "init":
+				Log.i(LOG, "init");
 				ArrayList<Article> artList = intent.getParcelableArrayListExtra(FragmentArticle.ARTICLE_URL);
 
 				//for test cut arts text to 270 chars
@@ -149,7 +163,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				this.startService(playIntent);
 			break;
 			case "play":
-				//Log.e(LOG, "play");
+				Log.i(LOG, "play");
 				this.isPaused = false;
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 				//if article is not loaded, notif shows progress and starts to download it
@@ -160,14 +174,14 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				}
 			break;
 			case "pause":
-				//Log.e(LOG, "pause");
+				Log.i(LOG, "pause");
 				this.isPaused = true;
 				mTTS.stop();
 
 				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
 			break;
 			case "forward":
-				//Log.e(LOG, "forward");
+				Log.i(LOG, "forward");
 				if (this.currentArtPosition != this.artList.size() - 1)
 				{
 					this.isPaused = true;
@@ -184,7 +198,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				}
 			break;
 			case "rewind":
-				//Log.e(LOG, "rewind");
+				Log.i(LOG, "rewind");
 				if (this.currentArtPosition != 0)
 				{
 					this.isPaused = true;
@@ -201,11 +215,47 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				}
 			break;
 			case "close":
+				Log.i(LOG, "close");
 				this.mTTS.stop();
 				this.mTTS.shutdown();
 				this.mTTS = null;
 				this.stopForeground(true);
 				this.stopSelf();
+			break;
+			case "restore":
+				Log.i(LOG, "restore");
+				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+			break;
+			case "askToClose":
+				Log.i(LOG, "askToClose");
+				//mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getCloseTTSNotification().build());
+
+				if (askToClose == 0)
+				{
+					askToClose++;
+					Toast.makeText(ctx, "Нажмите ещё раз, чтобы прекратить озвучивание статей", Toast.LENGTH_SHORT)
+					.show();
+				}
+				else
+				{
+					this.mTTS.stop();
+					this.mTTS.shutdown();
+					this.mTTS = null;
+					this.stopForeground(true);
+					this.stopSelf();
+				}
+
+				//Обнуление счётчика через 5 секунд
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						// Do something after 5s = 5000ms
+						askToClose = 0;
+					}
+				}, 5000);
 			break;
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -300,12 +350,57 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		}
 	};
 
+	//	private NotificationCompat.Builder getCloseTTSNotification()
+	//	{
+	//		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+	//		builder.setSmallIcon(R.drawable.ic_play_arrow_grey600_24dp);
+	//		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
+	//
+	//		//builder.setAutoCancel(true);
+	//		//Close button
+	//		Intent restoreIntent = new Intent(this, ServiceTTS.class);
+	//		restoreIntent.setAction("restore");
+	//		PendingIntent piRestore = PendingIntent.getService(this, 0, restoreIntent,
+	//		PendingIntent.FLAG_UPDATE_CURRENT);
+	//		builder.setContentIntent(piRestore);
+	//
+	//		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+	//
+	//		inboxStyle.addLine("Вы хотите прекратить");
+	//		inboxStyle.addLine("озвучивание статей?");
+	//
+	//		builder.setStyle(inboxStyle);
+	//
+	//		builder.addAction(R.drawable.ic_keyboard_arrow_left_grey600_48dp, "Вообще-то нет", piRestore);
+	//
+	//		Intent closeIntent = new Intent(this, ServiceTTS.class);
+	//		closeIntent.setAction("close");
+	//		PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
+	//		PendingIntent.FLAG_UPDATE_CURRENT);
+	//		builder.addAction(R.drawable.ic_pause_grey600_48dp, "Очень", piClose);
+	//
+	//		return builder;
+	//	}
+
 	private NotificationCompat.Builder getNotification()
 	{
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setSmallIcon(R.drawable.ic_play_arrow_grey600_24dp);
 		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
-		builder.setAutoCancel(false);
+
+		//builder.setAutoCancel(true);
+		//Close button
+		Intent closeIntent = new Intent(this, ServiceTTS.class);
+		closeIntent.setAction("close");
+		PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
+		PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Intent askToCloseIntent = new Intent(this, ServiceTTS.class);
+		askToCloseIntent.setAction("askToClose");
+		PendingIntent piAskToClose = PendingIntent.getService(this, 0, askToCloseIntent,
+		PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(piAskToClose);
+		//builder.setDeleteIntent(piClose);
 
 		Article curArt = this.artList.get(currentArtPosition);
 		if (!isPaused && curArt.getArtText().equals(Const.EMPTY_STRING))
@@ -352,7 +447,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			}
 			for (String s : titlePartsList)
 			{
-				inboxStyle.addLine(s);
+				inboxStyle.addLine(Html.fromHtml(s));
 			}
 			builder.setStyle(inboxStyle);
 
@@ -369,10 +464,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			if (this.currentArtPosition == 0)
 			{
 				//Close button
-				Intent closeIntent = new Intent(this, ServiceTTS.class);
-				closeIntent.setAction("close");
-				PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
 				builder.addAction(R.drawable.ic_highlight_remove_grey600_48dp, "", piClose);
 			}
 			else
@@ -403,10 +494,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			if (this.currentArtPosition == this.artList.size() - 1)
 			{
 				//Close button
-				Intent closeIntent = new Intent(this, ServiceTTS.class);
-				closeIntent.setAction("close");
-				PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
 				builder.addAction(R.drawable.ic_highlight_remove_grey600_48dp, "", piClose);
 			}
 			else
@@ -419,7 +506,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				builder.addAction(R.drawable.ic_fast_forward_grey600_48dp, "", piForward);
 			}
 		}
-		// Displays the progress bar for the first time.
 		return builder;
 	}
 
@@ -432,7 +518,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	@Override
 	public void onInit(int status)
 	{
-		Log.e(LOG, "TTS on init");
+		Log.i(LOG, "TTS on init");
 		if (status == TextToSpeech.SUCCESS)
 		{
 			Locale locale = new Locale("ru");
@@ -454,6 +540,14 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 					Log.i("TTS", "set colace eng");
 				}
 			}
+
+			if (!this.isPaused)
+			{
+				//And start playing
+				Intent playIntent = new Intent(this, ServiceTTS.class);
+				playIntent.setAction("play");
+				this.startService(playIntent);
+			}
 		}
 		else
 		{
@@ -465,7 +559,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	{
 		ArrayList<String> artTextAsList = new ArrayList<String>();
 
-		artTextAsList.add(article.getTitle() + " \n");
+		artTextAsList.add(Html.fromHtml(article.getTitle() + " \n").toString());
 
 		TextView tv = new TextView(this);
 		tv.setText(Html.fromHtml(article.getArtText()));
