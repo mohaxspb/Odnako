@@ -59,14 +59,23 @@ public class ActivityArticle extends ActivityBase
 
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		//TODO
 		if (nightModeIsOn)
 		{
-			this.setTheme(R.style.ThemeDark);
+			this.setTheme(R.style.ThemeDarkIndigo);
 		}
 		else
 		{
-			this.setTheme(R.style.ThemeLight);
+			this.setTheme(R.style.ThemeLightIndigo);
 		}
+//		if (nightModeIsOn)
+//		{
+//			this.setTheme(R.style.ThemeDark);
+//		}
+//		else
+//		{
+//			this.setTheme(R.style.ThemeLight);
+//		}
 
 		super.onCreate(savedInstanceState);
 

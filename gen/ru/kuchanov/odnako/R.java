@@ -3367,51 +3367,57 @@ containing a value of this type.
         public static final int ic_vibration_grey600_48dp=0x7f0200bc;
         public static final int ic_vibration_white_48dp=0x7f0200bd;
         public static final int img_cover_dark_top_to_bottom=0x7f0200be;
-        public static final int img_cover_light_top_to_bottom=0x7f0200bf;
-        public static final int info_box_blue=0x7f0200c0;
-        public static final int kultura_1770_1_13=0x7f0200c1;
-        public static final int kulturnaya_politika_1770_1_67=0x7f0200c2;
-        public static final int list_focused=0x7f0200c3;
-        public static final int list_item_selector=0x7f0200c4;
-        public static final int list_pressed=0x7f0200c5;
-        public static final int md_btn_selected=0x7f0200c6;
-        public static final int md_btn_selected_dark=0x7f0200c7;
-        public static final int md_btn_selector=0x7f0200c8;
-        public static final int md_btn_selector_dark=0x7f0200c9;
-        public static final int md_btn_selector_ripple=0x7f0200ca;
-        public static final int md_btn_selector_ripple_dark=0x7f0200cb;
-        public static final int md_btn_shape=0x7f0200cc;
-        public static final int md_btn_shape_green=0x7f0200cd;
-        public static final int md_dialog_background=0x7f0200ce;
-        public static final int md_dialog_background_dark=0x7f0200cf;
-        public static final int md_item_selected=0x7f0200d0;
-        public static final int md_item_selected_dark=0x7f0200d1;
-        public static final int md_selector=0x7f0200d2;
-        public static final int md_selector_dark=0x7f0200d3;
-        public static final int md_transparent=0x7f0200d4;
-        public static final int menu_dropdown_panel=0x7f0200d5;
-        public static final int miroporyadok_1770_1_20=0x7f0200d6;
-        public static final int mirovoy_krizis_1770_1_41=0x7f0200d7;
-        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200d8;
-        public static final int novosti_1770_1_4=0x7f0200d9;
-        public static final int oboronnaya_politika=0x7f0200da;
-        public static final int oboronnaya_politika_1770_1_18=0x7f0200db;
-        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200dc;
-        public static final int odnako=0x7f0200dd;
-        public static final int powered_by_google_dark=0x7f0200de;
-        public static final int powered_by_google_light=0x7f0200df;
-        public static final int selectable_background_dark=0x7f0200e0;
-        public static final int selectable_background_light=0x7f0200e1;
-        public static final int social_facebook=0x7f0200e2;
-        public static final int social_google=0x7f0200e3;
-        public static final int social_livejournal=0x7f0200e4;
-        public static final int social_odnoklassniki=0x7f0200e5;
-        public static final int social_twitter=0x7f0200e6;
-        public static final int social_vkontakte=0x7f0200e7;
-        public static final int spinner_default_holo_dark_am=0x7f0200e8;
-        public static final int spinner_default_holo_light_am=0x7f0200e9;
-        public static final int top_img_cover_dark=0x7f0200ea;
-        public static final int top_img_cover_light=0x7f0200eb;
+        public static final int img_cover_dark_top_to_bottom_indigo=0x7f0200bf;
+        public static final int img_cover_light_top_to_bottom=0x7f0200c0;
+        public static final int img_cover_light_top_to_bottom_indigo=0x7f0200c1;
+        public static final int info_box_blue=0x7f0200c2;
+        public static final int kultura_1770_1_13=0x7f0200c3;
+        public static final int kulturnaya_politika_1770_1_67=0x7f0200c4;
+        public static final int list_focused=0x7f0200c5;
+        public static final int list_item_selector=0x7f0200c6;
+        public static final int list_pressed=0x7f0200c7;
+        public static final int md_btn_selected=0x7f0200c8;
+        public static final int md_btn_selected_dark=0x7f0200c9;
+        public static final int md_btn_selector=0x7f0200ca;
+        public static final int md_btn_selector_dark=0x7f0200cb;
+        public static final int md_btn_selector_ripple=0x7f0200cc;
+        public static final int md_btn_selector_ripple_dark=0x7f0200cd;
+        public static final int md_btn_shape=0x7f0200ce;
+        public static final int md_btn_shape_green=0x7f0200cf;
+        public static final int md_dialog_background=0x7f0200d0;
+        public static final int md_dialog_background_dark=0x7f0200d1;
+        public static final int md_item_selected=0x7f0200d2;
+        public static final int md_item_selected_dark=0x7f0200d3;
+        public static final int md_selector=0x7f0200d4;
+        public static final int md_selector_dark=0x7f0200d5;
+        public static final int md_transparent=0x7f0200d6;
+        public static final int menu_dropdown_panel=0x7f0200d7;
+        public static final int miroporyadok_1770_1_20=0x7f0200d8;
+        public static final int mirovoy_krizis_1770_1_41=0x7f0200d9;
+        public static final int nauka_i_tehnologii_1770_1_49=0x7f0200da;
+        public static final int novosti_1770_1_4=0x7f0200db;
+        public static final int oboronnaya_politika=0x7f0200dc;
+        public static final int oboronnaya_politika_1770_1_18=0x7f0200dd;
+        public static final int oboronnaya_promishlennost_1770_1_59=0x7f0200de;
+        public static final int odnako=0x7f0200df;
+        public static final int powered_by_google_dark=0x7f0200e0;
+        public static final int powered_by_google_light=0x7f0200e1;
+        public static final int selectable_background_dark=0x7f0200e2;
+        public static final int selectable_background_dark_indigo=0x7f0200e3;
+        public static final int selectable_background_light=0x7f0200e4;
+        public static final int selectable_background_light_indigo=0x7f0200e5;
+        public static final int social_facebook=0x7f0200e6;
+        public static final int social_google=0x7f0200e7;
+        public static final int social_livejournal=0x7f0200e8;
+        public static final int social_odnoklassniki=0x7f0200e9;
+        public static final int social_twitter=0x7f0200ea;
+        public static final int social_vkontakte=0x7f0200eb;
+        public static final int spinner_default_holo_dark_am=0x7f0200ec;
+        public static final int spinner_default_holo_light_am=0x7f0200ed;
+        public static final int top_img_cover_dark=0x7f0200ee;
+        public static final int top_img_cover_dark_indigo=0x7f0200ef;
+        public static final int top_img_cover_light=0x7f0200f0;
+        public static final int top_img_cover_light_indigo=0x7f0200f1;
     }
     public static final class id {
         public static final int action_bar=0x7f0b0057;
@@ -4234,9 +4240,13 @@ containing a value of this type.
         public static final int MD_Light=0x7f0d011b;
         public static final int MD_WindowAnimation=0x7f0d0120;
         public static final int OdnakoDropDownListViewDark=0x7f0d012b;
+        public static final int OdnakoDropDownListViewDarkIndigo=0x7f0d0133;
         public static final int OdnakoDropDownListViewLight=0x7f0d012e;
+        public static final int OdnakoDropDownListViewLightIndigo=0x7f0d0136;
         public static final int OdnakoPopupMenuDark=0x7f0d012a;
+        public static final int OdnakoPopupMenuDarkIndigo=0x7f0d0132;
         public static final int OdnakoPopupMenuLight=0x7f0d012d;
+        public static final int OdnakoPopupMenuLightIndigo=0x7f0d0135;
         public static final int Platform_AppCompat=0x7f0d00f4;
         public static final int Platform_AppCompat_Light=0x7f0d00f5;
         public static final int Platform_ThemeOverlay_AppCompat_Dark=0x7f0d0109;
@@ -4344,13 +4354,19 @@ containing a value of this type.
         public static final int Theme_AppCompat_NoActionBar=0x7f0d00e4;
         public static final int Theme_IAPTheme=0x7f0d0124;
         /**  Odnako custom dark theme with material_grey_colors 
- <item name="android:itemBackground">@color/material_grey_800</item> 
          */
         public static final int ThemeDark=0x7f0d0129;
+        /**  TODO INDIGO THEME 
+ Odnako custom dark theme with material_grey_colors 
+         */
+        public static final int ThemeDarkIndigo=0x7f0d0131;
         public static final int ThemeDarkPreference=0x7f0d0130;
         /**  <style name="ThemeLight" parent="Theme.AppCompat.Light"> 
          */
         public static final int ThemeLight=0x7f0d012c;
+        /**  <style name="ThemeLight" parent="Theme.AppCompat.Light"> 
+         */
+        public static final int ThemeLightIndigo=0x7f0d0134;
         public static final int ThemeLightPreference=0x7f0d012f;
         public static final int ThemeOverlay_AppCompat=0x7f0d00ef;
         /**  Theme overlay that replaces the normal control color, which by default is the same as the

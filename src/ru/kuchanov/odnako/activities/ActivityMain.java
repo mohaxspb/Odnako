@@ -142,14 +142,25 @@ public class ActivityMain extends ActivityBase
 
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true;
+		
+		//TODO
 		if (nightModeIsOn)
 		{
-			this.setTheme(R.style.ThemeDark);
+			this.setTheme(R.style.ThemeDarkIndigo);
 		}
 		else
 		{
-			this.setTheme(R.style.ThemeLight);
+			this.setTheme(R.style.ThemeLightIndigo);
 		}
+		
+//		if (nightModeIsOn)
+//		{
+//			this.setTheme(R.style.ThemeDark);
+//		}
+//		else
+//		{
+//			this.setTheme(R.style.ThemeLight);
+//		}
 
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
