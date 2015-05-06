@@ -108,11 +108,17 @@
         <item>Серая (стандартная)</item>
         <item>Индиго (синяя)</item>
         <item>Красная (просто красная)</item>
+        <item>Сине-зелёная (вроде как)</item>
+        <item>Зелёная (потом примеры прикручу)</item>
+        <item>Янтарная (да, в сл. версии)</item>
     </string-array>
     <string-array name="theme_values">
         <item>grey</item>
         <item>indigo</item>
         <item>red</item>
+        <item>teal</item>
+        <item>green</item>
+        <item>amber</item>
     </string-array>
     <!-- Масштаб картинок и текста для главной -->
     <string-array name="scale">

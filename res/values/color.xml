@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- for rippleEffect -->
     <color name="transparent">#00FFFFFF</color>
-
     <color name="odnako">#ff333333</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
@@ -50,5 +50,45 @@
     <color name="material_red_800">#C62828</color>
     <color name="material_red_900">#B71C1C</color>
     <color name="material_red_900_transparent">#00B71C1C</color>
+    <!-- material_teal_colors -->
+    <color name="material_teal_50">#E0F2F1</color>
+    <color name="material_teal_100">#B2DFDB</color>
+    <color name="material_teal_200">#80CBC4</color>
+    <color name="material_teal_300">#4DB6AC</color>
+    <color name="material_teal_300_transparent">#004DB6AC</color>
+    <color name="material_teal_400">#26A69A</color>
+    <color name="material_teal_500">#009688</color>
+    <color name="material_teal_600">#00897B</color>
+    <color name="material_teal_700">#00796B</color>
+    <color name="material_teal_800">#00695C</color>
+    <color name="material_teal_900">#004D40</color>
+    <color name="material_teal_900_transparent">#00004D40</color>
+    <!-- material_green_colors -->
+    <color name="material_green_50">#E8F5E9</color>
+    <color name="material_green_100">#C8E6C9</color>
+    <color name="material_green_200">#A5D6A7</color>
+    <color name="material_green_300">#81C784</color>
+    <color name="material_green_300_transparent">#0081C784</color>
+    <color name="material_green_400">#66BB6A</color>
+    <color name="material_green_500">#4CAF50</color>
+    <color name="material_green_600">#43A047</color>
+    <color name="material_green_700">#388E3C</color>
+    <color name="material_green_800">#2E7D32</color>
+    <color name="material_green_900">#1B5E20</color>
+    <color name="material_green_900_transparent">#001B5E20</color>
+    
+    <!-- material_amber_colors -->
+    <color name="material_amber_50">#FFF8E1</color>
+    <color name="material_amber_100">#FFECB3</color>
+    <color name="material_amber_200">#FFE082</color>
+    <color name="material_amber_300">#FFD54F</color>
+    <color name="material_amber_300_transparent">#00FFD54F</color>
+    <color name="material_amber_400">#FFCA28</color>
+    <color name="material_amber_500">#FFC107</color>
+    <color name="material_amber_600">#FFB300</color>
+    <color name="material_amber_700">#FFA000</color>
+    <color name="material_amber_800">#FF8F00</color>
+    <color name="material_amber_900">#FF6F00</color>
+    <color name="material_amber_900_transparent">#00FF6F00</color>
 
 </resources>

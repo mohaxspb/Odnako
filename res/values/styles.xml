@@ -8,7 +8,7 @@
         <!--
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
         -->
         <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
@@ -30,6 +30,7 @@
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_800</item>
         <item name="cardBackGroundColorDark">@color/material_grey_800</item>
+        <!-- icons -->
         <item name="themeIcon">@drawable/ic_color_lens_white_48dp</item>
         <item name="nightModeIcon">@drawable/ic_brightness_4_white_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_dark</item>
@@ -197,7 +198,8 @@
     </style>
 
     <!-- TODO INDIGO THEME -->
-    
+
+
     <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDarkIndigo" parent="ThemeDark">
         <item name="android:windowBackground">@color/material_indigo_700</item>
@@ -278,10 +280,21 @@
         <item name="actionMenuTextColor">@color/material_indigo_800</item>
     </style>
 
+    <style name="ThemeLightPreferenceIndigo" parent="ThemeLightIndigo">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_indigo_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <style name="ThemeDarkPreferenceIndigo" parent="ThemeDarkIndigo">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_indigo_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
     <!-- RED THEME -->
-
-
-    <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDarkRed" parent="ThemeDark">
         <item name="android:windowBackground">@color/material_red_700</item>
         <item name="selectorColor">@color/material_red_500</item>
@@ -359,6 +372,302 @@
         <item name="android:popupBackground">@color/material_red_400</item>
         <item name="android:background">@color/material_red_400</item>
         <item name="actionMenuTextColor">@color/material_red_800</item>
+    </style>
+
+    <style name="ThemeLightPreferenceRed" parent="ThemeLightRed">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_red_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <style name="ThemeDarkPreferenceRed" parent="ThemeDarkRed">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_red_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <!-- TEAL THEME -->
+    <style name="ThemeDarkTeal" parent="ThemeDark">
+        <item name="android:windowBackground">@color/material_teal_700</item>
+        <item name="selectorColor">@color/material_teal_500</item>
+        <item name="android:textColorPrimary">@color/material_teal_300</item>
+        <item name="android:textColorPrimaryInverse">@color/material_teal_300</item>
+        <item name="android:textColorSecondary">@color/material_teal_400</item>
+        <item name="actionMenuTextColor">@color/material_teal_400</item>
+        <!--  -->
+        <item name="md_positive_color">@color/material_teal_900</item>
+        <item name="colorPrimary">@color/material_teal_800</item>
+        <item name="colorPrimaryDark">@color/material_teal_900</item>
+        <item name="colorAccent">@color/material_teal_400</item>
+        <item name="android:navigationBarColor">@color/material_teal_900</item>
+        <item name="actionMenuTextAppearance">@color/material_teal_400</item>
+        <item name="android:textColor">@color/material_teal_300</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_teal_900</item>
+        <item name="cardBackGroundColorDark">@color/material_teal_900</item>
+        <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_teal</item>
+        <item name="topImgCover">@drawable/top_img_cover_dark_teal</item>
+
+        <!-- style for dropdown lists, such as context menu -->
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuDarkTeal</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewDarkTeal</item>
+        <item name="android:itemBackground">@drawable/selectable_background_dark_teal</item>
+    </style>
+
+    <style name="OdnakoPopupMenuDarkTeal" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_dark_teal</item>
+        <item name="android:popupBackground">@color/material_teal_800</item>
+        <item name="android:background">@color/material_teal_800</item>
+        <item name="actionMenuTextColor">@color/material_teal_400</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewDarkTeal" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_dark_teal</item>
+        <item name="android:background">@color/material_teal_800</item>
+        <item name="android:popupBackground">@color/material_teal_800</item>
+        <item name="actionMenuTextColor">@color/material_teal_400</item>
+    </style>
+
+    <style name="ThemeLightTeal" parent="ThemeLight">
+        <item name="android:windowBackground">@color/material_teal_200</item>
+        <item name="selectorColor">@color/material_teal_500</item>
+        <item name="android:textColorPrimary">@color/material_teal_800</item>
+        <item name="android:textColorPrimaryInverse">@color/material_teal_800</item>
+        <item name="actionMenuTextColor">@color/material_teal_800</item>
+        <item name="colorPrimary">@color/material_teal_400</item>
+        <item name="colorPrimaryDark">@color/material_teal_500</item>
+        <item name="colorAccent">@color/material_teal_800</item>
+        <item name="android:navigationBarColor">@color/material_teal_500</item>
+        <item name="android:textColorSecondary">@color/material_teal_700</item>
+        <item name="actionMenuTextAppearance">@color/material_teal_800</item>
+        <item name="android:textColor">@color/material_teal_800</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_teal_50</item>
+        <item name="cardBackGroundColorDark">@color/material_teal_200</item>
+        <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_teal</item>
+        <item name="topImgCover">@drawable/top_img_cover_light_teal</item>
+        <!-- standart widjets styles -->
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuLightTeal</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLightTeal</item>
+        <item name="android:itemBackground">@drawable/selectable_background_light_teal</item>
+    </style>
+
+    <style name="OdnakoPopupMenuLightTeal" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_light_teal</item>
+        <item name="android:popupBackground">@color/material_teal_400</item>
+        <item name="android:background">@color/material_teal_400</item>
+        <item name="actionMenuTextColor">@color/material_teal_800</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewLightTeal" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_light_teal</item>
+        <item name="android:popupBackground">@color/material_teal_400</item>
+        <item name="android:background">@color/material_teal_400</item>
+        <item name="actionMenuTextColor">@color/material_teal_800</item>
+    </style>
+
+    <style name="ThemeLightPreferenceTeal" parent="ThemeLightTeal">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_teal_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <style name="ThemeDarkPreferenceTeal" parent="ThemeDarkTeal">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_teal_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <!-- GREEN THEME -->
+    <style name="ThemeDarkGreen" parent="ThemeDark">
+        <item name="android:windowBackground">@color/material_green_700</item>
+        <item name="selectorColor">@color/material_green_500</item>
+        <item name="android:textColorPrimary">@color/material_green_300</item>
+        <item name="android:textColorPrimaryInverse">@color/material_green_300</item>
+        <item name="android:textColorSecondary">@color/material_green_400</item>
+        <item name="actionMenuTextColor">@color/material_green_400</item>
+        <!--  -->
+        <item name="md_positive_color">@color/material_green_900</item>
+        <item name="colorPrimary">@color/material_green_800</item>
+        <item name="colorPrimaryDark">@color/material_green_900</item>
+        <item name="colorAccent">@color/material_green_400</item>
+        <item name="android:navigationBarColor">@color/material_green_900</item>
+        <item name="actionMenuTextAppearance">@color/material_green_400</item>
+        <item name="android:textColor">@color/material_green_300</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_green_900</item>
+        <item name="cardBackGroundColorDark">@color/material_green_900</item>
+        <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_green</item>
+        <item name="topImgCover">@drawable/top_img_cover_dark_green</item>
+
+        <!-- style for dropdown lists, such as context menu -->
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuDarkGreen</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewDarkGreen</item>
+        <item name="android:itemBackground">@drawable/selectable_background_dark_green</item>
+    </style>
+
+    <style name="OdnakoPopupMenuDarkGreen" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_dark_green</item>
+        <item name="android:popupBackground">@color/material_green_800</item>
+        <item name="android:background">@color/material_green_800</item>
+        <item name="actionMenuTextColor">@color/material_green_400</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewDarkGreen" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_dark_green</item>
+        <item name="android:background">@color/material_green_800</item>
+        <item name="android:popupBackground">@color/material_green_800</item>
+        <item name="actionMenuTextColor">@color/material_green_400</item>
+    </style>
+
+    <style name="ThemeLightGreen" parent="ThemeLight">
+        <item name="android:windowBackground">@color/material_green_200</item>
+        <item name="selectorColor">@color/material_green_500</item>
+        <item name="android:textColorPrimary">@color/material_green_800</item>
+        <item name="android:textColorPrimaryInverse">@color/material_green_800</item>
+        <item name="actionMenuTextColor">@color/material_green_800</item>
+        <item name="colorPrimary">@color/material_green_400</item>
+        <item name="colorPrimaryDark">@color/material_green_500</item>
+        <item name="colorAccent">@color/material_green_800</item>
+        <item name="android:navigationBarColor">@color/material_green_500</item>
+        <item name="android:textColorSecondary">@color/material_green_700</item>
+        <item name="actionMenuTextAppearance">@color/material_green_800</item>
+        <item name="android:textColor">@color/material_green_800</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_green_50</item>
+        <item name="cardBackGroundColorDark">@color/material_green_200</item>
+        <!--  -->
+        <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_green</item>
+        <item name="topImgCover">@drawable/top_img_cover_light_green</item>
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuLightGreen</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLightGreen</item>
+        <item name="android:itemBackground">@drawable/selectable_background_light_green</item>
+    </style>
+
+    <style name="OdnakoPopupMenuLightGreen" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_light_green</item>
+        <item name="android:popupBackground">@color/material_green_400</item>
+        <item name="android:background">@color/material_green_400</item>
+        <item name="actionMenuTextColor">@color/material_green_800</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewLightGreen" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_light_green</item>
+        <item name="android:popupBackground">@color/material_green_400</item>
+        <item name="android:background">@color/material_green_400</item>
+        <item name="actionMenuTextColor">@color/material_green_800</item>
+    </style>
+
+    <style name="ThemeLightPreferenceGreen" parent="ThemeLightGreen">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_green_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <style name="ThemeDarkPreferenceGreen" parent="ThemeDarkGreen">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_green_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+    
+        <!-- GREEN THEME -->
+    <style name="ThemeDarkAmber" parent="ThemeDark">
+        <item name="android:windowBackground">@color/material_amber_700</item>
+        <item name="selectorColor">@color/material_amber_500</item>
+        <item name="android:textColorPrimary">@color/material_amber_300</item>
+        <item name="android:textColorPrimaryInverse">@color/material_amber_300</item>
+        <item name="android:textColorSecondary">@color/material_amber_400</item>
+        <item name="actionMenuTextColor">@color/material_amber_400</item>
+        <!--  -->
+        <item name="md_positive_color">@color/material_amber_900</item>
+        <item name="colorPrimary">@color/material_amber_800</item>
+        <item name="colorPrimaryDark">@color/material_amber_900</item>
+        <item name="colorAccent">@color/material_amber_400</item>
+        <item name="android:navigationBarColor">@color/material_amber_900</item>
+        <item name="actionMenuTextAppearance">@color/material_amber_400</item>
+        <item name="android:textColor">@color/material_amber_300</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_amber_900</item>
+        <item name="cardBackGroundColorDark">@color/material_amber_900</item>
+        <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_amber</item>
+        <item name="topImgCover">@drawable/top_img_cover_dark_amber</item>
+
+        <!-- style for dropdown lists, such as context menu -->
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuDarkAmber</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewDarkAmber</item>
+        <item name="android:itemBackground">@drawable/selectable_background_dark_amber</item>
+    </style>
+
+    <style name="OdnakoPopupMenuDarkAmber" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_dark_amber</item>
+        <item name="android:popupBackground">@color/material_amber_800</item>
+        <item name="android:background">@color/material_amber_800</item>
+        <item name="actionMenuTextColor">@color/material_amber_400</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewDarkAmber" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_dark_amber</item>
+        <item name="android:background">@color/material_amber_800</item>
+        <item name="android:popupBackground">@color/material_amber_800</item>
+        <item name="actionMenuTextColor">@color/material_amber_400</item>
+    </style>
+
+    <style name="ThemeLightAmber" parent="ThemeLight">
+        <item name="android:windowBackground">@color/material_amber_200</item>
+        <item name="selectorColor">@color/material_amber_500</item>
+        <item name="android:textColorPrimary">@color/material_amber_800</item>
+        <item name="android:textColorPrimaryInverse">@color/material_amber_800</item>
+        <item name="actionMenuTextColor">@color/material_amber_800</item>
+        <item name="colorPrimary">@color/material_amber_400</item>
+        <item name="colorPrimaryDark">@color/material_amber_500</item>
+        <item name="colorAccent">@color/material_amber_800</item>
+        <item name="android:navigationBarColor">@color/material_amber_500</item>
+        <item name="android:textColorSecondary">@color/material_amber_700</item>
+        <item name="actionMenuTextAppearance">@color/material_amber_800</item>
+        <item name="android:textColor">@color/material_amber_800</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_amber_50</item>
+        <item name="cardBackGroundColorDark">@color/material_amber_200</item>
+        <!--  -->
+        <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_amber</item>
+        <item name="topImgCover">@drawable/top_img_cover_light_amber</item>
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuLightAmber</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLightAmber</item>
+        <item name="android:itemBackground">@drawable/selectable_background_light_amber</item>
+    </style>
+
+    <style name="OdnakoPopupMenuLightAmber" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_light_amber</item>
+        <item name="android:popupBackground">@color/material_amber_400</item>
+        <item name="android:background">@color/material_amber_400</item>
+        <item name="actionMenuTextColor">@color/material_amber_800</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewLightAmber" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_light_amber</item>
+        <item name="android:popupBackground">@color/material_amber_400</item>
+        <item name="android:background">@color/material_amber_400</item>
+        <item name="actionMenuTextColor">@color/material_amber_800</item>
+    </style>
+
+    <style name="ThemeLightPreferenceAmber" parent="ThemeLightAmber">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_amber_300</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <style name="ThemeDarkPreferenceAmber" parent="ThemeDarkAmber">
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/material_amber_800</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowActionBar">true</item>
     </style>
 
 </resources>

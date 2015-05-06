@@ -140,7 +140,6 @@ public class ActivityMain extends ActivityBase
 
 		this.twoPane = this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
-		//TODO
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true;
 		int themeID = R.style.ThemeLight;
@@ -155,17 +154,17 @@ public class ActivityMain extends ActivityBase
 			case ActivityPreference.THEME_RED:
 				themeID = (nightModeIsOn) ? R.style.ThemeDarkRed : R.style.ThemeLightRed;
 			break;
+			case ActivityPreference.THEME_TEAL:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkTeal : R.style.ThemeLightTeal;
+			break;
+			case ActivityPreference.THEME_GREEN:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkGreen : R.style.ThemeLightGreen;
+			break;
+			case ActivityPreference.THEME_AMBER:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkAmber : R.style.ThemeLightAmber;
+			break;
 		}
 		this.setTheme(themeID);
-
-		//		if (nightModeIsOn)
-		//		{
-		//			this.setTheme(R.style.ThemeDark);
-		//		}
-		//		else
-		//		{
-		//			this.setTheme(R.style.ThemeLight);
-		//		}
 
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);

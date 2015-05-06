@@ -40,12 +40,15 @@ SharedPreferences.OnSharedPreferenceChangeListener
 
 	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
 	//Theme
-	public static final String PREF_KEY_NIGHT_MODE = "night_mode";	
+	public static final String PREF_KEY_NIGHT_MODE = "night_mode";
 	public static final String PREF_KEY_THEME = "theme";
 	public static final String THEME_GREY = "grey";
 	public static final String THEME_INDIGO = "indigo";
 	public static final String THEME_RED = "red";
-	
+	public static final String THEME_TEAL = "teal";
+	public static final String THEME_GREEN = "green";
+	public static final String THEME_AMBER = "amber";
+
 	public static final String PREF_KEY_TWO_PANE = "twoPane";
 	public static final String PREF_KEY_UI_SCALE = "scale";
 	public static final String PREF_KEY_ART_SCALE = "scale_art";
@@ -84,15 +87,30 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		//end of get default settings to get all settings later
 
 		//set theme before super and set content to apply it
-		//		if (pref.getString("theme", "dark").equals("dark"))
-		if (this.pref.getBoolean("night_mode", false))
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true;
+		int themeID = R.style.ThemeLightPreference;
+		switch (this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY))
 		{
-			this.setTheme(R.style.ThemeDarkPreference);
+			case ActivityPreference.THEME_GREY:
+				themeID = (nightModeIsOn) ? R.style.ThemeDark : R.style.ThemeLight;
+			break;
+			case ActivityPreference.THEME_INDIGO:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceIndigo : R.style.ThemeLightPreferenceIndigo;
+			break;
+			case ActivityPreference.THEME_RED:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceRed : R.style.ThemeLightPreferenceRed;
+			break;
+			case ActivityPreference.THEME_TEAL:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceTeal : R.style.ThemeLightPreferenceTeal;
+			break;
+			case ActivityPreference.THEME_GREEN:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceGreen : R.style.ThemeLightPreferenceGreen;
+			break;
+			case ActivityPreference.THEME_AMBER:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceAmber : R.style.ThemeLightPreferenceAmber;
+			break;
 		}
-		else
-		{
-			this.setTheme(R.style.ThemeLightPreference);
-		}
+		this.setTheme(themeID);
 
 		//onBuildHeaders() will be called during super.onCreate()
 		try
@@ -118,9 +136,9 @@ SharedPreferences.OnSharedPreferenceChangeListener
 
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	public void onStop()
-	{		
+	{
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
 		super.onStop();
 	}
@@ -129,7 +147,7 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public void onPause()
 	{
 		YandexMetrica.onPauseActivity(this);
-		
+
 		super.onPause();
 	}
 
@@ -276,6 +294,7 @@ SharedPreferences.OnSharedPreferenceChangeListener
 				Log.i(LOG, "twoPane: " + String.valueOf(pref.getBoolean(key, false) == true));
 			break;
 			case PREF_KEY_NIGHT_MODE:
+			case PREF_KEY_THEME:
 				this.recreate();
 			break;
 			case PREF_KEY_NOTIFICATION:

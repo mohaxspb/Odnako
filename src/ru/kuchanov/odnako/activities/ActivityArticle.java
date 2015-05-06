@@ -58,7 +58,6 @@ public class ActivityArticle extends ActivityBase
 		this.checkTimeAds = new CheckTimeToAds(this, mInterstitialAd);
 
 		//set theme before super and set content to apply it
-		//TODO
 		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
 		int themeID = R.style.ThemeLight;
 		switch (this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY))
@@ -72,16 +71,17 @@ public class ActivityArticle extends ActivityBase
 			case ActivityPreference.THEME_RED:
 				themeID = (nightModeIsOn) ? R.style.ThemeDarkRed : R.style.ThemeLightRed;
 			break;
+			case ActivityPreference.THEME_TEAL:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkTeal : R.style.ThemeLightTeal;
+			break;
+			case ActivityPreference.THEME_GREEN:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkGreen : R.style.ThemeLightGreen;
+			break;
+			case ActivityPreference.THEME_AMBER:
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkAmber : R.style.ThemeLightAmber;
+			break;
 		}
 		this.setTheme(themeID);
-//		if (nightModeIsOn)
-//		{
-//			this.setTheme(R.style.ThemeDark);
-//		}
-//		else
-//		{
-//			this.setTheme(R.style.ThemeLight);
-//		}
 
 		super.onCreate(savedInstanceState);
 
