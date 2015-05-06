@@ -105,16 +105,14 @@
         <item>90</item>
     </string-array>
     <string-array name="theme">
-        <item>Светлая</item>
-        <item>Тёмная</item>
+        <item>Серая (стандартная)</item>
+        <item>Индиго (синяя)</item>
+        <item>Красная (просто красная)</item>
     </string-array>
     <string-array name="theme_values">
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
-    <string-array name="theme_str_arr">
-        <item name="ligth">@string/light</item>
-        <item name="dark">@string/dark</item>
+        <item>grey</item>
+        <item>indigo</item>
+        <item>red</item>
     </string-array>
     <!-- Масштаб картинок и текста для главной -->
     <string-array name="scale">
@@ -166,10 +164,8 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    
     <string name="settings_title">Настройки</string>
     <string name="mail_to_me_summary">Написать чего-нибудь разработчику по e-mail. Например: \"Молодец, отличная программа!\" или \"Мне в приложении не хватает такой-то функции, добавьте пожалуйста!\"</string>
-    
     <string name="pro_ver_adv">В полной версии вы сможете пользоваться загрузками статей без ограничений, приложение не будет просить вас включить рекламу. Также вы получите моральное удовлетворение от вклада в развитие IT сектора Российской экономики! =)</string>
     <string name="version_history_summary">Увлекательная и поучительная история развития приложения от первого релиза до нынешнего состояния.</string>
     <string name="two_pane_alert"><![CDATA[На данный момент планшетный режим находится в тестовой версии. По независящим от разработчика причинам (по крайней мере так думает сам разработчик), при быстром перелистывании категорий статей экраны статей (те, что справа) не хотят перерисовываться... Разработчик потратил множество унылых часов на попытки заставить всё это работать как должно, но потерпел неудачу. В будущем планшетный режим будет или таки окончательно исправлен, либо переделан в смысле архитектуры. В данный момент он работает нормально, если листать категории неторопясь. А перерисовка статей достигается поворотом экрана.]]></string>

@@ -25,14 +25,28 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 		super.onCreate(savedState);
 
 		this.act = (PreferenceActivity) this.getActivity();
+		PreferenceManager.setDefaultValues(this.act, R.xml.pref_design, true);
 
 		addPreferencesFromResource(R.xml.pref_design);
 
-		//version_history
-		Preference prefVersionHistory = findPreference("twoPane");
-		prefVersionHistory.setOnPreferenceClickListener(this.twoPaneCL);
+		//twoPane
+		Preference prefTwoPane = findPreference(ActivityPreference.PREF_KEY_TWO_PANE);
+		prefTwoPane.setOnPreferenceClickListener(this.twoPaneCL);
+
+		//twoPane
+//		Preference prefTheme = findPreference(ActivityPreference.PREF_KEY_THEME);
+//		prefTheme.setOnPreferenceClickListener(this.themeCL);
 
 	}
+
+//	protected OnPreferenceClickListener themeCL = new OnPreferenceClickListener()
+//	{
+//		@Override
+//		public boolean onPreferenceClick(Preference preference)
+//		{
+//			return false;
+//		}
+//	};
 
 	protected OnPreferenceClickListener twoPaneCL = new OnPreferenceClickListener()
 	{

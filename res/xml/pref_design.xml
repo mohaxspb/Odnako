@@ -53,7 +53,7 @@
         android:switchTextOn="Вкл" />
 
     <ListPreference
-        android:defaultValue="ligth"
+        android:defaultValue="grey"
         android:entries="@array/theme"
         android:entryValues="@array/theme_values"
         android:icon="?themeIcon"
@@ -62,11 +62,9 @@
         android:title="Выбор темы приложения" >
     </ListPreference>
 
-    <!-- <SwitchPreference
+    <SwitchPreference
         android:defaultValue="@bool/isTablet"
-        android:enabled="@bool/isTablet" -->
-        <SwitchPreference
-        android:defaultValue="@bool/isTablet"
+        android:enabled="@bool/isTablet"
         android:icon="?tabletIcon"
         android:key="twoPane"
         android:summaryOff="Планшетный режим"

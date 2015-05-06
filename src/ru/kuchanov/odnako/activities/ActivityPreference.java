@@ -39,7 +39,13 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_IS_PRO = "isPro";
 
 	public static final String PREF_KEY_ADS_IS_ON = "adsOn";
-	public static final String PREF_KEY_NIGHT_MODE = "night_mode";
+	//Theme
+	public static final String PREF_KEY_NIGHT_MODE = "night_mode";	
+	public static final String PREF_KEY_THEME = "theme";
+	public static final String THEME_GREY = "grey";
+	public static final String THEME_INDIGO = "indigo";
+	public static final String THEME_RED = "red";
+	
 	public static final String PREF_KEY_TWO_PANE = "twoPane";
 	public static final String PREF_KEY_UI_SCALE = "scale";
 	public static final String PREF_KEY_ART_SCALE = "scale_art";

@@ -8,7 +8,7 @@
         <!--
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
         -->
         <!-- test -->
         <item name="android:windowBackground">@color/material_grey_700</item>
@@ -197,10 +197,9 @@
     </style>
 
     <!-- TODO INDIGO THEME -->
-
+    
     <!-- Odnako custom dark theme with material_grey_colors -->
     <style name="ThemeDarkIndigo" parent="ThemeDark">
-
         <item name="android:windowBackground">@color/material_indigo_700</item>
         <item name="selectorColor">@color/material_indigo_500</item>
         <item name="android:textColorPrimary">@color/material_indigo_300</item>
@@ -241,7 +240,6 @@
         <item name="actionMenuTextColor">@color/material_indigo_400</item>
     </style>
 
-    <!-- <style name="ThemeLight" parent="Theme.AppCompat.Light"> -->
     <style name="ThemeLightIndigo" parent="ThemeLight">
         <item name="android:windowBackground">@color/material_indigo_200</item>
         <item name="selectorColor">@color/material_indigo_500</item>
@@ -278,6 +276,89 @@
         <item name="android:popupBackground">@color/material_indigo_400</item>
         <item name="android:background">@color/material_indigo_400</item>
         <item name="actionMenuTextColor">@color/material_indigo_800</item>
+    </style>
+
+    <!-- RED THEME -->
+
+
+    <!-- Odnako custom dark theme with material_grey_colors -->
+    <style name="ThemeDarkRed" parent="ThemeDark">
+        <item name="android:windowBackground">@color/material_red_700</item>
+        <item name="selectorColor">@color/material_red_500</item>
+        <item name="android:textColorPrimary">@color/material_red_300</item>
+        <item name="android:textColorPrimaryInverse">@color/material_red_300</item>
+        <item name="android:textColorSecondary">@color/material_red_400</item>
+        <item name="actionMenuTextColor">@color/material_red_400</item>
+        <!--  -->
+        <item name="md_positive_color">@color/material_red_900</item>
+        <item name="colorPrimary">@color/material_red_800</item>
+        <item name="colorPrimaryDark">@color/material_red_900</item>
+        <item name="colorAccent">@color/material_red_400</item>
+        <item name="android:navigationBarColor">@color/material_red_900</item>
+        <item name="actionMenuTextAppearance">@color/material_red_400</item>
+        <item name="android:textColor">@color/material_red_300</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_red_900</item>
+        <item name="cardBackGroundColorDark">@color/material_red_900</item>
+        <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_red</item>
+        <item name="topImgCover">@drawable/top_img_cover_dark_red</item>
+
+        <!-- style for dropdown lists, such as context menu -->
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuDarkRed</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewDarkRed</item>
+        <item name="android:itemBackground">@drawable/selectable_background_dark_red</item>
+    </style>
+
+    <style name="OdnakoPopupMenuDarkRed" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_dark_red</item>
+        <item name="android:popupBackground">@color/material_red_800</item>
+        <item name="android:background">@color/material_red_800</item>
+        <item name="actionMenuTextColor">@color/material_red_400</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewDarkRed" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_dark_red</item>
+        <item name="android:background">@color/material_red_800</item>
+        <item name="android:popupBackground">@color/material_red_800</item>
+        <item name="actionMenuTextColor">@color/material_red_400</item>
+    </style>
+
+    <style name="ThemeLightRed" parent="ThemeLight">
+        <item name="android:windowBackground">@color/material_red_200</item>
+        <item name="selectorColor">@color/material_red_500</item>
+        <item name="android:textColorPrimary">@color/material_red_800</item>
+        <item name="android:textColorPrimaryInverse">@color/material_red_800</item>
+        <item name="actionMenuTextColor">@color/material_red_800</item>
+        <item name="colorPrimary">@color/material_red_400</item>
+        <item name="colorPrimaryDark">@color/material_red_500</item>
+        <item name="colorAccent">@color/material_red_800</item>
+        <item name="android:navigationBarColor">@color/material_red_500</item>
+        <item name="android:textColorSecondary">@color/material_red_700</item>
+        <item name="actionMenuTextAppearance">@color/material_red_800</item>
+        <item name="android:textColor">@color/material_red_800</item>
+        <!-- custom attrs -->
+        <item name="cardBackGroundColor">@color/material_red_50</item>
+        <item name="cardBackGroundColorDark">@color/material_red_200</item>
+        <!--  -->
+        <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_red</item>
+        <item name="topImgCover">@drawable/top_img_cover_light_red</item>
+        <item name="popupMenuStyle">@style/OdnakoPopupMenuLightRed</item>
+        <item name="dropDownListViewStyle">@style/OdnakoDropDownListViewLightRed</item>
+        <item name="android:itemBackground">@drawable/selectable_background_light_red</item>
+    </style>
+
+    <style name="OdnakoPopupMenuLightRed" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:listSelector">@drawable/selectable_background_light_red</item>
+        <item name="android:popupBackground">@color/material_red_400</item>
+        <item name="android:background">@color/material_red_400</item>
+        <item name="actionMenuTextColor">@color/material_red_800</item>
+    </style>
+
+    <style name="OdnakoDropDownListViewLightRed" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_light_red</item>
+        <item name="android:popupBackground">@color/material_red_400</item>
+        <item name="android:background">@color/material_red_400</item>
+        <item name="actionMenuTextColor">@color/material_red_800</item>
     </style>
 
 </resources>
