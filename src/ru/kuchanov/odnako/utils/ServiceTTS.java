@@ -228,7 +228,6 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			break;
 			case "askToClose":
 				Log.i(LOG, "askToClose");
-				//mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getCloseTTSNotification().build());
 
 				if (askToClose == 0)
 				{

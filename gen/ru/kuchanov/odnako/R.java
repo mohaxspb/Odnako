@@ -4227,34 +4227,16 @@ containing a value of this type.
         public static final int CardView=0x7f0d0121;
         public static final int CardView_Dark=0x7f0d0123;
         public static final int CardView_Light=0x7f0d0122;
-        /**  Background for the search query section (e.g. EditText) 
- <item name="queryBackground">@style/ThemeDark.colorPrimaryDark</item> 
- Background for the actions section (e.g. voice, submit) 
- <item name="submitBackground">@style/ThemeDark.colorPrimaryDark</item> 
- Close button icon 
- <item name="closeIcon">...</item> 
- Search button icon 
- <item name="searchIcon">@drawable/ic_search_white_48dp</item> 
- Go/commit button icon 
- <item name="goIcon">...</item> 
- Voice search button icon 
- <item name="voiceIcon">...</item> 
- Commit icon shown in the query suggestion row 
- <item name="commitIcon">...</item> 
- Layout for query suggestion rows 
- <item name="suggestionRowLayout">...</item> 
-         */
-        public static final int DarkSearchViewStyle=0x7f0d012a;
         public static final int MD_ActionButton=0x7f0d011e;
         public static final int MD_ActionButton_Text=0x7f0d011f;
         public static final int MD_ActionButtonStacked=0x7f0d011d;
         public static final int MD_Dark=0x7f0d011c;
         public static final int MD_Light=0x7f0d011b;
         public static final int MD_WindowAnimation=0x7f0d0120;
-        public static final int OdnakoDropDownListViewDark=0x7f0d012c;
-        public static final int OdnakoDropDownListViewLight=0x7f0d012f;
-        public static final int OdnakoPopupMenuDark=0x7f0d012b;
-        public static final int OdnakoPopupMenuLight=0x7f0d012e;
+        public static final int OdnakoDropDownListViewDark=0x7f0d012b;
+        public static final int OdnakoDropDownListViewLight=0x7f0d012e;
+        public static final int OdnakoPopupMenuDark=0x7f0d012a;
+        public static final int OdnakoPopupMenuLight=0x7f0d012d;
         public static final int Platform_AppCompat=0x7f0d00f4;
         public static final int Platform_AppCompat_Light=0x7f0d00f5;
         public static final int Platform_ThemeOverlay_AppCompat_Dark=0x7f0d0109;
@@ -4365,11 +4347,11 @@ containing a value of this type.
  <item name="android:itemBackground">@color/material_grey_800</item> 
          */
         public static final int ThemeDark=0x7f0d0129;
-        public static final int ThemeDarkPreference=0x7f0d0131;
+        public static final int ThemeDarkPreference=0x7f0d0130;
         /**  <style name="ThemeLight" parent="Theme.AppCompat.Light"> 
          */
-        public static final int ThemeLight=0x7f0d012d;
-        public static final int ThemeLightPreference=0x7f0d0130;
+        public static final int ThemeLight=0x7f0d012c;
+        public static final int ThemeLightPreference=0x7f0d012f;
         public static final int ThemeOverlay_AppCompat=0x7f0d00ef;
         /**  Theme overlay that replaces the normal control color, which by default is the same as the
          secondary text color, with the primary text color. 

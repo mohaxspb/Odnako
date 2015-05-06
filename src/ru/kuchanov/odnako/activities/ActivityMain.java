@@ -132,7 +132,6 @@ public class ActivityMain extends ActivityBase
 		this.bindService();
 
 		//ADS
-		//XXX test for 60 min;
 		if (!this.pref.contains(CheckTimeToAds.PREF_KEY_MAX_IN_APP_PERIOD))
 		{
 			CheckTimeToAds.setMaxInAppPeriod(act, 90L * 60L * 1000L);
