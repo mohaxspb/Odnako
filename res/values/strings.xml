@@ -107,10 +107,10 @@
     <string-array name="theme">
         <item>Серая (стандартная)</item>
         <item>Индиго (синяя)</item>
-        <item>Красная (просто красная)</item>
-        <item>Сине-зелёная (вроде как)</item>
-        <item>Зелёная (потом примеры прикручу)</item>
-        <item>Янтарная (да, в сл. версии)</item>
+        <item>Красная (только в полной версии)</item>
+        <item>Сине-зелёная (только в полной версии)</item>
+        <item>Зелёная (только в полной версии)</item>
+        <item>Янтарная (только в полной версии)</item>
     </string-array>
     <string-array name="theme_values">
         <item>grey</item>

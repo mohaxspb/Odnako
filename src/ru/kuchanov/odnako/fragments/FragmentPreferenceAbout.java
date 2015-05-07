@@ -32,7 +32,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 	CheckBoxPreference allAdsCheckBox;
 
-	final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
+	public final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
 
 	@Override
 	public void onCreate(Bundle savedState)

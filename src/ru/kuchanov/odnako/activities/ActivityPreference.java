@@ -92,7 +92,7 @@ SharedPreferences.OnSharedPreferenceChangeListener
 		switch (this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY))
 		{
 			case ActivityPreference.THEME_GREY:
-				themeID = (nightModeIsOn) ? R.style.ThemeDark : R.style.ThemeLight;
+				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreference : R.style.ThemeLightPreference;
 			break;
 			case ActivityPreference.THEME_INDIGO:
 				themeID = (nightModeIsOn) ? R.style.ThemeDarkPreferenceIndigo : R.style.ThemeLightPreferenceIndigo;
@@ -294,8 +294,22 @@ SharedPreferences.OnSharedPreferenceChangeListener
 				Log.i(LOG, "twoPane: " + String.valueOf(pref.getBoolean(key, false) == true));
 			break;
 			case PREF_KEY_NIGHT_MODE:
-			case PREF_KEY_THEME:
 				this.recreate();
+			break;
+			case PREF_KEY_THEME:
+				boolean isPro = pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == true;
+				if (isPro)
+				{
+					this.recreate();
+				}
+				else
+				{
+					String themeValue=pref.getString(key, "grey");
+					if (themeValue.equals(THEME_GREY) || themeValue.equals(THEME_INDIGO))
+					{
+						this.recreate();
+					}
+				}
 			break;
 			case PREF_KEY_NOTIFICATION:
 				//Запускаем\ отключаем сервис

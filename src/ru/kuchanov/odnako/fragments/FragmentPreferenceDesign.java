@@ -2,22 +2,30 @@ package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityPreference;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 
 public class FragmentPreferenceDesign extends PreferenceFragment
 {
 	final static String LOG = FragmentPreferenceDesign.class.getSimpleName();
 
 	PreferenceActivity act;
+	SharedPreferences pref;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -26,6 +34,7 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 
 		this.act = (PreferenceActivity) this.getActivity();
 		PreferenceManager.setDefaultValues(this.act, R.xml.pref_design, true);
+		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 
 		addPreferencesFromResource(R.xml.pref_design);
 
@@ -33,28 +42,73 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 		Preference prefTwoPane = findPreference(ActivityPreference.PREF_KEY_TWO_PANE);
 		prefTwoPane.setOnPreferenceClickListener(this.twoPaneCL);
 
-		//twoPane
-//		Preference prefTheme = findPreference(ActivityPreference.PREF_KEY_THEME);
-//		prefTheme.setOnPreferenceClickListener(this.themeCL);
+		//theme
+		//		Preference prefTheme = findPreference(ActivityPreference.PREF_KEY_THEME);
+		//		prefTheme.setOnPreferenceClickListener(this.themeCL);
 
+		final ListPreference prefTheme = (ListPreference) findPreference(ActivityPreference.PREF_KEY_THEME);
+		prefTheme.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+		{
+			public boolean onPreferenceChange(Preference preference, Object newValue)
+			{
+				Log.i(LOG, newValue.toString());
+				int index = prefTheme.findIndexOfValue(newValue.toString());
+				if (index == -1)
+				{
+					//Toast.makeText(act.getBaseContext(), prefTheme.getEntries()[index], Toast.LENGTH_LONG).show();
+					return false;
+				}
+				boolean isPro = pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == true;
+				if (isPro)
+				{
+					return true;
+				}
+				if (index > 1)
+				{
+					pref.edit().putString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY).commit();
+					MaterialDialog dialogGoPro;
+					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
+
+					dialogGoProBuilder.title(R.string.go_pro_title)
+					.content(R.string.go_pro_advantages)
+					.positiveText(R.string.go_pro_buy)
+					.callback(new MaterialDialog.ButtonCallback()
+					{
+						@Override
+						public void onPositive(MaterialDialog dialog)
+						{
+							try
+							{
+								act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
+								+ FragmentPreferenceAbout.LINK_TO_PRO)));
+							} catch (Exception e)
+							{
+								String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
+								Log.e(LOG, marketErrMsg);
+								e.printStackTrace();
+								Toast.makeText(act, marketErrMsg, Toast.LENGTH_SHORT).show();
+							}
+						}
+					});
+					dialogGoPro = dialogGoProBuilder.build();
+					int textColor = act.getResources().getColor(R.color.black);
+					((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(
+					R.drawable.md_btn_shape_green);
+					dialogGoPro.show();
+
+					return false;
+				}
+				return true;
+			}
+		});
 	}
-
-//	protected OnPreferenceClickListener themeCL = new OnPreferenceClickListener()
-//	{
-//		@Override
-//		public boolean onPreferenceClick(Preference preference)
-//		{
-//			return false;
-//		}
-//	};
 
 	protected OnPreferenceClickListener twoPaneCL = new OnPreferenceClickListener()
 	{
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
-			final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
-
 			MaterialDialog dialogTwoPaneAlert;
 			MaterialDialog.Builder dialogTwoPaneAlertBuilder = new MaterialDialog.Builder(act);
 			dialogTwoPaneAlertBuilder.title("Планшетный режим")
