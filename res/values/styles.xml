@@ -69,6 +69,7 @@
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_white_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
+        <item name="archiveIcon">@drawable/ic_archive_white_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_dark</item>
@@ -150,7 +151,6 @@
         <item name="vibrationIcon">@drawable/ic_vibration_grey600_48dp</item>
         <item name="systemSettingsIcon">@drawable/ic_storage_grey600_48dp</item>
         <item name="aboutIcon">@drawable/ic_info_grey600_48dp</item>
-
         <!-- more and more -->
         <item name="marketDownlodIcon">@drawable/ic_shop_grey600_48dp</item>
         <item name="marketDOWNLOADEDIcon">@drawable/ic_play_install_grey600_48dp</item>
@@ -160,6 +160,7 @@
         <item name="openInBrowserIcon">@drawable/ic_open_in_browser_grey600_48dp</item>
         <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
+        <item name="archiveIcon">@drawable/ic_archive_grey600_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_light</item>
@@ -572,8 +573,8 @@
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowActionBar">true</item>
     </style>
-    
-        <!-- GREEN THEME -->
+
+    <!-- GREEN THEME -->
     <style name="ThemeDarkAmber" parent="ThemeDark">
         <item name="android:windowBackground">@color/material_amber_700</item>
         <item name="selectorColor">@color/material_amber_500</item>

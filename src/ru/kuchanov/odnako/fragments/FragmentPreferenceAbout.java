@@ -4,17 +4,14 @@ import ru.kuchanov.odnako.R;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -23,14 +20,12 @@ import com.afollestad.materialdialogs.internal.MDButton;
 
 public class FragmentPreferenceAbout extends PreferenceFragment
 {
-	final static String LOG = FragmentPreferenceAbout.class.getSimpleName();
+	private final static String LOG = FragmentPreferenceAbout.class.getSimpleName();
 
-	PreferenceActivity act;
+	private PreferenceActivity act;
 
-	static String APP_NAME;
-	static String APP_TITLE;
-
-	CheckBoxPreference allAdsCheckBox;
+	private static String APP_NAME;
+	private static String APP_TITLE;
 
 	public final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
 
@@ -45,11 +40,6 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		APP_NAME = this.act.getApplicationInfo().packageName;
 
 		addPreferencesFromResource(R.xml.pref_about);
-
-		///ads prefs
-		//		allAdsCheckBox = (CheckBoxPreference) findPreference("adsOn");
-		//		allAdsCheckBox.setOnPreferenceClickListener(onOfAllAds);
-		//end of ads prefs
 
 		//link_to_market
 		Preference prefereces = findPreference("link_to_market");
@@ -71,6 +61,9 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		Preference prefVersionHistory = findPreference("version_history");
 		prefVersionHistory.setOnPreferenceClickListener(this.versionHistoryCL);
 
+		//version_history
+		Preference prefUsedLibs = findPreference("used_libs");
+		prefUsedLibs.setOnPreferenceClickListener(this.usedLibsCL);
 	}
 
 	protected OnPreferenceClickListener linkToMarket = new OnPreferenceClickListener()
@@ -184,12 +177,12 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 
 			String allVersionsDescriptionString;
 			String[] allVerArr = act.getResources().getStringArray(R.array.version_history_arr);
-			StringBuilder sb=new StringBuilder();
-			for(String s:allVerArr)
+			StringBuilder sb = new StringBuilder();
+			for (String s : allVerArr)
 			{
-				sb.append(s);				
+				sb.append(s);
 			}
-			allVersionsDescriptionString=sb.toString();
+			allVersionsDescriptionString = sb.toString();
 
 			MaterialDialog dialogVersionHistory;
 			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
@@ -198,16 +191,34 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			.positiveText("Это было интересно!");
 			dialogVersionHistory = dialogGoProBuilder.build();
 			//getColor
-			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
-			int indexOfAttrTextSize = 0;
-			TypedValue typedValue = new TypedValue();
-			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-			int textColor = a.getColor(indexOfAttrTextSize, 0);
-			a.recycle();
-			((MDButton) dialogVersionHistory.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
-			
+			//			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
+			//			int indexOfAttrTextSize = 0;
+			//			TypedValue typedValue = new TypedValue();
+			//			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+			//			int textColor = a.getColor(indexOfAttrTextSize, 0);
+			//			a.recycle();
+			//			((MDButton) dialogVersionHistory.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+
 			dialogVersionHistory.show();
-			
+
+			return false;
+		}
+	};
+
+	protected OnPreferenceClickListener usedLibsCL = new OnPreferenceClickListener()
+	{
+		@Override
+		public boolean onPreferenceClick(Preference preference)
+		{
+			MaterialDialog dialogVersionHistory;
+			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
+			dialogGoProBuilder.title("Список использованных в разработке библиотек")
+			.content(Html.fromHtml(act.getResources().getString(R.string.used_libs)))
+			.positiveText("Это может пригодится...");
+			dialogVersionHistory = dialogGoProBuilder.build();
+
+			dialogVersionHistory.show();
+
 			return false;
 		}
 	};

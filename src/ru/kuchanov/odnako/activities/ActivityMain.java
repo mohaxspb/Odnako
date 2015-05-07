@@ -433,7 +433,7 @@ public class ActivityMain extends ActivityBase
 		if (alarmUp)
 		{
 			//Log.d("myTag", "Alarm is already active");
-			System.out.println("Alarm is already active");
+			Log.i(LOG, "Alarm is already active");
 
 			if (notifOn)
 			{

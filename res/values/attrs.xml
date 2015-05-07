@@ -76,6 +76,8 @@
     <attr name="openInBrowserIcon" format="reference" />
     <attr name="mailToMeIcon" format="reference" />
     <attr name="tabletIcon" format="reference" />
+    <attr name="archiveIcon" format="reference"/>
+    <!--  -->
     <attr name="coverTopToBottom" format="reference" />
     <attr name="topImgCover" format="reference" />
 

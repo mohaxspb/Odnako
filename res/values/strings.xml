@@ -172,18 +172,41 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="settings_title">Настройки</string>
     <string name="mail_to_me_summary">Написать чего-нибудь разработчику по e-mail. Например: \"Молодец, отличная программа!\" или \"Мне в приложении не хватает такой-то функции, добавьте пожалуйста!\"</string>
-    <string name="pro_ver_adv"><![CDATA[В полной версии вы получите:<br/><br/>
+    <string name="pro_ver_adv">
+<![CDATA[В полной версии вы получите:<br/><br/>
         •неограниченные возможности оф-лайн чтения!<br/>
         •ещё 4 цветовых темы приложения!<br/>
         •больше никакой рекламы!<br/>
         •благодарность разработчика!<br/>
-        •и самое главное: Вы получите моральное удовлетворение от вклада в развитие IT сектора российской экономики! =)]]></string>
+        •и самое главное: Вы получите моральное удовлетворение от вклада в развитие IT сектора российской экономики! =)]]>
+    </string>
     <string name="version_history_summary">Увлекательная и поучительная история развития приложения от первого релиза до нынешнего состояния.</string>
-    <string name="two_pane_alert"><![CDATA[На данный момент планшетный режим находится в тестовой версии.<br/><br/>
+    <string name="two_pane_alert">
+<![CDATA[На данный момент планшетный режим находится в тестовой версии.<br/><br/>
         По независящим от разработчика причинам (по крайней мере так думает сам разработчик), при быстром перелистывании категорий статей экраны статей (те, что справа) не хотят перерисовываться...<br/>
         Разработчик потратил множество унылых часов на попытки заставить всё это работать как должно, но потерпел неудачу.<br/>
         В будущем планшетный режим будет или таки окончательно исправлен, либо переделан в смысле архитектуры.<br/><br/>
-        В данный момент он работает нормально, если листать категории неторопясь. А перерисовка статей достигается поворотом экрана.]]></string>
+        В данный момент он работает нормально, если листать категории неторопясь. А перерисовка статей достигается поворотом экрана.]]>
+    </string>
+    <string name="used_libs">
+<![CDATA[<p><strong>При создании сего приложения пользовались нижеперечисленные библиотеки:<br/></strong><br/><br/>
+        •<a href=\"https://github.com/JakeWharton/NineOldAndroids\">NineOldAndroids</a><br/>
+        •<a href=\"https://github.com/makovkastar/FloatingActionButton\">FloatingActionButton</a><br/>
+        •<a href=\"https://github.com/square/okhttp\">okhttp</a><br/>
+        •<a href=\"https://github.com/square/mimecraft\">mimecraft</a><br/>
+        •<a href=\"https://github.com/ACRA/acra\">ACRA</a><br/>
+        •<a href=\"https://github.com/balysv/material-ripple\">material-ripple</a><br/>
+        •<a href=\"http://ormlite.com/\">OrmLite</a><br/>
+        •<a href=\"https://github.com/jakenjarvis/Android-OrmLiteContentProvider\">Android-OrmLiteContentProvider</a><br/>
+        •<a href=\"https://github.com/ApmeM/android-flowlayout\">android-flowlayout</a><br/>
+        •<a href=\"https://github.com/afollestad/material-dialogs\">material-dialogs</a><br/>
+        •<a href=\"https://github.com/nostra13/Android-Universal-Image-Loader\">Android-Universal-Image-Loader</a><br/>
+        •<a href=\"https://gist.github.com/pyricau/3424004\">Fixed JellyBeen TextView</a><br/>
+        •<a href=\"https://github.com/yandexmobile/metrica-sdk-android\">Yandex-metrica</a><br/>
+        •<a href=\"https://github.com/scruffyfox/Robin-Client/blob/master/v2%20client/Robin/src/main/java/in/lib/view/HintedImageView.java\">Toast to ImageView onLongClick</a><br/>
+        •<a href=\"https://bitbucket.org/sagus_helgy/prerate\">PreRate</a><br/>
+        </p>]]>
+    </string>
 
     <string-array name="version_history_arr">
         <item>
@@ -208,6 +231,7 @@
 <strong>Разное:</strong><br/>
 -Выбрать размер текста в комментариях теперь тоже можно из настроек.<br/>
 -Т.к. приложение переписано с нуля, то все старые баги заменены на новые фичи)<br/>
+-Теперь у сего приложения открытый исходный код и если вы умеете в ООП, Java и Git по жду ваших pull-request-ов <a href=\"https://github.com/mohaxspb/Odnako/\">тут</a><br/>
 </p>]]>
         </item>
         <item>

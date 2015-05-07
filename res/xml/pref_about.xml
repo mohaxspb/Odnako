@@ -24,44 +24,22 @@
         android:title="Поделиться приложением" >
     </Preference>
     <Preference
+        android:icon="?mailToMeIcon"
+        android:key="mail_to_me"
+        android:summary="@string/mail_to_me_summary"
+        android:title="Написать разработчику" >
+    </Preference>
+    <Preference
         android:icon="?aboutIcon"
         android:key="version_history"
         android:summary="@string/version_history_summary"
         android:title="История изменений" >
     </Preference>
     <Preference
-        android:icon="?mailToMeIcon"
-        android:key="mail_to_me"
-        android:summary="@string/mail_to_me_summary"
-        android:title="Написать разработчику" >
+        android:icon="?archiveIcon"
+        android:key="used_libs"
+        android:summary="Ссылки на полезные в разработке ресурсы"
+        android:title="Использованные библиотеки" >
     </Preference>
-    <!-- <Preference android:summary="@string/help_me" /> -->
-
-
-    <!--
-    <PreferenceScreen
-        android:enabled="true"
-        android:key="screen"
-        android:summary="Поднять ВВП Родины, путём помощи разработчику в зарабатывании денег на отпуск в Крыму"
-        android:title="Поддержать разработчика" >
-        <PreferenceCategory android:title="@string/ads_on_advantages" >
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="adsOn"
-                android:summary="ВКЛ/ВЫКЛ рекламу"
-                android:summaryOff="Нет, я НЕ уважаю труд разработчика и НЕ хочу повысить ВВП Родины, дав ему (разработчику) возможность заработать на отдых в Крыму"
-                android:summaryOn="Да, я уважаю труд разработчика и хочу повысить ВВП Родины, дав ему (разработчику) возможность заработать на отдых в Крыму"
-                android:title="Управление рекламой" >
-            </CheckBoxPreference>
-        </PreferenceCategory>
-        <PreferenceCategory android:title="@string/pro_ver_adv" >
-            <Preference
-                android:key="link_to_pro"
-                android:summary="Откроется play market"
-                android:title="Купить полную версию" >
-            </Preference>
-        </PreferenceCategory>
-    </PreferenceScreen>
-    -->
 
 </PreferenceScreen>
