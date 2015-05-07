@@ -59,6 +59,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.InterstitialAd;
+import com.pandorika.prerate.PreRate;
 import com.yandex.metrica.YandexMetrica;
 
 public class ActivityMain extends ActivityBase
@@ -134,7 +135,7 @@ public class ActivityMain extends ActivityBase
 		//ADS
 		if (!this.pref.contains(CheckTimeToAds.PREF_KEY_MAX_IN_APP_PERIOD))
 		{
-			CheckTimeToAds.setMaxInAppPeriod(act, 90L * 60L * 1000L);
+			CheckTimeToAds.setMaxInAppPeriod(act, 60L * 60L * 1000L);
 		}
 		this.checkTimeAds = new CheckTimeToAds(this, this.mInterstitialAd);
 
@@ -412,6 +413,9 @@ public class ActivityMain extends ActivityBase
 		ReporterSettings.checkIsUpdatedFromOldVer(act);
 
 		this.checkTimeAds.onResume();
+
+		//PreRate dialog
+		PreRate.init(this, "mohax.spb@gmail.ru", "От пользователя приложения Однако").showIfNeed();
 
 		//Check if autoload alarm is set
 		Intent intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
@@ -1200,5 +1204,21 @@ public class ActivityMain extends ActivityBase
 
 			break;
 		}
+	}
+	
+	public void onDestroy()
+	{
+		Log.d(LOG, "onDestroy");
+		if (bound)
+		{
+			this.act.unbindService(sConn);
+			bound = false;
+		}
+		PreRate.clearDialogIfOpen();
+		//		if (this.adView != null)
+		//		{
+		//			adView.destroy();
+		//		}
+		super.onDestroy();
 	}
 }
