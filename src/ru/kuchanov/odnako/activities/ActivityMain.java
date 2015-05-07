@@ -33,6 +33,7 @@ import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.NewVersionFeachersDialog;
 import ru.kuchanov.odnako.utils.ReporterSettings;
+import ru.kuchanov.odnako.utils.ShareApp;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -416,6 +417,9 @@ public class ActivityMain extends ActivityBase
 
 		//PreRate dialog
 		PreRate.init(this, "mohax.spb@gmail.ru", "От пользователя приложения Однако").showIfNeed();
+
+		//Share app dialog
+		ShareApp.appLaunched(act);
 
 		//Check if autoload alarm is set
 		Intent intent2check = new Intent(this.getApplicationContext(), ReceiverTimer.class);
@@ -1205,7 +1209,7 @@ public class ActivityMain extends ActivityBase
 			break;
 		}
 	}
-	
+
 	public void onDestroy()
 	{
 		Log.d(LOG, "onDestroy");

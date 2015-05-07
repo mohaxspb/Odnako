@@ -70,7 +70,6 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 					MaterialDialog dialogGoPro;
 					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 
-//					dialogGoProBuilder.title(R.string.go_pro_title)
 					dialogGoProBuilder.title("Эта тема доступна в полной версии приложения")
 					.content(Html.fromHtml(act.getResources().getString(R.string.pro_ver_adv)))
 					.positiveText(R.string.go_pro_buy)
