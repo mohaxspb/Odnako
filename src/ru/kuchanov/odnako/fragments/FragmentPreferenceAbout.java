@@ -100,7 +100,7 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 
 			dialogGoProBuilder.title(R.string.go_pro_title)
-			.content(R.string.go_pro_advantages)
+			.content(Html.fromHtml(act.getResources().getString(R.string.pro_ver_adv)))
 			.positiveText(R.string.go_pro_buy)
 			.callback(new MaterialDialog.ButtonCallback()
 			{

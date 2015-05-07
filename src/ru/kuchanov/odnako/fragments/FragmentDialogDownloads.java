@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -149,7 +150,7 @@ public class FragmentDialogDownloads extends DialogFragment
 					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 
 					dialogGoProBuilder.title(R.string.go_pro_title)
-					.content(R.string.go_pro_advantages)
+					.content(Html.fromHtml(act.getResources().getString(R.string.pro_ver_adv)))
 					.positiveText(R.string.go_pro_buy)
 					.callback(new MaterialDialog.ButtonCallback()
 					{

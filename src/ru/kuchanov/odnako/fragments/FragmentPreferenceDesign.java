@@ -13,6 +13,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -69,8 +70,9 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 					MaterialDialog dialogGoPro;
 					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 
-					dialogGoProBuilder.title(R.string.go_pro_title)
-					.content(R.string.go_pro_advantages)
+//					dialogGoProBuilder.title(R.string.go_pro_title)
+					dialogGoProBuilder.title("Эта тема доступна в полной версии приложения")
+					.content(Html.fromHtml(act.getResources().getString(R.string.pro_ver_adv)))
 					.positiveText(R.string.go_pro_buy)
 					.callback(new MaterialDialog.ButtonCallback()
 					{
@@ -112,7 +114,7 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 			MaterialDialog dialogTwoPaneAlert;
 			MaterialDialog.Builder dialogTwoPaneAlertBuilder = new MaterialDialog.Builder(act);
 			dialogTwoPaneAlertBuilder.title("Планшетный режим")
-			.content(act.getResources().getString(R.string.two_pane_alert))
+			.content(Html.fromHtml(act.getResources().getString(R.string.two_pane_alert)))
 			.positiveText("Всё равно включить")
 			.negativeText("Тогда не надо")
 			.callback(new MaterialDialog.ButtonCallback()
