@@ -12,7 +12,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.yandex.metrica.YandexMetrica;
 
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.animations.RotationPageTransformer;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
@@ -147,7 +147,7 @@ public class ActivityArticle extends ActivityBase
 		this.getAllCatAndAutTitles();
 
 		this.pager = (ViewPager) this.findViewById(R.id.pager_right);
-		this.pager.setPageTransformer(true, new RotationPageTransformer());
+//		this.pager.setPageTransformer(true, new RotationPageTransformer());
 		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), getCurrentCategory(), act);
 		this.pager.setAdapter(pagerAdapter);
 		PagerListenerArticle listener = new PagerListenerArticle(this, getCurrentCategory());

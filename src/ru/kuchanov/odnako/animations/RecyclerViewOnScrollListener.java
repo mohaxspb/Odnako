@@ -58,7 +58,13 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 				{
 					if (manager.findFirstVisibleItemPosition() == 0)
 					{
-						initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+						try
+						{
+							initialDistance = (int) (manager.findViewByPosition(1).getY() - toolbar.getHeight());
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			break;
@@ -164,12 +170,12 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			}
 		}
 		////End of move picture
-		
+
 		//as we have translusent status bar we must plus statusBar height to toolbar's Ycoord
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-//				{
-//					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
-//				}
+		//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		//				{
+		//					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
+		//				}
 
 		//move light actionBar
 		if (scrollToUp)
@@ -232,15 +238,15 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			else
 			{
 				//as we have translusent status bar we must plus statusBar height to toolbar's Ycoord
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-//				{
-////					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
-//					toolbar.setY(0 + getStatusBarHeight());
-//				}else
-//				{
-					toolbar.setY(0);
-//				}
-				
+				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+				//				{
+				////					toolbar.setY(this.toolbar.getY() + getStatusBarHeight());
+				//					toolbar.setY(0 + getStatusBarHeight());
+				//				}else
+				//				{
+				toolbar.setY(0);
+				//				}
+
 			}
 
 			//light actionBar

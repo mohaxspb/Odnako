@@ -46,10 +46,10 @@ public class NewVersionFeachersDialog
 		}
 		else
 		{
-			showNewVersionDialog(ctx);
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putBoolean(ActivityPreference.PREF_KEY_FIRST_LAUNCH, true);
 			editor.commit();
+			showNewVersionDialog(ctx);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class NewVersionFeachersDialog
 		MaterialDialog dialognewVersion;
 		MaterialDialog.Builder dialognewVersionBuilder = new MaterialDialog.Builder(ctx);
 		dialognewVersionBuilder.title(APP_TITLE + ", версия " + app_ver)
-		.icon(ctx.getDrawable(ctx.getApplicationInfo().icon))
+//		.icon(ctx.getDrawable(ctx.getApplicationInfo().icon))
 		.content(Html.fromHtml(message))
 		.positiveText("Ура!");
 		dialognewVersion = dialognewVersionBuilder.build();

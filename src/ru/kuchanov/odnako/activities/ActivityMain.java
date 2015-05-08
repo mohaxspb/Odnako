@@ -14,7 +14,6 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
-import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
@@ -591,7 +590,7 @@ public class ActivityMain extends ActivityBase
 		final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-		final MenuItem refresh = menu.findItem(R.id.refresh);
+//		final MenuItem refresh = menu.findItem(R.id.refresh);
 		final MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener()
@@ -607,7 +606,7 @@ public class ActivityMain extends ActivityBase
 				isKeyboardOpened = true;
 
 				allSettings.setVisible(false);
-				refresh.setVisible(false);
+//				refresh.setVisible(false);
 				return true;
 			}
 
@@ -616,7 +615,7 @@ public class ActivityMain extends ActivityBase
 			{
 				//System.out.println("onMenuItemActionCollapse");
 				allSettings.setVisible(true);
-				refresh.setVisible(true);
+//				refresh.setVisible(true);
 
 				isKeyboardOpened = false;
 				queryToSave = null;
@@ -797,7 +796,7 @@ public class ActivityMain extends ActivityBase
 				searchView.clearFocus();
 			}
 			allSettings.setVisible(false);
-			refresh.setVisible(false);
+//			refresh.setVisible(false);
 		}
 		else
 		{
@@ -814,14 +813,14 @@ public class ActivityMain extends ActivityBase
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 
-		MenuItem refresh = menu.findItem(R.id.refresh);
+//		MenuItem refresh = menu.findItem(R.id.refresh);
 		MenuItem settingsAll = menu.findItem(R.id.action_settings_all);
 		MenuItem search = menu.findItem(R.id.action_search);
 
 		if (drawerOpen)
 		{
 			settingsAll.setVisible(false);
-			refresh.setVisible(false);
+//			refresh.setVisible(false);
 			search.setVisible(false);
 		}
 		else
@@ -837,25 +836,25 @@ public class ActivityMain extends ActivityBase
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-							refresh.setVisible(false);
+//							refresh.setVisible(false);
 							settingsAll.setVisible(false);
 						}
 						else
 						{
 							search.setVisible(false);
-							refresh.setVisible(true);
+//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-						refresh.setVisible(false);
+//						refresh.setVisible(false);
 						settingsAll.setVisible(false);
 					break;
 					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
-						refresh.setVisible(true);
+//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 				}
@@ -871,25 +870,25 @@ public class ActivityMain extends ActivityBase
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-							refresh.setVisible(false);
+//							refresh.setVisible(false);
 							settingsAll.setVisible(true);
 						}
 						else
 						{
 							search.setVisible(false);
-							refresh.setVisible(true);
+//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-						refresh.setVisible(true);
+//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
-						refresh.setVisible(true);
+//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 				}
@@ -922,11 +921,11 @@ public class ActivityMain extends ActivityBase
 					themeMenuItem.setChecked(true);
 				}
 				return true;
-			case R.id.refresh:
-				Log.e(LOG, "refresh");
-				DataBaseHelper h = new DataBaseHelper(act);
-				int DBVersion = h.getWritableDatabase().getVersion();
-				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
+//			case R.id.refresh:
+//				Log.e(LOG, "refresh");
+//				DataBaseHelper h = new DataBaseHelper(act);
+//				int DBVersion = h.getWritableDatabase().getVersion();
+//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// 
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();
@@ -954,7 +953,7 @@ public class ActivityMain extends ActivityBase
 				//				+ "_set_filter");
 				//				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 
-				return true;
+//				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);

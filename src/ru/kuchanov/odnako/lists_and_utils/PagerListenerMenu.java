@@ -144,7 +144,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		//menuOptions
 		Menu menu = toolbar.getMenu();
-		MenuItem refresh = menu.findItem(R.id.refresh);
+//		MenuItem refresh = menu.findItem(R.id.refresh);
 		MenuItem search = menu.findItem(R.id.action_search);
 		if (search == null)
 		{
@@ -155,13 +155,13 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			if (position == 3 || position == 13)
 			{
 				search.setVisible(true);
-				refresh.setVisible(false);
+//				refresh.setVisible(false);
 			}
 			else
 			{
 				search.setVisible(false);
 				search.collapseActionView();
-				refresh.setVisible(true);
+//				refresh.setVisible(true);
 			}
 		}
 	}

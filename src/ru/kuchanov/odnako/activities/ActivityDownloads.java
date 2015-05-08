@@ -6,10 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
-import org.acra.ACRA;
-
-import com.google.android.gms.ads.InterstitialAd;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import android.content.Intent;
@@ -18,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.ads.InterstitialAd;
 
 public class ActivityDownloads extends ActivityBase
 {
@@ -118,11 +116,11 @@ public class ActivityDownloads extends ActivityBase
 		}
 		switch (item.getItemId())
 		{
-			case R.id.refresh:
-				System.out.println("refresh");
-				ACRA.getErrorReporter().handleSilentException(
-				new RuntimeException("Exception from Downloading activity from refresh button"));
-				return true;
+//			case R.id.refresh:
+//				System.out.println("refresh");
+//				ACRA.getErrorReporter().handleSilentException(
+//				new RuntimeException("Exception from Downloading activity from refresh button"));
+//				return true;
 			case R.id.action_search:
 				//				String url = "http://kuchanov.ru/acra/test.php";
 				//				TestPhp testPhp = new TestPhp(act, url);

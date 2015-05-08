@@ -98,7 +98,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.toolbar.setTitle(this.allAuthors.get(position).getName());
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
-			MenuItem refresh = menu.findItem(R.id.refresh);
+//			MenuItem refresh = menu.findItem(R.id.refresh);
 			if (search == null)
 			{
 				//can be if menu populated after on resume and we hide elements there
@@ -106,7 +106,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			else
 			{
 				search.setVisible(true);
-				refresh.setVisible(true);
+//				refresh.setVisible(true);
 			}
 			//if twoPane we must set rightPager
 

@@ -3521,7 +3521,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0d0054;
         public static final int action_mode_bar_stub=0x7f0d0053;
         public static final int action_mode_close_button=0x7f0d003c;
-        public static final int action_search=0x7f0d00db;
+        public static final int action_search=0x7f0d00da;
         public static final int action_settings=0x7f0d00d4;
         public static final int action_settings_all=0x7f0d00d5;
         public static final int activity_chooser_view_content=0x7f0d003d;
@@ -3665,7 +3665,6 @@ containing a value of this type.
         public static final int rating_bar_0=0x7f0d00c6;
         public static final int read_img=0x7f0d0086;
         public static final int recycler_view=0x7f0d00b6;
-        public static final int refresh=0x7f0d00da;
         public static final int sandbox=0x7f0d002e;
         public static final int satellite=0x7f0d0029;
         public static final int save_img=0x7f0d0085;

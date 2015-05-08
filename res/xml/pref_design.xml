@@ -62,8 +62,10 @@
         android:title="Выбор темы приложения" >
     </ListPreference>
 
-    <SwitchPreference
-        android:defaultValue="@bool/isTablet"
+    <!-- <SwitchPreference
+        android:defaultValue="@bool/isTablet" -->
+        <SwitchPreference
+        android:defaultValue="false" 
         android:enabled="@bool/isTablet"
         android:icon="?tabletIcon"
         android:key="twoPane"
