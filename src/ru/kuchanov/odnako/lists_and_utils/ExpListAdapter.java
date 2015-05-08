@@ -3,8 +3,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
@@ -30,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 public class ExpListAdapter extends BaseExpandableListAdapter
 {
 
@@ -40,6 +40,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 	private Drawable drawableArrrowDown;
 	private Drawable drawableArrowUp;
 	private Drawable drawableSaved;
+	private Drawable drawableContacs;
 	private Drawable drawableSettings;
 	private Drawable drawableSubject;
 	private Drawable drawableCategoriesMore;
@@ -71,6 +72,11 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		attrs = new int[] { R.attr.saveIcon };
 		ta = this.act.obtainStyledAttributes(attrs);
 		drawableSaved = ta.getDrawable(0);
+		ta.recycle();
+		//set contactsIcon by theme
+		attrs = new int[] { R.attr.mailToMeIcon };
+		ta = this.act.obtainStyledAttributes(attrs);
+		drawableContacs = ta.getDrawable(0);
 		ta.recycle();
 		//set settingsIcon by theme
 		attrs = new int[] { R.attr.settingsIcon };
@@ -234,8 +240,16 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 					holderMain.right.setImageDrawable(drawableArrrowDown);
 				}
 			break;
-			//settings
+			//contacts
 			case 2:
+				//Left img
+				holderMain.left.setImageDrawable(drawableContacs);
+
+				//Right img
+				holderMain.right.setImageDrawable(null);
+			break;
+			//settings
+			case 3:
 				//Left img
 				holderMain.left.setImageDrawable(drawableSettings);
 

@@ -5,6 +5,7 @@
     <string-array name="menu_items">
         <item>Авторы</item>
         <item>Категории</item>
+        <item>Обратная связь</item>
         <item>Настройки</item>
     </string-array>
     <string-array name="authors">

@@ -20,11 +20,11 @@ public class FillMenuList
 		ArrayList<String> children1 = new ArrayList<String>();
 		ArrayList<String> children2 = new ArrayList<String>();
 		ArrayList<String> children3 = new ArrayList<String>();
+		ArrayList<String> children4 = new ArrayList<String>();
 
 		String[] menuCat = ctx.getResources().getStringArray(R.array.menu_items);
 		for (int i = 0; i < menuCat.length; i++)
 		{
-			//authors
 			switch (i)
 			{
 				case 0:
@@ -46,8 +46,10 @@ public class FillMenuList
 				case 2:
 					groups.add(children3);
 				break;
+				case 3:
+					groups.add(children4);
+				break;
 			}
-			///test
 		}
 		return groups;
 	}

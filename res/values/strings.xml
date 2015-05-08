@@ -188,6 +188,32 @@
         В будущем планшетный режим будет или таки окончательно исправлен, либо переделан в смысле архитектуры.<br/><br/>
         В данный момент он работает нормально, если листать категории неторопясь. А перерисовка статей достигается поворотом экрана.]]>
     </string>
+    
+    <string-array name="contacts">
+        <item>
+<![CDATA[<p><strong>Вконтакте:</strong><br/>
+        •<a href=\"https://vk.com/odnako_android\">Группа приложения</a><br/>
+        •<a href=\"https://vk.com/odnako_org\">Группа сайта</a><br/><br/>
+        <strong>Google+:</strong><br/>
+        •<a href=\"https://plus.google.com/u/0/communities/118261515338041960622\">Группа для альфа- и бета-тестирования</a><br/><br/>
+        <strong>GitHub:</strong><br/>
+        •<a href=\"https://github.com/mohaxspb/Odnako\">Репозиторий с кодом приложения</a><br/><br/>
+        </p>]]>
+        </item>
+        <item>
+<![CDATA[<p>
+        <strong>Почта:</strong><br/>
+        mohax.spb@gmail.com<br/><br/>
+        </p>]]>
+        </item>
+        <item>
+<![CDATA[<p>
+        <strong>Собственно сам сайт:</strong><br/>
+        •<a href=\"http://www.odnako.org/\">http://www.odnako.org/</a><br/>
+        </p>]]>
+        </item>
+    </string-array>
+    
     <string name="used_libs">
 <![CDATA[<p><strong>При создании сего приложения пользовались нижеперечисленные библиотеки:<br/></strong><br/><br/>
         •<a href=\"https://github.com/JakeWharton/NineOldAndroids\">NineOldAndroids</a><br/>
