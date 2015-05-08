@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -48,12 +49,16 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 			dialogGoPro = dialogGoProBuilder.build();
 
 			TextView top = (TextView) dialogGoPro.getCustomView().findViewById(R.id.top);
+			top.setLinksClickable(true);
+			top.setMovementMethod(LinkMovementMethod.getInstance());
 			top.setText(Html.fromHtml(act.getResources().getStringArray(R.array.contacts)[0]));
 
 			TextView mail = (TextView) dialogGoPro.getCustomView().findViewById(R.id.mail);
 			mail.setText(Html.fromHtml(act.getResources().getStringArray(R.array.contacts)[1]));
 
 			TextView bottom = (TextView) dialogGoPro.getCustomView().findViewById(R.id.bottom);
+			bottom.setLinksClickable(true);
+			bottom.setMovementMethod(LinkMovementMethod.getInstance());
 			bottom.setText(Html.fromHtml(act.getResources().getStringArray(R.array.contacts)[2]));
 
 			dialogGoPro.show();
