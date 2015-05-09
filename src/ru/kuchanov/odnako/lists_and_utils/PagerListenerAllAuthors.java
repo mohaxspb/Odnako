@@ -81,7 +81,12 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 //			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
 			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[3], position);
 
-			this.toolbarRight.setTitle(this.allAuthors.get(position).getName());
+			//if we search some text we can have allCats.size()=0
+			if(this.allAuthors!=null && this.allAuthors.size()>0)
+			{
+				this.toolbarRight.setTitle(this.allAuthors.get(position).getName());
+			}
+			
 
 			//notify allAuthors frag about author selected
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
@@ -95,7 +100,12 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.act.setCurentCategoryPosition(position);
 			this.currentCategoryPosition = position;
 
-			this.toolbar.setTitle(this.allAuthors.get(position).getName());
+			//if we search some text we can have allCats.size()=0
+			if(this.allAuthors!=null && this.allAuthors.size()>0)
+			{
+				this.toolbar.setTitle(this.allAuthors.get(position).getName());
+			}
+			
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
 //			MenuItem refresh = menu.findItem(R.id.refresh);

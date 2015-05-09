@@ -1031,7 +1031,7 @@ public class ActivityMain extends ActivityBase
 	public void onBackPressed()
 	{
 		Log.d(LOG, "onBackPressed");
-
+		if(this.menu==null){Log.e(LOG, "menu is NULL!!!!!!!!!!!!!!!!!");this.menu=this.toolbar.getMenu();}
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();
 		if (searchView.isIconified() == false)

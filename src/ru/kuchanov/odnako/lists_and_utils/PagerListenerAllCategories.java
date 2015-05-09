@@ -19,6 +19,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -72,7 +73,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 	@Override
 	public void onPageSelected(int position)
 	{
-//		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
+		Log.d(LOG, "select pagerListenerAllAuthors position = " + position);
 		if (isInRightPager)
 		{
 			//is in right (MenuPager, 3 position)
@@ -80,7 +81,11 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 
 			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[13], position);
 
-			this.toolbarRight.setTitle(this.allCategories.get(position).getTitle());
+			//if we search some text we can have allCats.size()=0
+			if(this.allCategories!=null && this.allCategories.size()>0)
+			{
+				this.toolbarRight.setTitle(this.allCategories.get(position).getTitle());
+			}
 
 			//notify allCategories frag about author selected
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[13] + "art_position");
@@ -94,10 +99,14 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			this.act.setCurentCategoryPosition(position);
 			this.currentCategoryPosition = position;
 
-			this.toolbar.setTitle(this.allCategories.get(position).getTitle());
+			//if we search some text we can have allCats.size()=0
+			if(this.allCategories!=null && this.allCategories.size()>0)
+			{
+				this.toolbar.setTitle(this.allCategories.get(position).getTitle());
+			}
+						
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
-//			MenuItem refresh = menu.findItem(R.id.refresh);
 			if (search == null)
 			{
 				//can be if menu populated after on resume and we hide elements there
@@ -105,7 +114,6 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			else
 			{
 				search.setVisible(true);
-//				refresh.setVisible(true);
 			}
 
 			//if twoPane we must set rightPager
