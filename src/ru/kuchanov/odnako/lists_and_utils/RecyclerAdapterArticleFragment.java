@@ -19,6 +19,7 @@ import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.HtmlTextFormatting;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
+import ru.kuchanov.odnako.utils.MyHtmlTagHandler;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -115,7 +116,6 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					return TEXT;
 				}
-				//				TagNode[] articlesTags = this.getArticlesTags();
 				int curPosition = position - 2;
 
 				if (curPosition < articlesTags.length)
@@ -137,7 +137,6 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				{
 					return CARD_SHARE;
 				}
-				//XXX
 				if (curPosition == articlesTags.length + 2)
 				{
 					if (!this.article.getTagsAll().equals(Const.EMPTY_STRING))
@@ -156,7 +155,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				}
 				else
 				{
-					//XXX that can be reached....
+					//that can be reached....
 					return HEADER;
 				}
 		}
@@ -171,6 +170,9 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 		//So we only need innerHTML from "body" tag;
 		TagNode[] articlesTags = articleTextTag.findElementByName("body", true).getChildTags();
 		TagNode formatedArticle = HtmlTextFormatting.format(articlesTags);
+
+		formatedArticle = HtmlTextFormatting.reduceTagsQuont(formatedArticle);
+
 		return formatedArticle.getChildTags();
 	}
 
@@ -381,6 +383,12 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				hT.text.setPadding(10, 10, 10, 0);
 				hT.text.setTextSize(21 * scaleFactorArticle);
 
+				//Try to fix crushing by 
+				//java.lang.IndexOutOfBoundsException: setSpan (-1 ... -1) starts before 0
+				//http://stackoverflow.com/questions/25880638/rotating-android-device-while-viewing-dialog-preference-with-timepicker-or-numbe
+				hT.text.setSaveFromParentEnabled(false);
+				hT.text.setSaveEnabled(true);
+
 				hT.text.setTextIsSelectable(true);
 
 				//For no reason (?) this not work
@@ -388,11 +396,20 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 
 				hT.text.setLinksClickable(true);
 				hT.text.setMovementMethod(LinkMovementMethod.getInstance());
+				hT.text.setText(null);
 
-				hT.text.setText(Html.fromHtml("<" + articlesTags[positionInArticlesTags].getName() + ">"
-				+ articlesTags[positionInArticlesTags].getText().toString() + "</"
-				+ articlesTags[positionInArticlesTags].getName()
-				+ ">"));
+				HtmlCleaner hc = new HtmlCleaner();
+
+				TagNode[] tags = articlesTags[positionInArticlesTags].getChildTags();
+				for (TagNode tag : tags)
+				{
+					hT.text.append(Html.fromHtml("<" + tag.getName() + ">" +
+					//					tag.getText().toString() +
+					Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()) +
+					"</" + tag + ">", null, new MyHtmlTagHandler()));
+					
+					Log.i(LOG, hc.getInnerHtml(tag));
+				}
 			break;
 			case IMAGE:
 				final HolderImage hI = (HolderImage) holder;
@@ -410,8 +427,8 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				Log.e(LOG, style);
 				style = style.replaceAll(" ", "").replaceAll(":", "").replaceAll("px", "");
 				String[] widthHeightArr = style.split(";");
-				int imgW;// = Integer.parseInt(widthHeightArr[0]);
-				int imgH;// = Integer.parseInt(widthHeightArr[1]);
+				int imgW;
+				int imgH;
 				if (widthHeightArr[0].contains("width"))
 				{
 					widthHeightArr[0] = widthHeightArr[0].replaceAll("width", "");

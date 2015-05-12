@@ -17,6 +17,8 @@ import ru.kuchanov.odnako.db.Article;
  */
 public class HtmlTextFormatting
 {
+	static final String LOG = HtmlTextFormatting.class.getSimpleName();
+
 	private static final String TAG_IMG = "img";
 	private static final String TAG_INPUT = "input";
 	private static final String TAG_A = "a";
@@ -88,10 +90,16 @@ public class HtmlTextFormatting
 				{
 					formatedArticle.addChild(curTag);
 				}
-			}//if tag is p
+			}//if tag is p or div
 			else
 			{
-				formatedArticle.addChild(curTag);
+				//place tag inside of p tag
+				TagNode pTag=new TagNode("p");
+				pTag.addChild(curTag);
+				TagNode brTag=new TagNode("br");
+				pTag.addChild(brTag);
+				formatedArticle.addChild(pTag);
+				//formatedArticle.addChild(curTag);
 			}
 		}//loop of articles tags
 		return formatedArticle;
@@ -182,5 +190,41 @@ public class HtmlTextFormatting
 		pTag.addChild(new ContentNode(link));
 		//add them to our formated tag
 		formatedArticle.addChild(pTag);
+	}
+
+	public static TagNode reduceTagsQuont(TagNode data)
+	{
+		TagNode[] formatedArticleTagsArr = data.getChildTags();
+
+		formatedArticle = new TagNode("div");
+
+		for (int i = 0; i < formatedArticleTagsArr.length; i++)
+		{
+			if (formatedArticleTagsArr[i].getName().equals("img"))
+			{
+				formatedArticle.addChild(formatedArticleTagsArr[i]);
+			}
+			else
+			{
+				//add first divTag if final tag has no childs
+				if (!formatedArticle.hasChildren())
+				{
+					TagNode divTag = new TagNode("div");
+					formatedArticle.addChild(divTag);
+				}
+				//check name of last tag
+				if (formatedArticle.getChildTags()[formatedArticle.getChildTags().length - 1].getName().equals("img"))
+				{
+					TagNode divTag = new TagNode("div");
+					divTag.addChild(formatedArticleTagsArr[i]);
+					formatedArticle.addChild(divTag);
+				}
+				else
+				{
+					formatedArticle.getChildTags()[formatedArticle.getChildTags().length - 1].addChild(formatedArticleTagsArr[i]);
+				}
+			}
+		}
+		return formatedArticle;
 	}
 }
