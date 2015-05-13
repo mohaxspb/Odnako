@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="files_dir">
-        <item>В папке приложения</item>
-        <item>На карте памяти</item>
-    </string-array>
-    <string-array name="files_dir_values">
-        <item>/data/data/ru.kuchanov.odnako/files</item>
-        <item>/mnt/sdcard/odnako/</item>
+
+    <string-array name="share_options">
+        <item>Ссылкой на статью</item>
+        <item>Текстом статьи</item>
+        <item>Текстом статьи в HTML формате</item>
     </string-array>
     <string-array name="notif_period">
         <item>30 мин</item>

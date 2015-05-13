@@ -24,53 +24,52 @@ public final class R {
         public static final int popup_exit=0x7f04000c;
     }
     public static final class array {
-        public static final int all_authors_big_imgs=0x7f0e0015;
+        public static final int all_authors_big_imgs=0x7f0e0014;
         /**  descriptions 
          */
-        public static final int all_authors_descriptions=0x7f0e0016;
+        public static final int all_authors_descriptions=0x7f0e0015;
         /**  imgs 
          */
-        public static final int all_authors_imgs=0x7f0e0014;
-        public static final int all_authors_names=0x7f0e0012;
-        public static final int all_authors_urls=0x7f0e0013;
-        public static final int all_authors_who=0x7f0e0017;
+        public static final int all_authors_imgs=0x7f0e0013;
+        public static final int all_authors_names=0x7f0e0011;
+        public static final int all_authors_urls=0x7f0e0012;
+        public static final int all_authors_who=0x7f0e0016;
         /**  End of menu categories 
  all categories 
          */
-        public static final int all_categories=0x7f0e000e;
-        public static final int all_categories_imgs=0x7f0e0010;
-        public static final int all_categories_imgs_files_names=0x7f0e0011;
-        public static final int all_categories_urls=0x7f0e000f;
-        public static final int authors=0x7f0e0005;
-        public static final int authors_imgs_files_names=0x7f0e0007;
-        public static final int authors_imgs_links=0x7f0e0006;
-        public static final int authors_links=0x7f0e0008;
-        public static final int categories=0x7f0e0009;
-        public static final int categories_descriptions=0x7f0e000b;
-        public static final int categories_imgs_files_names=0x7f0e000d;
-        public static final int categories_imgs_urls=0x7f0e000c;
-        public static final int categories_links=0x7f0e000a;
-        public static final int contacts=0x7f0e0020;
-        public static final int entries=0x7f0e0018;
-        public static final int entry_values=0x7f0e0019;
-        public static final int files_dir=0x7f0e0000;
-        public static final int files_dir_values=0x7f0e0001;
+        public static final int all_categories=0x7f0e000d;
+        public static final int all_categories_imgs=0x7f0e000f;
+        public static final int all_categories_imgs_files_names=0x7f0e0010;
+        public static final int all_categories_urls=0x7f0e000e;
+        public static final int authors=0x7f0e0004;
+        public static final int authors_imgs_files_names=0x7f0e0006;
+        public static final int authors_imgs_links=0x7f0e0005;
+        public static final int authors_links=0x7f0e0007;
+        public static final int categories=0x7f0e0008;
+        public static final int categories_descriptions=0x7f0e000a;
+        public static final int categories_imgs_files_names=0x7f0e000c;
+        public static final int categories_imgs_urls=0x7f0e000b;
+        public static final int categories_links=0x7f0e0009;
+        public static final int contacts=0x7f0e001f;
+        public static final int entries=0x7f0e0017;
+        public static final int entry_values=0x7f0e0018;
         /**  menu categories 
          */
-        public static final int menu_items=0x7f0e0004;
-        public static final int notif_period=0x7f0e0002;
-        public static final int notif_period_values=0x7f0e0003;
+        public static final int menu_items=0x7f0e0003;
+        public static final int notif_period=0x7f0e0001;
+        public static final int notif_period_values=0x7f0e0002;
         /**  Масштаб картинок и текста для главной 
          */
-        public static final int scale=0x7f0e001c;
+        public static final int scale=0x7f0e001b;
         /**  Масштаб для статей 
          */
-        public static final int scale_art=0x7f0e001e;
-        public static final int scale_values=0x7f0e001d;
-        public static final int scale_values_art=0x7f0e001f;
-        public static final int theme=0x7f0e001a;
-        public static final int theme_values=0x7f0e001b;
-        public static final int version_history_arr=0x7f0e0021;
+        public static final int scale_art=0x7f0e001d;
+        public static final int scale_values=0x7f0e001c;
+        public static final int scale_values_art=0x7f0e001e;
+        public static final int share_options=0x7f0e0000;
+        public static final int theme=0x7f0e0019;
+        public static final int theme_values=0x7f0e001a;
+        public static final int version_history_arr=0x7f0e0020;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"

@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
@@ -40,10 +37,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -60,13 +61,13 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 
 	private AppCompatActivity act;
 
-	Article article;
+	private Article article;
 
-	ImageLoader imageLoader;
-	final DisplayImageOptions options;
+	private ImageLoader imageLoader;
+	private final DisplayImageOptions options;
 	private SharedPreferences pref;
 
-	boolean twoPane;
+	private boolean twoPane;
 
 	private boolean artAuthorDescrIsShown = false;
 
@@ -404,11 +405,8 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				for (TagNode tag : tags)
 				{
 					hT.text.append(Html.fromHtml("<" + tag.getName() + ">" +
-					//					tag.getText().toString() +
 					Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()) +
 					"</" + tag + ">", null, new MyHtmlTagHandler()));
-					
-					Log.i(LOG, hc.getInnerHtml(tag));
 				}
 			break;
 			case IMAGE:
@@ -424,7 +422,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				}
 				//style="height:697px; width:500px"
 				String style = articlesTags[positionInArticlesTags].getAttributeByName("style");
-				Log.e(LOG, style);
+				//Log.e(LOG, style);
 				style = style.replaceAll(" ", "").replaceAll(":", "").replaceAll("px", "");
 				String[] widthHeightArr = style.split(";");
 				int imgW;
@@ -443,10 +441,6 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 					imgW = Integer.parseInt(widthHeightArr[1]);
 					imgH = Integer.parseInt(widthHeightArr[0]);
 				}
-				//				int imgW = Integer.parseInt(style.substring(style.indexOf("width") + 6, style.lastIndexOf("px")));
-				//				int imgH = Integer.parseInt(style.substring(style.indexOf("height") + 7, style.indexOf("px")));
-				//				int imgW = Integer.parseInt(widthHeightArr[0]);
-				//				int imgH = Integer.parseInt(widthHeightArr[1]);
 				float imgScale = (float) (imgH) / (float) (imgW);
 				int height = (int) (width * imgScale);
 				android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
@@ -577,7 +571,93 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 					@Override
 					public void onClick(View v)
 					{
-						Actions.shareUrl(article.getUrl(), act);
+						//Actions.shareUrl(article.getUrl(), act);
+
+						MaterialDialog dialogShare;
+						MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
+
+						dialogShareBuilder.title("Чем поделиться?")
+						.items(R.array.share_options)
+						.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice()
+						{
+							final static int SHARE_OPTION_URL = 0;
+							final static int SHARE_OPTION_TEXT = 1;
+							final static int SHARE_OPTION_TEXT_HTML = 2;
+
+							@Override
+							public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
+							{
+								/**
+								 * If you use alwaysCallSingleChoiceCallback(),
+								 * which is discussed below, returning false
+								 * here won't allow the newly selected radio
+								 * button to actually be selected.
+								 **/
+								String[] shareOptions = act.getResources().getStringArray(R.array.share_options);
+								String choosenOption = shareOptions[which];
+								Log.i(LOG, choosenOption);
+
+								String textToShare;
+
+								switch (which)
+								{
+									case SHARE_OPTION_URL:
+										textToShare = article.getUrl();
+										Actions.shareUrl(textToShare, act);
+									break;
+									case SHARE_OPTION_TEXT:
+										HtmlCleaner hc = new HtmlCleaner();
+										StringBuilder sb = new StringBuilder();
+										for (TagNode t : articlesTags)
+										{
+											switch (t.getName())
+											{
+												case "div":
+												case "p":
+													TagNode[] tags = t.getChildTags();
+													for (TagNode tag : tags)
+													{
+														TagNode tagWithReplacedATags = HtmlTextFormatting
+														.replaceATags(tag);
+														sb.append(Html.fromHtml(
+														"<"
+														+ tagWithReplacedATags.getName()
+														+ ">"
+														+
+														Html.fromHtml(hc.getInnerHtml(tagWithReplacedATags), null,
+														new MyHtmlTagHandler()) +
+														"</" + tagWithReplacedATags + ">", null, new MyHtmlTagHandler()));
+													}
+												break;
+												case "img":
+													String imgTagReplacement = "Ссылка на изображение: \n "
+													+ t.getAttributeByName("src") + " \n\n";
+													sb.append(imgTagReplacement);
+												break;
+												case "a":
+													String aTagReplacement = t.getText().toString() + " ("
+													+ t.getAttributeByName("href")
+													+ ")  \n\n";
+													sb.append(aTagReplacement);
+												break;
+											}
+
+										}
+										textToShare = sb.toString();
+
+										Actions.shareArtText(textToShare, act);
+									break;
+									case SHARE_OPTION_TEXT_HTML:
+										textToShare = article.getArtText();
+										Actions.shareArtText(textToShare, act);
+									break;
+								}
+
+								return true;
+							}
+						});
+						dialogShare = dialogShareBuilder.build();
+						dialogShare.show();
 					}
 				});
 			break;

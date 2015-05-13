@@ -6,11 +6,14 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.utils;
 
+import java.util.ArrayList;
+
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
 import ru.kuchanov.odnako.db.Article;
+import android.text.Html;
 
 /**
  * class for formatting Html and extracting some tags from p tag;
@@ -94,9 +97,9 @@ public class HtmlTextFormatting
 			else
 			{
 				//place tag inside of p tag
-				TagNode pTag=new TagNode("p");
+				TagNode pTag = new TagNode("p");
 				pTag.addChild(curTag);
-				TagNode brTag=new TagNode("br");
+				TagNode brTag = new TagNode("br");
 				pTag.addChild(brTag);
 				formatedArticle.addChild(pTag);
 				//formatedArticle.addChild(curTag);
@@ -221,10 +224,39 @@ public class HtmlTextFormatting
 				}
 				else
 				{
-					formatedArticle.getChildTags()[formatedArticle.getChildTags().length - 1].addChild(formatedArticleTagsArr[i]);
+					formatedArticle.getChildTags()[formatedArticle.getChildTags().length - 1]
+					.addChild(formatedArticleTagsArr[i]);
 				}
 			}
 		}
 		return formatedArticle;
+	}
+
+	public static TagNode replaceATags(TagNode tag)
+	{
+		HtmlCleaner hc = new HtmlCleaner();
+		String innerHtml = Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()).toString();
+		
+		TagNode ttttt=hc.clean(innerHtml);
+		ArrayList<TagNode> innerATags = new ArrayList<TagNode>(ttttt.getAllElementsList(true));
+		
+		for (TagNode aTag : innerATags)
+		{
+			if (aTag.getName().equals("a"))
+			{
+				String attr = aTag.getAttributeByName("href");
+				String text = aTag.getText().toString();
+				int firstATagIndex = innerHtml.indexOf("<a");
+				int firstATagTextIndex = innerHtml.indexOf(text);
+				String aTagsStartString = innerHtml.substring(firstATagIndex, firstATagTextIndex+text.length());
+				innerHtml = innerHtml.replace(aTagsStartString, text + " (" + attr + ") ");
+				innerHtml = innerHtml.replace("<a/>", "");
+			}
+		}
+		
+		TagNode newTagToReturn=new TagNode(tag.getName());
+		newTagToReturn.addChild(new ContentNode(innerHtml));
+
+		return newTagToReturn;
 	}
 }
