@@ -9,6 +9,7 @@ import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DateParse;
+import ru.kuchanov.odnako.utils.DialogShare;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -294,7 +295,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											//Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
-											Actions.shareUrl(p.getUrl(), act);
+//											Actions.shareUrl(p.getUrl(), act);
+											DialogShare.showChoiceDialog(act, p, DialogShare.SHARE_TYPE_ALL);
 											return true;
 										case R.id.show_comments:
 											Actions.showComments(artsInfo, positionInAllArtsInfo,
@@ -416,7 +418,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						{
 							public void onClick(View v)
 							{
-								Actions.shareArtText(p.getArtText(), act);
+								//Actions.shareArtText(p.getArtText(), act);
+								DialogShare.showChoiceDialog(act, p, DialogShare.SHARE_TYPE_TEXT);
 							}
 						});
 					}

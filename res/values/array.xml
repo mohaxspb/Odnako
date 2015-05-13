@@ -6,6 +6,10 @@
         <item>Текстом статьи</item>
         <item>Текстом статьи в HTML формате</item>
     </string-array>
+    <string-array name="share_options_text_only">
+        <item>Текстом статьи</item>
+        <item>Текстом статьи в HTML формате</item>
+    </string-array>
     <string-array name="notif_period">
         <item>30 мин</item>
         <item>1 час</item>

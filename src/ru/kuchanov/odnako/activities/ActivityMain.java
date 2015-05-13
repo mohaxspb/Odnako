@@ -76,10 +76,6 @@ public class ActivityMain extends ActivityBase
 	public final static String KEY_PAGER_TYPE = "pager type key";
 	private int pagerType = PAGER_TYPE_MENU;
 
-	//ViewPager and it's adapter for articles/comments
-	//	ViewPager artCommsPager;
-	//	PagerAdapter pagerAdapter;
-
 	//ViewPager and it's adapter for artsLists
 	public ViewPager artsListPager;
 

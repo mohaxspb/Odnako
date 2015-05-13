@@ -14,7 +14,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Article.Tag;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.utils.DateParse;
-import ru.kuchanov.odnako.utils.HtmlTextFormatting;
+import ru.kuchanov.odnako.utils.DialogShare;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
 import ru.kuchanov.odnako.utils.MyHtmlTagHandler;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -32,7 +32,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +41,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -80,7 +78,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 		this.article = article;
 		if (this.article != null)//!this.article.getArtText().equals(Const.EMPTY_STRING))
 		{
-			this.articlesTags = this.getArticlesTags();
+			this.articlesTags = DialogShare.getArticlesTags(article);
 		}
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
 		twoPane = pref.getBoolean("twoPane", false);
@@ -160,21 +158,6 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 					return HEADER;
 				}
 		}
-	}
-
-	private TagNode[] getArticlesTags()
-	{
-		String articleString = this.article.getArtText();
-		HtmlCleaner cleaner = new HtmlCleaner();
-		TagNode articleTextTag = cleaner.clean(articleString);
-		//it's unexpectable, but this TagNode have "head" and "body" tags...
-		//So we only need innerHTML from "body" tag;
-		TagNode[] articlesTags = articleTextTag.findElementByName("body", true).getChildTags();
-		TagNode formatedArticle = HtmlTextFormatting.format(articlesTags);
-
-		formatedArticle = HtmlTextFormatting.reduceTagsQuont(formatedArticle);
-
-		return formatedArticle.getChildTags();
 	}
 
 	@Override
@@ -571,93 +554,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 					@Override
 					public void onClick(View v)
 					{
-						//Actions.shareUrl(article.getUrl(), act);
-
-						MaterialDialog dialogShare;
-						MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
-
-						dialogShareBuilder.title("Чем поделиться?")
-						.items(R.array.share_options)
-						.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice()
-						{
-							final static int SHARE_OPTION_URL = 0;
-							final static int SHARE_OPTION_TEXT = 1;
-							final static int SHARE_OPTION_TEXT_HTML = 2;
-
-							@Override
-							public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
-							{
-								/**
-								 * If you use alwaysCallSingleChoiceCallback(),
-								 * which is discussed below, returning false
-								 * here won't allow the newly selected radio
-								 * button to actually be selected.
-								 **/
-								String[] shareOptions = act.getResources().getStringArray(R.array.share_options);
-								String choosenOption = shareOptions[which];
-								Log.i(LOG, choosenOption);
-
-								String textToShare;
-
-								switch (which)
-								{
-									case SHARE_OPTION_URL:
-										textToShare = article.getUrl();
-										Actions.shareUrl(textToShare, act);
-									break;
-									case SHARE_OPTION_TEXT:
-										HtmlCleaner hc = new HtmlCleaner();
-										StringBuilder sb = new StringBuilder();
-										for (TagNode t : articlesTags)
-										{
-											switch (t.getName())
-											{
-												case "div":
-												case "p":
-													TagNode[] tags = t.getChildTags();
-													for (TagNode tag : tags)
-													{
-														TagNode tagWithReplacedATags = HtmlTextFormatting
-														.replaceATags(tag);
-														sb.append(Html.fromHtml(
-														"<"
-														+ tagWithReplacedATags.getName()
-														+ ">"
-														+
-														Html.fromHtml(hc.getInnerHtml(tagWithReplacedATags), null,
-														new MyHtmlTagHandler()) +
-														"</" + tagWithReplacedATags + ">", null, new MyHtmlTagHandler()));
-													}
-												break;
-												case "img":
-													String imgTagReplacement = "Ссылка на изображение: \n "
-													+ t.getAttributeByName("src") + " \n\n";
-													sb.append(imgTagReplacement);
-												break;
-												case "a":
-													String aTagReplacement = t.getText().toString() + " ("
-													+ t.getAttributeByName("href")
-													+ ")  \n\n";
-													sb.append(aTagReplacement);
-												break;
-											}
-
-										}
-										textToShare = sb.toString();
-
-										Actions.shareArtText(textToShare, act);
-									break;
-									case SHARE_OPTION_TEXT_HTML:
-										textToShare = article.getArtText();
-										Actions.shareArtText(textToShare, act);
-									break;
-								}
-
-								return true;
-							}
-						});
-						dialogShare = dialogShareBuilder.build();
-						dialogShare.show();
+						DialogShare.showChoiceDialog(act, article, DialogShare.SHARE_TYPE_ALL);
 					}
 				});
 			break;

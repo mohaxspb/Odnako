@@ -20,6 +20,7 @@ import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
+import ru.kuchanov.odnako.utils.DialogShare;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.Intent;
 import android.os.Bundle;
@@ -116,7 +117,7 @@ public class ActivityArticle extends ActivityBase
 
 			this.restoreGroupChildPosition(stateFromIntent);
 		}
-		/* else */if (savedInstanceState != null)
+		if (savedInstanceState != null)
 		{
 			this.setCurrentCategory(savedInstanceState.getString("categoryToLoad"));
 			this.setCurArtPosition(savedInstanceState.getInt("position"));
@@ -134,8 +135,7 @@ public class ActivityArticle extends ActivityBase
 
 		//drawer settings
 		this.setNavDrawer();
-		//		//set arrow; It'll be better
-		//		this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//set arrow; It'll be better
 		((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
 		act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		////End of drawer settings
@@ -202,9 +202,6 @@ public class ActivityArticle extends ActivityBase
 				break;
 			}
 		}
-
-		//set arrow; It'll be better
-		//				this.act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/** Called whenever we call supportInvalidateOptionsMenu() */
@@ -283,11 +280,13 @@ public class ActivityArticle extends ActivityBase
 				{
 					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
 					.findFragmentByTag(FragmentArticle.LOG);
-					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
+//					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
+					DialogShare.showChoiceDialog(act, upperArtFrag.getArticle(), DialogShare.SHARE_TYPE_ALL);
 				}
 				else
 				{
-					Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
+//					Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
+					DialogShare.showChoiceDialog(act, this.curAllArtsInfo.get(this.getCurArtPosition()), DialogShare.SHARE_TYPE_ALL);
 				}
 				return true;
 			case R.id.action_settings:
