@@ -125,7 +125,7 @@ public class ActivityMain extends ActivityBase
 			}
 		}
 
-		/////////
+		//bind to service
 		this.bindService();
 
 		//ADS

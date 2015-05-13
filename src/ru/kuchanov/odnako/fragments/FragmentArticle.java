@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -242,10 +241,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	public void update(Article article)
 	{
 		this.curArticle = article;
-		Log.e(LOG, "update called");
+		Log.d(LOG, "update called");
 
 		if (this.curArticle != null && !this.isSingle)
 		{
+			Log.d(LOG, "update called, url: " + article.getUrl());
 			try
 			{
 				ViewPager pagerRight = (ViewPager) this.act.findViewById(R.id.pager_right);
@@ -254,12 +254,15 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 				if (!this.curArticle.getUrl().equals(urlFromPager))
 				{
 					this.curArticle = pagerAdapter.getAllArtsInfo().get(position);
-					((ActivityBase) act).getAllCatArtsInfo().get(pagerAdapter.getCategoryToLoad()).set(position, curArticle);
 				}
 			} catch (Exception e)
 			{
-
+				e.printStackTrace();
 			}
+		}
+		else
+		{
+			Log.e(LOG, "update called but article is NULL!!!!");
 		}
 
 		if (this.curArticle != null)

@@ -464,7 +464,12 @@ public class Actions
 	{
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+		//add link to app
+		String fullMessage = url
+		+ "\n\n"
+		+ "Отправлено с помощью приложения \"Однако, Новости и аналитика\" \n"
+		+ "https://play.google.com/store/apps/details?id=ru.kuchanov.odnako";
+		sendIntent.putExtra(Intent.EXTRA_TEXT, fullMessage);
 		sendIntent.setType("text/plain");
 		ctx.startActivity(Intent.createChooser(sendIntent, ctx.getResources().getText(R.string.share_link)));
 	}

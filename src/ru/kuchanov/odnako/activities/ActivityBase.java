@@ -104,7 +104,8 @@ public class ActivityBase extends AppCompatActivity
 	//	protected ArtInfo curArtInfo = null;
 	//	protected int curArtPosition = -1;
 	private int curArtPosition = 0;
-	protected ArrayList<Article> curAllArtsInfo = null;
+	//TODO delete it and refactor the whole app!1!!!!!!!!1111
+	public ArrayList<Article> curAllArtsInfo = null;
 
 	protected int backPressedQ;
 

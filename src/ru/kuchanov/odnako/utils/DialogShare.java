@@ -6,14 +6,18 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.utils;
 
+import java.util.Calendar;
+
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import android.content.Context;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -62,12 +66,10 @@ public class DialogShare
 				String choosenOption = shareOptions[which];
 				Log.i(LOG, choosenOption);
 
-				String textToShare;
-				
 				switch (type)
 				{
 					case SHARE_TYPE_ALL:
-						//do nothing
+					//do nothing
 					break;
 					case SHARE_TYPE_TEXT:
 						//we don't want to copt onClickListner for list, so simply add +1 to which,
@@ -75,16 +77,42 @@ public class DialogShare
 						which++;
 					break;
 				}
+				StringBuilder sb = new StringBuilder();
+				Calendar cal = Calendar.getInstance();
+				String textToShare;
+				String date;
 
 				switch (which)
 				{
 					case SHARE_OPTION_URL:
 						textToShare = article.getUrl();
+//						+ "\n\n"
+//						+ "Отправлено с помощью приложения \"Однако, Новости и аналитика\" \n"
+//						+ "https://play.google.com/store/apps/details?id=ru.kuchanov.odnako";
 						Actions.shareUrl(textToShare, ctx);
 					break;
 					case SHARE_OPTION_TEXT:
+						//add title
+						sb.append(article.getTitle());
+						sb.append("\n\n");
+
+						//Add link to article
+						sb.append("Ссылка на статью: " + article.getUrl());
+						sb.append("\n\n");
+
+						//add pubDate
+						cal.setTime(article.getPubDate());
+						date = DateUtils.formatDateTime(ctx, cal.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE
+						| DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+						sb.append("Дата публикации статьи: " + date);
+						sb.append("\n\n");
+
+						//add author if is
+						sb.append((article.getAuthorName().equals(Const.EMPTY_STRING) ? "" : "Автор: "
+						+ article.getAuthorName()));
+						sb.append("\n\n");
+
 						HtmlCleaner hc = new HtmlCleaner();
-						StringBuilder sb = new StringBuilder();
 						for (TagNode t : getArticlesTags(article))
 						{
 							switch (t.getName())
@@ -120,12 +148,43 @@ public class DialogShare
 							}
 
 						}
+						sb.append("\n\n");
+						sb.append("Отправлено с помощью приложения \"Однако, Новости и аналитика\" \n"
+						+ "https://play.google.com/store/apps/details?id=ru.kuchanov.odnako");
+
 						textToShare = sb.toString();
 
 						Actions.shareArtText(textToShare, ctx);
 					break;
 					case SHARE_OPTION_TEXT_HTML:
-						textToShare = article.getArtText();
+						//add title
+						sb.append(article.getTitle());
+						sb.append("\n\n");
+
+						//Add link to article
+						sb.append("Ссылка на статью: " + article.getUrl());
+						sb.append("\n\n");
+
+						//add pubDate
+						cal.setTime(article.getPubDate());
+						date = DateUtils.formatDateTime(ctx, cal.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE
+						| DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+						sb.append("Дата публикации статьи: " + date);
+						sb.append("\n\n");
+
+						//add author if is
+						sb.append((article.getAuthorName().equals(Const.EMPTY_STRING) ? "" : "Автор: "
+						+ article.getAuthorName()));
+						sb.append("\n\n");
+
+						//articles text
+						sb.append(article.getArtText());
+
+						sb.append("\n\n");
+						sb.append("Отправлено с помощью приложения \"Однако, Новости и аналитика\" \n"
+						+ "https://play.google.com/store/apps/details?id=ru.kuchanov.odnako");
+
+						textToShare = sb.toString();
 						Actions.shareArtText(textToShare, ctx);
 					break;
 				}

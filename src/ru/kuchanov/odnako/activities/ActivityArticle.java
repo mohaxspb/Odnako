@@ -55,6 +55,9 @@ public class ActivityArticle extends ActivityBase
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 		//end of get default settings to get all settings later
 
+		// binf to service
+		this.bindService();
+
 		//ADS
 		this.checkTimeAds = new CheckTimeToAds(this, mInterstitialAd);
 
@@ -147,7 +150,7 @@ public class ActivityArticle extends ActivityBase
 		this.getAllCatAndAutTitles();
 
 		this.pager = (ViewPager) this.findViewById(R.id.pager_right);
-//		this.pager.setPageTransformer(true, new RotationPageTransformer());
+		//		this.pager.setPageTransformer(true, new RotationPageTransformer());
 		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), getCurrentCategory(), act);
 		this.pager.setAdapter(pagerAdapter);
 		PagerListenerArticle listener = new PagerListenerArticle(this, getCurrentCategory());
@@ -280,13 +283,14 @@ public class ActivityArticle extends ActivityBase
 				{
 					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
 					.findFragmentByTag(FragmentArticle.LOG);
-//					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
+					//					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
 					DialogShare.showChoiceDialog(act, upperArtFrag.getArticle(), DialogShare.SHARE_TYPE_ALL);
 				}
 				else
 				{
-//					Actions.shareUrl(this.curAllArtsInfo.get(this.getCurArtPosition()).getUrl(), this.act);
-					DialogShare.showChoiceDialog(act, this.curAllArtsInfo.get(this.getCurArtPosition()), DialogShare.SHARE_TYPE_ALL);
+					DialogShare.showChoiceDialog(act,
+					this.allCatArtsInfo.get(getCurrentCategory()).get(this.getCurArtPosition()),
+					DialogShare.SHARE_TYPE_ALL);
 				}
 				return true;
 			case R.id.action_settings:
