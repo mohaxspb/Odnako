@@ -8,7 +8,7 @@
         <!--
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
         -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -47,7 +47,10 @@
         <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_white_48dp</item>
         <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_white_48dp</item>
         <item name="arrowBackIcon">@drawable/ic_arrow_back_white_48dp</item>
+        <!-- media actions -->
         <item name="arrowPlayIcon">@drawable/ic_play_arrow_white_48dp</item>
+        <item name="pauseIcon">@drawable/ic_pause_white_48dp</item>
+
         <!-- more -->
         <item name="authorsIcon">@drawable/ic_group_white_48dp</item>
         <item name="authorIcon">@drawable/ic_person_white_48dp</item>
@@ -137,7 +140,9 @@
         <item name="arrowUpIcon">@drawable/ic_keyboard_arrow_up_grey600_48dp</item>
         <item name="arrowDownIcon">@drawable/ic_keyboard_arrow_down_grey600_48dp</item>
         <item name="arrowBackIcon">@drawable/ic_arrow_back_grey600_48dp</item>
+        <!-- media actions -->
         <item name="arrowPlayIcon">@drawable/ic_play_arrow_grey600_48dp</item>
+        <item name="pauseIcon">@drawable/ic_pause_grey600_48dp</item>
         <!-- more -->
         <item name="authorsIcon">@drawable/ic_group_grey600_48dp</item>
         <item name="authorIcon">@drawable/ic_person_grey600_48dp</item>

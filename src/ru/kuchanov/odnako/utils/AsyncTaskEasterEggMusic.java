@@ -18,7 +18,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String>
+public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String[]>
 {
 	final static String LOG = AsyncTaskEasterEggMusic.class.getSimpleName();
 
@@ -34,9 +34,9 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String>
 		this.name = name;
 	}
 
-	protected String doInBackground(Void... args)
+	protected String[] doInBackground(Void... args)
 	{
-		String answer = "";
+		String[] answer = new String[2];
 
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		Request.Builder request = new Request.Builder();
@@ -53,7 +53,7 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String>
 			OkHttpClient client = new OkHttpClient();
 			Response response;
 			response = client.newCall(request.build()).execute();
-			answer = response.body().string();
+			answer = response.body().string().split(" !!!! ");
 			Log.e(LOG, response.body().string());
 		} catch (IOException e)
 		{
@@ -63,7 +63,7 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String>
 		return answer;
 	}
 
-	protected void onPostExecute(String answer)
+	protected void onPostExecute(String[] answer)
 	{
 		this.callback.onAnswerFromServer(answer);
 	}

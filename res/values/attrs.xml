@@ -52,7 +52,9 @@
     <attr name="arrowUpIcon" format="reference" />
     <attr name="arrowDownIcon" format="reference" />
     <attr name="arrowBackIcon" format="reference" />
+    <!-- media actions -->
     <attr name="arrowPlayIcon" format="reference" />
+    <attr name="pauseIcon" format="reference" />
     <!-- more -->
     <attr name="authorsIcon" format="reference" />
     <attr name="authorIcon" format="reference" />

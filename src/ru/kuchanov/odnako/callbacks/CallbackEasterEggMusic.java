@@ -13,5 +13,5 @@ public interface CallbackEasterEggMusic
 	 * called from OnPostExecute method of asyncTask, that's ask DB from top
 	 * 
 	 */
-	public void onAnswerFromServer(String answer);
+	public void onAnswerFromServer(String[] answer);
 }
