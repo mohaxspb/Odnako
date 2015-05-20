@@ -1,9 +1,16 @@
 package ru.kuchanov.odnako.fragments;
 
+import java.io.IOException;
+
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.callbacks.CallbackEasterEggMusic;
+import ru.kuchanov.odnako.utils.AsyncTaskEasterEggMusic;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,6 +19,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.text.Html;
 import android.util.Log;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -28,6 +38,9 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 	private static String APP_TITLE;
 
 	public final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
+
+	private int verHistoryOKqount = 0;
+	private String input = "";
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -188,17 +201,40 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
 			dialogGoProBuilder.title(APP_TITLE + ", версия " + app_ver)
 			.content(Html.fromHtml(allVersionsDescriptionString))
-			.positiveText("Это было интересно!");
-			dialogVersionHistory = dialogGoProBuilder.build();
-			//getColor
-			//			int[] textSizeAttr = new int[] { android.R.attr.textColorPrimary };
-			//			int indexOfAttrTextSize = 0;
-			//			TypedValue typedValue = new TypedValue();
-			//			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-			//			int textColor = a.getColor(indexOfAttrTextSize, 0);
-			//			a.recycle();
-			//			((MDButton) dialogVersionHistory.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+			.positiveText("Это было интересно!")
+			.callback(new MaterialDialog.ButtonCallback()
+			{
+				@Override
+				public void onPositive(MaterialDialog dialog)
+				{
+					if (verHistoryOKqount < 2)
+					{
+						verHistoryOKqount++;
+					}
+					else
+					{
+						MaterialDialog dialogInputName;
+						MaterialDialog.Builder dialogInputNameBuilder = new MaterialDialog.Builder(act);
+						dialogInputNameBuilder.title("Ух-ты, музыкальная пасхалка!")
+						.input("пароль", null, new MaterialDialog.InputCallback()
+						{
+							@Override
+							public void onInput(MaterialDialog dialog, CharSequence editTextInput)
+							{
+								input = editTextInput.toString();
+								Log.e(LOG, "onINPUT: " + input);
 
+								AsyncTaskEasterEggMusic askServer = new AsyncTaskEasterEggMusic(callback, input);
+								askServer.execute();
+							}
+						})
+						.positiveText("Ну-ка...");
+						dialogInputName = dialogInputNameBuilder.build();
+						dialogInputName.show();
+					}
+				}
+			});
+			dialogVersionHistory = dialogGoProBuilder.build();
 			dialogVersionHistory.show();
 
 			return false;
@@ -220,6 +256,115 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 			dialogVersionHistory.show();
 
 			return false;
+		}
+	};
+
+	CallbackEasterEggMusic callback = new CallbackEasterEggMusic()
+	{
+		@Override
+		public void onAnswerFromServer(String answer)
+		{
+			Log.e(LOG, "answer from server in callback: " + answer);
+			//			Log.i(LOG, "length is: " + answer.length() + " and must be: " + new String("mavrin-deja-vu").length());
+			//			for (int i = 0; i < answer.toCharArray().length; i++)
+			//			{
+			//				char c = answer.toCharArray()[i];
+			//				Log.d(LOG, "char code is :" + Character.codePointAt(answer.toCharArray(), i));
+			//				Log.d(LOG, "char is :" + String.valueOf(Character.toChars(Character.codePointAt(answer.toCharArray(), i))[0]));
+			//			}
+
+			char zeroSizeSpace = Character.toChars(65279)[0];
+			answer = answer.replaceAll(String.valueOf(zeroSizeSpace), "");
+			final String songUrl = "http://kuchanov.ru/odnako/" + answer + ".mp3";
+			Log.e(LOG, "songUrl: " + songUrl);
+
+			final MediaPlayer mP = new MediaPlayer();
+			try
+			{
+				final MaterialDialog dialogPlayer;
+				MaterialDialog.Builder dialogPlayerBuilder = new MaterialDialog.Builder(act);
+				dialogPlayerBuilder.title("Список использованных в разработке библиотек")
+				.customView(R.layout.easter_egg_dialog, false);
+
+				//.progress(false, 100, true);
+				dialogPlayer = dialogPlayerBuilder.build();
+
+				final SeekBar seekbar = (SeekBar) dialogPlayer.getCustomView().findViewById(R.id.seekbar);
+				final TextView value = (TextView) dialogPlayer.getCustomView().findViewById(R.id.value);
+				seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+				{
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar)
+					{
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar)
+					{
+					}
+
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+					{
+						value.setText(String.valueOf(progress));
+						if (fromUser)
+						{
+							mP.seekTo(progress);
+						}
+					}
+				});
+
+				mP.reset();
+				mP.setOnPreparedListener(new OnPreparedListener()
+				{
+					@Override
+					public void onPrepared(MediaPlayer mp)
+					{
+						if (!mP.isPlaying())
+						{
+							//							dialogPlayer.setProgress(0);
+							//							dialogPlayer.setMaxProgress(mp.getDuration());
+							seekbar.setProgress(0);
+							seekbar.setMax(mp.getDuration());
+
+							dialogPlayer.show();
+
+							mP.start();
+						}
+						else
+						{
+							mP.pause();
+						}
+					}
+				});
+				mP.setOnBufferingUpdateListener(new OnBufferingUpdateListener()
+				{
+					@Override
+					public void onBufferingUpdate(MediaPlayer mp, int percent)
+					{
+						seekbar.setSecondaryProgress(mp.getDuration()/100*percent);
+						
+						if (seekbar.getProgress() != seekbar.getMax())
+						{
+							// If the progress dialog is cancelled (the user closes it before it's done), break the loop
+							if (dialogPlayer.isCancelled())
+							{
+								return;
+							}
+							value.setText(String.valueOf(mp.getCurrentPosition()));
+							seekbar.setProgress(mp.getCurrentPosition());
+
+							//							dialogPlayer.setProgress(mp.getCurrentPosition());
+						}
+					}
+				});
+
+				mP.setDataSource(songUrl);
+				mP.prepare();
+			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	};
 }

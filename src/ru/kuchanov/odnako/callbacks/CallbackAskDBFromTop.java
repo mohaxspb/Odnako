@@ -15,8 +15,6 @@ public interface CallbackAskDBFromTop
 	/**
 	 * called from OnPostExecute method of asyncTask, that's ask DB from top
 	 * 
-	 * @param answer
 	 */
-//	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad);
 	public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad, ArrayList<Article> dataToSend);
 }
