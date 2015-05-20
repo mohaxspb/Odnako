@@ -36,7 +36,7 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String[]>
 
 	protected String[] doInBackground(Void... args)
 	{
-		String[] answer = new String[2];
+		String[] answer;
 
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		Request.Builder request = new Request.Builder();
@@ -58,6 +58,7 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String[]>
 		} catch (IOException e)
 		{
 			e.printStackTrace();
+			answer = null;
 		}
 
 		return answer;
@@ -65,6 +66,20 @@ public class AsyncTaskEasterEggMusic extends AsyncTask<Void, Void, String[]>
 
 	protected void onPostExecute(String[] answer)
 	{
-		this.callback.onAnswerFromServer(answer);
+		if (answer != null)
+		{
+			if (answer[0].contains("no-no-no"))
+			{
+				this.callback.onError("Вы не угадали!");
+			}
+			else
+			{
+				this.callback.onAnswerFromServer(answer);
+			}
+		}
+		else
+		{
+			this.callback.onError("Сервер не отвечает. Может нема интернета?..");
+		}
 	}
 }

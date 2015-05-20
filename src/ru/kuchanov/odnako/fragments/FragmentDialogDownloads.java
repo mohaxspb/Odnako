@@ -199,6 +199,8 @@ public class FragmentDialogDownloads extends DialogFragment
 				}
 			});
 			dialog = dialogBuilder.build();
+			int textColor = act.getResources().getColor(R.color.black);
+			((MDButton) dialog.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
 			dialog.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
 		}
 

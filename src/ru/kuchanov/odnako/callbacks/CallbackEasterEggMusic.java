@@ -14,4 +14,6 @@ public interface CallbackEasterEggMusic
 	 * 
 	 */
 	public void onAnswerFromServer(String[] answer);
+	
+	public void onError(String e);
 }

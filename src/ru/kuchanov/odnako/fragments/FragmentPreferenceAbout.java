@@ -1,18 +1,11 @@
 package ru.kuchanov.odnako.fragments;
 
-import java.io.IOException;
-import java.util.Calendar;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.callbacks.CallbackEasterEggMusic;
 import ru.kuchanov.odnako.utils.AsyncTaskEasterEggMusic;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.TypedArray;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -21,17 +14,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.MaterialDialog.ButtonCallback;
 import com.afollestad.materialdialogs.internal.MDButton;
 
 public class FragmentPreferenceAbout extends PreferenceFragment
@@ -271,171 +257,14 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		public void onAnswerFromServer(String[] answer)
 		{
 			Log.e(LOG, "answer from server in callback: " + answer[0] + "/ " + answer[1]);
-			//			Log.i(LOG, "length is: " + answer.length() + " and must be: " + new String("mavrin-deja-vu").length());
-			//			for (int i = 0; i < answer.toCharArray().length; i++)
-			//			{
-			//				char c = answer.toCharArray()[i];
-			//				Log.d(LOG, "char code is :" + Character.codePointAt(answer.toCharArray(), i));
-			//				Log.d(LOG, "char is :" + String.valueOf(Character.toChars(Character.codePointAt(answer.toCharArray(), i))[0]));
-			//			}
+			FragmentDialogEasterEggMusic frag = FragmentDialogEasterEggMusic.newInstance(answer);
+			frag.show(act.getFragmentManager(), "easterEggMusic");
+		}
 
-			char zeroSizeSpace = Character.toChars(65279)[0];
-			answer[0] = answer[0].replaceAll(String.valueOf(zeroSizeSpace), "");
-			final String songUrl = "http://kuchanov.ru/odnako/" + answer[0] + ".mp3";
-			Log.e(LOG, "songUrl: " + songUrl);
-
-			int[] attr = new int[] { R.attr.arrowPlayIcon };
-			TypedArray a = act.getTheme().obtainStyledAttributes(attr);
-			final int playIconId = a.getResourceId(0, 0);
-			a.recycle();
-
-			attr = new int[] { R.attr.pauseIcon };
-			a = act.getTheme().obtainStyledAttributes(attr);
-			final int pauseIconId = a.getResourceId(0, 0);
-			a.recycle();
-
-			final MediaPlayer mP = new MediaPlayer();
-			try
-			{
-				final MaterialDialog dialogPlayer;
-
-				MaterialDialog.Builder dialogPlayerBuilder = new MaterialDialog.Builder(act);
-				dialogPlayerBuilder.title(answer[1])
-				.cancelable(false)
-				.positiveText("Закрыть")
-				.callback(new ButtonCallback()
-				{
-					@Override
-					public void onPositive(MaterialDialog dialog)
-					{
-						mP.pause();
-						mP.stop();
-						mP.release();
-					}
-				})
-				.customView(R.layout.easter_egg_dialog, false);
-
-				dialogPlayer = dialogPlayerBuilder.build();
-
-				final SeekBar seekbar = (SeekBar) dialogPlayer.getCustomView().findViewById(R.id.seekbar);
-				final TextView value = (TextView) dialogPlayer.getCustomView().findViewById(R.id.value);
-				final ImageView downloadBtn = (ImageView) dialogPlayer.getCustomView().findViewById(R.id.download);
-				downloadBtn.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse(songUrl));
-						startActivity(i);
-					}
-				});
-				final ImageView playBtn = (ImageView) dialogPlayer.getCustomView().findViewById(R.id.play_pause);
-				playBtn.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						if (mP.isPlaying())
-						{
-							playBtn.setBackgroundResource(playIconId);
-							mP.pause();
-						}
-						else
-						{
-							playBtn.setBackgroundResource(pauseIconId);
-							mP.start();
-						}
-					}
-				});
-				seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
-				{
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar)
-					{
-					}
-
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar)
-					{
-					}
-
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-					{
-						Calendar cal = Calendar.getInstance();
-						cal.setTimeInMillis(progress);
-						String seconds = (cal.get(Calendar.SECOND) < 10) ? "0" + cal.get(Calendar.SECOND) : String
-						.valueOf(cal.get(Calendar.SECOND));
-						String progressStr = cal.get(Calendar.MINUTE) + ":" + seconds + "/";
-						cal.setTimeInMillis(seekBar.getMax());
-						seconds = (cal.get(Calendar.SECOND) < 10) ? "0" + cal.get(Calendar.SECOND) : String
-						.valueOf(cal.get(Calendar.SECOND));
-						progressStr += cal.get(Calendar.MINUTE) + ":" + seconds;
-						value.setText(progressStr);
-						if (fromUser)
-						{
-							mP.seekTo(progress);
-						}
-					}
-				});
-
-				mP.reset();
-				mP.setOnPreparedListener(new OnPreparedListener()
-				{
-					@Override
-					public void onPrepared(MediaPlayer mp)
-					{
-						if (!mP.isPlaying())
-						{
-							seekbar.setProgress(0);
-							seekbar.setMax(mp.getDuration());
-
-							playBtn.setBackgroundResource(playIconId);
-
-							dialogPlayer.show();
-
-							mP.start();
-						}
-						else
-						{
-							playBtn.setBackgroundResource(pauseIconId);
-
-							mP.pause();
-						}
-					}
-				});
-				mP.setOnBufferingUpdateListener(new OnBufferingUpdateListener()
-				{
-					@Override
-					public void onBufferingUpdate(MediaPlayer mp, int percent)
-					{
-						seekbar.setSecondaryProgress(mp.getDuration() / 100 * percent);
-
-						if (seekbar.getProgress() != seekbar.getMax())
-						{
-							seekbar.setProgress(mp.getCurrentPosition());
-
-							Calendar cal = Calendar.getInstance();
-							cal.setTimeInMillis(seekbar.getProgress());
-							String seconds = (cal.get(Calendar.SECOND) < 10) ? "0" + cal.get(Calendar.SECOND) : String
-							.valueOf(cal.get(Calendar.SECOND));
-							String progressStr = cal.get(Calendar.MINUTE) + ":" + seconds + "/";
-							cal.setTimeInMillis(seekbar.getMax());
-							seconds = (cal.get(Calendar.SECOND) < 10) ? "0" + cal.get(Calendar.SECOND) : String
-							.valueOf(cal.get(Calendar.SECOND));
-							progressStr += cal.get(Calendar.MINUTE) + ":" + seconds;
-							value.setText(progressStr);
-						}
-					}
-				});
-
-				mP.setDataSource(songUrl);
-				mP.prepare();
-			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e)
-			{
-				e.printStackTrace();
-			}
+		@Override
+		public void onError(String e)
+		{
+			Toast.makeText(act, e, Toast.LENGTH_SHORT).show();
 		}
 	};
 }

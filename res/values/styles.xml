@@ -17,7 +17,7 @@
         <item name="android:textColorSecondary">@color/material_grey_400</item>
         <item name="actionMenuTextColor">@color/material_grey_400</item>
         <!--  -->
-        <item name="md_positive_color">@color/material_grey_900</item>
+        <!-- <item name="md_positive_color">@color/material_grey_900</item> -->
         <item name="green">@color/green</item>
         <item name="greenDark">@color/green_dark</item>
         <item name="colorPrimary">@color/material_grey_800</item>

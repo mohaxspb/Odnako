@@ -6,14 +6,15 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako;
 
-import org.acra.*;
-import org.acra.annotation.*;
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import ru.kuchanov.odnako.utils.AcraReportSender;
+import android.app.Application;
 
 import com.yandex.metrica.YandexMetrica;
-
-import android.app.Application;
 
 /**
  * here we initialize ACRA crash reporter
