@@ -139,8 +139,25 @@ public class ActivityMain extends ActivityBase
 
 		//set theme before super and set content to apply it
 		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false) == true;
+		String theme = this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY);
+		if (theme.equals("dark"))
+		{
+			theme = ActivityPreference.THEME_GREY;
+			nightModeIsOn = true;
+
+			this.pref.edit().putString(ActivityPreference.PREF_KEY_THEME, theme).commit();
+			this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, nightModeIsOn).commit();
+		}
+		else if (theme.equals("ligth"))
+		{
+			theme = ActivityPreference.THEME_GREY;
+			nightModeIsOn = false;
+			this.pref.edit().putString(ActivityPreference.PREF_KEY_THEME, theme).commit();
+			this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, nightModeIsOn).commit();
+		}
+
 		int themeID = R.style.ThemeLight;
-		switch (this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY))
+		switch (theme)
 		{
 			case ActivityPreference.THEME_GREY:
 				themeID = (nightModeIsOn) ? R.style.ThemeDark : R.style.ThemeLight;
@@ -586,7 +603,7 @@ public class ActivityMain extends ActivityBase
 		final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 		final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-//		final MenuItem refresh = menu.findItem(R.id.refresh);
+		//		final MenuItem refresh = menu.findItem(R.id.refresh);
 		final MenuItem allSettings = menu.findItem(R.id.action_settings_all);
 
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener()
@@ -602,7 +619,7 @@ public class ActivityMain extends ActivityBase
 				isKeyboardOpened = true;
 
 				allSettings.setVisible(false);
-//				refresh.setVisible(false);
+				//				refresh.setVisible(false);
 				return true;
 			}
 
@@ -611,7 +628,7 @@ public class ActivityMain extends ActivityBase
 			{
 				//System.out.println("onMenuItemActionCollapse");
 				allSettings.setVisible(true);
-//				refresh.setVisible(true);
+				//				refresh.setVisible(true);
 
 				isKeyboardOpened = false;
 				queryToSave = null;
@@ -792,7 +809,7 @@ public class ActivityMain extends ActivityBase
 				searchView.clearFocus();
 			}
 			allSettings.setVisible(false);
-//			refresh.setVisible(false);
+			//			refresh.setVisible(false);
 		}
 		else
 		{
@@ -809,14 +826,14 @@ public class ActivityMain extends ActivityBase
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 
-//		MenuItem refresh = menu.findItem(R.id.refresh);
+		//		MenuItem refresh = menu.findItem(R.id.refresh);
 		MenuItem settingsAll = menu.findItem(R.id.action_settings_all);
 		MenuItem search = menu.findItem(R.id.action_search);
 
 		if (drawerOpen)
 		{
 			settingsAll.setVisible(false);
-//			refresh.setVisible(false);
+			//			refresh.setVisible(false);
 			search.setVisible(false);
 		}
 		else
@@ -832,25 +849,25 @@ public class ActivityMain extends ActivityBase
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-//							refresh.setVisible(false);
+							//							refresh.setVisible(false);
 							settingsAll.setVisible(false);
 						}
 						else
 						{
 							search.setVisible(false);
-//							refresh.setVisible(true);
+							//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-//						refresh.setVisible(false);
+						//						refresh.setVisible(false);
 						settingsAll.setVisible(false);
 					break;
 					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
-//						refresh.setVisible(true);
+						//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 				}
@@ -866,25 +883,25 @@ public class ActivityMain extends ActivityBase
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-//							refresh.setVisible(false);
+							//							refresh.setVisible(false);
 							settingsAll.setVisible(true);
 						}
 						else
 						{
 							search.setVisible(false);
-//							refresh.setVisible(true);
+							//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-//						refresh.setVisible(true);
+						//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
-//						refresh.setVisible(true);
+						//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 				}
@@ -917,11 +934,11 @@ public class ActivityMain extends ActivityBase
 					themeMenuItem.setChecked(true);
 				}
 				return true;
-//			case R.id.refresh:
-//				Log.e(LOG, "refresh");
-//				DataBaseHelper h = new DataBaseHelper(act);
-//				int DBVersion = h.getWritableDatabase().getVersion();
-//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
+				//			case R.id.refresh:
+				//				Log.e(LOG, "refresh");
+				//				DataBaseHelper h = new DataBaseHelper(act);
+				//				int DBVersion = h.getWritableDatabase().getVersion();
+				//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
 				// 
 				//				Intent intent = new Intent(this.act, ServiceDB.class);
 				//				Bundle b = new Bundle();
@@ -949,7 +966,7 @@ public class ActivityMain extends ActivityBase
 				//				+ "_set_filter");
 				//				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
 
-//				return true;
+				//				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
@@ -1027,7 +1044,11 @@ public class ActivityMain extends ActivityBase
 	public void onBackPressed()
 	{
 		Log.d(LOG, "onBackPressed");
-		if(this.menu==null){Log.e(LOG, "menu is NULL!!!!!!!!!!!!!!!!!");this.menu=this.toolbar.getMenu();}
+		if (this.menu == null)
+		{
+			Log.e(LOG, "menu is NULL!!!!!!!!!!!!!!!!!");
+			this.menu = this.toolbar.getMenu();
+		}
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();
 		if (searchView.isIconified() == false)
