@@ -24,53 +24,55 @@ public final class R {
         public static final int popup_exit=0x7f04000c;
     }
     public static final class array {
-        public static final int all_authors_big_imgs=0x7f0e0015;
+        public static final int all_authors_big_imgs=0x7f0e0017;
         /**  descriptions 
          */
-        public static final int all_authors_descriptions=0x7f0e0016;
+        public static final int all_authors_descriptions=0x7f0e0018;
         /**  imgs 
          */
-        public static final int all_authors_imgs=0x7f0e0014;
-        public static final int all_authors_names=0x7f0e0012;
-        public static final int all_authors_urls=0x7f0e0013;
-        public static final int all_authors_who=0x7f0e0017;
+        public static final int all_authors_imgs=0x7f0e0016;
+        public static final int all_authors_names=0x7f0e0014;
+        public static final int all_authors_urls=0x7f0e0015;
+        public static final int all_authors_who=0x7f0e0019;
         /**  End of menu categories 
  all categories 
          */
-        public static final int all_categories=0x7f0e000e;
-        public static final int all_categories_imgs=0x7f0e0010;
-        public static final int all_categories_imgs_files_names=0x7f0e0011;
-        public static final int all_categories_urls=0x7f0e000f;
-        public static final int authors=0x7f0e0005;
-        public static final int authors_imgs_files_names=0x7f0e0007;
-        public static final int authors_imgs_links=0x7f0e0006;
-        public static final int authors_links=0x7f0e0008;
-        public static final int categories=0x7f0e0009;
-        public static final int categories_descriptions=0x7f0e000b;
-        public static final int categories_imgs_files_names=0x7f0e000d;
-        public static final int categories_imgs_urls=0x7f0e000c;
-        public static final int categories_links=0x7f0e000a;
-        public static final int contacts=0x7f0e0020;
-        public static final int entries=0x7f0e0018;
-        public static final int entry_values=0x7f0e0019;
+        public static final int all_categories=0x7f0e0010;
+        public static final int all_categories_imgs=0x7f0e0012;
+        public static final int all_categories_imgs_files_names=0x7f0e0013;
+        public static final int all_categories_urls=0x7f0e0011;
+        public static final int authors=0x7f0e0007;
+        public static final int authors_imgs_files_names=0x7f0e0009;
+        public static final int authors_imgs_links=0x7f0e0008;
+        public static final int authors_links=0x7f0e000a;
+        public static final int categories=0x7f0e000b;
+        public static final int categories_descriptions=0x7f0e000d;
+        public static final int categories_imgs_files_names=0x7f0e000f;
+        public static final int categories_imgs_urls=0x7f0e000e;
+        public static final int categories_links=0x7f0e000c;
+        public static final int contacts=0x7f0e0022;
+        public static final int entries=0x7f0e001a;
+        public static final int entry_values=0x7f0e001b;
+        public static final int images_position=0x7f0e0004;
+        public static final int images_position_values=0x7f0e0005;
         /**  menu categories 
          */
-        public static final int menu_items=0x7f0e0004;
+        public static final int menu_items=0x7f0e0006;
         public static final int notif_period=0x7f0e0002;
         public static final int notif_period_values=0x7f0e0003;
         /**  Масштаб картинок и текста для главной 
          */
-        public static final int scale=0x7f0e001c;
+        public static final int scale=0x7f0e001e;
         /**  Масштаб для статей 
          */
-        public static final int scale_art=0x7f0e001e;
-        public static final int scale_values=0x7f0e001d;
-        public static final int scale_values_art=0x7f0e001f;
+        public static final int scale_art=0x7f0e0020;
+        public static final int scale_values=0x7f0e001f;
+        public static final int scale_values_art=0x7f0e0021;
         public static final int share_options=0x7f0e0000;
         public static final int share_options_text_only=0x7f0e0001;
-        public static final int theme=0x7f0e001a;
-        public static final int theme_values=0x7f0e001b;
-        public static final int version_history_arr=0x7f0e0021;
+        public static final int theme=0x7f0e001c;
+        public static final int theme_values=0x7f0e001d;
+        public static final int version_history_arr=0x7f0e0023;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -3811,48 +3813,50 @@ containing a value of this type.
         public static final int also_to_read_art_lay=0x7f030021;
         public static final int article_card=0x7f030022;
         public static final int article_card_art_frag=0x7f030023;
-        public static final int author_card=0x7f030024;
-        public static final int card_description_text_view=0x7f030025;
-        public static final int card_tag=0x7f030026;
-        public static final int category_card=0x7f030027;
-        public static final int comment_card_view=0x7f030028;
-        public static final int comments_bottom_btn_layout=0x7f030029;
-        public static final int contacts_dialog=0x7f03002a;
-        public static final int drawer_group=0x7f03002b;
-        public static final int drawer_header=0x7f03002c;
-        public static final int easter_egg_dialog=0x7f03002d;
-        public static final int fake_header_small=0x7f03002e;
-        public static final int feedback_dialog_2=0x7f03002f;
-        public static final int fragment_all_authors_list=0x7f030030;
-        public static final int fragment_art=0x7f030031;
-        public static final int fragment_arts_list=0x7f030032;
-        public static final int fragment_comments_list=0x7f030033;
-        public static final int fragment_dialog_downloads=0x7f030034;
-        public static final int md_dialog_basic=0x7f030035;
-        public static final int md_dialog_custom=0x7f030036;
-        public static final int md_dialog_input=0x7f030037;
-        public static final int md_dialog_list=0x7f030038;
-        public static final int md_dialog_progress=0x7f030039;
-        public static final int md_dialog_progress_indeterminate=0x7f03003a;
-        public static final int md_listitem=0x7f03003b;
-        public static final int md_listitem_multichoice=0x7f03003c;
-        public static final int md_listitem_singlechoice=0x7f03003d;
-        public static final int md_simplelist_item=0x7f03003e;
-        public static final int md_stub_actionbuttons=0x7f03003f;
-        public static final int md_stub_inputpref=0x7f030040;
-        public static final int md_stub_progress=0x7f030041;
-        public static final int md_stub_progress_indeterminate=0x7f030042;
-        public static final int md_stub_titleframe=0x7f030043;
-        public static final int pre_rate_question_dialog_0=0x7f030044;
-        public static final int pre_rate_stars_dialog_1=0x7f030045;
-        public static final int select_dialog_item_material=0x7f030046;
-        public static final int select_dialog_multichoice_material=0x7f030047;
-        public static final int select_dialog_singlechoice_material=0x7f030048;
-        public static final int share_panel=0x7f030049;
-        public static final int share_panel_landscape=0x7f03004a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03004b;
-        public static final int title_include=0x7f03004c;
-        public static final int toolbar_preference=0x7f03004d;
+        public static final int article_card_image_left=0x7f030024;
+        public static final int article_card_image_right=0x7f030025;
+        public static final int author_card=0x7f030026;
+        public static final int card_description_text_view=0x7f030027;
+        public static final int card_tag=0x7f030028;
+        public static final int category_card=0x7f030029;
+        public static final int comment_card_view=0x7f03002a;
+        public static final int comments_bottom_btn_layout=0x7f03002b;
+        public static final int contacts_dialog=0x7f03002c;
+        public static final int drawer_group=0x7f03002d;
+        public static final int drawer_header=0x7f03002e;
+        public static final int easter_egg_dialog=0x7f03002f;
+        public static final int fake_header_small=0x7f030030;
+        public static final int feedback_dialog_2=0x7f030031;
+        public static final int fragment_all_authors_list=0x7f030032;
+        public static final int fragment_art=0x7f030033;
+        public static final int fragment_arts_list=0x7f030034;
+        public static final int fragment_comments_list=0x7f030035;
+        public static final int fragment_dialog_downloads=0x7f030036;
+        public static final int md_dialog_basic=0x7f030037;
+        public static final int md_dialog_custom=0x7f030038;
+        public static final int md_dialog_input=0x7f030039;
+        public static final int md_dialog_list=0x7f03003a;
+        public static final int md_dialog_progress=0x7f03003b;
+        public static final int md_dialog_progress_indeterminate=0x7f03003c;
+        public static final int md_listitem=0x7f03003d;
+        public static final int md_listitem_multichoice=0x7f03003e;
+        public static final int md_listitem_singlechoice=0x7f03003f;
+        public static final int md_simplelist_item=0x7f030040;
+        public static final int md_stub_actionbuttons=0x7f030041;
+        public static final int md_stub_inputpref=0x7f030042;
+        public static final int md_stub_progress=0x7f030043;
+        public static final int md_stub_progress_indeterminate=0x7f030044;
+        public static final int md_stub_titleframe=0x7f030045;
+        public static final int pre_rate_question_dialog_0=0x7f030046;
+        public static final int pre_rate_stars_dialog_1=0x7f030047;
+        public static final int select_dialog_item_material=0x7f030048;
+        public static final int select_dialog_multichoice_material=0x7f030049;
+        public static final int select_dialog_singlechoice_material=0x7f03004a;
+        public static final int share_panel=0x7f03004b;
+        public static final int share_panel_landscape=0x7f03004c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03004d;
+        public static final int title_include=0x7f03004e;
+        public static final int toolbar_preference=0x7f03004f;
     }
     public static final class menu {
         public static final int art_card_menu=0x7f0f0000;

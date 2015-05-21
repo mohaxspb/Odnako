@@ -22,5 +22,15 @@
         <item>90</item>
         <item>120</item>
     </string-array>
+    <string-array name="images_position">
+        <item>Сверху</item>
+        <item>Слева</item>
+        <item>Справа</item>
+    </string-array>
+    <string-array name="images_position_values">
+        <item>up</item>
+        <item>left</item>
+        <item>right</item>
+    </string-array>
 
 </resources>

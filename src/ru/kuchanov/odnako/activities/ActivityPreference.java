@@ -53,6 +53,11 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_UI_SCALE = "scale";
 	public static final String PREF_KEY_ART_SCALE = "scale_art";
 	public static final String PREF_KEY_COMMENTS_SCALE = "scale_comments";
+	public static final String PREF_KEY_IMAGE_SHOW = "image_show";
+	public static final String PREF_KEY_IMAGE_POSITION = "images_position";
+	public static final String PREF_VALUE_IMAGE_POSITION_UP = "up";
+	public static final String PREF_VALUE_IMAGE_POSITION_LEFT = "left";
+	public static final String PREF_VALUE_IMAGE_POSITION_RIGHT = "right";
 	//notification keys
 	public static final String PREF_KEY_NOTIFICATION = "notification";
 	public static final String PREF_KEY_NOTIF_VIBRATION = "vibration";

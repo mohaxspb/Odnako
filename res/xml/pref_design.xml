@@ -38,8 +38,7 @@
         android:icon="?commentsIcon"
         android:key="scale_comments"
         android:summary="От 0.5х до 2х"
-        android:title="@string/comments_text_scale" >
-    </ListPreference>
+        android:title="@string/comments_text_scale" />
 
     <!-- Выбор темы -->
 
@@ -59,13 +58,14 @@
         android:icon="?themeIcon"
         android:key="theme"
         android:summary="Поверните экран для применения"
-        android:title="Выбор темы приложения" >
-    </ListPreference>
+        android:title="Выбор темы приложения" />
 
-    <!-- <SwitchPreference
-        android:defaultValue="@bool/isTablet" -->
-        <SwitchPreference
-        android:defaultValue="false" 
+    <!--
+         <SwitchPreference
+        android:defaultValue="@bool/isTablet"
+    -->
+    <SwitchPreference
+        android:defaultValue="false"
         android:enabled="@bool/isTablet"
         android:icon="?tabletIcon"
         android:key="twoPane"
@@ -73,5 +73,24 @@
         android:summaryOn="Планшетный режим"
         android:switchTextOff="Выкл"
         android:switchTextOn="Вкл" />
+
+    <!-- images -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="?default_image"
+        android:key="image_show"
+        android:summaryOff="Картинки НЕ отображаются и НЕ загружаются"
+        android:summaryOn="Картинки отображаются и загружаются"
+        android:switchTextOff="Картинки НЕ отображаются и НЕ загружаются"
+        android:switchTextOn="Картинки отображаются и загружаются" />
+
+    <ListPreference
+        android:defaultValue="up"
+        android:entries="@array/images_position"
+        android:entryValues="@array/images_position_values"
+        android:icon="?default_image"
+        android:key="images_position"
+        android:summary="Расположение картинки относительно заголовка"
+        android:title="Расположение картинки относительно заголовка" />
 
 </PreferenceScreen>

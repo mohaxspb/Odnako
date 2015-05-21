@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
@@ -190,6 +191,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					// ART_IMG
 					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/"))
 					{
+						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						int width = act.getResources().getDisplayMetrics().widthPixels;
 						if (twoPane)
 						{
@@ -204,9 +206,15 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 								width = width / 3 * 2;
 							}
 						}
+						if (!this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+						ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP).equals(
+						ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP))
+						{
+							width = width / 4;
+							params.weight = 1;
+						}
 						int height = (int) (width / (1.7f));
 
-						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						params.height = height;
 						holderMain.art_img.setLayoutParams(params);
 						String HDimgURL = p.getImgArt().replace("/120_72/", "/450_240/");
@@ -215,8 +223,16 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					}
 					else
 					{
+						//no image
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						params.height = 0;
+						if (!this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+						ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP).equals(
+						ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP))
+						{
+							params.width = 0;
+							params.weight = 0;
+						}
 						holderMain.art_img.setLayoutParams(params);
 					}
 					//end of ART_IMG
@@ -295,7 +311,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											//Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
-//											Actions.shareUrl(p.getUrl(), act);
+											//											Actions.shareUrl(p.getUrl(), act);
 											DialogShare.showChoiceDialog(act, p, DialogShare.SHARE_TYPE_ALL);
 											return true;
 										case R.id.show_comments:
@@ -305,7 +321,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 										case R.id.speeck:
 											Intent intentTTS = new Intent(act.getApplicationContext(), ServiceTTS.class);
 											intentTTS.setAction("init");
-											intentTTS.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, artsInfo);
+											intentTTS
+											.putParcelableArrayListExtra(FragmentArticle.ARTICLE_URL, artsInfo);
 											intentTTS.putExtra("position", positionInAllArtsInfo);
 											act.startService(intentTTS);
 											return true;
@@ -418,7 +435,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						{
 							public void onClick(View v)
 							{
-								//Actions.shareArtText(p.getArtText(), act);
 								DialogShare.showChoiceDialog(act, p, DialogShare.SHARE_TYPE_TEXT);
 							}
 						});
@@ -533,8 +549,23 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 				return holder;
 
 			case (ARTICLE):
-				// create a new view
-				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,
+				//XXX
+				String imgPos = this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+				ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP);
+				int layoutId = R.layout.article_card;
+				switch (imgPos)
+				{
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP:
+						layoutId = R.layout.article_card;
+					break;
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_LEFT:
+						layoutId = R.layout.article_card_image_left;
+					break;
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_RIGHT:
+						layoutId = R.layout.article_card_image_right;
+					break;
+				}
+				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(layoutId,
 				parent,
 				false);
 
