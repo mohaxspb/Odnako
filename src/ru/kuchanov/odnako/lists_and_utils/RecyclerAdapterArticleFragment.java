@@ -8,6 +8,7 @@ import org.htmlcleaner.TagNode;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.custom.view.FlowLayout;
 import ru.kuchanov.odnako.custom.view.JBTextView;
 import ru.kuchanov.odnako.db.Article;
@@ -214,17 +215,27 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				h.date.setTextSize(17 * scaleFactor);
 
 				// ART_IMG
-				if (!article.getImgArt().equals(Const.EMPTY_STRING) && !article.getImgArt().contains("/75_75/"))
+				boolean showImages = this.pref.getBoolean(ActivityPreference.PREF_KEY_IMAGE_SHOW, true) == true;
+				if (!article.getImgArt().equals(Const.EMPTY_STRING) && !article.getImgArt().contains("/75_75/")
+				&& showImages)
 				{
+					android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) h.artImg
+					.getLayoutParams();
 					int width = act.getResources().getDisplayMetrics().widthPixels;
 					if (twoPane)
 					{
 						//so 2/3 of width
 						width = width / 3 * 2;
 					}
+					if (!this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+					ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP).equals(
+					ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP))
+					{
+						width = width / 4;
+						params.weight = 1;
+					}
 					int height = (int) (width / (1.7f));
-					android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) h.artImg
-					.getLayoutParams();
+
 					params.height = height;
 					h.artImg.setLayoutParams(params);
 					String HDimgURL = article.getImgArt().replace("/120_72/", "/450_240/");
@@ -237,6 +248,13 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 					android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) h.artImg
 					.getLayoutParams();
 					params.height = android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
+					if (!this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+					ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP).equals(
+					ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP))
+					{
+						params.width = 0;
+						params.weight = 0;
+					}
 					h.artImg.setLayoutParams(params);
 				}
 				//end of ART_IMG
@@ -606,7 +624,22 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				false);
 				return new HolderHeader(itemLayoutView);
 			case (CARD_ARTICLE_TITLE):
-				itemLayoutView = act.getLayoutInflater().inflate(R.layout.article_card_art_frag,
+				String imgPos = this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
+				ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP);
+				int layoutId = R.layout.article_card_image_top;
+				switch (imgPos)
+				{
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP:
+						layoutId = R.layout.article_card_art_frag_image_top;
+					break;
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_LEFT:
+						layoutId = R.layout.article_card_art_frag_image_left;
+					break;
+					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_RIGHT:
+						layoutId = R.layout.article_card_art_frag_image_right;
+					break;
+				}
+				itemLayoutView = act.getLayoutInflater().inflate(layoutId,
 				parent,
 				false);
 				return new HolderArticleTitle(itemLayoutView);

@@ -189,7 +189,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 					////////
 					// ART_IMG
-					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/"))
+					boolean showImages=this.pref.getBoolean(ActivityPreference.PREF_KEY_IMAGE_SHOW, true)==true;
+					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/") && showImages)
 					{
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
 						int width = act.getResources().getDisplayMetrics().widthPixels;
@@ -549,14 +550,13 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 				return holder;
 
 			case (ARTICLE):
-				//XXX
 				String imgPos = this.pref.getString(ActivityPreference.PREF_KEY_IMAGE_POSITION,
 				ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP);
-				int layoutId = R.layout.article_card;
+				int layoutId = R.layout.article_card_image_top;
 				switch (imgPos)
 				{
 					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_UP:
-						layoutId = R.layout.article_card;
+						layoutId = R.layout.article_card_image_top;
 					break;
 					case ActivityPreference.PREF_VALUE_IMAGE_POSITION_LEFT:
 						layoutId = R.layout.article_card_image_left;
@@ -568,7 +568,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(layoutId,
 				parent,
 				false);
-
 				// create ViewHolder
 				holder = new ArticleHolder(itemLayoutView);
 				return holder;
