@@ -18,15 +18,6 @@
         app:horizontalSpacing="6dip"
         app:verticalSpacing="12dip" >
 
-       <!--  <TextView
-            android:id="@+id/tags_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/tags"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="23sp"
-            android:textStyle="bold" /> -->
     </ru.kuchanov.odnako.custom.view.FlowLayout>
 
 </android.support.v7.widget.CardView>

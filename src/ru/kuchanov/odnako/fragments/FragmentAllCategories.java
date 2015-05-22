@@ -174,7 +174,7 @@ public class FragmentAllCategories extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		//System.out.println("ArticlesListFragment onCreateView");
-		View v = inflater.inflate(R.layout.fragment_all_authors_list, container, false);
+		View v = inflater.inflate(R.layout.fragment_all_authors_categories, container, false);
 
 		this.topImg = (ImageView) v.findViewById(R.id.top_img);
 

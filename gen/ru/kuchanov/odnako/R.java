@@ -3827,7 +3827,7 @@ containing a value of this type.
         public static final int easter_egg_dialog=0x7f03002f;
         public static final int fake_header_small=0x7f030030;
         public static final int feedback_dialog_2=0x7f030031;
-        public static final int fragment_all_authors_list=0x7f030032;
+        public static final int fragment_all_authors_categories=0x7f030032;
         public static final int fragment_art=0x7f030033;
         public static final int fragment_arts_list=0x7f030034;
         public static final int fragment_comments_list=0x7f030035;
