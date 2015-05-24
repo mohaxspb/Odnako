@@ -12,7 +12,6 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.animations.RecyclerCommentsOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
-import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceComments;
@@ -31,6 +30,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -208,7 +208,8 @@ public class FragmentComments extends Fragment
 
 		this.recycler = (RecyclerView) v.findViewById(R.id.recycler_view);
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
-		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
+//		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
+		this.recycler.setLayoutManager(new LinearLayoutManager(act));
 		this.recycler.addItemDecoration(new SpacesItemDecoration(15));
 		//end of find all views
 

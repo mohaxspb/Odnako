@@ -8,7 +8,7 @@ package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
-import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
+//import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
@@ -29,6 +29,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -54,9 +55,11 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 	//	ArrayList<Article> allArtsInfo;
 
 	private RecyclerView recycler;
-	private RecyclerAdapterArticleFragment recyclerAdapter;
+	//	private RecyclerAdapterArticleFragment recyclerAdapter;
 
 	private boolean isSingle = false;
+
+	//	private int[] scroll = new int[]{0, 0};
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -79,6 +82,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			this.curArticle = savedState.getParcelable(Article.KEY_CURENT_ART);
 			this.setPosition(savedState.getInt("position"));
 			this.isSingle = savedState.getBoolean("isSingle", false);
+			//			this.scroll = savedState.getIntArray("scroll");
 		}
 
 		if (this.curArticle != null)
@@ -105,7 +109,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				return;
 			}
-			((MyLinearLayoutManager) recycler.getLayoutManager()).setFirstScroll(true);
+			//			((MyLinearLayoutManager) recycler.getLayoutManager()).setFirstScroll(true);
 			if (curArticle != null)
 			{
 				//				LocalBroadcastManager.getInstance(act).unregisterReceiver(articleReceiver);
@@ -142,6 +146,9 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			{
 				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
 				update(a);
+
+				Log.i(LOG,
+				"a.getText().equals(Const.EMPTY_STRING): " + String.valueOf(a.getArtText().equals(Const.EMPTY_STRING)));
 
 				//if it's currently displayed frag, we can notify, that it is readen now
 				ViewPager pager = (ViewPager) act.findViewById(R.id.pager_right);
@@ -192,7 +199,8 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 
 		this.recycler = (RecyclerView) v.findViewById(R.id.recycler_view);
 		this.recycler.setItemAnimator(new DefaultItemAnimator());
-		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
+		//		this.recycler.setLayoutManager(new MyLinearLayoutManager(act));
+		this.recycler.setLayoutManager(new LinearLayoutManager(act));
 
 		//check for existing article's text in ArtInfo obj. If it's null or empty - start download
 		this.update(curArticle);
@@ -214,6 +222,12 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		outState.putInt("position", this.getPosition());
 		outState.putParcelable(Article.KEY_CURENT_ART, curArticle);
 		outState.putBoolean("isSingle", isSingle);
+
+		//		LinearLayoutManager manager = ((LinearLayoutManager) this.recycler.getLayoutManager());
+		//		int firstVisiblePos = manager.findFirstVisibleItemPosition();
+		//
+		//		outState.putIntArray("scroll", new int[] { firstVisiblePos, manager.findViewByPosition(firstVisiblePos)
+		//		.getTop() });
 	}
 
 	@Override
@@ -243,7 +257,7 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 		this.curArticle = article;
 		Log.d(LOG, "update called");
 
-		if (this.curArticle != null && !this.isSingle)
+		if (this.curArticle != null && !this.isSingle && !this.curArticle.getArtText().equals(Const.EMPTY_STRING))
 		{
 			Log.d(LOG, "update called, url: " + article.getUrl());
 			try
@@ -298,10 +312,26 @@ public class FragmentArticle extends Fragment implements FragArtUPD
 			}
 		}
 
+		if (this.recycler.getAdapter() != null)
+		{
+			((RecyclerAdapterArticleFragment)this.recycler.getAdapter()).updateArticle(curArticle);
+			this.recycler.getAdapter().notifyDataSetChanged();
+		}
+		else
+		{
+			this.recycler.setAdapter(new RecyclerAdapterArticleFragment(act, curArticle));
+			this.recycler.getAdapter().notifyDataSetChanged();
+		}
+
 		//long beforeTime = System.currentTimeMillis();
-		this.recyclerAdapter = new RecyclerAdapterArticleFragment(act, curArticle);
-		this.recycler.setAdapter(recyclerAdapter);
-		this.recycler.getAdapter().notifyDataSetChanged();
+		//		this.recyclerAdapter = new RecyclerAdapterArticleFragment(act, curArticle);
+
+		//		this.recycler.setAdapter(recyclerAdapter);
+		//		this.recycler.getAdapter().notifyDataSetChanged();
+		//		Log.d(LOG, "scroll: " + this.scroll[0] + "/" + this.scroll[1]);
+		//		this.recycler.getLayoutManager().scrollToPosition(this.scroll[0]);
+		//		((LinearLayoutManager) this.recycler.getLayoutManager()).scrollVerticallyBy(this.scroll[1], recycler,
+		//		new RecyclerView.State());
 		//Log.e(LOG, "update fragment. TIME: " + String.valueOf((System.currentTimeMillis() - beforeTime)));
 	}
 

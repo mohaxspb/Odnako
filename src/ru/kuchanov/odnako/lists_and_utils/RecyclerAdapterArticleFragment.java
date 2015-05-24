@@ -97,6 +97,15 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 		}
 	}
 
+	public void updateArticle(Article a)
+	{
+		this.article = a;
+		if (this.article != null)//!this.article.getArtText().equals(Const.EMPTY_STRING))
+		{
+			this.articlesTags = DialogShare.getArticlesTags(article);
+		}
+	}
+
 	@Override
 	public int getItemViewType(int position)
 	{
