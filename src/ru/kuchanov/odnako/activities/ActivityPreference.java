@@ -58,6 +58,10 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_VALUE_IMAGE_POSITION_UP = "up";
 	public static final String PREF_VALUE_IMAGE_POSITION_LEFT = "left";
 	public static final String PREF_VALUE_IMAGE_POSITION_RIGHT = "right";
+	public static final String PREF_KEY_PREVIEW_SHOW = "preview_show";
+	public static final String PREF_KEY_AUTHOR_IMAGE_SHOW = "author_image_show";
+	public static final String PREF_KEY_ARTICLE_IS_READEN_BACKGROUND = "is_readen_background_show";
+	
 	//notification keys
 	public static final String PREF_KEY_NOTIFICATION = "notification";
 	public static final String PREF_KEY_NOTIF_VIBRATION = "vibration";

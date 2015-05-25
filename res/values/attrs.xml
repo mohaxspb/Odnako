@@ -10,12 +10,7 @@
         <attr name="layout_breakLine" format="boolean" />
         <attr name="layout_horizontalSpacing" format="dimension" />
     </declare-styleable>
-    <!-- <declare-styleable name="CustomTheme"> -->
-        <attr name="cardBackGroundColor" format="reference" />
-    <!-- </declare-styleable> -->
-    <!-- <declare-styleable name="CustomTheme"> -->
-        <attr name="cardBackGroundColorDark" format="reference" />
-    <!-- </declare-styleable> -->
+
     <!-- for rippleView -->
     <declare-styleable name="MaterialRippleLayout">
         <attr name="mrl_rippleColor" format="color" localization="suggested" />
@@ -32,8 +27,9 @@
         <attr name="mrl_rippleRoundedCorners" format="dimension" localization="suggested" />
     </declare-styleable>
 
+    <attr name="cardBackGroundColor" format="reference|color" />
+    <attr name="cardBackGroundColorDark" format="reference|color" />
     <attr name="selectorColor" format="reference|color" />
-    
     <attr name="overflowIcon" format="reference" />
     <attr name="settingsIcon" format="reference" />
     <attr name="refreshIcon" format="reference" />
@@ -43,7 +39,6 @@
     <attr name="unreadenIcon" format="reference" />
     <attr name="searchIconOdnako" format="reference" />
     <attr name="default_image" format="reference" />
-    
     <attr name="green" format="reference|color" />
     <attr name="greenDark" format="reference|color" />
     <!-- arrows -->
@@ -78,7 +73,8 @@
     <attr name="openInBrowserIcon" format="reference" />
     <attr name="mailToMeIcon" format="reference" />
     <attr name="tabletIcon" format="reference" />
-    <attr name="archiveIcon" format="reference"/>
+    <attr name="archiveIcon" format="reference" />
+    <attr name="pagesIcon" format="reference" />
     <!--  -->
     <attr name="coverTopToBottom" format="reference" />
     <attr name="topImgCover" format="reference" />

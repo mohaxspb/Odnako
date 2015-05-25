@@ -494,7 +494,7 @@ public class Actions
 				//if so we must change adapters to all ViewPagers
 				PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 				act.getSupportFragmentManager(), mainActivity);
-				AllAuthorsListAdapter adAllAut = new AllAuthorsListAdapter(mainActivity, null);
+				RecyclerAdapterAllAuthors adAllAut = new RecyclerAdapterAllAuthors(mainActivity, null);
 				//we also must setFilter to adapter by query. saved in Activity
 				String curFilter = mainActivity.getSearchText();
 				if (curFilter != null)
@@ -555,7 +555,7 @@ public class Actions
 				//if so we must change adapters to all ViewPagers
 				PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 				act.getSupportFragmentManager(), mainActivity);
-				AllCategoriesListAdapter adAllCat = new AllCategoriesListAdapter(mainActivity, null);
+				RecyclerAdapterAllCategories adAllCat = new RecyclerAdapterAllCategories(mainActivity, null);
 				//we also must setFilter to adapter by query. saved in Activity
 				String curFilter = mainActivity.getSearchText();
 				if (curFilter != null)
@@ -671,7 +671,7 @@ public class Actions
 				//if so we must change adapters to all ViewPagers
 				PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
 				act.getSupportFragmentManager(), mainActivity);
-				AllAuthorsListAdapter adAllAut = new AllAuthorsListAdapter(mainActivity, null);
+				RecyclerAdapterAllAuthors adAllAut = new RecyclerAdapterAllAuthors(mainActivity, null);
 				//we also must setFilter to adapter by query. saved in Activity
 				String curFilter = mainActivity.getSearchText();
 				if (curFilter != null)
@@ -732,7 +732,7 @@ public class Actions
 				//if so we must change adapters to all ViewPagers
 				PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
 				act.getSupportFragmentManager(), mainActivity);
-				AllCategoriesListAdapter adAllCat = new AllCategoriesListAdapter(mainActivity, null);
+				RecyclerAdapterAllCategories adAllCat = new RecyclerAdapterAllCategories(mainActivity, null);
 				//we also must setFilter to adapter by query. saved in Activity
 				String curFilter = mainActivity.getSearchText();
 				if (curFilter != null)

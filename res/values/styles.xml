@@ -28,7 +28,7 @@
         <item name="android:textColor">@color/material_grey_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_800</item>
-        <item name="cardBackGroundColorDark">@color/material_grey_800</item>
+        <item name="cardBackGroundColorDark">@color/material_grey_700</item>
         <!-- icons -->
         <item name="themeIcon">@drawable/ic_color_lens_white_48dp</item>
         <item name="nightModeIcon">@drawable/ic_brightness_4_white_48dp</item>
@@ -73,6 +73,7 @@
         <item name="mailToMeIcon">@drawable/ic_send_white_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
         <item name="archiveIcon">@drawable/ic_archive_white_48dp</item>
+        <item name="pagesIcon">@drawable/ic_pages_white_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_dark</item>
@@ -122,7 +123,8 @@
         <item name="android:textColor">@color/material_grey_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_grey_50</item>
-        <item name="cardBackGroundColorDark">@color/material_grey_200</item>
+        <item name="cardBackGroundColorDark">@color/material_grey_300</item>
+        <!--  -->
         <item name="themeIcon">@drawable/ic_color_lens_grey600_48dp</item>
         <item name="nightModeIcon">@drawable/ic_brightness_4_grey600_48dp</item>
         <item name="overflowIcon">@drawable/ic_action_overflow_light</item>
@@ -166,6 +168,7 @@
         <item name="mailToMeIcon">@drawable/ic_send_grey600_48dp</item>
         <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
         <item name="archiveIcon">@drawable/ic_archive_grey600_48dp</item>
+        <item name="pagesIcon">@drawable/ic_pages_grey600_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_light</item>
@@ -221,7 +224,7 @@
         <item name="android:textColor">@color/material_indigo_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_indigo_900</item>
-        <item name="cardBackGroundColorDark">@color/material_indigo_900</item>
+        <item name="cardBackGroundColorDark">@color/material_indigo_800</item>
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_indigo</item>
         <item name="topImgCover">@drawable/top_img_cover_dark_indigo</item>
 
@@ -260,7 +263,7 @@
         <item name="android:textColor">@color/material_indigo_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_indigo_50</item>
-        <item name="cardBackGroundColorDark">@color/material_indigo_200</item>
+        <item name="cardBackGroundColorDark">@color/material_indigo_300</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_indigo</item>
         <item name="topImgCover">@drawable/top_img_cover_light_indigo</item>
@@ -315,7 +318,7 @@
         <item name="android:textColor">@color/material_red_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_red_900</item>
-        <item name="cardBackGroundColorDark">@color/material_red_900</item>
+        <item name="cardBackGroundColorDark">@color/material_red_800</item>
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_red</item>
         <item name="topImgCover">@drawable/top_img_cover_dark_red</item>
 
@@ -354,7 +357,7 @@
         <item name="android:textColor">@color/material_red_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_red_50</item>
-        <item name="cardBackGroundColorDark">@color/material_red_200</item>
+        <item name="cardBackGroundColorDark">@color/material_red_300</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_red</item>
         <item name="topImgCover">@drawable/top_img_cover_light_red</item>
@@ -409,7 +412,7 @@
         <item name="android:textColor">@color/material_teal_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_teal_900</item>
-        <item name="cardBackGroundColorDark">@color/material_teal_900</item>
+        <item name="cardBackGroundColorDark">@color/material_teal_800</item>
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_teal</item>
         <item name="topImgCover">@drawable/top_img_cover_dark_teal</item>
 
@@ -448,7 +451,7 @@
         <item name="android:textColor">@color/material_teal_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_teal_50</item>
-        <item name="cardBackGroundColorDark">@color/material_teal_200</item>
+        <item name="cardBackGroundColorDark">@color/material_teal_300</item>
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_teal</item>
         <item name="topImgCover">@drawable/top_img_cover_light_teal</item>
         <!-- standart widjets styles -->
@@ -503,7 +506,7 @@
         <item name="android:textColor">@color/material_green_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_green_900</item>
-        <item name="cardBackGroundColorDark">@color/material_green_900</item>
+        <item name="cardBackGroundColorDark">@color/material_green_800</item>
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_green</item>
         <item name="topImgCover">@drawable/top_img_cover_dark_green</item>
 
@@ -542,7 +545,7 @@
         <item name="android:textColor">@color/material_green_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_green_50</item>
-        <item name="cardBackGroundColorDark">@color/material_green_200</item>
+        <item name="cardBackGroundColorDark">@color/material_green_300</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_green</item>
         <item name="topImgCover">@drawable/top_img_cover_light_green</item>
@@ -597,7 +600,7 @@
         <item name="android:textColor">@color/material_amber_300</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_amber_900</item>
-        <item name="cardBackGroundColorDark">@color/material_amber_900</item>
+        <item name="cardBackGroundColorDark">@color/material_amber_800</item>
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom_amber</item>
         <item name="topImgCover">@drawable/top_img_cover_dark_amber</item>
 
@@ -636,7 +639,7 @@
         <item name="android:textColor">@color/material_amber_800</item>
         <!-- custom attrs -->
         <item name="cardBackGroundColor">@color/material_amber_50</item>
-        <item name="cardBackGroundColorDark">@color/material_amber_200</item>
+        <item name="cardBackGroundColorDark">@color/material_amber_300</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom_amber</item>
         <item name="topImgCover">@drawable/top_img_cover_light_amber</item>

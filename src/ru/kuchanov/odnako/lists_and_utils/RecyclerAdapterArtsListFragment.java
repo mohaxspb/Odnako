@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.utils.MyUIL;
 import ru.kuchanov.odnako.utils.ServiceTTS;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -189,7 +190,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 					////////
 					// ART_IMG
-					boolean showImages=this.pref.getBoolean(ActivityPreference.PREF_KEY_IMAGE_SHOW, true)==true;
+					boolean showImages = this.pref.getBoolean(ActivityPreference.PREF_KEY_IMAGE_SHOW, true) == true;
 					if (!p.getImgArt().equals(Const.EMPTY_STRING) && !p.getImgArt().contains("/75_75/") && showImages)
 					{
 						LayoutParams params = (LayoutParams) holderMain.art_img.getLayoutParams();
@@ -312,7 +313,6 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											//Actions.markAsRead(p.getUrl(), act);
 											return true;
 										case R.id.share_link:
-											//											Actions.shareUrl(p.getUrl(), act);
 											DialogShare.showChoiceDialog(act, p, DialogShare.SHARE_TYPE_ALL);
 											return true;
 										case R.id.show_comments:
@@ -337,7 +337,8 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					////End of popUp menu in cardView
 
 					//preview
-					if (!p.getPreview().equals(Const.EMPTY_STRING))
+					boolean showPreview = this.pref.getBoolean(ActivityPreference.PREF_KEY_PREVIEW_SHOW, false) == true;
+					if (!p.getPreview().equals(Const.EMPTY_STRING) && showPreview)
 					{
 						LayoutParams params = (LayoutParams) holderMain.preview.getLayoutParams();
 						params.height = LayoutParams.WRAP_CONTENT;
@@ -359,7 +360,9 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					////end of preview
 
 					//name and image of author
-					if (!p.getImgArt().equals(Const.EMPTY_STRING) && p.getImgArt().contains("/75_75/"))
+					boolean showAuthorImage = this.pref.getBoolean(ActivityPreference.PREF_KEY_AUTHOR_IMAGE_SHOW, true) == true;
+					if (!p.getImgArt().equals(Const.EMPTY_STRING) && p.getImgArt().contains("/75_75/")
+					&& showAuthorImage)
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
@@ -370,7 +373,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						this.imageLoader.displayImage(p.getImgArt(), holderMain.author_img,
 						MyUIL.getTransparentBackgroundROUNDOptions(act));
 					}
-					else if (!p.getImgAuthor().equals(Const.EMPTY_STRING))
+					else if (!p.getImgAuthor().equals(Const.EMPTY_STRING) && showAuthorImage)
 					{
 						LayoutParams params = (LayoutParams) holderMain.author_img.getLayoutParams();
 						params.height = pixels;
@@ -461,30 +464,44 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						});
 					}
 					////end SaveImg
-
+					//XXX
 					//read Img
 					//Log.d(LOG, "p.isReaden(): " + String.valueOf(p.isReaden()));
+					boolean artBackgroundIsReaden = this.pref.getBoolean(
+					ActivityPreference.PREF_KEY_ARTICLE_IS_READEN_BACKGROUND, true) == true;
+					//set arrowDownIcon by theme
+					int[] attrs = new int[] { ru.kuchanov.odnako.R.attr.cardBackGroundColor };
+					TypedArray ta = act.obtainStyledAttributes(attrs);
+					int defaultBackgroundColor = ta.getColor(0, Color.WHITE);
+					ta.recycle();
+					attrs = new int[] { R.attr.cardBackGroundColorDark };
+					ta = act.obtainStyledAttributes(attrs);
+					int readenBackgroundColor = ta.getColor(0, Color.WHITE);
+					ta.recycle();
+					attrs = new int[] { ru.kuchanov.odnako.R.attr.readenIcon };
+					ta = act.obtainStyledAttributes(attrs);
+					int readenIconId = ta.getResourceId(0, R.drawable.ic_drafts_white_48dp);
+					ta.recycle();
+					attrs = new int[] { ru.kuchanov.odnako.R.attr.unreadenIcon };
+					ta = act.obtainStyledAttributes(attrs);
+					int unreadenIconId = ta.getResourceId(0, R.drawable.ic_markunread_white_48dp);
+					ta.recycle();
 					if (p.isReaden())
 					{
-						if (nightMode == true)
+						if (artBackgroundIsReaden)
 						{
-							holderMain.read.setImageResource(R.drawable.ic_drafts_white_48dp);
+							holderMain.card.setCardBackgroundColor(readenBackgroundColor);
 						}
 						else
 						{
-							holderMain.read.setImageResource(R.drawable.ic_drafts_grey600_48dp);
+							holderMain.card.setCardBackgroundColor(defaultBackgroundColor);
 						}
+						holderMain.read.setImageResource(readenIconId);
 					}
 					else
 					{
-						if (nightMode == true)
-						{
-							holderMain.read.setImageResource(R.drawable.ic_markunread_white_48dp);
-						}
-						else
-						{
-							holderMain.read.setImageResource(R.drawable.ic_markunread_grey600_48dp);
-						}
+						holderMain.card.setCardBackgroundColor(defaultBackgroundColor);
+						holderMain.read.setImageResource(unreadenIconId);
 					}
 					holderMain.read.setOnClickListener(new OnClickListener()
 					{

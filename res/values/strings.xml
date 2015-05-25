@@ -22,6 +22,7 @@
     <string name="mark_as_unread">Отметить НЕ прочитанной</string>
     <string name="mark_as_read_unread">Отметить прочитанной/ НЕ прочитанной</string>
     <string name="share_link">Поделиться ссылкой</string>
+    <string name="share_article">Поделиться статьёй</string>
     <string name="show_comments">Читать комментарии</string>
     <string name="speek_aloud">Прочесть вслух</string>
     <string name="zero">0</string>

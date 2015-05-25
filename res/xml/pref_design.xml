@@ -92,5 +92,32 @@
         android:key="images_position"
         android:summary="Расположение картинки относительно заголовка"
         android:title="Расположение картинки относительно заголовка" />
+    
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="?authorIcon"
+        android:key="author_image_show"
+        android:summaryOff="Фото авторов НЕ отображаются и НЕ загружаются"
+        android:summaryOn="Фото авторов отображаются и загружаются"
+        android:switchTextOff="Фото авторов НЕ отображаются и НЕ загружаются"
+        android:switchTextOn="Фото авторов отображаются и загружаются" />
+    
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="?pagesIcon"
+        android:key="preview_show"
+        android:summaryOff="Краткое содержание"
+        android:summaryOn="Краткое содержание"
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
+    
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="?readenIcon"
+        android:key="is_readen_background_show"
+        android:summaryOff="Фон прочитанной статьи"
+        android:summaryOn="Фон прочитанной статьи"
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
 
 </PreferenceScreen>

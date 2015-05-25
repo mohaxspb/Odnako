@@ -11,7 +11,7 @@ import java.util.Locale;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListenerALLAUTHORS;
-import ru.kuchanov.odnako.lists_and_utils.AllCategoriesListAdapter;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterArtsListFragment;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerAllCategories;
@@ -46,7 +46,7 @@ public class FragmentAllCategories extends Fragment
 	private SharedPreferences pref;
 
 	private RecyclerView artsList;
-	private AllCategoriesListAdapter adapter;
+	private RecyclerAdapterAllCategories adapter;
 
 	private String categoryToLoad = "all_categories";
 
@@ -192,7 +192,7 @@ public class FragmentAllCategories extends Fragment
 
 		this.setArtsList((RecyclerView) v.findViewById(R.id.arts_list_view));
 
-		this.adapter = new AllCategoriesListAdapter(act, this);
+		this.adapter = new RecyclerAdapterAllCategories(act, this);
 		this.getArtsList().setAdapter(adapter);
 
 		this.getArtsList().setItemAnimator(new DefaultItemAnimator());
