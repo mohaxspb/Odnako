@@ -52,7 +52,8 @@ public class HtmlTextFormatting
 		for (int i = 0; i < tags.length; i++)
 		{
 			TagNode curTag = tags[i];
-			if (curTag.getName().equals("p") || curTag.getName().equals("div"))
+			if (curTag.getName().equals("p") || curTag.getName().equals("div")
+			)
 			{
 				if (curTag.getChildTags().length != 0)
 				{
@@ -94,6 +95,15 @@ public class HtmlTextFormatting
 					formatedArticle.addChild(curTag);
 				}
 			}//if tag is p or div
+			else if(curTag.getName().equals("h1")
+			|| curTag.getName().equals("h2")
+			|| curTag.getName().equals("h3")
+			|| curTag.getName().equals("h4")
+			|| curTag.getName().equals("h5")
+			|| curTag.getName().equals("h6"))
+			{
+				formatedArticle.addChild(curTag);
+			}
 			else
 			{
 				//place tag inside of p tag
@@ -236,10 +246,10 @@ public class HtmlTextFormatting
 	{
 		HtmlCleaner hc = new HtmlCleaner();
 		String innerHtml = Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()).toString();
-		
-		TagNode ttttt=hc.clean(innerHtml);
+
+		TagNode ttttt = hc.clean(innerHtml);
 		ArrayList<TagNode> innerATags = new ArrayList<TagNode>(ttttt.getAllElementsList(true));
-		
+
 		for (TagNode aTag : innerATags)
 		{
 			if (aTag.getName().equals("a"))
@@ -248,13 +258,13 @@ public class HtmlTextFormatting
 				String text = aTag.getText().toString();
 				int firstATagIndex = innerHtml.indexOf("<a");
 				int firstATagTextIndex = innerHtml.indexOf(text);
-				String aTagsStartString = innerHtml.substring(firstATagIndex, firstATagTextIndex+text.length());
+				String aTagsStartString = innerHtml.substring(firstATagIndex, firstATagTextIndex + text.length());
 				innerHtml = innerHtml.replace(aTagsStartString, text + " (" + attr + ") ");
 				innerHtml = innerHtml.replace("<a/>", "");
 			}
 		}
-		
-		TagNode newTagToReturn=new TagNode(tag.getName());
+
+		TagNode newTagToReturn = new TagNode(tag.getName());
 		newTagToReturn.addChild(new ContentNode(innerHtml));
 
 		return newTagToReturn;

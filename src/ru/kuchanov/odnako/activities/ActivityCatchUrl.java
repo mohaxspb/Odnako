@@ -53,7 +53,7 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 
 		if (formatedAdress.contains("comments"))
 		{
-			//TODO launch comments
+			//launch comments
 			Log.d(LOG, "comments");
 
 			Intent intent = new Intent(act, ActivityArticle.class);

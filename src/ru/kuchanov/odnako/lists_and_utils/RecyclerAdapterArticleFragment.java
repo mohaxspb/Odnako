@@ -31,8 +31,10 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -414,9 +416,18 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				TagNode[] tags = articlesTags[positionInArticlesTags].getChildTags();
 				for (TagNode tag : tags)
 				{
-					hT.text.append(Html.fromHtml("<" + tag.getName() + ">" +
-					Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()) +
-					"</" + tag + ">", null, new MyHtmlTagHandler()));
+					String text = "<"
+					+ tag.getName()
+					+ ">"
+					+
+					//					Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()) +
+					//					hc.getInnerHtml(tag).replaceAll("<b>", "<strong>").replaceAll("</b>", "</strong>") +
+					Html.fromHtml(hc.getInnerHtml(tag).replaceAll("<b>", "<strong>").replaceAll("</b>", "</strong>"),
+					null, new MyHtmlTagHandler()) +
+					"</" + tag + ">";
+					Log.i(LOG, text);
+					Spanned spannable = Html.fromHtml(text, null, new MyHtmlTagHandler());
+					hT.text.append(spannable);
 				}
 			break;
 			case IMAGE:
