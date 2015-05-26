@@ -704,11 +704,12 @@ public class Actions
 	{
 		Log.d(LOG, "showArticle!");
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
-		boolean twoPane = pref.getBoolean("twoPane", false);
+		boolean twoPane = pref.getBoolean("twoPane", false)==true;
 		//check if it's large screen
-		final ActivityMain mainActivity = (ActivityMain) act;
+		
 		if (twoPane)
 		{
+			final ActivityMain mainActivity = (ActivityMain) act;
 			final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 			final ViewPager rightPager = (ViewPager) act.findViewById(R.id.pager_right);
 			//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 

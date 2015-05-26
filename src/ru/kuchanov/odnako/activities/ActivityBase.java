@@ -129,7 +129,21 @@ public class ActivityBase extends AppCompatActivity
 			LocalBinder localBinder = (LocalBinder) binder;
 			serviceDB = (ServiceDB) localBinder.getService();
 
-			allCatArtsInfo = serviceDB.getAllCatArtsInfo();
+			if (allCatArtsInfo == null)
+			{
+				allCatArtsInfo = new HashMap<>();
+			}
+
+			ArrayList<String> keySet = new ArrayList<String>(serviceDB.getAllCatArtsInfo().keySet());
+			for (int i = 0; i < serviceDB.getAllCatArtsInfo().size(); i++)
+			{
+				if (serviceDB.getAllCatArtsInfo().get(keySet.get(i)) != null)
+				{
+					allCatArtsInfo.put(keySet.get(i), serviceDB.getAllCatArtsInfo().get(keySet.get(i)));
+				}
+			}
+
+			//allCatArtsInfo = serviceDB.getAllCatArtsInfo();
 		}
 
 		public void onServiceDisconnected(ComponentName name)

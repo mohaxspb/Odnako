@@ -59,6 +59,10 @@ public class ActivityArticle extends ActivityBase
 		this.bindService();
 
 		//ADS
+		if (!this.pref.contains(CheckTimeToAds.PREF_KEY_MAX_IN_APP_PERIOD))
+		{
+			CheckTimeToAds.setMaxInAppPeriod(act, 60L * 60L * 1000L);
+		}
 		this.checkTimeAds = new CheckTimeToAds(this, mInterstitialAd);
 
 		//set theme before super and set content to apply it
@@ -92,16 +96,17 @@ public class ActivityArticle extends ActivityBase
 		////CHECK HERE SITUATION WHEN WE LAUNCH THIS ACTIVITY WITH TWOPANE MODE
 		//that's can be if we open settings from article activity
 		//and enable twoPane
-		if (this.pref.getBoolean("twoPane", false))
-		{
-			Intent intent = new Intent(act, ActivityMain.class);
-			//set flags to prevent restoring activity from backStack and create really new instance
-			//with given categories number
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			act.startActivity(intent);
-			this.finish();
-			return;
-		}
+		//		remove to support catching urls
+		//		if (this.pref.getBoolean("twoPane", false))
+		//		{
+		//			Intent intent = new Intent(act, ActivityMain.class);
+		//			//set flags to prevent restoring activity from backStack and create really new instance
+		//			//with given categories number
+		//			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		//			act.startActivity(intent);
+		//			this.finish();
+		//			return;
+		//		}
 
 		this.setContentView(R.layout.activity_article);
 
@@ -119,6 +124,13 @@ public class ActivityArticle extends ActivityBase
 			this.allCatArtsInfo.put(this.getCurrentCategory(), curAllArtsInfo);
 
 			this.restoreGroupChildPosition(stateFromIntent);
+
+			Log.d(LOG, "stateFromIntent");
+			Log.i(LOG, "allCatArtsInfo.size(): " + allCatArtsInfo.size());
+			for (int i = 0; i < allCatArtsInfo.size(); i++)
+			{
+				Log.i(LOG, allCatArtsInfo.get(this.getCurrentCategory()).get(0).getTitle());
+			}
 		}
 		if (savedInstanceState != null)
 		{
@@ -134,6 +146,13 @@ public class ActivityArticle extends ActivityBase
 			this.allCatAndAutURLs = savedInstanceState.getStringArrayList(KEY_ALL_CAT_AND_AUT_URLS_LIST);
 
 			this.restoreGroupChildPosition(savedInstanceState);
+
+			Log.d(LOG, "savedInstanceState");
+			Log.i(LOG, "allCatArtsInfo.size(): " + allCatArtsInfo.size());
+			for (int i = 0; i < allCatArtsInfo.size(); i++)
+			{
+				Log.i(LOG, allCatArtsInfo.get(this.getCurrentCategory()).get(0).getTitle());
+			}
 		}
 
 		//drawer settings
@@ -168,7 +187,7 @@ public class ActivityArticle extends ActivityBase
 		}
 
 		//adMob
-		this.AddAds();
+		//this.AddAds();
 		//end of adMob
 	}
 

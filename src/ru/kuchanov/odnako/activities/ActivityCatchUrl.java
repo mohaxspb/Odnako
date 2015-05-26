@@ -10,10 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,61 +45,140 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 		//call super after setTheme to set it 0_0
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.activity_downloads);
-
 		Uri data = this.getIntent().getData();
 		Log.d(LOG, "Uri data: " + data);
 
 		String formatedAdress = data.toString().replace("www.", "");
-		formatedAdress = Author.getURLwithoutSlashAtTheEnd(formatedAdress);
+		Log.d(LOG, "formatedAdress: " + formatedAdress);
 
-		DataBaseHelper h = new DataBaseHelper(this);
-		Boolean isCategory = null;
-
-		isCategory = Category.isCategory(h, formatedAdress);
-		if (isCategory == null)
+		if (formatedAdress.contains("comments"))
 		{
-			isCategory = Category.isCategory(h, Author.getURLwithoutSlashAtTheEnd(formatedAdress));
-		}
+			//TODO launch comments
+			Log.d(LOG, "comments");
 
-		h.close();
+			Intent intent = new Intent(act, ActivityArticle.class);
+			Bundle b = new Bundle();
+			b.putInt("position", 0);
+			b.putString("categoryToLoad", "fromBrowser");
+			ArrayList<Article> allArtsInfo = new ArrayList<Article>();
+			Article art = new Article();
+			//remove last parts;
+			int startOfComments = formatedAdress.lastIndexOf("comments");
+			formatedAdress = formatedAdress.substring(0, startOfComments);
+			Log.d(LOG, "formatedAdress comments; " + formatedAdress);
+			art.setUrl(formatedAdress);
+			art.setTitle(formatedAdress);
+			allArtsInfo.add(art);
 
-		if (isCategory == null)
-		{
-			Log.d(LOG, "UNKNOWN category");
-			Intent intent = new Intent(act, ActivityMain.class);
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
+			b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
+			intent.putExtras(b);
 
-			intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
-			intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, formatedAdress);
+			intent.putExtra(FragmentComments.LOG, true);
 
-			//set flags to prevent restoring activity from backStack and create really new instance
-			//with given categories number
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			act.startActivity(intent);
 
 			this.finish();
 		}
-		else
+		else if (formatedAdress.contains("blogs"))
 		{
-			if (isCategory)
+			if (formatedAdress.equals("http://odnako.org/blogs") || formatedAdress.equals("http://odnako.org/blogs/"))
 			{
-				Log.d(LOG, "Category!!!");
-				int posInDB = this.searchForCategoryInDB(formatedAdress);
-				ArrayList<Category> cats = (ArrayList<Category>) this.getAllCategoriesList();
-				Log.d(LOG, cats.get(posInDB).getTitle());
-
+				Log.d(LOG, "Lenta obnovleniy");
 				Actions.showAllCategoriesArticles(formatedAdress, act);
 				this.finish();
 			}
 			else
 			{
-				Log.d(LOG, "Author!!!");
-				int posInDB = this.searchForAuthorInDB(formatedAdress);
-				ArrayList<Author> auts = (ArrayList<Author>) this.getAllAuthorsList();
-				Log.d(LOG, auts.get(posInDB).getName());
+				//launch article
+				Log.d(LOG, "not comments and not main or blogs");
+				Log.d(LOG, "so article!");
 
-				Actions.showAllAuthorsArticles(formatedAdress, act);
+				Intent intent = new Intent(act, ActivityArticle.class);
+				Bundle b = new Bundle();
+				b.putInt("position", 0);
+				b.putString("categoryToLoad", "fromBrowser");
+				ArrayList<Article> allArtsInfo = new ArrayList<Article>();
+				Article art = new Article();
+				art.setUrl(formatedAdress);
+				art.setTitle(formatedAdress);
+				allArtsInfo.add(art);
+
+				b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
+				b.putIntArray("groupChildPosition", ((ActivityBase) act).getGroupChildPosition());
+				intent.putExtras(b);
+
+				act.startActivity(intent);
+
 				this.finish();
+			}
+		}
+		else
+		{
+			//So it must be author or category or main domain
+			if (formatedAdress.equals("http://odnako.org/") || formatedAdress.equals("http://odnako.org"))
+			{
+				//TODO think about what to launch in case of "odnako.org"
+				Log.d(LOG, "main domain adress");
+				formatedAdress = "http://odnako.org";
+				Actions.showAllCategoriesArticles(formatedAdress, act);
+				this.finish();
+			}
+			else
+			{
+				//search adress in DB.
+				//It can be authoe, category or unknown category
+				//...or something else...
+				Boolean isCategory = null;
+
+				formatedAdress = Author.getURLwithoutSlashAtTheEnd(formatedAdress);
+				DataBaseHelper h = new DataBaseHelper(this);
+				isCategory = Category.isCategory(h, formatedAdress);
+				if (isCategory == null)
+				{
+					isCategory = Category.isCategory(h, Author.getURLwithoutSlashAtTheEnd(formatedAdress));
+				}
+
+				h.close();
+
+				if (isCategory == null)
+				{
+					Log.d(LOG, "UNKNOWN category");
+					Intent intent = new Intent(act, ActivityMain.class);
+
+					intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
+					intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, formatedAdress);
+
+					//set flags to prevent restoring activity from backStack and create really new instance
+					//with given categories number
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					act.startActivity(intent);
+
+					this.finish();
+				}
+				else
+				{
+					if (isCategory)
+					{
+						Log.d(LOG, "Category!!!");
+						int posInDB = this.searchForCategoryInDB(formatedAdress);
+						ArrayList<Category> cats = (ArrayList<Category>) this.getAllCategoriesList();
+						Log.d(LOG, cats.get(posInDB).getTitle());
+
+						Actions.showAllCategoriesArticles(formatedAdress, act);
+						this.finish();
+					}
+					else
+					{
+						Log.d(LOG, "Author!!!");
+						int posInDB = this.searchForAuthorInDB(formatedAdress);
+						ArrayList<Author> auts = (ArrayList<Author>) this.getAllAuthorsList();
+						Log.d(LOG, auts.get(posInDB).getName());
+
+						Actions.showAllAuthorsArticles(formatedAdress, act);
+						this.finish();
+					}
+				}
 			}
 		}
 
@@ -120,6 +200,8 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 		//				}
 		//			}
 		//		}
+
+		//		this.setContentView(R.layout.activity_downloads);
 	}
 
 	/**

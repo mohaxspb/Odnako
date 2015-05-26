@@ -319,10 +319,18 @@ public class HtmlHelper
 	{
 		TagNode descrTag = rootNode.findElementByAttValue("class", "section first", true, false);
 		TagNode imgTag = descrTag.findElementByName("img", true);
-		String imgUrl = imgTag.getAttributeByName("src");
-		if (imgUrl.startsWith("/i/"))
+		String imgUrl;
+		if (imgTag != null)
 		{
-			imgUrl = DOMAIN_MAIN + imgUrl;
+			imgUrl = imgTag.getAttributeByName("src");
+			if (imgUrl.startsWith("/i/"))
+			{
+				imgUrl = DOMAIN_MAIN + imgUrl;
+			}
+		}
+		else
+		{
+			imgUrl = Const.EMPTY_STRING;
 		}
 		return imgUrl;
 	}

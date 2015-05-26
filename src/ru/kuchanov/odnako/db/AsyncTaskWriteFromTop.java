@@ -279,27 +279,41 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									}
 								}//calculating newQount
 									//before deleting, that may cause changing of list we get nextArtUrl for new rows
-								String nextArtUrl = Article.getArticleUrlById(h,
-								first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
-								//also before deleting get id of new firstArtOfNextPage to update
-								//it's prevArtsUrl
-								int firstArtOfNextPageId = first30FromTop.get(first30FromTop.size() - newQuont - 1)
-								.getId();
-								//THEN delete ArtAutTable rows
-								ArtAutTable.delete(h,
-								first30FromTop.subList(0, first30FromTop.size() - newQuont));
-								//create ArtAut list from ArtInfo
-								List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
-								h, dataFromWeb, authorId);
-								//set nextArt of it's last to def quont on page - new qount URL
-								dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
-								//and update def quont on page - new qount prev URL by last of gained
-								ArtAutTable.updatePreviousArt(h, firstArtOfNextPageId,
-								dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
-								//Finally write new rows!
-								ArtAutTable.write(h, dataToWrite);
+								//XXX some problem... fix it with hardcoding erasing data and rewriting it
+								if ((first30FromTop.size() - newQuont - 1) < 0)
+								{
+									//create ArtAut list from ArtInfo
+									List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
+									h, dataFromWeb, authorId);
+									//Finally write new rows!
+									ArtAutTable.write(h, dataToWrite);
 
-								return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+								}
+								else
+								{
+									String nextArtUrl = Article.getArticleUrlById(h,
+									first30FromTop.get(first30FromTop.size() - newQuont - 1).getArticleId());
+									//also before deleting get id of new firstArtOfNextPage to update
+									//it's prevArtsUrl
+									int firstArtOfNextPageId = first30FromTop.get(first30FromTop.size() - newQuont - 1)
+									.getId();
+									//THEN delete ArtAutTable rows
+									ArtAutTable.delete(h,
+									first30FromTop.subList(0, first30FromTop.size() - newQuont));
+									//create ArtAut list from ArtInfo
+									List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
+									h, dataFromWeb, authorId);
+									//set nextArt of it's last to def quont on page - new qount URL
+									dataToWrite.get(dataToWrite.size() - 1).setNextArtUrl(nextArtUrl);
+									//and update def quont on page - new qount prev URL by last of gained
+									ArtAutTable.updatePreviousArt(h, firstArtOfNextPageId,
+									dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
+									//Finally write new rows!
+									ArtAutTable.write(h, dataToWrite);
+
+									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+								}
 							}
 						}
 						else

@@ -71,7 +71,7 @@ public class CheckTimeToAds
 	public static boolean isTimeToShowAds(Context ctx)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false);
+		return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false)==true;
 	}
 
 	public static void adsShown(Context ctx)
