@@ -82,6 +82,8 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 					hh.getAuthorsWho(), hh.getAuthorsImage(), hh.getAuthorsBigImg(), new Date(
 					System.currentTimeMillis()), new Date(0));
 					h.getDaoAuthor().create(a);
+					//refresh daos to add new raws to them
+					h.refreshDaos();
 				}
 			}
 			else
@@ -90,9 +92,18 @@ public class ParsePageForAllArtsInfo extends AsyncTask<Void, Void, ArrayList<Art
 				//write new Author if it don't exists
 				if (Category.isCategory(h, getCategoryToLoad()) == null)
 				{
+					Log.i(LOG, "Create new category");
+					
+//					Log.e(LOG, "before size: "+h.getAllCategoriesUrls().size());
+					
 					//create new entry in Category
 					Category c = hh.getCategoryFromHtml();
 					h.getDaoCategory().create(c);
+					
+//					Log.e(LOG, "after create size: "+h.getAllCategoriesUrls().size());
+//					//refresh daos to add new raws to them
+//					h.refreshDaos();
+//					Log.e(LOG, "after refresh size: "+h.getAllCategoriesUrls().size());
 				}
 			}
 		} catch (Exception e)

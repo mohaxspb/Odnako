@@ -424,6 +424,23 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			//TODO transfer it to AsyncTask!
 			if (dataToSend.size() < 30)
 			{
+				if(Category.isCategory(this.getHelper(), categoryToLoad)==null)
+				{
+					try
+					{
+						Log.e(LOG, "size: "+this.getHelper().getAllCategoriesUrls().size());
+						Log.d(LOG, categoryToLoad);
+						for(String s:this.getHelper().getAllCategoriesUrls())
+						{
+							Log.i(LOG, s);
+						}
+					} catch (SQLException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
 				if (Category.isCategory(this.getHelper(), categoryToLoad))
 				{
 					int categoryId = Category.getCategoryIdByURL(getHelper(), categoryToLoad);

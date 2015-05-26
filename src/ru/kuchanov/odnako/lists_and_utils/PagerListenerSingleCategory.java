@@ -64,14 +64,18 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 		}
 		else
 		{
+			String toolbarTitle;
 			if (Category.isCategory(h, singleCategoryUrl))
 			{
-				this.toolbar.setTitle(Category.getNameByUrl(h, singleCategoryUrl));
+				toolbarTitle=Category.getNameByUrl(h, singleCategoryUrl);
+				this.toolbar.setTitle(toolbarTitle);
 			}
 			else
 			{
-				this.toolbar.setTitle(Author.getNameByUrl(h, singleCategoryUrl));
+				toolbarTitle=Author.getNameByUrl(h, singleCategoryUrl);
+				this.toolbar.setTitle(toolbarTitle);
 			}
+			Log.d(LOG + singleCategoryUrl, "toolbarTitle: " + toolbarTitle);
 		}
 		h.close();
 

@@ -210,6 +210,15 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		}
 	}
 
+	public void refreshDaos() throws SQLException
+	{
+		this.daoCategory = DaoManager.createDao(this.getConnectionSource(), Category.class);
+		this.daoAuthor = DaoManager.createDao(this.getConnectionSource(), Author.class);
+		this.daoArticle = DaoManager.createDao(this.getConnectionSource(), Article.class);
+		this.daoArtCatTable = DaoManager.createDao(this.getConnectionSource(), ArtCatTable.class);
+		this.daoArtAutTable = DaoManager.createDao(this.getConnectionSource(), ArtAutTable.class);
+	}
+
 	/**
 	 * Returns the Database Access Object (DAO) for our Category class. It will
 	 * create it or just give the cached value.

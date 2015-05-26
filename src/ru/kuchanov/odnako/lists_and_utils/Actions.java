@@ -48,7 +48,7 @@ public class Actions
 	public static void showAllAuthorsArticles(String authorBlogUrlFUCK, final AppCompatActivity act)
 	{
 		final String authorBlogUrl = Author.getURLwithoutSlashAtTheEnd(authorBlogUrlFUCK);
-		if (!authorBlogUrl.equals("empty") && !authorBlogUrl.equals(""))
+		if (!authorBlogUrl.equals(Const.EMPTY_STRING) && !authorBlogUrl.equals(""))
 		{
 			Log.d(LOG, "show all AuthorsArticles!");
 			//check if it's large screen
@@ -150,6 +150,29 @@ public class Actions
 				{
 					//TODO open ActivityMain via intent, that contains pager type and authors url
 					Log.e(LOG, "TwoPane && NOT ActivityMain");
+					
+					Intent intent = new Intent(act, ActivityMain.class);
+
+					PagerAdapterAllAuthors pagerAllAut = new PagerAdapterAllAuthors(
+					act.getSupportFragmentManager(), null);
+					ActivityBase activityBase = (ActivityBase) act;
+					pagerAllAut.updateData((ArrayList<Author>) activityBase.getAllAuthorsList());
+					int position = searchForAuthorInDB(pagerAllAut, authorBlogUrl);
+					if (position != -1)
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_AUTHORS);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY_POSITION, position);
+					}
+					else
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, authorBlogUrl);
+					}
+
+					//set flags to prevent restoring activity from backStack and create really new instance
+					//with given categories number
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					act.startActivity(intent);
 				}
 			}
 			else
@@ -350,6 +373,29 @@ public class Actions
 				{
 					//TODO open ActivityMain via intent, that contains pager type and authors url
 					Log.e(LOG, "twoPane && NOT ActivityMain");
+					
+					Intent intent = new Intent(act, ActivityMain.class);
+
+					PagerAdapterAllCategories pagerAllCat = new PagerAdapterAllCategories(
+					act.getSupportFragmentManager(), null);
+					ActivityBase activityBase = (ActivityBase) act;
+					pagerAllCat.updateData((ArrayList<Category>) activityBase.getAllCategoriesList());
+					int position = searchForCategoryInDB(pagerAllCat, categoryUrl);
+					if (position != -1)
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_CATEGORIES);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY_POSITION, position);
+					}
+					else
+					{
+						intent.putExtra(ActivityMain.KEY_PAGER_TYPE, ActivityMain.PAGER_TYPE_SINGLE);
+						intent.putExtra(ActivityBase.KEY_CURRENT_CATEGORY, categoryUrl);
+					}
+
+					//set flags to prevent restoring activity from backStack and create really new instance
+					//with given categories number
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					act.startActivity(intent);
 				}
 			}
 			else

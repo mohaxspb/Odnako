@@ -306,6 +306,7 @@ public class Category implements Parcelable
 			if (cat != null)
 			{
 				isCategory = true;
+				return isCategory;
 			}
 			else
 			{
@@ -316,11 +317,34 @@ public class Category implements Parcelable
 				if (aut != null)
 				{
 					isCategory = false;
+					return isCategory;
 				}
 				else
 				{
 					//we can't find url both in Category and Author, so it's unknown Category; return null;
+					//					//try without slash at the end
+					cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+					.queryForFirst();
+					if(cat!=null)
+					{
+						isCategory = true;
+						return isCategory;
+					}
+					isCategory = (cat == null) ? null : true;//isCategory(h, Author.getURLwithoutSlashAtTheEnd(url));
+					if (isCategory == null)
+					{
+						//try with slash...
+						cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url+"/")
+						.queryForFirst();
+						isCategory = (cat == null) ? null : true;
+						if(cat!=null)
+						{
+							isCategory = true;
+							return isCategory;
+						}
+					}
 					isCategory = null;
+					return isCategory;
 				}
 			}
 		} catch (SQLException e)

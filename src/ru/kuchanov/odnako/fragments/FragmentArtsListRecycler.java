@@ -20,6 +20,7 @@ import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceRSS;
@@ -310,23 +311,30 @@ public class FragmentArtsListRecycler extends Fragment
 					//it's the only one fragment, so isDisplayed is always true
 					isDisplayed = true;
 					//try setting title to toolbar
-					ArrayList<Article> allArts = intent.getParcelableArrayListExtra(Article.KEY_ALL_ART_INFO);
 					Toolbar toolbar = (Toolbar) act.findViewById(toolbarId);
-					if (allArts != null)
-					{
-						if (allArts.get(0).getAuthorName().equals("empty"))
-						{
-							toolbar.setTitle(categoryToLoad);
-						}
-						else
-						{
-							toolbar.setTitle(allArts.get(0).getAuthorName());
-						}
-					}
-					else
+
+					//find Category or Author name in DB
+					DataBaseHelper h = new DataBaseHelper(act);
+					if (Category.isCategory(h, categoryToLoad) == null)
 					{
 						toolbar.setTitle(categoryToLoad);
 					}
+					else
+					{
+						String toolbarTitle;
+						if (Category.isCategory(h, categoryToLoad))
+						{
+							toolbarTitle = Category.getNameByUrl(h, categoryToLoad);
+							toolbar.setTitle(toolbarTitle);
+						}
+						else
+						{
+							toolbarTitle = Author.getNameByUrl(h, categoryToLoad);
+							toolbar.setTitle(toolbarTitle);
+						}
+						Log.d(LOG, "toolbarTitle: " + toolbarTitle);
+					}
+					h.close();
 				break;
 			}
 
