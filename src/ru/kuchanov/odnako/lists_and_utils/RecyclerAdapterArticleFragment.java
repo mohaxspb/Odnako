@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.DialogShare;
 import ru.kuchanov.odnako.utils.ImgLoadListenerBigSmall;
+import ru.kuchanov.odnako.utils.MakeLinksClicable.CustomerTextClick;
 import ru.kuchanov.odnako.utils.MyHtmlTagHandler;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.SharedPreferences;
@@ -31,10 +32,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.Spanned;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -407,27 +409,47 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 				//For no reason (?) this not work
 				//hT.text.setAutoLinkMask(Linkify.ALL);
 
-				hT.text.setLinksClickable(true);
-				hT.text.setMovementMethod(LinkMovementMethod.getInstance());
 				hT.text.setText(null);
 
 				HtmlCleaner hc = new HtmlCleaner();
 
 				TagNode[] tags = articlesTags[positionInArticlesTags].getChildTags();
+
+				String full = "<html><body>";
+
 				for (TagNode tag : tags)
 				{
-					String text = "<"
-					+ tag.getName()
-					+ ">"
-					+
-					//					Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()) +
-					//					hc.getInnerHtml(tag).replaceAll("<b>", "<strong>").replaceAll("</b>", "</strong>") +
-					Html.fromHtml(hc.getInnerHtml(tag).replaceAll("<b>", "<strong>").replaceAll("</b>", "</strong>"),
-					null, new MyHtmlTagHandler()) +
-					"</" + tag + ">";
-					Log.i(LOG, text);
-					Spanned spannable = Html.fromHtml(text, null, new MyHtmlTagHandler());
-					hT.text.append(spannable);
+					String text1 = "<" + tag.getName() + ">";
+					String text2 = Html.fromHtml(hc.getInnerHtml(tag), null, new MyHtmlTagHandler()).toString();
+					//					String text2 = hc.getInnerHtml(tag);
+					String text3 = "</" + tag + ">";
+					String text = text1 + text2 + text3;//(String) TextUtils.concat(text1, text2, text3);
+					full += text;
+					//Log.i(LOG, text);
+				}
+
+				full += "</body></html>";
+				hT.text.setText(Html.fromHtml(full, null, new MyHtmlTagHandler()));
+
+				hT.text.setLinksClickable(true);
+				hT.text.setMovementMethod(LinkMovementMethod.getInstance());
+
+				CharSequence text = hT.text.getText();
+				if (text instanceof Spannable)
+				{
+					int end = text.length();
+					Spannable sp = (Spannable) hT.text.getText();
+					URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+					SpannableStringBuilder style = new SpannableStringBuilder(text);
+					//					style.clearSpans();//should clear old spans
+					for (URLSpan url : urls)
+					{
+						style.removeSpan(url);
+						CustomerTextClick click = new CustomerTextClick(url.getURL());
+						style.setSpan(click, sp.getSpanStart(url), sp.getSpanEnd(url),
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+					hT.text.setText(style);
 				}
 			break;
 			case IMAGE:

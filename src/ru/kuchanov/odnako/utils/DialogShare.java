@@ -86,9 +86,6 @@ public class DialogShare
 				{
 					case SHARE_OPTION_URL:
 						textToShare = article.getUrl();
-//						+ "\n\n"
-//						+ "Отправлено с помощью приложения \"Однако, Новости и аналитика\" \n"
-//						+ "https://play.google.com/store/apps/details?id=ru.kuchanov.odnako";
 						Actions.shareUrl(textToShare, ctx);
 					break;
 					case SHARE_OPTION_TEXT:
