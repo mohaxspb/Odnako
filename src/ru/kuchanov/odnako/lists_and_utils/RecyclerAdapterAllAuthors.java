@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
@@ -55,7 +56,8 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 
 	private String currentFilter = null;
 
-	public RecyclerAdapterAllAuthors(ActivityMain act, FragmentAllAuthors artsListFrag)
+//	public RecyclerAdapterAllAuthors(ActivityMain act, FragmentAllAuthors artsListFrag)
+	public RecyclerAdapterAllAuthors(ActivityBase act, FragmentAllAuthors artsListFrag)
 	{
 		this.act = act;
 

@@ -95,7 +95,6 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 				Log.d(LOG, "so article!");
 
 				Intent intent = new Intent(act, ActivityArticle.class);
-				intent.setAction("test");
 //				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				Bundle b = new Bundle();
 				b.putInt("position", 0);

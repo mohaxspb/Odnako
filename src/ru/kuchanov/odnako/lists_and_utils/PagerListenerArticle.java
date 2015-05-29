@@ -22,7 +22,7 @@ import android.util.Log;
 
 public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 {
-	final static String LOG = PagerListenerArticle.class.getSimpleName()+"/";
+	final static String LOG = PagerListenerArticle.class.getSimpleName() + "/";
 
 	private ActivityBase act;
 	private boolean twoPane;
@@ -45,12 +45,20 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		//else it's ActivityArticle!
 		if (this.twoPane)
 		{
-			ActivityMain mainActivity = (ActivityMain) this.act;
-			//move topImg and toolBar while scrolling left list
-			toolbar.setY(0);
-			toolbar.getBackground().setAlpha(255);
+			try
+			{
+				ActivityMain mainActivity = (ActivityMain) this.act;
+				//move topImg and toolBar while scrolling left list
+				toolbar.setY(0);
+				toolbar.getBackground().setAlpha(255);
 
-			mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
+				mainActivity.getAllCatListsSelectedArtPosition().put(categoryToLoad, position);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				ActivityArticle articleActivity = (ActivityArticle) this.act;
+				articleActivity.setCurArtPosition(position);
+			}
 
 			Intent intentToListFrag = new Intent(categoryToLoad + "art_position");
 			intentToListFrag.putExtra("position", position);
@@ -93,7 +101,7 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 		}
 		else
 		{
-			Log.e(LOG+categoryToLoad, "allArts=null");
+			Log.e(LOG + categoryToLoad, "allArts=null");
 		}
 
 		setTitleToToolbar(categoryToLoad, act, twoPane, position);
@@ -106,12 +114,35 @@ public class PagerListenerArticle extends ViewPager.SimpleOnPageChangeListener
 			ViewPager artCommsPager;
 			artCommsPager = (ViewPager) act.findViewById(R.id.pager_right);
 
-			Toolbar toolbarRight;
-			toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
-			toolbarRight.setTitle("Статья " + String.valueOf(positionInPager + 1) + "/"
-			+ artCommsPager.getAdapter().getCount());
-			toolbarRight.setY(0);
-			toolbarRight.getBackground().setAlpha(255);
+			try
+			{
+				Toolbar toolbarRight;
+				toolbarRight = (Toolbar) act.findViewById(R.id.toolbar_right);
+				toolbarRight.setTitle("Статья " + String.valueOf(positionInPager + 1) + "/"
+				+ artCommsPager.getAdapter().getCount());
+				toolbarRight.setY(0);
+				toolbarRight.getBackground().setAlpha(255);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				
+				Toolbar toolbar;
+				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				String categoriesTitle = "";
+
+				for (int i = 0; i < act.getAllCatAndAutURLs().size(); i++)
+				{
+					String s = act.getAllCatAndAutURLs().get(i);
+					if (s.equals(categoryToLoad))
+					{
+						categoriesTitle = act.getAllCatAndAutTitles().get(i);
+						break;
+					}
+				}
+				toolbar.setTitle(categoriesTitle + " " + String.valueOf(positionInPager + 1) + "/"
+				+ act.getAllCatArtsInfo().get(categoryToLoad).size());
+			}
+			
 		}
 		else
 		{

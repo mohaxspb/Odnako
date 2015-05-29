@@ -528,7 +528,7 @@ public class Actions
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		boolean twoPane = pref.getBoolean("twoPane", false);
 
-		if (twoPane)
+		if (twoPane && act instanceof ActivityMain)
 		{
 			final ActivityMain mainActivity = (ActivityMain) act;
 
@@ -675,14 +675,7 @@ public class Actions
 		ft.addToBackStack(null);
 		ft.commit();
 
-		if (!twoPane)
-		{
-			//So it's article activity
-			//replace hamburger icon to backArrow
-			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
-			act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-		else
+		if (twoPane && act instanceof ActivityMain)
 		{
 			//we are on main activity, so we must set toggle to rightToolbar
 			final Toolbar toolbar;
@@ -696,6 +689,14 @@ public class Actions
 					act.onBackPressed();
 				}
 			});
+		}
+		else
+		{
+			
+			//So it's article activity
+			//replace hamburger icon to backArrow
+			((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
+			act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}
 

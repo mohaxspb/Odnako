@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.fragments.FragmentAllCategories;
@@ -38,7 +39,8 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 	private static final int HEADER = 0;
 	private static final int CATEGORY = 2;
 
-	private ActivityMain act;
+//	private ActivityMain act;
+	private ActivityBase act;
 
 	private ImageLoader imageLoader;
 	private SharedPreferences pref;
@@ -52,7 +54,8 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 
 	private String currentFilter = null;
 
-	public RecyclerAdapterAllCategories(ActivityMain act, FragmentAllCategories artsListFrag)
+//	public RecyclerAdapterAllCategories(ActivityMain act, FragmentAllCategories artsListFrag)
+	public RecyclerAdapterAllCategories(ActivityBase act, FragmentAllCategories artsListFrag)
 	{
 		this.act = act;
 

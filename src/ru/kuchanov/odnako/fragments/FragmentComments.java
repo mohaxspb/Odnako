@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.animations.RecyclerCommentsOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
@@ -310,7 +311,7 @@ public class FragmentComments extends Fragment
 		super.onResume();
 		this.act.supportInvalidateOptionsMenu();
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
-		if (pref.getBoolean("twoPane", false))
+		if (pref.getBoolean("twoPane", false) && act instanceof ActivityMain)
 		{
 			Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
 			toolbar.setTitle("Комментарии");
