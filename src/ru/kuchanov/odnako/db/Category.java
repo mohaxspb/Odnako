@@ -46,10 +46,10 @@ public class Category implements Parcelable
 	private String description;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
-	private String img_url;
+	private String imgUrl;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
-	private String img_file_name;
+	private String imgFileName;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
 	private Date refreshed;
@@ -92,8 +92,8 @@ public class Category implements Parcelable
 		this.url = url;
 		this.title = title;
 		this.description = description;
-		this.img_url = img_url;
-		this.img_file_name = img_file_name;
+		this.imgUrl = img_url;
+		this.imgFileName = img_file_name;
 		this.refreshed = refreshed;
 		this.lastArticleDate = lastArticleDate;
 	}
@@ -103,8 +103,8 @@ public class Category implements Parcelable
 		this.url = stringData[0];
 		this.title = stringData[1];
 		this.description = stringData[2];
-		this.img_url = stringData[3];
-		this.img_file_name = stringData[4];
+		this.imgUrl = stringData[3];
+		this.imgFileName = stringData[4];
 		this.refreshed = dateData[0];
 		this.lastArticleDate = dateData[1];
 	}
@@ -151,22 +151,22 @@ public class Category implements Parcelable
 
 	public String getImgUrl()
 	{
-		return img_url;
+		return imgUrl;
 	}
 
 	public void setImgUrl(String img_url)
 	{
-		this.img_url = img_url;
+		this.imgUrl = img_url;
 	}
 
 	public String getImg_file_name()
 	{
-		return img_file_name;
+		return imgFileName;
 	}
 
 	public void setImg_file_name(String img_file_name)
 	{
-		this.img_file_name = img_file_name;
+		this.imgFileName = img_file_name;
 	}
 
 	public Date getRefreshed()
@@ -362,8 +362,8 @@ public class Category implements Parcelable
 		allInfo[1] = url;
 		allInfo[2] = title;
 		allInfo[3] = description;
-		allInfo[4] = img_url;
-		allInfo[5] = img_file_name;
+		allInfo[4] = imgUrl;
+		allInfo[5] = imgFileName;
 
 		allInfo[6] = refreshed.toString();
 		allInfo[7] = lastArticleDate.toString();
@@ -414,8 +414,8 @@ public class Category implements Parcelable
 		dest.writeString(url);
 		dest.writeString(title);
 		dest.writeString(description);
-		dest.writeString(img_url);
-		dest.writeString(img_file_name);
+		dest.writeString(imgUrl);
+		dest.writeString(imgFileName);
 		dest.writeLong(refreshed.getTime());
 		dest.writeLong(lastArticleDate.getTime());
 		dest.writeString(firstArticleURL);
@@ -427,8 +427,8 @@ public class Category implements Parcelable
 		url = in.readString();
 		title = in.readString();
 		description = in.readString();
-		img_url = in.readString();
-		img_file_name = in.readString();
+		imgUrl = in.readString();
+		imgFileName = in.readString();
 		refreshed = new Date(in.readLong());
 		lastArticleDate = new Date(in.readLong());
 		firstArticleURL = in.readString();

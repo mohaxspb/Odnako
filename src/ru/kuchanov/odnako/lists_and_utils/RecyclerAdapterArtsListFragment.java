@@ -76,7 +76,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 		imageLoader = MyUIL.get(act);
 
-		nightMode = this.pref.getBoolean("night_mode", false);
+		nightMode = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 		if (nightMode == true)
 		{
 			options = MyUIL.getDarkOptions();

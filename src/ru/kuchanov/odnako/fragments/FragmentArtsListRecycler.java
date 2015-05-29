@@ -582,49 +582,44 @@ public class FragmentArtsListRecycler extends Fragment
 			this.toolbarId = R.id.toolbar;
 			this.setInLeftPager(true);
 		}
+		
+		//set top image of category
 		this.topImg = (ImageView) v.findViewById(R.id.top_img);
-
-		String defPackage = act.getPackageName();
-		String[] catImgsFilesNames = act.getResources().getStringArray(R.array.categories_imgs_files_names);
-		String[] categoriesUrls = act.getResources().getStringArray(R.array.categories_links);
-		boolean findImgFile = false;
-
-		for (int i = 0; i < categoriesUrls.length && !findImgFile; i++)
+		ArrayList<Category> allCats = (ArrayList<Category>) act.getAllCategoriesList();
+		boolean findIt = false;
+		if (allCats != null)
 		{
-			if (this.categoryToLoad.equals(categoriesUrls[i]))
+			//find imgUrl
+			for (Category c : allCats)
 			{
-				findImgFile = true;
-				String fullResName = catImgsFilesNames[i];
-				String resName = fullResName.substring(0, fullResName.length() - 4);
-				int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-				//imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
-				topImg.setImageResource(resId);
-				break;
-			}
-		}
-		if (!findImgFile)
-		{
-			catImgsFilesNames = CatData.getAllTagsImgsFILEnames(act);
-			categoriesUrls = CatData.getAllTagsLinks(act);
-			for (int i = 0; i < categoriesUrls.length && !findImgFile; i++)
-			{
-				if (this.categoryToLoad.equals(categoriesUrls[i]))
+				if (Author.getURLwithoutSlashAtTheEnd(this.getCategoryToLoad()).equals(
+				Author.getURLwithoutSlashAtTheEnd(c.getUrl())))
 				{
-					findImgFile = true;
-					String fullResName = catImgsFilesNames[i];
-					String resName = fullResName.substring(0, fullResName.length() - 4);
-					int resId = act.getResources().getIdentifier(resName, "drawable", defPackage);
-					imgLoader.displayImage("drawable://" + resId, topImg,
-					MyUIL.getTransparentBackgroundOptions(this.act));
+					String imgUrl = c.getImgUrl();
+					if (imgUrl.startsWith("/i/"))
+					{
+						imgUrl = Const.DOMAIN_MAIN + imgUrl;
+					}
+					imgLoader.displayImage(imgUrl, topImg, MyUIL.getCategoryImageOptions(act));
+					findIt = true;
 					break;
 				}
 			}
+			if (findIt == false)
+			{
+				//setDefault
+				int resId = R.drawable.odnako;
+				topImg.setImageResource(resId);
+			}
 		}
-		if (!findImgFile)
+		else
 		{
+			Log.d(LOG, categoryToLoad + ": " + "allCats=NULL WTF?!");
+			//setDefault
 			int resId = R.drawable.odnako;
-			imgLoader.displayImage("drawable://" + resId, topImg, MyUIL.getTransparentBackgroundOptions(this.act));
+			topImg.setImageResource(resId);
 		}
+
 		this.topImg.setY(topImgCoord);
 
 		this.swipeRef = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh);

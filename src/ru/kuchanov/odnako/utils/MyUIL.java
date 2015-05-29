@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.utils;
 import java.io.File;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -23,8 +24,9 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
 
 /**
- * Helper for UniversalImageLoader library
- * <a href="https://github.com/nostra13/Android-Universal-Image-Loader">Link to GitHub</a>
+ * Helper for UniversalImageLoader library <a
+ * href="https://github.com/nostra13/Android-Universal-Image-Loader">Link to
+ * GitHub</a>
  */
 public class MyUIL
 {
@@ -73,8 +75,8 @@ public class MyUIL
 		.showImageOnFail(R.drawable.ic_crop_original_white_48dp)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
-//		.considerExifParams(true)
-//		.bitmapConfig(Bitmap.Config.RGB_565)
+		//		.considerExifParams(true)
+		//		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
 
@@ -87,8 +89,8 @@ public class MyUIL
 		.showImageOnFail(R.drawable.ic_crop_original_grey600_48dp)
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
-//		.considerExifParams(true)
-//		.bitmapConfig(Bitmap.Config.RGB_565)
+		//		.considerExifParams(true)
+		//		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
 
@@ -148,6 +150,38 @@ public class MyUIL
 
 		return new DisplayImageOptions.Builder()
 		.displayer(new RoundedBitmapDisplayer((int) DipToPx.convert(35, act)))
+		.showImageOnLoading(imageOnLoading)
+		.showImageForEmptyUri(imageForEmptyUri)
+		.showImageOnFail(imageOnFail)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+	}
+
+	public static DisplayImageOptions getCategoryImageOptions(Context ctx)
+	{
+		int imageOnLoading;
+		int imageForEmptyUri;
+		int imageOnFail;
+
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		boolean nightModeIsOn = pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
+		if (nightModeIsOn)
+		{
+			imageOnLoading = R.drawable.ic_autorenew_white_48dp;
+			imageForEmptyUri = R.drawable.odnako;
+			imageOnFail = R.drawable.odnako;
+		}
+		else
+		{
+			imageOnLoading = R.drawable.ic_autorenew_grey600_48dp;
+			imageForEmptyUri = R.drawable.odnako;
+			imageOnFail = R.drawable.odnako;
+		}
+
+		return new DisplayImageOptions.Builder()
 		.showImageOnLoading(imageOnLoading)
 		.showImageForEmptyUri(imageForEmptyUri)
 		.showImageOnFail(imageOnFail)

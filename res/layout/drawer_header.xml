@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/img"
         android:scaleType="fitXY"
-        android:src="@drawable/agr_dummy" />
+        android:src="@drawable/odnako" />
 
     <ImageView
         android:id="@+id/ava_img"

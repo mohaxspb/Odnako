@@ -26,7 +26,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Author implements Comparable<Author>, Parcelable
 {
 	public final static String ID_FIELD_NAME = "id";
-	public final static String URL_FIELD_NAME = "blog_url";
+	public final static String URL_FIELD_NAME = "blogUrl";
 	public final static String NAME_FIELD_NAME = "name";
 	public final static String REFRESHED_FIELD_NAME = "refreshed";
 	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
@@ -35,7 +35,7 @@ public class Author implements Comparable<Author>, Parcelable
 	private int id;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
-	private String blog_url;
+	private String blogUrl;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = NAME_FIELD_NAME)
 	private String name;
@@ -75,7 +75,7 @@ public class Author implements Comparable<Author>, Parcelable
 	public Author(String blog_url, String name, String descr, String who, String ava_url, String ava_big, Date ref,
 	Date lastArt)
 	{
-		this.blog_url = blog_url;
+		this.blogUrl = blog_url;
 		this.name = name;
 		this.avatar = ava_url;
 		this.avatarBig = ava_big;
@@ -87,7 +87,7 @@ public class Author implements Comparable<Author>, Parcelable
 
 	public Author(String[] stringData, Date[] dateData)
 	{
-		this.blog_url = stringData[0];
+		this.blogUrl = stringData[0];
 		this.name = stringData[1];
 		this.avatar = stringData[2];
 		this.avatarBig = stringData[3];
@@ -109,12 +109,12 @@ public class Author implements Comparable<Author>, Parcelable
 
 	public String getBlog_url()
 	{
-		return blog_url;
+		return blogUrl;
 	}
 
 	public void setBlog_url(String blog_url)
 	{
-		this.blog_url = blog_url;
+		this.blogUrl = blog_url;
 	}
 
 	public String getName()
@@ -304,7 +304,7 @@ public class Author implements Comparable<Author>, Parcelable
 		String[] allInfo = new String[10];
 
 		allInfo[0] = String.valueOf(id);
-		allInfo[1] = blog_url;
+		allInfo[1] = blogUrl;
 		allInfo[2] = name;
 		allInfo[3] = description;
 		allInfo[4] = who;
@@ -384,7 +384,7 @@ public class Author implements Comparable<Author>, Parcelable
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		dest.writeInt(id);
-		dest.writeString(blog_url);
+		dest.writeString(blogUrl);
 		dest.writeString(name);
 		dest.writeString(description);
 		dest.writeString(who);
@@ -398,7 +398,7 @@ public class Author implements Comparable<Author>, Parcelable
 	private Author(Parcel in)
 	{
 		id = in.readInt();
-		blog_url = in.readString();
+		blogUrl = in.readString();
 		name = in.readString();
 		description = in.readString();
 		who = in.readString();

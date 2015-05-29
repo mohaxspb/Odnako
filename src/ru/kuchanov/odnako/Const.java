@@ -8,6 +8,8 @@ package ru.kuchanov.odnako;
 
 public final class Const
 {
+	public final static String DOMAIN_MAIN = "http://odnako.org";
+
 	public static final String EMPTY_STRING = "empty";
 
 	//public static boolean IS_PRO = false;
