@@ -305,7 +305,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			List<Author> allAuthors = this.getDaoAuthor().queryForAll();
 			for (int i = 0; i < allAuthors.size(); i++)
 			{
-				allURLs.add(allAuthors.get(i).getBlog_url());
+				allURLs.add(allAuthors.get(i).getBlogUrl());
 			}
 
 			//TODO change MENU urls
@@ -375,7 +375,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			List<Author> allAuthors = this.getDaoAuthor().queryForAll();
 			for (int i = 0; i < allAuthors.size(); i++)
 			{
-				allURLs.add(allAuthors.get(i).getBlog_url());
+				allURLs.add(allAuthors.get(i).getBlogUrl());
 			}
 		} catch (SQLException e)
 		{

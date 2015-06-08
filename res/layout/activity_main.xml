@@ -6,11 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!--
-    android:fitsSystemWindows="true"
-    android:clipToPadding="false" >
-    -->
-
     <RelativeLayout
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
@@ -28,18 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/fakeStatusBar" />
-        <!-- android:layout_above="@id/adView" /> -->
-
-
-        <!--
-             <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/MAIN_AD_UNIT_ID" />
-        -->
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -58,6 +41,22 @@
         android:background="?colorPrimary"
         android:divider="@android:color/transparent"
         android:groupIndicator="@null" />
-    <!-- android:listSelector = "@drawable/selectable_background" -->
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/drawer_right"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="?colorPrimary" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_right_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?colorPrimary"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.v4.widget.DrawerLayout>

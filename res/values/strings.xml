@@ -11,10 +11,14 @@
     <!--  -->
     <string name="app_name">Однако</string>
     <string name="article">Статья</string>
+    <string name="articles">Статьи</string>
     <string name="title">Заголовок</string>
     <string name="date">Дата</string>
     <string name="preview">Краткое содержание</string>
     <string name="author">Автор</string>
+    <string name="authors">Авторы</string>
+    <string name="category">Категория</string>
+    <string name="categories">Категории</string>
     <string name="tags">Теги:</string>
     <string name="also_by_theme">Также по теме "ТЕМА":</string>
     <string name="also_to_read">Также смотрите:</string>
@@ -66,7 +70,7 @@
     <string name="sound">Звук</string>
     <string name="system_settings">Системные настройки</string>
     <string name="about">О приложении</string>
-    <string name="category">Раздел</string>
+    <!-- <string name="category">Раздел</string> -->
     <string name="quontity">Количество</string>
     <string name="downBtn">Скачать</string>
     <string name="download_all">Скачать всё</string>
@@ -76,8 +80,6 @@
     <string name="on">Включено</string>
     <string name="off">Выключено</string>
     <!--  -->
-    <string name="light">Светлая</string>
-    <string name="dark">Тёмная</string>
     <string name="theme">Тема</string>
     <string name="night_mode">Ночной режим</string>
     <string name="ui_text_scale">Размер текста заголовков, имён авторов, некоторых иконок</string>
@@ -94,6 +96,8 @@
     <string name="feature_login">Когда-нибудь разработчик разберётся как залогиниться на сайте через приложение и тут будет ваша автатарка, ваши ФИО и ваш логин. И вы сможете комментировать статьи через приложение! =)</string>
     <string name="loading">Загружаю, подождите, пожалуйста.</string>
     <string name="article_loading">Тут появится текст статьи, когда она загрузится!</string>
+    <string name="favorites">Избранное</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
 
     <string-array name="entries">
         <item>30</item>
@@ -189,7 +193,7 @@
         В будущем планшетный режим будет или таки окончательно исправлен, либо переделан в смысле архитектуры.<br/><br/>
         В данный момент он работает нормально, если листать категории неторопясь. А перерисовка статей достигается поворотом экрана.]]>
     </string>
-    
+
     <string-array name="contacts">
         <item>
 <![CDATA[<p><strong>Вконтакте:</strong><br/>
@@ -215,7 +219,7 @@
         </p>]]>
         </item>
     </string-array>
-    
+
     <string name="used_libs">
 <![CDATA[<p><strong>При создании сего приложения пользовались нижеперечисленные библиотеки:<br/></strong><br/><br/>
         •<a href=\"https://github.com/JakeWharton/NineOldAndroids\">NineOldAndroids</a><br/>

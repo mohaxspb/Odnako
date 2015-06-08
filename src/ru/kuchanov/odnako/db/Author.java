@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Date;
 
+import ru.kuchanov.odnako.Const;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -107,7 +109,7 @@ public class Author implements Comparable<Author>, Parcelable
 		this.id = id;
 	}
 
-	public String getBlog_url()
+	public String getBlogUrl()
 	{
 		return blogUrl;
 	}
@@ -256,8 +258,7 @@ public class Author implements Comparable<Author>, Parcelable
 
 	public static String getAvatarUrlByName(DataBaseHelper h, String name)
 	{
-		String avatarUrl = "empty";
-
+		String avatarUrl = Const.EMPTY_STRING;
 		try
 		{
 			avatarUrl = h.getDaoAuthor().queryBuilder().where().eq(NAME_FIELD_NAME, name).queryForFirst().getAvatar();
@@ -265,7 +266,20 @@ public class Author implements Comparable<Author>, Parcelable
 		{
 			e.printStackTrace();
 		}
+		return avatarUrl;
+	}
 
+	public static String getAvatarUrlByUrl(DataBaseHelper h, String url)
+	{
+		String avatarUrl = Const.EMPTY_STRING;
+		try
+		{
+			avatarUrl = h.getDaoAuthor().queryBuilder().where()
+			.eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getAvatar();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 		return avatarUrl;
 	}
 
@@ -274,7 +288,8 @@ public class Author implements Comparable<Author>, Parcelable
 		String name;
 		try
 		{
-			name = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getName();
+			name = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+			.queryForFirst().getName();
 		} catch (SQLException e)
 		{
 			name = url;

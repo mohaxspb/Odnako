@@ -14,6 +14,8 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
+import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
@@ -144,7 +146,6 @@ public class ActivityMain extends ActivityBase
 		{
 			theme = ActivityPreference.THEME_GREY;
 			nightModeIsOn = true;
-
 			this.pref.edit().putString(ActivityPreference.PREF_KEY_THEME, theme).commit();
 			this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, nightModeIsOn).commit();
 		}
@@ -823,10 +824,30 @@ public class ActivityMain extends ActivityBase
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		//Log.e(LOG, "onPrepareOptionsMenu called");
+
+		//setVisibility depending on category
+		MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
+		int position = this.getCurentCategoryPosition();
+		switch (this.pagerType)
+		{
+			case PAGER_TYPE_MENU:
+				if (position == 3 || position == 13 || position == 14)
+				{
+					addToFavs.setVisible(false);
+				}
+				else
+				{
+					addToFavs.setVisible(true);
+				}
+			break;
+			default:
+				addToFavs.setVisible(true);
+			break;
+		}
+
 		// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawer);
 
-		//		MenuItem refresh = menu.findItem(R.id.refresh);
 		MenuItem settingsAll = menu.findItem(R.id.action_settings_all);
 		MenuItem search = menu.findItem(R.id.action_search);
 
@@ -842,27 +863,23 @@ public class ActivityMain extends ActivityBase
 			if (((SearchView) menu.findItem(R.id.action_search).getActionView()).isIconified() == false)
 			{
 				//setvisibility depending on category
-				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
 				{
 					case PAGER_TYPE_MENU:
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-							//							refresh.setVisible(false);
 							settingsAll.setVisible(false);
 						}
 						else
 						{
 							search.setVisible(false);
-							//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-						//						refresh.setVisible(false);
 						settingsAll.setVisible(false);
 					break;
 					case PAGER_TYPE_SINGLE:
@@ -876,32 +893,27 @@ public class ActivityMain extends ActivityBase
 			{
 				//searchView is collapsed
 				//setvisibility depending on category
-				int position = this.getCurentCategoryPosition();
 				switch (this.pagerType)
 				{
 					case PAGER_TYPE_MENU:
 						if (position == 3 || position == 13)
 						{
 							search.setVisible(true);
-							//							refresh.setVisible(false);
 							settingsAll.setVisible(true);
 						}
 						else
 						{
 							search.setVisible(false);
-							//							refresh.setVisible(true);
 							settingsAll.setVisible(true);
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
 					case PAGER_TYPE_AUTHORS:
 						search.setVisible(true);
-						//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 					case PAGER_TYPE_SINGLE:
 						search.setVisible(false);
-						//						refresh.setVisible(true);
 						settingsAll.setVisible(true);
 					break;
 				}
@@ -970,14 +982,70 @@ public class ActivityMain extends ActivityBase
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
+			case R.id.add_to_favorites:
+				//TODO
+				String type = Favorites.KEY_CATEGORIES;
+				String url = this.getCurrentCategory();
+				String title = this.getCurrentCategory();
+				switch (this.pagerType)
+				{
+					case PAGER_TYPE_MENU:
+						if (this.currentCategoryPosition < 3)
+						{
+							type = Favorites.KEY_AUTHORS;
+							url = CatData.getMenuLinks(act)[this.currentCategoryPosition];
+							title = CatData.getMenuNames(act)[this.currentCategoryPosition];
+						}
+						else
+						{
+							type = Favorites.KEY_CATEGORIES;
+							url = CatData.getMenuLinks(act)[this.currentCategoryPosition];
+							title = CatData.getMenuNames(act)[this.currentCategoryPosition];
+						}
+					break;
+					case PAGER_TYPE_CATEGORIES:
+						type = Favorites.KEY_CATEGORIES;
+						PagerAdapterAllCategories adapterCategories = (PagerAdapterAllCategories) this.artsListPager
+						.getAdapter();
+						url = adapterCategories.getAllCategoriesList().get(currentCategoryPosition).getUrl();
+						title = adapterCategories.getAllCategoriesList().get(currentCategoryPosition).getTitle();
+					break;
+					case PAGER_TYPE_AUTHORS:
+						type = Favorites.KEY_AUTHORS;
+						PagerAdapterAllAuthors adapterAuthors = (PagerAdapterAllAuthors) this.artsListPager
+						.getAdapter();
+						url = adapterAuthors.getAllAuthorsList().get(currentCategoryPosition).getBlogUrl();
+						title = adapterAuthors.getAllAuthorsList().get(currentCategoryPosition).getName();
+					break;
+					case PAGER_TYPE_SINGLE:
+						DataBaseHelper h = new DataBaseHelper(act);
+						Boolean isCategory = Category.isCategory(h, this.getCurrentCategory());
+						if (isCategory != null)
+						{
+							type = (isCategory) ? Favorites.KEY_CATEGORIES : Favorites.KEY_AUTHORS;
+							url = this.getCurrentCategory();
+							title = (isCategory) ? Category.getNameByUrl(h, url) : Author.getNameByUrl(h, url);
+						}
+						else
+						{
+							type = Favorites.KEY_CATEGORIES;
+							url = this.getCurrentCategory();
+							title = this.getCurrentCategory();
+						}
+						h.close();
+					break;
+				}
+				Favorites.addFavorite(act, type, url, title);
+				this.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+				return super.onOptionsItemSelected(item);
 			case R.id.theme_dark:
 				if (nightModeIsOn)
 				{
-					this.pref.edit().putBoolean("night_mode", false).commit();
+					this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false).commit();
 				}
 				else
 				{
-					this.pref.edit().putBoolean("night_mode", true).commit();
+					this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, true).commit();
 				}
 				this.recreate();
 				return super.onOptionsItemSelected(item);
@@ -1062,6 +1130,11 @@ public class ActivityMain extends ActivityBase
 			this.mDrawerLayout.closeDrawer(Gravity.LEFT);
 			return;
 		}
+		else if (mDrawerLayout.isDrawerOpen(Gravity.END))
+		{
+			this.mDrawerLayout.closeDrawer(Gravity.RIGHT);
+			return;
+		}
 
 		if (this.getSupportFragmentManager().findFragmentByTag(FragmentComments.LOG) != null)
 		{
@@ -1082,7 +1155,7 @@ public class ActivityMain extends ActivityBase
 					break;
 					case PAGER_TYPE_AUTHORS:
 						currentCategory = ((PagerAdapterAllAuthors) this.artsListPager.getAdapter())
-						.getAllAuthorsList().get(this.currentCategoryPosition).getBlog_url();
+						.getAllAuthorsList().get(this.currentCategoryPosition).getBlogUrl();
 					break;
 					case PAGER_TYPE_SINGLE:
 						currentCategory = this.getCurrentCategory();
@@ -1126,7 +1199,7 @@ public class ActivityMain extends ActivityBase
 				break;
 				case PAGER_TYPE_AUTHORS:
 					currentCategory = ((PagerAdapterAllAuthors) this.artsListPager.getAdapter())
-					.getAllAuthorsList().get(this.currentCategoryPosition).getBlog_url();
+					.getAllAuthorsList().get(this.currentCategoryPosition).getBlogUrl();
 				break;
 				case PAGER_TYPE_SINGLE:
 					currentCategory = this.getCurrentCategory();

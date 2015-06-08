@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_lin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorPrimary"
+    android:baselineAligned="false"
+    android:orientation="horizontal" >
+
+    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:mrl_rippleColor="?colorPrimaryDark"
+        app:mrl_rippleDelayClick="false"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="true" >
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text="@string/category"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="20sp" />
+    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+
+    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        app:mrl_rippleColor="?colorPrimaryDark"
+        app:mrl_rippleDelayClick="false"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="true" >
+
+        <ImageView
+            android:id="@+id/clear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/img"
+            android:scaleType="fitXY"
+            android:src="?clearIcon" />
+    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+
+</LinearLayout>

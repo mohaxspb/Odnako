@@ -21,6 +21,7 @@ import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
 import ru.kuchanov.odnako.lists_and_utils.DrawerItemClickListener;
 import ru.kuchanov.odnako.lists_and_utils.ExpListAdapter;
 import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
+import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterDrawerRight;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -29,11 +30,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -65,6 +70,10 @@ public class ActivityBase extends AppCompatActivity
 	protected DrawerLayout mDrawerLayout;
 	protected ExpandableListView mDrawer;
 	protected ExpListAdapter expAdapter;
+
+	public RecyclerView drawerRightRecyclerView;
+	public SwipeRefreshLayout drawerRightSwipeRefreshLayout;
+
 	protected boolean drawerOpened;
 	public ActionBarDrawerToggle mDrawerToggle;
 
@@ -222,6 +231,10 @@ public class ActivityBase extends AppCompatActivity
 	//set Navigatin drawer
 	protected void setNavDrawer()
 	{
+		//XXX
+		this.drawerRightSwipeRefreshLayout = (SwipeRefreshLayout) this.act.findViewById(R.id.drawer_right);
+		this.drawerRightRecyclerView = (RecyclerView) this.act.findViewById(R.id.drawer_right_recycler_view);
+
 		//drawer settings
 		mDrawerLayout = (DrawerLayout) this.act.findViewById(R.id.drawer_layout);
 		mDrawer = (ExpandableListView) findViewById(R.id.start_drawer);
@@ -236,6 +249,8 @@ public class ActivityBase extends AppCompatActivity
 			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
 		}
 		DrawerLayout.LayoutParams lp = (android.support.v4.widget.DrawerLayout.LayoutParams) mDrawer.getLayoutParams();
+		DrawerLayout.LayoutParams drawerRightLayPar = (android.support.v4.widget.DrawerLayout.LayoutParams) this.drawerRightSwipeRefreshLayout
+		.getLayoutParams();
 		int drawerWidth;
 		this.twoPane = this.pref.getBoolean("twoPane", false);
 		if (this.twoPane)
@@ -252,6 +267,8 @@ public class ActivityBase extends AppCompatActivity
 		}
 		lp.width = drawerWidth;
 		mDrawer.setLayoutParams(lp);
+		drawerRightLayPar.width = drawerWidth;
+		this.drawerRightSwipeRefreshLayout.setLayoutParams(drawerRightLayPar);
 		////end of set Drawer width
 
 		// As we're using a Toolbar, we should retrieve it and set it
@@ -303,6 +320,17 @@ public class ActivityBase extends AppCompatActivity
 
 		mDrawer.expandGroup(1);
 		((ExpListAdapter) this.mDrawer.getExpandableListAdapter()).notifyDataSetChanged();
+
+		//XXX
+		this.drawerRightRecyclerView.setLayoutManager(new LinearLayoutManager(act));
+		this.drawerRightRecyclerView.setAdapter(new RecyclerAdapterDrawerRight(act, null));
+		int[] textSizeAttr = new int[] { ru.kuchanov.odnako.R.attr.colorPrimary };
+		int indexOfAttrTextSize = 0;
+		TypedValue typedValue = new TypedValue();
+		TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+		int colorPrimary = a.getColor(indexOfAttrTextSize, 0xFFFFFF);
+		a.recycle();
+		this.drawerRightSwipeRefreshLayout.setBackgroundColor(colorPrimary);
 		////End of drawer settings
 	}
 

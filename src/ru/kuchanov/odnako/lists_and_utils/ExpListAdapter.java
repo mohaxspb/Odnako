@@ -84,7 +84,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		drawableSettings = ta.getDrawable(0);
 		ta.recycle();
 		//set subjectIcon by theme
-		attrs = new int[] { R.attr.subjectIcon };
+		attrs = new int[] { R.attr.categoryIcon };
 		ta = this.act.obtainStyledAttributes(attrs);
 		drawableSubject = ta.getDrawable(0);
 		ta.recycle();
@@ -302,7 +302,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				{
 					view.setBackgroundColor(storedValueInTheme.data);
 				}
-				//				view.setBackgroundColor(Color.TRANSPARENT);
 			}
 		}
 		else
@@ -313,7 +312,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 			{
 				view.setBackgroundColor(storedValueInTheme.data);
 			}
-			//			view.setBackgroundColor(Color.TRANSPARENT);
 		}
 
 		//test
@@ -357,13 +355,13 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 				}
 				else
 				{
-					//holderMain.left.setImageDrawable(drawableAuthor);
 					//get and display author's avatar
 					ImageLoader imageLoader = MyUIL.get(act);
 					DataBaseHelper helper = new DataBaseHelper(act);
 					String imageUri = Author.getAvatarUrlByName(helper, drawerItemTitle);
 					imageLoader
 					.displayImage(imageUri, holderMain.left, MyUIL.getTransparentBackgroundROUNDOptions(act));
+					helper.close();
 				}
 
 			break;

@@ -10,8 +10,8 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
 public abstract class RecyclerViewOnScrollListener extends OnScrollListener
@@ -212,6 +212,16 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 			//do it only while it's not moved
 			//and we are on the top of our list
 			//					System.out.println("firstVisPos ==0: "+String.valueOf(manager.findFirstVisibleItemPosition()==0));
+//			Log.i(LOG, "scroll to up");
+//			Log.e(LOG, "toolbars alpha: " + toolbar.getBackground().getAlpha());
+//			int[] textSizeAttr = new int[] { ru.kuchanov.odnako.R.attr.colorPrimary };
+//			int indexOfAttrTextSize = 0;
+//			TypedValue typedValue = new TypedValue();
+//			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+//			int colorPrimary = a.getColor(indexOfAttrTextSize, 0xFFFFFF);
+//			a.recycle();
+//			int alpha = Color.alpha(colorPrimary);
+//			Log.d(LOG, "colorPrimary alpha: " + alpha);
 			if (toolbar.getY() == 0)
 			{
 				if (manager.findFirstVisibleItemPosition() == 0)
@@ -230,6 +240,7 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 		}
 		else
 		{
+			//if scroll to bottom
 			//move actionBar
 			if (toolbar.getY() < 0)
 			{
@@ -248,8 +259,17 @@ public abstract class RecyclerViewOnScrollListener extends OnScrollListener
 				//				}
 
 			}
-
 			//light actionBar
+//			Log.i(LOG, "scroll to bottom");
+//			Log.e(LOG, "toolbars alpha: " + toolbar.getBackground().getAlpha());
+//			int[] textSizeAttr = new int[] { ru.kuchanov.odnako.R.attr.colorPrimary };
+//			int indexOfAttrTextSize = 0;
+//			TypedValue typedValue = new TypedValue();
+//			TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
+//			int colorPrimary = a.getColor(indexOfAttrTextSize, 0xFFFFFF);
+//			a.recycle();
+//			int alpha = Color.alpha(colorPrimary);
+//			Log.d(LOG, "colorPrimary alpha: " + alpha);
 			if (toolbar.getY() == 0)
 			{
 				if (manager.findFirstVisibleItemPosition() == 0)

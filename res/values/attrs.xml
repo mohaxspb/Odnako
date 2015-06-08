@@ -29,6 +29,8 @@
 
     <attr name="cardBackGroundColor" format="reference|color" />
     <attr name="cardBackGroundColorDark" format="reference|color" />
+    <attr name="green" format="reference|color" />
+    <attr name="greenDark" format="reference|color" />
     <attr name="selectorColor" format="reference|color" />
     <attr name="overflowIcon" format="reference" />
     <attr name="settingsIcon" format="reference" />
@@ -39,8 +41,8 @@
     <attr name="unreadenIcon" format="reference" />
     <attr name="searchIconOdnako" format="reference" />
     <attr name="default_image" format="reference" />
-    <attr name="green" format="reference|color" />
-    <attr name="greenDark" format="reference|color" />
+    
+    
     <!-- arrows -->
     <attr name="arrowLeftIcon" format="reference" />
     <attr name="arrowRightIcon" format="reference" />
@@ -57,8 +59,8 @@
     <attr name="downloadIcon" format="reference" />
     <attr name="downloadIconSmall" format="reference" />
     <attr name="saveIcon" format="reference" />
-    <attr name="asListIcon" format="reference" />
-    <attr name="subjectIcon" format="reference" />
+    <attr name="articleIcon" format="reference" />
+    <attr name="categoryIcon" format="reference" />
     <attr name="categoriesMoreIcon" format="reference" />
     <attr name="vibrationIcon" format="reference" />
     <attr name="systemSettingsIcon" format="reference" />
@@ -75,6 +77,9 @@
     <attr name="tabletIcon" format="reference" />
     <attr name="archiveIcon" format="reference" />
     <attr name="pagesIcon" format="reference" />
+    <attr name="clearIcon" format="reference" />
+    <attr name="createIcon" format="reference" />
+    <attr name="favoriteStarIcon" format="reference" />
     <!--  -->
     <attr name="coverTopToBottom" format="reference" />
     <attr name="topImgCover" format="reference" />

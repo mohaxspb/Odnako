@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
 import ru.kuchanov.odnako.utils.DateParse;
@@ -27,11 +29,13 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -327,6 +331,11 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 											intentTTS.putExtra("position", positionInAllArtsInfo);
 											act.startService(intentTTS);
 											return true;
+										case R.id.favorites:
+											Favorites.addFavorite(act, Favorites.KEY_ARTICLES, p.getUrl(), p.getTitle());
+											ActivityBase actBase = ((ActivityBase) act);
+											actBase.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+											return true;
 										default:
 											return false;
 									}
@@ -418,6 +427,18 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 						public void onClick(View v)
 						{
 							Actions.showAllAuthorsArticles(p.getAuthorBlogUrl(), act);
+						}
+					});
+					holderMain.author_lin.setOnLongClickListener(new OnLongClickListener()
+					{
+						@Override
+						public boolean onLongClick(View v)
+						{
+							Log.e(LOG, "OnLongClick called!");
+							Favorites.addFavorite(act, Favorites.KEY_AUTHORS, p.getAuthorBlogUrl(), p.getAuthorName());
+							ActivityBase actBase = ((ActivityBase) act);
+							actBase.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+							return true;
 						}
 					});
 					//end of name of author

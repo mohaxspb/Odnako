@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.kuchanov.odnako.custom.view.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    app:mrl_rippleColor="?colorPrimaryDark"
+    app:mrl_rippleDelayClick="false"
+    app:mrl_rippleHover="true"
+    app:mrl_rippleOverlay="true" >
+
+    <LinearLayout
+        android:id="@+id/main_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/unit"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?colorPrimary"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="25dp"
+                android:contentDescription="@string/img"
+                android:scaleType="fitXY"
+                android:src="?authorIcon" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:text="@string/author"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            app:mrl_rippleColor="?colorPrimaryDark"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true" >
+
+            <ImageView
+                android:id="@+id/clear"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/img"
+                android:scaleType="fitXY"
+                android:src="?clearIcon" />
+        </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+    </LinearLayout>
+
+</ru.kuchanov.odnako.custom.view.MaterialRippleLayout>

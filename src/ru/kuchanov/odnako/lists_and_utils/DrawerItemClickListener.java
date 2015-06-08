@@ -81,7 +81,6 @@ public class DrawerItemClickListener implements ExpandableListView.OnChildClickL
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			act.startActivity(intent);
 		}
-
 		return true;
 	}
 }

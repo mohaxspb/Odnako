@@ -82,7 +82,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[13], position);
 
 			//if we search some text we can have allCats.size()=0
-			if(this.allCategories!=null && this.allCategories.size()>0)
+			if (this.allCategories != null && this.allCategories.size() > 0)
 			{
 				this.toolbarRight.setTitle(this.allCategories.get(position).getTitle());
 			}
@@ -100,11 +100,11 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			this.currentCategoryPosition = position;
 
 			//if we search some text we can have allCats.size()=0
-			if(this.allCategories!=null && this.allCategories.size()>0)
+			if (this.allCategories != null && this.allCategories.size() > 0)
 			{
 				this.toolbar.setTitle(this.allCategories.get(position).getTitle());
 			}
-						
+
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
 			if (search == null)
@@ -114,6 +114,8 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 			else
 			{
 				search.setVisible(true);
+				MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
+				addToFavs.setVisible(true);
 			}
 
 			//if twoPane we must set rightPager
@@ -124,7 +126,7 @@ public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeList
 				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				curentCategory, act);
 				pagerRight.setAdapter(pagerRightAdapter);
-//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(act, curentCategory);
 				pagerRight.setOnPageChangeListener(listener);
 

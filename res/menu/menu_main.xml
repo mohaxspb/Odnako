@@ -26,14 +26,23 @@
                     android:title="@string/night_mode"
                     app:showAsAction="always"/>
             </group>
+
+            <item
+                android:id="@+id/add_to_favorites"
+                android:icon="?favoriteStarIcon"
+                android:orderInCategory="300"
+                android:title="@string/add_to_favorites"
+                app:showAsAction="always"/>
         </menu>
     </item>
-    <!-- <item
+    <!--
+         <item
         android:id="@+id/refresh"
         android:icon="?refreshIcon"
         android:orderInCategory="100"
         android:title="@string/refresh"
-        app:showAsAction="always"/> -->
+        app:showAsAction="always"/>
+    -->
     <item
         android:id="@+id/action_search"
         android:icon="?searchIconOdnako"

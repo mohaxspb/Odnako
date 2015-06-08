@@ -3,12 +3,9 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
 import ru.kuchanov.odnako.utils.DipToPx;
@@ -31,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -195,7 +194,7 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 				{
 					public void onClick(View v)
 					{
-						Actions.showAllAuthorsArticles(p.getBlog_url(), act);
+						Actions.showAllAuthorsArticles(p.getBlogUrl(), act);
 					}
 				});
 

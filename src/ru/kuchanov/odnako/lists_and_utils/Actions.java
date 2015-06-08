@@ -69,7 +69,7 @@ public class Actions
 						int position = 0;
 						for (int i = 0; i < adapter.getAllAuthorsList().size(); i++)
 						{
-							if (authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).getBlog_url()))
+							if (authorBlogUrl.equals(adapter.getAllAuthorsList().get(i).getBlogUrl()))
 							{
 								position = i;
 								break;
@@ -273,7 +273,7 @@ public class Actions
 		{
 			String curAutUrl = Author.getURLwithoutSlashAtTheEnd(pagerAllAut.getAllAuthorsList()
 			.get(i)
-			.getBlog_url());
+			.getBlogUrl());
 			if (authorBlogUrl.equals(curAutUrl))
 			{
 				weFindIt = true;

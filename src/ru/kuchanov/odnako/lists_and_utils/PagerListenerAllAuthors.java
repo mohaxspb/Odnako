@@ -65,7 +65,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 		this.allAuthorsUrls = new ArrayList<String>();
 		for (Author a : allAuthors)
 		{
-			allAuthorsUrls.add(a.getBlog_url());
+			allAuthorsUrls.add(a.getBlogUrl());
 		}
 	}
 
@@ -78,15 +78,14 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			//is in right (MenuPager, 3 position)
 			String[] menuUrls = CatData.getMenuLinks(act);
 
-//			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
+			//			this.act.getAllCatListsSelectedArtPosition().put(allAuthorsUrls.get(position), position);
 			this.act.getAllCatListsSelectedArtPosition().put(menuUrls[3], position);
 
 			//if we search some text we can have allCats.size()=0
-			if(this.allAuthors!=null && this.allAuthors.size()>0)
+			if (this.allAuthors != null && this.allAuthors.size() > 0)
 			{
 				this.toolbarRight.setTitle(this.allAuthors.get(position).getName());
 			}
-			
 
 			//notify allAuthors frag about author selected
 			Intent intentToAllAuthorsFrag = new Intent(menuUrls[3] + "art_position");
@@ -101,14 +100,13 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			this.currentCategoryPosition = position;
 
 			//if we search some text we can have allCats.size()=0
-			if(this.allAuthors!=null && this.allAuthors.size()>0)
+			if (this.allAuthors != null && this.allAuthors.size() > 0)
 			{
 				this.toolbar.setTitle(this.allAuthors.get(position).getName());
 			}
-			
+
 			Menu menu = toolbar.getMenu();
 			MenuItem search = menu.findItem(R.id.action_search);
-//			MenuItem refresh = menu.findItem(R.id.refresh);
 			if (search == null)
 			{
 				//can be if menu populated after on resume and we hide elements there
@@ -116,7 +114,8 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 			else
 			{
 				search.setVisible(true);
-//				refresh.setVisible(true);
+				MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
+				addToFavs.setVisible(true);
 			}
 			//if twoPane we must set rightPager
 
@@ -127,7 +126,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				pagerRightAdapter = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				curentCategory, act);
 				pagerRight.setAdapter(pagerRightAdapter);
-//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
+				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(act, curentCategory);
 				pagerRight.setOnPageChangeListener(listener);
 

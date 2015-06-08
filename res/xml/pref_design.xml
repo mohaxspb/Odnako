@@ -81,8 +81,8 @@
         android:key="image_show"
         android:summaryOff="Картинки НЕ отображаются и НЕ загружаются"
         android:summaryOn="Картинки отображаются и загружаются"
-        android:switchTextOff="Картинки НЕ отображаются и НЕ загружаются"
-        android:switchTextOn="Картинки отображаются и загружаются" />
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
 
     <ListPreference
         android:defaultValue="up"
@@ -92,16 +92,15 @@
         android:key="images_position"
         android:summary="Расположение картинки относительно заголовка"
         android:title="Расположение картинки относительно заголовка" />
-    
+
     <SwitchPreference
         android:defaultValue="true"
         android:icon="?authorIcon"
         android:key="author_image_show"
         android:summaryOff="Фото авторов НЕ отображаются и НЕ загружаются"
         android:summaryOn="Фото авторов отображаются и загружаются"
-        android:switchTextOff="Фото авторов НЕ отображаются и НЕ загружаются"
-        android:switchTextOn="Фото авторов отображаются и загружаются" />
-    
+        android:switchTextOff="Выкл"
+        android:switchTextOn="Вкл" />
     <SwitchPreference
         android:defaultValue="true"
         android:icon="?pagesIcon"
@@ -110,7 +109,6 @@
         android:summaryOn="Краткое содержание"
         android:switchTextOff="Выкл"
         android:switchTextOn="Вкл" />
-    
     <SwitchPreference
         android:defaultValue="true"
         android:icon="?readenIcon"

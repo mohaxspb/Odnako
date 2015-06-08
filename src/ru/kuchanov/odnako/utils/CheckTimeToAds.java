@@ -7,11 +7,13 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.utils;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
@@ -46,12 +48,24 @@ public class CheckTimeToAds
 	{
 		Log.e(LOG, "requestNewInterstitial");
 		//get EMULATOR deviceID
-//		String android_id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
-//		String deviceId = DeviceID.md5(android_id).toUpperCase(Locale.ENGLISH);
+		String android_id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+		String deviceId = DeviceID.md5(android_id).toUpperCase(Locale.ENGLISH);
 
-		AdRequest adRequest = new AdRequest.Builder()
-//		.addTestDevice(deviceId)
-		.build();
+		Log.e(LOG, deviceId);
+		AdRequest adRequest;
+		if (deviceId.equals("358635056478739"))
+		{
+			Log.e(LOG, "deviceId matched!");
+			adRequest = new AdRequest.Builder()
+			.addTestDevice(deviceId)
+			.build();
+		}
+		else
+		{
+			Log.e(LOG, "deviceId NOT matched!");
+			adRequest = new AdRequest.Builder()
+			.build();
+		}
 
 		mInterstitialAd.loadAd(adRequest);
 	}
@@ -71,7 +85,7 @@ public class CheckTimeToAds
 	public static boolean isTimeToShowAds(Context ctx)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false)==true;
+		return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false) == true;
 	}
 
 	public static void adsShown(Context ctx)

@@ -59,7 +59,7 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 		ArrayList<String> allAuthorsURLsList = new ArrayList<String>();
 		for (Author a : allAuthorsInfo)
 		{
-			allAuthorsURLsList.add(a.getBlog_url());
+			allAuthorsURLsList.add(a.getBlogUrl());
 		}
 		return allAuthorsURLsList;
 	}
@@ -69,7 +69,7 @@ public class PagerAdapterAllAuthors extends FragmentStatePagerAdapter
 	{
 		FragmentArtsListRecycler frag = new FragmentArtsListRecycler();
 		Bundle b = new Bundle();
-		b.putString("categoryToLoad", allAuthorsInfo.get(position).getBlog_url());
+		b.putString("categoryToLoad", allAuthorsInfo.get(position).getBlogUrl());
 		b.putInt("pageToLoad", 1);
 		frag.setArguments(b);
 		return frag;

@@ -98,7 +98,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 				PagerAdapterArticles adapterLeft = new PagerAdapterArticles(act.getSupportFragmentManager(),
 				categoryForRightPager, act);
-				
+
 				pagerRight.setAdapter(adapterLeft);
 				pagerRight.getAdapter().notifyDataSetChanged();
 				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
@@ -144,7 +144,6 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 
 		//menuOptions
 		Menu menu = toolbar.getMenu();
-//		MenuItem refresh = menu.findItem(R.id.refresh);
 		MenuItem search = menu.findItem(R.id.action_search);
 		if (search == null)
 		{
@@ -152,16 +151,24 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		}
 		else
 		{
-			if (position == 3 || position == 13)
+			if (position == 3 || position == 13 || position == 14)
 			{
 				search.setVisible(true);
-//				refresh.setVisible(false);
+				
+				MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
+				if (position == 3 || position == 13 || position == 14)
+				{
+					addToFavs.setVisible(false);
+				}
+				else
+				{
+					addToFavs.setVisible(true);
+				}
 			}
 			else
 			{
 				search.setVisible(false);
 				search.collapseActionView();
-//				refresh.setVisible(true);
 			}
 		}
 	}

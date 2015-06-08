@@ -8,7 +8,7 @@
         <!--
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
         -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
@@ -58,8 +58,8 @@
         <item name="downloadIcon">@drawable/ic_file_download_white_48dp</item>
         <item name="downloadIconSmall">@drawable/ic_file_download_grey600_24dp</item>
         <item name="saveIcon">@drawable/ic_save_white_48dp</item>
-        <item name="asListIcon">@drawable/ic_list_white_48dp</item>
-        <item name="subjectIcon">@drawable/ic_subject_white_48dp</item>
+        <item name="articleIcon">@drawable/ic_my_library_books_white_48dp</item>
+        <item name="categoryIcon">@drawable/ic_subject_white_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_white_48dp</item>
         <item name="vibrationIcon">@drawable/ic_vibration_white_48dp</item>
         <item name="systemSettingsIcon">@drawable/ic_storage_white_48dp</item>
@@ -74,6 +74,9 @@
         <item name="tabletIcon">@drawable/ic_tablet_android_white_48dp</item>
         <item name="archiveIcon">@drawable/ic_archive_white_48dp</item>
         <item name="pagesIcon">@drawable/ic_pages_white_48dp</item>
+        <item name="clearIcon">@drawable/ic_clear_white_48dp</item>
+        <item name="createIcon">@drawable/ic_create_white_48dp</item>
+        <item name="favoriteStarIcon">@drawable/ic_grade_white_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_dark_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_dark</item>
@@ -152,8 +155,8 @@
         <item name="downloadIcon">@drawable/ic_file_download_grey600_48dp</item>
         <item name="downloadIconSmall">@drawable/ic_file_download_white_24dp</item>
         <item name="saveIcon">@drawable/ic_save_grey600_48dp</item>
-        <item name="asListIcon">@drawable/ic_list_grey600_48dp</item>
-        <item name="subjectIcon">@drawable/ic_subject_grey600_48dp</item>
+        <item name="articleIcon">@drawable/ic_my_library_books_grey600_48dp</item>
+        <item name="categoryIcon">@drawable/ic_subject_grey600_48dp</item>
         <item name="categoriesMoreIcon">@drawable/ic_playlist_add_grey600_48dp</item>
         <item name="vibrationIcon">@drawable/ic_vibration_grey600_48dp</item>
         <item name="systemSettingsIcon">@drawable/ic_storage_grey600_48dp</item>
@@ -169,6 +172,9 @@
         <item name="tabletIcon">@drawable/ic_tablet_android_grey600_48dp</item>
         <item name="archiveIcon">@drawable/ic_archive_grey600_48dp</item>
         <item name="pagesIcon">@drawable/ic_pages_grey600_48dp</item>
+        <item name="clearIcon">@drawable/ic_clear_grey600_48dp</item>
+        <item name="createIcon">@drawable/ic_create_grey600_48dp</item>
+        <item name="favoriteStarIcon">@drawable/ic_grade_grey600_48dp</item>
         <!--  -->
         <item name="coverTopToBottom">@drawable/img_cover_light_top_to_bottom</item>
         <item name="topImgCover">@drawable/top_img_cover_light</item>

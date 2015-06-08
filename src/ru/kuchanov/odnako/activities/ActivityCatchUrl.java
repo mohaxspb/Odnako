@@ -306,7 +306,7 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 		{
 			String curAutUrl = Author.getURLwithoutSlashAtTheEnd(auts
 			.get(i)
-			.getBlog_url());
+			.getBlogUrl());
 			if (authorBlogUrl.equals(curAutUrl) || authorBlogUrlWithoutSlash.equals(curAutUrl))
 			{
 				weFindIt = true;

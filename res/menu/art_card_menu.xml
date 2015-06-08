@@ -17,5 +17,9 @@
         android:id="@+id/speeck"
         android:orderInCategory="110"
         android:title="@string/speek_aloud"/>
+    <item
+        android:id="@+id/favorites"
+        android:orderInCategory="200"
+        android:title="@string/add_to_favorites"/>
 
 </menu>

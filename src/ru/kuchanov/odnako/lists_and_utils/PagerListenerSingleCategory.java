@@ -17,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 /**
  * Yes, I know that there could be only 1 page, but we want to create right
@@ -67,23 +69,36 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 			String toolbarTitle;
 			if (Category.isCategory(h, singleCategoryUrl))
 			{
-				toolbarTitle=Category.getNameByUrl(h, singleCategoryUrl);
+				toolbarTitle = Category.getNameByUrl(h, singleCategoryUrl);
 				this.toolbar.setTitle(toolbarTitle);
 			}
 			else
 			{
-				toolbarTitle=Author.getNameByUrl(h, singleCategoryUrl);
+				toolbarTitle = Author.getNameByUrl(h, singleCategoryUrl);
 				this.toolbar.setTitle(toolbarTitle);
 			}
 			Log.d(LOG + singleCategoryUrl, "toolbarTitle: " + toolbarTitle);
 		}
 		h.close();
 
+		Menu menu = toolbar.getMenu();
+		MenuItem search = menu.findItem(R.id.action_search);
+		if (search == null)
+		{
+			//can be if menu populated after on resume and we hide elements there
+		}
+		else
+		{
+			search.setVisible(false);
+			MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
+			addToFavs.setVisible(true);
+		}
+
 		if (twoPane)
 		{
 			pagerRight.setAdapter(new PagerAdapterArticles(act.getSupportFragmentManager(),
 			singleCategoryUrl, act));
-//			pagerRight.setPageTransformer(true, new RotationPageTransformer());
+			//			pagerRight.setPageTransformer(true, new RotationPageTransformer());
 			OnPageChangeListener listener = new PagerListenerArticle(this.act, singleCategoryUrl);
 			pagerRight.setOnPageChangeListener(listener);
 			int curPos = 0;

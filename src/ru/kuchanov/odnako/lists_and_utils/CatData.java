@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Author;
 import android.content.Context;
@@ -83,7 +84,7 @@ public class CatData
 		String[] categoriesLinks = new String[CatData.getAllTagsLinks(act).length];
 		for (int i = 0; i < categoriesLinks.length; i++)
 		{
-			categoriesLinks[i] = "empty";
+			categoriesLinks[i] = Const.EMPTY_STRING;
 		}
 		return categoriesLinks;
 	}

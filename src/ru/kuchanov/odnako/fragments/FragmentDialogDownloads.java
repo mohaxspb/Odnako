@@ -266,7 +266,7 @@ public class FragmentDialogDownloads extends DialogFragment
 			ArrayList<String> allAutTitles = new ArrayList<String>();
 			for (int i = 0; i < this.allAuthors.size(); i++)
 			{
-				allAutUrls.add(allAuthors.get(i).getBlog_url());
+				allAutUrls.add(allAuthors.get(i).getBlogUrl());
 				allAutTitles.add(allAuthors.get(i).getName());
 			}
 
