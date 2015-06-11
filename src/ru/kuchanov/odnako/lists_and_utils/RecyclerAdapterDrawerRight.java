@@ -1,7 +1,12 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
+import java.util.ArrayList;
+
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityArticle;
+import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.custom.view.MaterialRippleLayout;
 import ru.kuchanov.odnako.db.Article;
@@ -9,14 +14,21 @@ import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Favorites;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.utils.MyUIL;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -172,7 +184,9 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 							public void onClick(View v)
 							{
 								Log.e(LOG, pairArr[0]);
-								//TODO
+								Actions.showAllAuthorsArticles(pairArr[0], act);
+								ActivityBase actBase = (ActivityBase) act;
+								actBase.mDrawerLayout.closeDrawer(Gravity.RIGHT);
 							}
 						});
 
@@ -266,7 +280,9 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 							public void onClick(View v)
 							{
 								Log.e(LOG, pairArr[0]);
-								//TODO
+								Actions.showAllCategoriesArticles(pairArr[0], act);
+								ActivityBase actBase = (ActivityBase) act;
+								actBase.mDrawerLayout.closeDrawer(Gravity.RIGHT);
 							}
 						});
 
@@ -357,6 +373,9 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 							{
 								Log.e(LOG, pairArr[0]);
 								//TODO
+								showArticle(pairArr[0], pairArr[1]);
+								ActivityBase actBase = (ActivityBase) act;
+								actBase.mDrawerLayout.closeDrawer(Gravity.RIGHT);
 							}
 						});
 
@@ -463,6 +482,68 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 			bottomLin = (LinearLayout) itemLayoutView.findViewById(R.id.bottom_lin);
 			topLin = (MaterialRippleLayout) itemLayoutView.findViewById(R.id.top_lin);
 			expandIcon = (ImageView) itemLayoutView.findViewById(R.id.expand);
+		}
+	}
+
+	public void showArticle(String url, String title)
+	{
+		if (act instanceof ActivityArticle || (act instanceof ActivityMain && twoPane))
+		{
+			Fragment newFragment = new FragmentArticle();
+			Article a = new Article();
+			a.setUrl(url);
+			a.setTitle(title);
+			Bundle b = new Bundle();
+			b.putParcelable(Article.KEY_CURENT_ART, a);
+			b.putBoolean("isSingle", true);
+			newFragment.setArguments(b);
+
+			FragmentTransaction ft = act.getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.container_right, newFragment, FragmentArticle.LOG);
+			ft.addToBackStack(null);
+			ft.commit();
+
+			//setBackButton to toolbar and its title
+			Toolbar toolbar;
+			if (!twoPane)
+			{
+				//So it's article activity
+				((ActivityBase) act).mDrawerToggle.setDrawerIndicatorEnabled(false);
+				toolbar = (Toolbar) act.findViewById(R.id.toolbar);
+				toolbar.setTitle("Статья");
+			}
+			else
+			{
+				//we are on main activity, so we must set toggle to rightToolbar
+				toolbar = (Toolbar) act.findViewById(R.id.toolbar_right);
+				toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+				toolbar.setNavigationOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						act.onBackPressed();
+					}
+				});
+				toolbar.setTitle("Статья");
+			}
+		}
+		else
+		{
+			Intent intent = new Intent(act, ActivityArticle.class);
+			Bundle b = new Bundle();
+			b.putInt("position", 0);
+			b.putString("categoryToLoad", "favotites");
+			ArrayList<Article> allArtsInfo = new ArrayList<Article>();
+			Article a = new Article();
+			a.setUrl(url);
+			a.setTitle(title);
+			allArtsInfo.add(a);
+			b.putParcelableArrayList(Article.KEY_ALL_ART_INFO, allArtsInfo);
+			b.putIntArray("groupChildPosition", new int[] { -1, -1 });
+			intent.putExtras(b);
+
+			act.startActivity(intent);
 		}
 	}
 }

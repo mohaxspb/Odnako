@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,7 +68,7 @@ public class ActivityBase extends AppCompatActivity
 	Toolbar toolbar;
 
 	//drawer
-	protected DrawerLayout mDrawerLayout;
+	public DrawerLayout mDrawerLayout;
 	protected ExpandableListView mDrawer;
 	protected ExpListAdapter expAdapter;
 
@@ -331,6 +332,15 @@ public class ActivityBase extends AppCompatActivity
 		int colorPrimary = a.getColor(indexOfAttrTextSize, 0xFFFFFF);
 		a.recycle();
 		this.drawerRightSwipeRefreshLayout.setBackgroundColor(colorPrimary);
+		this.drawerRightSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener()
+		{
+			@Override
+			public void onRefresh()
+			{
+				Log.i(LOG, "DrawerRight onRefresh called");
+				//TODO
+			}
+		});
 		////End of drawer settings
 	}
 

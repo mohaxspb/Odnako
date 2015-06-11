@@ -582,7 +582,7 @@ public class FragmentArtsListRecycler extends Fragment
 			this.toolbarId = R.id.toolbar;
 			this.setInLeftPager(true);
 		}
-		
+
 		//set top image of category
 		this.topImg = (ImageView) v.findViewById(R.id.top_img);
 		ArrayList<Category> allCats = (ArrayList<Category>) act.getAllCategoriesList();
@@ -895,112 +895,131 @@ public class FragmentArtsListRecycler extends Fragment
 			{
 				case Const.Action.ARTICLE_READ:
 					//loop through all arts in activity and update them and adapters
-					if (allArtsInfo != null)
+					try
 					{
-						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+						if (allArtsInfo != null)
 						{
-							Article artInList = allArtsInfo.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
+							for (int i = 0; i < allArtsInfo.size() && notFound; i++)
 							{
-								allArtsInfo.get(i).setReaden(a.isReaden());
-								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-								notFound = false;
+								Article artInList = allArtsInfo.get(i);
+								if (artInList != null && artInList.getUrl().equals(a.getUrl()))
+								{
+									allArtsInfo.get(i).setReaden(a.isReaden());
+									recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
+									notFound = false;
+								}
 							}
 						}
+					} catch (Exception e)
+					{
+						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
 				break;
 				case Const.Action.ARTICLE_LOADED:
 					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
+					try
 					{
-						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
-						if (artsList != null)
+						for (String key : keySet)
 						{
-							notFound = true;
-							for (int i = 0; i < artsList.size() && notFound; i++)
+							ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
+							if (artsList != null && artsList.size() != 0)
 							{
-								Article artInList = artsList.get(i);
+								notFound = true;
+								for (int i = 0; i < artsList.size() && notFound; i++)
+								{
+									Article artInList = artsList.get(i);
+									if (artInList.getUrl().equals(a.getUrl()))
+									{
+										if (!a.getArtText().equals(Const.EMPTY_STRING))
+										{
+											artsList.get(i).setArtText(a.getArtText());
+										}
+										//pubDate
+										if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+										{
+											artsList.get(i).setPubDate(a.getPubDate());
+										}
+										//set preview
+										artsList.get(i).setPreview(a.getPreview());
+										notFound = false;
+									}
+								}
+							}
+						}
+						notFound = true;
+						if (allArtsInfo != null)
+						{
+							for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+							{
+								Article artInList = allArtsInfo.get(i);
 								if (artInList.getUrl().equals(a.getUrl()))
 								{
 									if (!a.getArtText().equals(Const.EMPTY_STRING))
 									{
-										artsList.get(i).setArtText(a.getArtText());
+										allArtsInfo.get(i).setArtText(a.getArtText());
 									}
 									//pubDate
-									if (artsList.get(i).getPubDate().getTime() < a.getPubDate().getTime())
+									if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
 									{
-										artsList.get(i).setPubDate(a.getPubDate());
+										allArtsInfo.get(i).setPubDate(a.getPubDate());
 									}
 									//set preview
-									artsList.get(i).setPreview(a.getPreview());
+									allArtsInfo.get(i).setPreview(a.getPreview());
+									//							recyclerAdapter.notifyDataSetChanged();
+									recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 									notFound = false;
 								}
 							}
 						}
-					}
-					notFound = true;
-					if (allArtsInfo != null)
+					} catch (Exception e)
 					{
-						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
-						{
-							Article artInList = allArtsInfo.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
-							{
-								if (!a.getArtText().equals(Const.EMPTY_STRING))
-								{
-									allArtsInfo.get(i).setArtText(a.getArtText());
-								}
-								//pubDate
-								if (allArtsInfo.get(i).getPubDate().getTime() < a.getPubDate().getTime())
-								{
-									allArtsInfo.get(i).setPubDate(a.getPubDate());
-								}
-								//set preview
-								allArtsInfo.get(i).setPreview(a.getPreview());
-								//							recyclerAdapter.notifyDataSetChanged();
-								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-								notFound = false;
-							}
-						}
+						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
+
 				break;
 				case Const.Action.ARTICLE_DELETED:
-					//Log.e(LOG+categoryToLoad, Const.Action.ARTICLE_DELETED);
-					//loop through all arts in activity and update them and adapters
-					for (String key : keySet)
+					try
 					{
-						ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
-						if (artsList != null)
+						//Log.e(LOG+categoryToLoad, Const.Action.ARTICLE_DELETED);
+						//loop through all arts in activity and update them and adapters
+						for (String key : keySet)
 						{
-							notFound = true;
-							for (int i = 0; i < artsList.size() && notFound; i++)
+							ArrayList<Article> artsList = act.getAllCatArtsInfo().get(key);
+							if (artsList != null)
 							{
-								Article artInList = artsList.get(i);
+								notFound = true;
+								for (int i = 0; i < artsList.size() && notFound; i++)
+								{
+									Article artInList = artsList.get(i);
+									if (artInList.getUrl().equals(a.getUrl()))
+									{
+										artsList.get(i).setArtText(Const.EMPTY_STRING);
+										artsList.get(i).setRefreshed(new Date(0));
+										notFound = false;
+									}
+								}
+							}
+						}
+						notFound = true;
+						if (allArtsInfo != null)
+						{
+							for (int i = 0; i < allArtsInfo.size() && notFound; i++)
+							{
+								Article artInList = allArtsInfo.get(i);
 								if (artInList.getUrl().equals(a.getUrl()))
 								{
-									artsList.get(i).setArtText(Const.EMPTY_STRING);
-									artsList.get(i).setRefreshed(new Date(0));
+									//Log.e(LOG, a.getUrl());
+									allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
+									allArtsInfo.get(i).setRefreshed(new Date(0));
+									//							recyclerAdapter.notifyDataSetChanged();
+									recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
 									notFound = false;
 								}
 							}
 						}
-					}
-					notFound = true;
-					if (allArtsInfo != null)
+					} catch (Exception e)
 					{
-						for (int i = 0; i < allArtsInfo.size() && notFound; i++)
-						{
-							Article artInList = allArtsInfo.get(i);
-							if (artInList.getUrl().equals(a.getUrl()))
-							{
-								//Log.e(LOG, a.getUrl());
-								allArtsInfo.get(i).setArtText(Const.EMPTY_STRING);
-								allArtsInfo.get(i).setRefreshed(new Date(0));
-								//							recyclerAdapter.notifyDataSetChanged();
-								recyclerAdapter.updateArticle(allArtsInfo.get(i), i);
-								notFound = false;
-							}
-						}
+						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
 				break;
 			}

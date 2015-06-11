@@ -1022,7 +1022,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				Log.i(LOG, "Catched error in ArticleChanged receiver of SERVICE_DB");
+//				e.printStackTrace();
 			}
 		}
 	};

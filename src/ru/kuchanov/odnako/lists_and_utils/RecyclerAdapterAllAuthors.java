@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,6 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 	private final Drawable drawableArrowUp;
 
 	private static final int HEADER = 0;
-	private static final int ADS = 1;
 	private static final int AUTHOR = 2;
 	private AppCompatActivity act;
 
@@ -55,7 +55,7 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 
 	private String currentFilter = null;
 
-//	public RecyclerAdapterAllAuthors(ActivityMain act, FragmentAllAuthors artsListFrag)
+	//	public RecyclerAdapterAllAuthors(ActivityMain act, FragmentAllAuthors artsListFrag)
 	public RecyclerAdapterAllAuthors(ActivityBase act, FragmentAllAuthors artsListFrag)
 	{
 		this.act = act;
@@ -151,17 +151,9 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 			case (HEADER):
 
 			break;
-			case (ADS):
-			//TODO
-			break;
 			case (AUTHOR):
-				//				final AuthorInfo p;
-				final Author p;
-				p = this.getArtInfoByPosition(position);
-
-				//				final ArtInfo p = this.getArtInfoByPosition(position);
+				final Author p = this.getArtInfoByPosition(position);
 				final int positionInAllArtsInfo = RecyclerAdapterAllAuthors.getPositionInAllArtsInfo(position);
-
 				final AuthorHolder holderMain = (AuthorHolder) holder;
 
 				//variables for scaling text and icons and images from settings
@@ -235,35 +227,26 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 				//description
 				if (!p.getDescription().equals(Const.EMPTY_STRING) && !p.getDescription().equals(""))
 				{
-					Spanned spannedContentPreview = Html.fromHtml(p.getDescription());
-					holderMain.description.setText(spannedContentPreview);
 					holderMain.description.setTextSize(21 * scaleFactor);
-				}
-				else
-				{
-					holderMain.description.setText(null);
-				}
-				//fuck it. It ruins layout(((
-				//				holderMain.description.setLinksClickable(true);
-				//				holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
-				//descriptionIcon
+					holderMain.description.setText(Html.fromHtml(p.getDescription()));
 
-				if (!p.getDescription().equals(Const.EMPTY_STRING) && !p.getDescription().equals(""))
-				{
+					holderMain.description.setLinksClickable(true);
+					holderMain.description.setMovementMethod(LinkMovementMethod.getInstance());
+
 					holderMain.more_icon.setImageDrawable(drawableArrowDown);
-				}
 
-				//descr onClick
-				if (!p.getDescription().equals(Const.EMPTY_STRING) && !p.getDescription().equals(""))
-				{
-					//set conateiner height to wrapContent
+					LayoutParams paramsDescr = (LayoutParams) holderMain.description.getLayoutParams();
+					paramsDescr.height = (int) DipToPx.convert(40, act);
+					holderMain.description.setLayoutParams(paramsDescr);
+
+					//set container height to wrapContent
 					LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();
 					paramsBottomLin.height = LayoutParams.WRAP_CONTENT;
 					holderMain.bottom_lin.setLayoutParams(paramsBottomLin);
-					//set on click
-					holderMain.bottom_lin.setOnClickListener(new OnClickListener()
-					{
 
+					//set on click
+					holderMain.more_icon.setOnClickListener(new OnClickListener()
+					{
 						@Override
 						public void onClick(View v)
 						{
@@ -284,17 +267,26 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 								params.height = LayoutParams.WRAP_CONTENT;
 								holderMain.description.setLayoutParams(params);
 							}
+							//set container height to wrapContent
+							LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();
+							paramsBottomLin.height = LayoutParams.WRAP_CONTENT;
+							holderMain.bottom_lin.setLayoutParams(paramsBottomLin);
 						}
 					});
 				}
 				else
 				{
+					holderMain.description.setText(null);
+
+					holderMain.more_icon.setImageDrawable(null);
+
 					//set conateiner height to ZERO
 					LayoutParams paramsBottomLin = (LayoutParams) holderMain.bottom_lin.getLayoutParams();
 					paramsBottomLin.height = 0;
 					holderMain.bottom_lin.setLayoutParams(paramsBottomLin);
 					//set on click
-					holderMain.bottom_lin.setOnClickListener(null);
+					//					holderMain.bottom_lin.setOnClickListener(null);
+					holderMain.more_icon.setOnClickListener(null);
 				}
 			break;
 		}
@@ -314,22 +306,12 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 
 				holder = new HeaderHolder(itemLayoutView);
 				return holder;
-			case (ADS):
-				//TODO
-				itemLayoutView = new LinearLayout(act);
-				itemLayoutView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 255));
-
-				holder = new HeaderHolder(itemLayoutView);
-				return holder;
 			case (AUTHOR):
-				// create a new view
 				itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.author_card,
 				parent,
 				false);
 
-				// create ViewHolder
 				holder = new AuthorHolder(itemLayoutView);
-
 				return holder;
 			default:
 				return holder;
