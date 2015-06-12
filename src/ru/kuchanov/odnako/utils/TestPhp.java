@@ -48,7 +48,7 @@ public class TestPhp extends AsyncTask<Void, Void, String>
 
 	OkHttpClient client = new OkHttpClient();
 
-	String post(String url/* , String json */) throws IOException
+	String post(String url) throws IOException
 	{
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		for (String key : array)
@@ -67,7 +67,6 @@ public class TestPhp extends AsyncTask<Void, Void, String>
 
 	protected void onPostExecute(String answer)
 	{
-//		ACRA.getErrorReporter().
 		if (answer != null)
 		{
 			Log.e(LOG, answer);

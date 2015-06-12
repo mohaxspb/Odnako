@@ -76,8 +76,7 @@ public class AcraReportSender implements ReportSender
 		try
 		{
 			OkHttpClient client = new OkHttpClient();
-			Response response;
-			response = client.newCall(request.build()).execute();
+			Response response = client.newCall(request.build()).execute();
 			Log.e(LOG, response.body().string());
 		} catch (IOException e)
 		{
@@ -89,11 +88,11 @@ public class AcraReportSender implements ReportSender
 //BACKEND PHP CODE
 
 //<?php
-//$user="p211659_db";
-//$pass="DO YOU REALLY EXPECTED TO SEE HERE MY PASSWORD?.. REALLY?..";
+//$user="login";
+//$pass="passport";
 //
-//$db="p211659_db";
-//$host="p211659.mysql.ihc.ru";
+//$db="db_name";
+//$host="db_host";
 //$charset="utf-8";
 //
 //$dsn = "mysql:host=$host;dbname=$db;charset=$charset";

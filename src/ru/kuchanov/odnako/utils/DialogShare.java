@@ -185,7 +185,6 @@ public class DialogShare
 						Actions.shareArtText(textToShare, ctx);
 					break;
 				}
-
 				return true;
 			}
 		});
@@ -207,5 +206,4 @@ public class DialogShare
 
 		return formatedArticle.getChildTags();
 	}
-
 }
