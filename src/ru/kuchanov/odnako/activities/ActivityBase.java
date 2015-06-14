@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.db.ServiceDB.LocalBinder;
 import ru.kuchanov.odnako.lists_and_utils.DrawerGroupClickListener;
@@ -61,7 +62,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class ActivityBase extends AppCompatActivity
 {
 	static final String LOG = ActivityBase.class.getSimpleName();
-	protected AppCompatActivity act;
+	protected ActivityBase act;
 	protected boolean twoPane;
 	protected SharedPreferences pref;
 
@@ -357,8 +358,7 @@ public class ActivityBase extends AppCompatActivity
 						{
 							case 0:
 								Log.i(LOG, "Отправить на сервер");
-								FavoritesUpload favsUpload = new FavoritesUpload(act);
-								favsUpload.execute();
+								Favorites.uploadFavs(act);
 							break;
 							case 1:
 								Log.i(LOG, "Загрузить с сервера");

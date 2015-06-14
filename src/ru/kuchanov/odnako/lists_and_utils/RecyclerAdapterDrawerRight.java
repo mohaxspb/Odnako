@@ -1,6 +1,7 @@
 package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
@@ -15,6 +16,7 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -125,7 +127,32 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 		switch (getItemViewType(position))
 		{
 			case (HEADER):
+				final HolderHeader hH = (HolderHeader) holder;
+				String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
+				String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass
+				.split(Favorites.DIVIDER);
+				if (logPassArr != null)
+				{
+					String login = logPassArr[0];
+					//String password = logPassArr[1];
+					hH.login.setText(login);
+					Date refreshed;
+					long refreshedMills = pref.getLong(Favorites.KEY_REFRESHED, 0);
+					if (refreshedMills == 0)
+					{
+						hH.refreshed.setText("Никогда");
+					}
+					else
+					{
+						refreshed = new Date(refreshedMills);
+						hH.refreshed.setText(Html.fromHtml(DateParse.formatDateByCurTime(refreshed)));
+					}
+				}
+				else
+				//no logPass in prefs, so let user write it
+				{
 
+				}
 			break;
 			case (AUTHORS):
 				final HolderAuthors hA = (HolderAuthors) holder;
@@ -303,18 +330,6 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 				{
 					hC.bottomLin.removeAllViews();
 				}
-
-			//				hC.bottomLin.removeAllViews();
-			//				LinearLayout categoryUnit = (LinearLayout) act.getLayoutInflater().inflate(
-			//				R.layout.drawer_right_category_unit,
-			//				hC.bottomLin,
-			//				false);
-			//				hC.bottomLin.addView(categoryUnit);
-			//				categoryUnit = (LinearLayout) act.getLayoutInflater().inflate(
-			//				R.layout.drawer_right_category_unit,
-			//				hC.bottomLin,
-			//				false);
-			//				hC.bottomLin.addView(categoryUnit);
 			break;
 			case (ARTICLES):
 				final HolderArticles hArt = (HolderArticles) holder;
@@ -434,9 +449,18 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 
 	static class HolderHeader extends RecyclerView.ViewHolder
 	{
+		TextView login, refreshed;
+		ImageView refreshBtn, editBtn;
+		TextView goPro;
+
 		HolderHeader(View itemLayoutView)
 		{
 			super(itemLayoutView);
+			this.login = (TextView) itemLayoutView.findViewById(R.id.login);
+			this.refreshed = (TextView) itemLayoutView.findViewById(R.id.sincked);
+			this.refreshBtn = (ImageView) itemLayoutView.findViewById(R.id.refresh);
+			this.editBtn = (ImageView) itemLayoutView.findViewById(R.id.edit);
+			this.goPro = (TextView) itemLayoutView.findViewById(R.id.go_pro_btn);
 		}
 	}
 

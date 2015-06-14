@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.utils.FavoritesUpload;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog.ButtonCallback;
 
 /**
  * Model for parsing and manipulating of favorites data.
@@ -30,6 +38,12 @@ public class Favorites
 	public static final String KEY_AUTHORS = "authors";
 	public static final String KEY_ARTICLES = "articles";
 	public static final String KEY_CATEGORIES = "categories";
+
+	public static final String KEY_LOGIN = "login";
+	public static final String KEY_PASSWORD = "password";
+	public static final String KEY_LOG_PASS = "logPass";
+
+	public static final String KEY_REFRESHED = "favsRefreshed";
 
 	private String authors, categories, articles;
 
@@ -136,6 +150,9 @@ public class Favorites
 				existedFavs += Favorites.DIVIDER_GROUP;
 			}
 			pref.edit().putString(type, existedFavs + url + Favorites.DIVIDER + title).commit();
+
+			pref.edit().putLong(KEY_REFRESHED, System.currentTimeMillis()).commit();
+
 			Log.i(LOG, type + " " + url + " successfully add to favorites");
 		}
 		else
@@ -196,12 +213,69 @@ public class Favorites
 				String resultedFavs = existedFavs.replace(partToDelete, "");
 				pref.edit().putString(type, resultedFavs).commit();
 			}
+			pref.edit().putLong(KEY_REFRESHED, System.currentTimeMillis()).commit();
 
 			Log.i(LOG, "article " + url + "successfully removed from favorites");
 		}
 		else
 		{
 			Log.i(LOG, "article " + url + "DON'T FOUND IN favorites");
+		}
+	}
+
+	public static void uploadFavs(final ActivityBase act)
+	{
+		final String login, password;
+		//firstly check if we store some log/pass in prefs
+		final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
+		String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass.split(DIVIDER);
+		if (logPassArr != null)
+		{
+			login = logPassArr[0];
+			password = logPassArr[1];
+
+			FavoritesUpload favsUpload = new FavoritesUpload(act, login, password);
+			favsUpload.execute();
+		}
+		else
+		//no logPass in prefs, so let user write it
+		{
+			MaterialDialog dialogShare;
+			MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
+			dialogShareBuilder.title(R.string.favs_log_pass_title);
+			dialogShareBuilder.customView(R.layout.fragment_dialog_favorites_log_pass, true);
+			dialogShareBuilder.positiveText("Сохранить");
+			dialogShareBuilder.negativeText("Отмена");
+			dialogShareBuilder.callback(new ButtonCallback()
+			{
+				@Override
+				public void onPositive(MaterialDialog dialog)
+				{
+					EditText loginET = (EditText) dialog.getCustomView().findViewById(R.id.login);
+					String login = loginET.getText().toString();
+					EditText passET = (EditText) dialog.getCustomView().findViewById(R.id.password);
+					String pass = passET.getText().toString();
+
+					if ("".equals(login))
+					{
+						Toast.makeText(act, "Надо бы какой-нибудь логин задать...", Toast.LENGTH_SHORT).show();
+						return;
+					}
+					if ("".equals(pass))
+					{
+						Toast.makeText(act, "Без пароля ничего не получится!", Toast.LENGTH_SHORT).show();
+						return;
+					}
+
+					pref.edit().putString(Favorites.KEY_LOG_PASS, login + DIVIDER + pass).commit();
+					act.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+				}
+			});
+			dialogShareBuilder.cancelable(false);
+			dialogShare = dialogShareBuilder.build();
+
+			dialogShare.show();
 		}
 	}
 }

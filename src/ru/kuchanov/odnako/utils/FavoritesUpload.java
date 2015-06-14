@@ -28,10 +28,13 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 	private final static String LOG = FavoritesUpload.class.getSimpleName() + "/";
 
 	Context ctx;
+	String login, password;
 
-	public FavoritesUpload(Context ctx)
+	public FavoritesUpload(Context ctx, String login, String password)
 	{
 		this.ctx = ctx;
+		this.login = login;
+		this.password = password;
 	}
 
 	protected String doInBackground(Void... arg)
@@ -43,6 +46,9 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		Request.Builder request = new Request.Builder();
 
+		builder.add(Favorites.KEY_LOGIN, this.login);
+		builder.add(Favorites.KEY_PASSWORD, this.password);
+		
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String authorsFavs = pref.getString(Favorites.KEY_AUTHORS, Const.EMPTY_STRING);
 		builder.add(Favorites.KEY_AUTHORS, authorsFavs);
