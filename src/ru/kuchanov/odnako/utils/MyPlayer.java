@@ -21,5 +21,4 @@ public class MyPlayer
 
 		return mp;
 	}
-
 }

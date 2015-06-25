@@ -122,6 +122,12 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 		final int authorIconId = ta.getResourceId(0, 0);
 		ta.recycle();
 
+		//set arrowDownIcon by theme
+		attrs = new int[] { android.R.attr.textColorPrimary };
+		ta = this.act.obtainStyledAttributes(attrs);
+		final int textColorPrimary = act.getResources().getColor(ta.getResourceId(0, 0));
+		ta.recycle();
+
 		LinearLayout.LayoutParams params;
 
 		switch (getItemViewType(position))
@@ -129,10 +135,12 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 			case (HEADER):
 				final HolderHeader hH = (HolderHeader) holder;
 				String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
-				String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass
+				final String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass
 				.split(Favorites.DIVIDER);
 				if (logPassArr != null)
 				{
+					hH.login.setTextColor(textColorPrimary);
+
 					String login = logPassArr[0];
 					//String password = logPassArr[1];
 					hH.login.setText(login);
@@ -151,8 +159,32 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 				else
 				//no logPass in prefs, so let user write it
 				{
-
+					hH.login.setTextColor(act.getResources().getColor(R.color.red));
+					hH.login.setText("Ваш логин");
 				}
+				hH.editBtn.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						Favorites.showFavsLogPassDialog((ActivityBase) act);
+					}
+				});
+				hH.refreshBtn.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						if (logPassArr != null)
+						{
+							Favorites.showFavsOnFromServerDialog((ActivityBase) act);
+						}
+						else
+						{
+							Favorites.showFavsLogPassDialog((ActivityBase) act);
+						}
+					}
+				});
 			break;
 			case (AUTHORS):
 				final HolderAuthors hA = (HolderAuthors) holder;

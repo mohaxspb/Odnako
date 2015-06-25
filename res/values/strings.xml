@@ -42,7 +42,7 @@
     <string name="downloads">Загрузки</string>
     <string name="crash_toast_text">Отчёт об ошибке отправлен разработчику</string>
     <string name="favs_log_pass_title">Введите логин и пароль для сохранения избранного на сервере. \n Так вы сможете восстановить избранное на другом устройстве или после удаления файлов приложения</string>
-    <string name="hint_login">логин (например имя вашей кошки)</string>
+    <string name="hint_login">логин (например НяшМяш)</string>
     <string name="hint_password">пароль (например 12345)</string>
     <!-- services -->
     <string name="service_db">Работа с базой данных статей</string>

@@ -8,13 +8,19 @@ package ru.kuchanov.odnako.utils;
 
 import java.io.IOException;
 
+import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.db.Favorites;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 public class FavoritesDownload extends AsyncTask<Void, Void, String>
@@ -22,10 +28,12 @@ public class FavoritesDownload extends AsyncTask<Void, Void, String>
 	private final static String LOG = FavoritesDownload.class.getSimpleName() + "/";
 
 	Context ctx;
+	final SharedPreferences pref;
 
 	public FavoritesDownload(Context ctx)
 	{
 		this.ctx = ctx;
+		pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	protected String doInBackground(Void... arg)
@@ -37,16 +45,14 @@ public class FavoritesDownload extends AsyncTask<Void, Void, String>
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		Request.Builder request = new Request.Builder();
 
-		//		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		//		String authorsFavs = pref.getString(Favorites.KEY_AUTHORS, Const.EMPTY_STRING);
-		//		builder.add(Favorites.KEY_AUTHORS, authorsFavs);
-		//		String catsFavs = pref.getString(Favorites.KEY_CATEGORIES, Const.EMPTY_STRING);
-		//		builder.add(Favorites.KEY_CATEGORIES, catsFavs);
-		//		String artsFavs = pref.getString(Favorites.KEY_ARTICLES, Const.EMPTY_STRING);
-		//		builder.add(Favorites.KEY_ARTICLES, artsFavs);
+		String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
+		final String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass
+		.split(Favorites.DIVIDER);
+		builder.add(Favorites.KEY_LOGIN, logPassArr[0]);
+		builder.add(Favorites.KEY_PASSWORD, logPassArr[1]);
 
-//		RequestBody formBody = builder.build();
-//		request.post(formBody);
+		RequestBody formBody = builder.build();
+		request.post(formBody);
 
 		request.url(url);
 		try

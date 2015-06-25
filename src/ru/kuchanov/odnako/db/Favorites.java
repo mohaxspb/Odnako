@@ -12,11 +12,13 @@ import java.util.HashMap;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.utils.FavoritesDownload;
 import ru.kuchanov.odnako.utils.FavoritesUpload;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -241,41 +243,95 @@ public class Favorites
 		else
 		//no logPass in prefs, so let user write it
 		{
-			MaterialDialog dialogShare;
-			MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
-			dialogShareBuilder.title(R.string.favs_log_pass_title);
-			dialogShareBuilder.customView(R.layout.fragment_dialog_favorites_log_pass, true);
-			dialogShareBuilder.positiveText("Сохранить");
-			dialogShareBuilder.negativeText("Отмена");
-			dialogShareBuilder.callback(new ButtonCallback()
-			{
-				@Override
-				public void onPositive(MaterialDialog dialog)
-				{
-					EditText loginET = (EditText) dialog.getCustomView().findViewById(R.id.login);
-					String login = loginET.getText().toString();
-					EditText passET = (EditText) dialog.getCustomView().findViewById(R.id.password);
-					String pass = passET.getText().toString();
-
-					if ("".equals(login))
-					{
-						Toast.makeText(act, "Надо бы какой-нибудь логин задать...", Toast.LENGTH_SHORT).show();
-						return;
-					}
-					if ("".equals(pass))
-					{
-						Toast.makeText(act, "Без пароля ничего не получится!", Toast.LENGTH_SHORT).show();
-						return;
-					}
-
-					pref.edit().putString(Favorites.KEY_LOG_PASS, login + DIVIDER + pass).commit();
-					act.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
-				}
-			});
-			dialogShareBuilder.cancelable(false);
-			dialogShare = dialogShareBuilder.build();
-
-			dialogShare.show();
+			showFavsLogPassDialog(act);
 		}
+	}
+
+	public static void showFavsLogPassDialog(final ActivityBase act)
+	{
+		final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+
+		MaterialDialog dialogShare;
+		MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
+		dialogShareBuilder.title(R.string.favs_log_pass_title);
+		dialogShareBuilder.customView(R.layout.fragment_dialog_favorites_log_pass, true);
+		dialogShareBuilder.positiveText("Сохранить");
+		dialogShareBuilder.negativeText("Отмена");
+		dialogShareBuilder.callback(new ButtonCallback()
+		{
+			@Override
+			public void onPositive(MaterialDialog dialog)
+			{
+				EditText loginET = (EditText) dialog.getCustomView().findViewById(R.id.login);
+				String login = loginET.getText().toString();
+				EditText passET = (EditText) dialog.getCustomView().findViewById(R.id.password);
+				String pass = passET.getText().toString();
+
+				if ("".equals(login))
+				{
+					Toast.makeText(act, "Надо бы какой-нибудь логин задать...", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if ("".equals(pass))
+				{
+					Toast.makeText(act, "Без пароля ничего не получится!", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				pref.edit().putString(Favorites.KEY_LOG_PASS, login + DIVIDER + pass).commit();
+				act.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+			}
+		});
+		dialogShareBuilder.cancelable(false);
+		dialogShare = dialogShareBuilder.build();
+
+		String logPass = pref.getString(KEY_LOG_PASS, Const.EMPTY_STRING);
+		boolean logPassExists = (Const.EMPTY_STRING.equals(logPass)) ? false : true;
+
+		if (logPassExists)
+		{
+			EditText loginET = (EditText) dialogShare.getCustomView().findViewById(R.id.login);
+			String login = logPass.split(DIVIDER)[0];
+			loginET.setText(login);
+
+			EditText passET = (EditText) dialogShare.getCustomView().findViewById(R.id.password);
+			String pass = logPass.split(DIVIDER)[1];
+			passET.setText(pass);
+		}
+
+		dialogShare.show();
+	}
+
+	public static void showFavsOnFromServerDialog(final ActivityBase act)
+	{
+		MaterialDialog dialogShare;
+		MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
+		String[] options = new String[] { "Отправить на сервер", "Загрузить с сервера" };
+		dialogShareBuilder.items(options);
+		dialogShareBuilder.title("На сервер или с него?");
+		dialogShareBuilder.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice()
+		{
+			@Override
+			public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
+			{
+				switch (which)
+				{
+					case 0:
+						Log.i(LOG, "Отправить на сервер");
+						Favorites.uploadFavs(act);
+					break;
+					case 1:
+						Log.i(LOG, "Загрузить с сервера");
+						FavoritesDownload favsDownload = new FavoritesDownload(act);
+						favsDownload.execute();
+					break;
+				}
+				//XXX delete
+				//drawerRightSwipeRefreshLayout.setRefreshing(false);
+				return true;
+			}
+		});
+		dialogShare = dialogShareBuilder.build();
+		dialogShare.show();
 	}
 }

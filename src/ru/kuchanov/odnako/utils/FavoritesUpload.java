@@ -22,10 +22,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class FavoritesUpload extends AsyncTask<Void, Void, String>
 {
 	private final static String LOG = FavoritesUpload.class.getSimpleName() + "/";
+
+	private final static String SERVER_ANSWER_UPDATE_OK = "row successfully updated!";
+	private final static String SERVER_ANSWER_INSERT_OK = "row successfully added!";
+	private final static String SERVER_ANSWER_WRONG_PASS = "wrong password!";
 
 	Context ctx;
 	String login, password;
@@ -48,7 +53,7 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 
 		builder.add(Favorites.KEY_LOGIN, this.login);
 		builder.add(Favorites.KEY_PASSWORD, this.password);
-		
+
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String authorsFavs = pref.getString(Favorites.KEY_AUTHORS, Const.EMPTY_STRING);
 		builder.add(Favorites.KEY_AUTHORS, authorsFavs);
@@ -78,11 +83,32 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 	{
 		if (answer != null)
 		{
+			char zeroSizeSpace = Character.toChars(65279)[0];
+			answer = answer.replaceAll(String.valueOf(zeroSizeSpace), "");
 			Log.e(LOG, answer);
+			String msg;
+			switch (answer)
+			{
+				case SERVER_ANSWER_INSERT_OK:
+					msg = "Ваше избранное сохранено на сервере!";
+				break;
+				case SERVER_ANSWER_UPDATE_OK:
+					msg = "Ваше избранное обновлено на сервере!";
+				break;
+				case SERVER_ANSWER_WRONG_PASS:
+					msg = "Бездушный сервер ругается на неверный пароль! =(";
+				break;
+				default:
+					msg = "Сервер ответил что-то невнятное и никто не знает в чём дело( Но виноват, скорее всего, разработчик.";
+				break;
+			}
+			Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
 			Log.e(LOG, "answer=null");
+			String msg = "Не удалось достучаться до сервера. Может с интернетом какие-то проблеммы?..";
+			Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
 		}
 	}
 }

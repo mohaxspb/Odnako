@@ -35,22 +35,31 @@
             android:textColor="?android:textColorPrimary"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/info"
+        <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_margin="10dp"
-            android:contentDescription="@string/img"
-            android:scaleType="fitXY"
-            android:src="?aboutIcon" />
+            app:mrl_rippleColor="?colorPrimaryDark"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true" >
+
+            <ImageView
+                android:id="@+id/info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/img"
+                android:scaleType="fitXY"
+                android:src="?aboutIcon" />
+        </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bottom_lin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
         android:layout_marginBottom="10dp"
+        android:baselineAligned="false"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -79,14 +88,23 @@
                     android:textColor="?android:textColorSecondary"
                     android:textSize="17sp" />
 
-                <ImageView
-                    android:id="@+id/refresh"
+                <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
-                    android:contentDescription="@string/img"
-                    android:scaleType="fitXY"
-                    android:src="?refreshIcon" />
+                    app:mrl_rippleColor="?colorPrimaryDark"
+                    app:mrl_rippleDelayClick="false"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="true" >
+
+                    <ImageView
+                        android:id="@+id/refresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/img"
+                        android:scaleType="fitXY"
+                        android:src="?refreshIcon" />
+                </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -108,14 +126,23 @@
                     android:textColor="?android:textColorPrimary"
                     android:textSize="21sp" />
 
-                <ImageView
-                    android:id="@+id/edit"
+                <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
-                    android:contentDescription="@string/img"
-                    android:scaleType="fitXY"
-                    android:src="?createIcon" />
+                    app:mrl_rippleColor="?colorPrimaryDark"
+                    app:mrl_rippleDelayClick="false"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="true" >
+
+                    <ImageView
+                        android:id="@+id/edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/img"
+                        android:scaleType="fitXY"
+                        android:src="?createIcon" />
+                </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
             </LinearLayout>
         </LinearLayout>
 

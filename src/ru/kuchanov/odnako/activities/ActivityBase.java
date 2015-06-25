@@ -26,8 +26,6 @@ import ru.kuchanov.odnako.lists_and_utils.FillMenuList;
 import ru.kuchanov.odnako.lists_and_utils.RecyclerAdapterDrawerRight;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
-import ru.kuchanov.odnako.utils.FavoritesDownload;
-import ru.kuchanov.odnako.utils.FavoritesUpload;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -56,7 +54,6 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ActivityBase extends AppCompatActivity
@@ -343,36 +340,7 @@ public class ActivityBase extends AppCompatActivity
 			public void onRefresh()
 			{
 				Log.i(LOG, "DrawerRight onRefresh called");
-				//TODO
-				MaterialDialog dialogShare;
-				MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
-				String[] options = new String[] { "Отправить на сервер", "Загрузить с сервера" };
-				dialogShareBuilder.items(options);
-				dialogShareBuilder.title("На сервер или с него?");
-				dialogShareBuilder.itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice()
-				{
-					@Override
-					public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
-					{
-						switch (which)
-						{
-							case 0:
-								Log.i(LOG, "Отправить на сервер");
-								Favorites.uploadFavs(act);
-							break;
-							case 1:
-								Log.i(LOG, "Загрузить с сервера");
-								FavoritesDownload favsDownload = new FavoritesDownload(act);
-								favsDownload.execute();
-							break;
-						}
-						//XXX delete
-						drawerRightSwipeRefreshLayout.setRefreshing(false);
-						return true;
-					}
-				});
-				dialogShare = dialogShareBuilder.build();
-				dialogShare.show();
+				Favorites.showFavsOnFromServerDialog(act);
 			}
 		});
 		////End of drawer settings
