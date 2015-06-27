@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.fragments.FragmentDialogDownloads;
 import ru.kuchanov.odnako.utils.DateParse;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.Intent;
@@ -197,6 +198,14 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 						dialogFavsAboutBuilder.positiveText("Всё понятно!");
 						dialogFavsAbout = dialogFavsAboutBuilder.build();
 						dialogFavsAbout.show();
+					}
+				});
+				hH.goPro.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						FragmentDialogDownloads.showGoProDialog(act);
 					}
 				});
 			break;

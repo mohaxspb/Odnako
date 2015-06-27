@@ -17,6 +17,7 @@ import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.ServiceDB;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -146,35 +147,8 @@ public class FragmentDialogDownloads extends DialogFragment
 				public void onPositive(MaterialDialog dialog)
 				{
 					Log.e(LOG, "Go PRO!");
-					MaterialDialog dialogGoPro;
-					MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
-
-					dialogGoProBuilder.title(R.string.go_pro_title)
-					.content(Html.fromHtml(act.getResources().getString(R.string.pro_ver_adv)))
-					.positiveText(R.string.go_pro_buy)
-					.callback(new MaterialDialog.ButtonCallback()
-					{
-						@Override
-						public void onPositive(MaterialDialog dialog)
-						{
-							try
-							{
-								act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
-								+ LINK_TO_PRO)));
-							} catch (Exception e)
-							{
-								String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
-								Log.e(LOG, marketErrMsg);
-								e.printStackTrace();
-								Toast.makeText(act, marketErrMsg, Toast.LENGTH_SHORT).show();
-							}
-						}
-					});
-					dialogGoPro = dialogGoProBuilder.build();
-					int textColor = act.getResources().getColor(R.color.black);
-					((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
-					dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
-					dialogGoPro.show();
+					
+					showGoProDialog(act);
 				}
 
 				@Override
@@ -315,5 +289,38 @@ public class FragmentDialogDownloads extends DialogFragment
 		});
 
 		return dialog;
+	}
+
+	public static void showGoProDialog(final Context ctx)
+	{
+		MaterialDialog dialogGoPro;
+		MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(ctx);
+
+		dialogGoProBuilder.title(R.string.go_pro_title)
+		.content(Html.fromHtml(ctx.getResources().getString(R.string.pro_ver_adv)))
+		.positiveText(R.string.go_pro_buy)
+		.callback(new MaterialDialog.ButtonCallback()
+		{
+			@Override
+			public void onPositive(MaterialDialog dialog)
+			{
+				try
+				{
+					ctx.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
+					+ LINK_TO_PRO)));
+				} catch (Exception e)
+				{
+					String marketErrMsg = "Должен был запуститься Play Market, но что-то пошло не так...";
+					Log.e(LOG, marketErrMsg);
+					e.printStackTrace();
+					Toast.makeText(ctx, marketErrMsg, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		dialogGoPro = dialogGoProBuilder.build();
+		int textColor = ctx.getResources().getColor(R.color.black);
+		((MDButton) dialogGoPro.getActionButton(DialogAction.POSITIVE)).setTextColor(textColor);
+		dialogGoPro.getActionButton(DialogAction.POSITIVE).setBackgroundResource(R.drawable.md_btn_shape_green);
+		dialogGoPro.show();
 	}
 }

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityPreference;
+import ru.kuchanov.odnako.fragments.FragmentDialogDownloads;
 import ru.kuchanov.odnako.utils.FavoritesDownload;
 import ru.kuchanov.odnako.utils.FavoritesUpload;
 import android.content.Context;
@@ -48,6 +50,10 @@ public class Favorites
 	public static final String KEY_LOG_PASS = "logPass";
 
 	public static final String KEY_REFRESHED = "favsRefreshed";
+
+	public static final int MAX_FAVS_AUTHORS = 1;
+	public static final int MAX_FAVS_CATEGORIES = 1;
+	public static final int MAX_FAVS_ARTICLES = 3;
 
 	private String authors, categories, articles;
 
@@ -144,6 +150,49 @@ public class Favorites
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 
+		//check if it's not PRO version and favs limit already reached!
+		String existedFavs = pref.getString(type, Const.EMPTY_STRING);
+		if (pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == false)
+		{
+			if (!Const.EMPTY_STRING.equals(existedFavs))
+			{
+				String[] favs = existedFavs.split(DIVIDER_GROUP);
+				int size = favs.length;
+				boolean limitReached = false;
+				String msg = "Только в Однако+ версии!";
+				switch (type)
+				{
+					case KEY_AUTHORS:
+						if (size >= MAX_FAVS_AUTHORS)
+						{
+							limitReached = true;
+							msg = "В бесплатной версии не более одного автора можно добавить в избранное!";
+						}
+					break;
+					case KEY_CATEGORIES:
+						if (size >= MAX_FAVS_CATEGORIES)
+						{
+							limitReached = true;
+							msg = "В бесплатной версии не более одного раздела можно добавить в избранное!";
+						}
+					break;
+					case KEY_ARTICLES:
+						if (size >= MAX_FAVS_ARTICLES)
+						{
+							limitReached = true;
+							msg = "В бесплатной версии не более 3 статей можно добавить в избранное!";
+						}
+					break;
+				}
+				if (limitReached)
+				{
+					Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+					FragmentDialogDownloads.showGoProDialog(ctx);
+					return;
+				}
+			}
+		}
+		///////////////////
 		boolean alreadyExisted = false;
 
 		for (String s : Favorites.getFavoriteUrls(ctx, type))
@@ -157,7 +206,6 @@ public class Favorites
 
 		if (!alreadyExisted)
 		{
-			String existedFavs = pref.getString(type, Const.EMPTY_STRING);
 			if (Const.EMPTY_STRING.equals(existedFavs))
 			{
 				existedFavs = "";
@@ -171,10 +219,25 @@ public class Favorites
 			pref.edit().putLong(KEY_REFRESHED, System.currentTimeMillis()).commit();
 
 			Log.i(LOG, type + " " + url + " successfully add to favorites");
+			String msg = "";
+			switch (type)
+			{
+				case KEY_AUTHORS:
+					msg = "Автор добавлен в избранное!";
+				break;
+				case KEY_CATEGORIES:
+					msg = "Раздел добавлен в избранное!";
+				break;
+				case KEY_ARTICLES:
+					msg = "Статья добавлена в избранное!";
+				break;
+			}
+			Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
 			Log.i(LOG, "article " + url + " IS ALREDAY add to favorites");
+			Toast.makeText(ctx, "Уже в избранном!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
