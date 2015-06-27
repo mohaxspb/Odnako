@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -51,7 +50,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 	public static final int CATEGORIES = 2;
 	public static final int ARTICLES = 3;
 
-	private AppCompatActivity act;
+	private ActivityBase act;
 
 	ImageLoader imageLoader;
 	final DisplayImageOptions options;
@@ -59,7 +58,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 
 	boolean twoPane;
 
-	public RecyclerAdapterDrawerRight(AppCompatActivity act, Article article)
+	public RecyclerAdapterDrawerRight(ActivityBase act, Article article)
 	{
 		this.act = act;
 
@@ -177,7 +176,8 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 					{
 						if (logPassArr != null)
 						{
-							Favorites.showFavsOnFromServerDialog((ActivityBase) act);
+							Favorites.showFavsToFromServerDialog((ActivityBase) act);
+//							act.drawerRightSwipeRefreshLayout.setRefreshing(true);
 						}
 						else
 						{

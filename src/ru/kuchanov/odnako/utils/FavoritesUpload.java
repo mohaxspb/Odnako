@@ -9,20 +9,19 @@ package ru.kuchanov.odnako.utils;
 import java.io.IOException;
 
 import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.db.Favorites;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
 
 public class FavoritesUpload extends AsyncTask<Void, Void, String>
 {
@@ -32,12 +31,12 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 	private final static String SERVER_ANSWER_INSERT_OK = "row successfully added!";
 	private final static String SERVER_ANSWER_WRONG_PASS = "wrong password!";
 
-	Context ctx;
+	ActivityBase act;
 	String login, password;
 
-	public FavoritesUpload(Context ctx, String login, String password)
+	public FavoritesUpload(ActivityBase act, String login, String password)
 	{
-		this.ctx = ctx;
+		this.act = act;
 		this.login = login;
 		this.password = password;
 	}
@@ -54,7 +53,7 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 		builder.add(Favorites.KEY_LOGIN, this.login);
 		builder.add(Favorites.KEY_PASSWORD, this.password);
 
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 		String authorsFavs = pref.getString(Favorites.KEY_AUTHORS, Const.EMPTY_STRING);
 		builder.add(Favorites.KEY_AUTHORS, authorsFavs);
 		String catsFavs = pref.getString(Favorites.KEY_CATEGORIES, Const.EMPTY_STRING);
@@ -102,14 +101,16 @@ public class FavoritesUpload extends AsyncTask<Void, Void, String>
 					msg = "Сервер ответил что-то невнятное и никто не знает в чём дело( Но виноват, скорее всего, разработчик.";
 				break;
 			}
-			Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+			Toast.makeText(act, msg, Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
 			Log.e(LOG, "answer=null");
 			String msg = "Не удалось достучаться до сервера. Может с интернетом какие-то проблеммы?..";
-			Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+			Toast.makeText(act, msg, Toast.LENGTH_SHORT).show();
 		}
+
+		act.drawerRightSwipeRefreshLayout.setRefreshing(false);
 	}
 }
 

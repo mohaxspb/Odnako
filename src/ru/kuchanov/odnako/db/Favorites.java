@@ -15,6 +15,7 @@ import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.utils.FavoritesDownload;
 import ru.kuchanov.odnako.utils.FavoritesUpload;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class Favorites
 
 	public static final String DIVIDER = " !!!! ";
 	public static final String DIVIDER_GROUP = " !!__!! ";
+	public static final String DIVIDER_CATEGORIES = "!_!_!_!";
 
 	public static final String KEY_AUTHORS = "authors";
 	public static final String KEY_ARTICLES = "articles";
@@ -123,6 +125,19 @@ public class Favorites
 			}
 		}
 		return urls;
+	}
+
+	public static void writeFavorites(Context ctx, String favorites)
+	{
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+		String[] favs = favorites.split(DIVIDER_CATEGORIES);
+
+		pref.edit().putString(KEY_AUTHORS, favs[0]).commit();
+		pref.edit().putString(KEY_CATEGORIES, favs[1]).commit();
+		pref.edit().putString(KEY_ARTICLES, favs[2]).commit();
+
+		pref.edit().putLong(KEY_REFRESHED, System.currentTimeMillis()).commit();
 	}
 
 	public static void addFavorite(Context ctx, String type, String url, String title)
@@ -247,6 +262,28 @@ public class Favorites
 		}
 	}
 
+	public static void downloadFavs(final ActivityBase act)
+	{
+		final String login, password;
+		//firstly check if we store some log/pass in prefs
+		final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
+		String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
+		String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass.split(DIVIDER);
+		if (logPassArr != null)
+		{
+			login = logPassArr[0];
+			password = logPassArr[1];
+
+			FavoritesDownload favsDownload = new FavoritesDownload(act, login, password);
+			favsDownload.execute();
+		}
+		else
+		//no logPass in prefs, so let user write it
+		{
+			showFavsLogPassDialog(act);
+		}
+	}
+
 	public static void showFavsLogPassDialog(final ActivityBase act)
 	{
 		final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
@@ -302,7 +339,7 @@ public class Favorites
 		dialogShare.show();
 	}
 
-	public static void showFavsOnFromServerDialog(final ActivityBase act)
+	public static void showFavsToFromServerDialog(final ActivityBase act)
 	{
 		MaterialDialog dialogShare;
 		MaterialDialog.Builder dialogShareBuilder = new MaterialDialog.Builder(act);
@@ -319,16 +356,23 @@ public class Favorites
 					case 0:
 						Log.i(LOG, "Отправить на сервер");
 						Favorites.uploadFavs(act);
+						act.drawerRightSwipeRefreshLayout.setRefreshing(true);
 					break;
 					case 1:
 						Log.i(LOG, "Загрузить с сервера");
-						FavoritesDownload favsDownload = new FavoritesDownload(act);
-						favsDownload.execute();
+						Favorites.downloadFavs(act);
+						act.drawerRightSwipeRefreshLayout.setRefreshing(true);
 					break;
 				}
-				//XXX delete
-				//drawerRightSwipeRefreshLayout.setRefreshing(false);
 				return true;
+			}
+		});
+		dialogShareBuilder.cancelListener(new DialogInterface.OnCancelListener()
+		{
+			@Override
+			public void onCancel(DialogInterface dialog)
+			{
+				act.drawerRightSwipeRefreshLayout.setRefreshing(false);
 			}
 		});
 		dialogShare = dialogShareBuilder.build();

@@ -8,14 +8,13 @@ package ru.kuchanov.odnako.utils;
 
 import java.io.IOException;
 
-import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.db.Favorites;
-
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -27,13 +26,21 @@ public class FavoritesDownload extends AsyncTask<Void, Void, String>
 {
 	private final static String LOG = FavoritesDownload.class.getSimpleName() + "/";
 
-	Context ctx;
+	//	private final static String SERVER_ANSWER_DOWNLOAD_OK = "row successfully updated!";
+	private final static String SERVER_ANSWER_DOWNLOAD_NO_SUCH_LOGIN = "no such login!";
+	private final static String SERVER_ANSWER_WRONG_PASS = "wrong password!";
+
+	ActivityBase act;
 	final SharedPreferences pref;
 
-	public FavoritesDownload(Context ctx)
+	String login, password;
+
+	public FavoritesDownload(ActivityBase act, String login, String password)
 	{
-		this.ctx = ctx;
-		pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		this.act = act;
+		pref = PreferenceManager.getDefaultSharedPreferences(act);
+		this.login = login;
+		this.password = password;
 	}
 
 	protected String doInBackground(Void... arg)
@@ -42,14 +49,14 @@ public class FavoritesDownload extends AsyncTask<Void, Void, String>
 
 		String url = "http://kuchanov.ru/odnako/favorites/download.php";
 
+		//		String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
+		//		boolean logPassExists = Const.EMPTY_STRING.equals(loginPass) == true;
+		//		final String[] logPassArr = (logPassExists) ? null : loginPass.split(Favorites.DIVIDER);
+
 		FormEncodingBuilder builder = new FormEncodingBuilder();
 		Request.Builder request = new Request.Builder();
-
-		String loginPass = pref.getString(Favorites.KEY_LOG_PASS, Const.EMPTY_STRING);
-		final String[] logPassArr = (Const.EMPTY_STRING.equals(loginPass)) ? null : loginPass
-		.split(Favorites.DIVIDER);
-		builder.add(Favorites.KEY_LOGIN, logPassArr[0]);
-		builder.add(Favorites.KEY_PASSWORD, logPassArr[1]);
+		builder.add(Favorites.KEY_LOGIN, login);
+		builder.add(Favorites.KEY_PASSWORD, password);
 
 		RequestBody formBody = builder.build();
 		request.post(formBody);
@@ -72,12 +79,41 @@ public class FavoritesDownload extends AsyncTask<Void, Void, String>
 	{
 		if (answer != null)
 		{
+			char zeroSizeSpace = Character.toChars(65279)[0];
+			answer = answer.replaceAll(String.valueOf(zeroSizeSpace), "");
 			Log.e(LOG, answer);
+			String msg;
+			switch (answer)
+			{
+				case SERVER_ANSWER_DOWNLOAD_NO_SUCH_LOGIN:
+					msg = "Сервер говорит, что на нём нет записи о таком логине!";
+				break;
+				case SERVER_ANSWER_WRONG_PASS:
+					msg = "Бездушный сервер ругается на неверный пароль! =(";
+				break;
+				default:
+					//It seems to be what we need to update favorites;
+					Favorites.writeFavorites(act, answer);
+					try
+					{
+						act.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+					} catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+					msg = "Ваше избранное загружено!";
+				break;
+			}
+			Toast.makeText(act, msg, Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
 			Log.e(LOG, "answer=null");
+			String msg = "Не удалось достучаться до сервера. Может с интернетом какие-то проблеммы?..";
+			Toast.makeText(act, msg, Toast.LENGTH_SHORT).show();
 		}
+		
+		act.drawerRightSwipeRefreshLayout.setRefreshing(false);
 	}
 }
 //

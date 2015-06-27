@@ -340,7 +340,7 @@ public class ActivityBase extends AppCompatActivity
 			public void onRefresh()
 			{
 				Log.i(LOG, "DrawerRight onRefresh called");
-				Favorites.showFavsOnFromServerDialog(act);
+				Favorites.showFavsToFromServerDialog(act);
 			}
 		});
 		////End of drawer settings
