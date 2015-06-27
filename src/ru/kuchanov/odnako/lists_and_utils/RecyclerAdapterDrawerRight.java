@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -177,12 +178,25 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 						if (logPassArr != null)
 						{
 							Favorites.showFavsToFromServerDialog((ActivityBase) act);
-//							act.drawerRightSwipeRefreshLayout.setRefreshing(true);
 						}
 						else
 						{
 							Favorites.showFavsLogPassDialog((ActivityBase) act);
 						}
+					}
+				});
+				hH.about.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						MaterialDialog dialogFavsAbout;
+						MaterialDialog.Builder dialogFavsAboutBuilder = new MaterialDialog.Builder(act);
+						dialogFavsAboutBuilder.title("Избранное");
+						dialogFavsAboutBuilder.content(R.string.favs_about);
+						dialogFavsAboutBuilder.positiveText("Всё понятно!");
+						dialogFavsAbout = dialogFavsAboutBuilder.build();
+						dialogFavsAbout.show();
 					}
 				});
 			break;
@@ -481,9 +495,8 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 
 	static class HolderHeader extends RecyclerView.ViewHolder
 	{
-		TextView login, refreshed;
-		ImageView refreshBtn, editBtn;
-		TextView goPro;
+		TextView login, refreshed, goPro;
+		ImageView refreshBtn, editBtn, about;
 
 		HolderHeader(View itemLayoutView)
 		{
@@ -492,6 +505,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 			this.refreshed = (TextView) itemLayoutView.findViewById(R.id.sincked);
 			this.refreshBtn = (ImageView) itemLayoutView.findViewById(R.id.refresh);
 			this.editBtn = (ImageView) itemLayoutView.findViewById(R.id.edit);
+			this.about = (ImageView) itemLayoutView.findViewById(R.id.info);
 			this.goPro = (TextView) itemLayoutView.findViewById(R.id.go_pro_btn);
 		}
 	}

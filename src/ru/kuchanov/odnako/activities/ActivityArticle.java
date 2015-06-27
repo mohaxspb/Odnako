@@ -14,6 +14,7 @@ import com.yandex.metrica.YandexMetrica;
 import ru.kuchanov.odnako.R;
 //import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
+import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
@@ -32,6 +33,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class ActivityArticle extends ActivityBase
 {
@@ -312,17 +314,48 @@ public class ActivityArticle extends ActivityBase
 					DialogShare.SHARE_TYPE_ALL);
 				}
 				return true;
+			case R.id.add_to_favorites:
+				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
+				{
+					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
+					.findFragmentByTag(FragmentArticle.LOG);
+					if (upperArtFrag.getArticle() != null)
+					{
+						Favorites.addFavorite(act, Favorites.KEY_ARTICLES, upperArtFrag.getArticle().getUrl(),
+						upperArtFrag.getArticle().getTitle());
+						this.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+					}
+					else
+					{
+						Toast.makeText(act, "Добавить в избранное почему-то не получилось", Toast.LENGTH_SHORT).show();
+					}
+				}
+				else
+				{
+					Article curArt = this.allCatArtsInfo.get(getCurrentCategory()).get(this.getCurArtPosition());
+					if (curArt != null)
+					{
+						Favorites.addFavorite(act, Favorites.KEY_ARTICLES, curArt.getUrl(),
+						curArt.getTitle());
+						this.drawerRightRecyclerView.getAdapter().notifyDataSetChanged();
+					}
+					else
+					{
+						Toast.makeText(act, "Добавить в избранное почему-то не получилось", Toast.LENGTH_SHORT).show();
+					}
+				}
+				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
 			case R.id.theme_dark:
 				if (nightModeIsOn)
 				{
-					this.pref.edit().putBoolean("night_mode", false).commit();
+					this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false).commit();
 				}
 				else
 				{
-					this.pref.edit().putBoolean("night_mode", true).commit();
+					this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, true).commit();
 				}
 				this.recreate();
 				return super.onOptionsItemSelected(item);

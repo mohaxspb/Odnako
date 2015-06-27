@@ -983,7 +983,6 @@ public class ActivityMain extends ActivityBase
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
 			case R.id.add_to_favorites:
-				//TODO
 				String type = Favorites.KEY_CATEGORIES;
 				String url = this.getCurrentCategory();
 				String title = this.getCurrentCategory();
