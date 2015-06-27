@@ -131,131 +131,148 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			this.stopSelf();
 			return super.onStartCommand(intent, flags, startId);
 		}
-		switch (action)
+
+		try
 		{
-			case "init":
-				Log.i(LOG, "init");
-				ArrayList<Article> artList = intent.getParcelableArrayListExtra(FragmentArticle.ARTICLE_URL);
+			switch (action)
+			{
+				case "init":
+					Log.i(LOG, "init");
+					ArrayList<Article> artList = intent.getParcelableArrayListExtra(FragmentArticle.ARTICLE_URL);
 
-				//for test cut arts text to 270 chars
-				//				for (Article a : artList)
-				//				{
-				//					TextView tv = new TextView(this);
-				//					tv.setText(Html.fromHtml(a.getArtText()));
-				//					String articlesTextWithoutHtml = tv.getText().toString();
-				//					String cutedText = articlesTextWithoutHtml.substring(0, 270);
-				//					a.setArtText(cutedText);
-				//				}
+					this.artList = artList;
+					this.currentArtPosition = intent.getIntExtra("position", 0);
 
-				this.artList = artList;
-				this.currentArtPosition = intent.getIntExtra("position", 0);
-
-				this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
-				this.curArtTextListPosition = 0;
-
-				this.isPaused = true;
-
-				this.startForeground(NOTIFICATION_TTS_ID, this.getNotification().build());
-
-				//And start playing
-				Intent playIntent = new Intent(this, ServiceTTS.class);
-				playIntent.setAction("play");
-				this.startService(playIntent);
-			break;
-			case "play":
-				Log.i(LOG, "play");
-				this.isPaused = false;
-				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-				//if article is not loaded, notif shows progress and starts to download it
-				//so check it and speek only if we have text
-				if (!this.artList.get(currentArtPosition).getArtText().equals(Const.EMPTY_STRING))
-				{
-					this.speekPart();
-				}
-			break;
-			case "pause":
-				Log.i(LOG, "pause");
-				this.isPaused = true;
-				mTTS.stop();
-
-				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-			break;
-			case "forward":
-				Log.i(LOG, "forward");
-				if (this.currentArtPosition != this.artList.size() - 1)
-				{
-					this.isPaused = true;
-					mTTS.stop();
-					this.currentArtPosition++;
 					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
 					this.curArtTextListPosition = 0;
+
+					this.isPaused = true;
+
+					this.startForeground(NOTIFICATION_TTS_ID, this.getNotification().build());
+
+					//And start playing
+					Intent playIntent = new Intent(this, ServiceTTS.class);
+					playIntent.setAction("play");
+					this.startService(playIntent);
+				break;
+				case "play":
+					Log.i(LOG, "play");
+					this.isPaused = false;
 					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-				}
-				else
-				{
-					Toast.makeText(this, "Дальше не выйдет - это последняя статья в списке!", Toast.LENGTH_SHORT)
-					.show();
-				}
-			break;
-			case "rewind":
-				Log.i(LOG, "rewind");
-				if (this.currentArtPosition != 0)
-				{
+					//if article is not loaded, notif shows progress and starts to download it
+					//so check it and speek only if we have text
+					if (!this.artList.get(currentArtPosition).getArtText().equals(Const.EMPTY_STRING))
+					{
+						this.speekPart();
+					}
+				break;
+				case "pause":
+					Log.i(LOG, "pause");
 					this.isPaused = true;
 					mTTS.stop();
-					this.currentArtPosition--;
-					this.curArtTextList = this.createArtTextListFromArticle(this.artList.get(this.currentArtPosition));
-					this.curArtTextListPosition = 0;
-					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-				}
-				else
-				{
-					Toast.makeText(this, "Дальше не выйдет - это первая статья в списке!", Toast.LENGTH_SHORT)
-					.show();
-				}
-			break;
-			case "close":
-				Log.i(LOG, "close");
-				this.mTTS.stop();
-				this.mTTS.shutdown();
-				this.mTTS = null;
-				this.stopForeground(true);
-				this.stopSelf();
-			break;
-			case "restore":
-				Log.i(LOG, "restore");
-				mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
-			break;
-			case "askToClose":
-				Log.i(LOG, "askToClose");
 
-				if (askToClose == 0)
-				{
-					askToClose++;
-					Toast.makeText(ctx, "Нажмите ещё раз, чтобы прекратить озвучивание статей", Toast.LENGTH_SHORT)
-					.show();
-				}
-				else
-				{
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				break;
+				case "forward":
+					Log.i(LOG, "forward");
+					if (this.currentArtPosition != this.artList.size() - 1)
+					{
+						this.isPaused = true;
+						mTTS.stop();
+						this.currentArtPosition++;
+						this.curArtTextList = this.createArtTextListFromArticle(this.artList
+						.get(this.currentArtPosition));
+						this.curArtTextListPosition = 0;
+						mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+					}
+					else
+					{
+						Toast.makeText(this, "Дальше не выйдет - это последняя статья в списке!", Toast.LENGTH_SHORT)
+						.show();
+					}
+				break;
+				case "rewind":
+					Log.i(LOG, "rewind");
+					if (this.currentArtPosition != 0)
+					{
+						this.isPaused = true;
+						mTTS.stop();
+						this.currentArtPosition--;
+						this.curArtTextList = this.createArtTextListFromArticle(this.artList
+						.get(this.currentArtPosition));
+						this.curArtTextListPosition = 0;
+						mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+					}
+					else
+					{
+						Toast.makeText(this, "Дальше не выйдет - это первая статья в списке!", Toast.LENGTH_SHORT)
+						.show();
+					}
+				break;
+				case "close":
+					Log.i(LOG, "close");
 					this.mTTS.stop();
 					this.mTTS.shutdown();
 					this.mTTS = null;
+					
+					mNotifyManager.cancel(NOTIFICATION_TTS_ID);
+					
 					this.stopForeground(true);
 					this.stopSelf();
-				}
+				break;
+				case "restore":
+					Log.i(LOG, "restore");
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, this.getNotification().build());
+				break;
+				case "askToClose":
+					Log.i(LOG, "askToClose");
 
-				//Обнуление счётчика через 5 секунд
-				final Handler handler = new Handler();
-				handler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
+					if (askToClose == 0)
 					{
-						// Do something after 5s = 5000ms
-						askToClose = 0;
+						askToClose++;
+						Toast.makeText(ctx, "Нажмите ещё раз, чтобы прекратить озвучивание статей", Toast.LENGTH_SHORT)
+						.show();
 					}
-				}, 5000);
-			break;
+					else
+					{
+						this.mTTS.stop();
+						this.mTTS.shutdown();
+						this.mTTS = null;
+						
+						mNotifyManager.cancel(NOTIFICATION_TTS_ID);
+						
+						this.stopForeground(true);
+						this.stopSelf();
+					}
+
+					//Обнуление счётчика через 5 секунд
+					final Handler handler = new Handler();
+					handler.postDelayed(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							// Do something after 7s = 7000ms
+							askToClose = 0;
+						}
+					}, 7000);
+				break;
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			Toast
+			.makeText(ctx, "Произошла какая-то жуткая ошибка при попытке озвучить статью... =(",
+			Toast.LENGTH_SHORT).show();
+			
+			this.mTTS.stop();
+			this.mTTS.shutdown();
+			this.mTTS = null;
+			
+			mNotifyManager.cancel(NOTIFICATION_TTS_ID);
+			
+			this.stopForeground(true);
+			this.stopSelf();
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -327,59 +344,35 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		public void onReceive(Context context, Intent intent)
 		{
 			Log.e(LOG, "articleReceiver onReceive");
-			if (intent.getExtras().containsKey(Msg.ERROR))
+
+			try
 			{
-				//set to paused state, update notif to default state and Toast error
-				isPaused = true;
-				mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
-				Toast.makeText(ctx, intent.getStringExtra(Msg.ERROR), Toast.LENGTH_SHORT).show();
-			}
-			else
-			{
-				Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
-				artList.get(currentArtPosition).setArtText(a.getArtText());
-				curArtTextList = createArtTextListFromArticle(artList.get(currentArtPosition));
-				mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
-				if (!isPaused)
+				if (intent.getExtras().containsKey(Msg.ERROR))
 				{
-					speekPart();
+					//set to paused state, update notif to default state and Toast error
+					isPaused = true;
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+					Toast.makeText(ctx, intent.getStringExtra(Msg.ERROR), Toast.LENGTH_SHORT).show();
 				}
-				LocalBroadcastManager.getInstance(ctx).unregisterReceiver(articleReceiver);
+				else
+				{
+					Article a = intent.getParcelableExtra(Article.KEY_CURENT_ART);
+					artList.get(currentArtPosition).setArtText(a.getArtText());
+					curArtTextList = createArtTextListFromArticle(artList.get(currentArtPosition));
+					mNotifyManager.notify(NOTIFICATION_TTS_ID, getNotification().build());
+					if (!isPaused)
+					{
+						speekPart();
+					}
+					LocalBroadcastManager.getInstance(ctx).unregisterReceiver(articleReceiver);
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 	};
-
-	//	private NotificationCompat.Builder getCloseTTSNotification()
-	//	{
-	//		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-	//		builder.setSmallIcon(R.drawable.ic_play_arrow_grey600_24dp);
-	//		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_grey600_48dp));
-	//
-	//		//builder.setAutoCancel(true);
-	//		//Close button
-	//		Intent restoreIntent = new Intent(this, ServiceTTS.class);
-	//		restoreIntent.setAction("restore");
-	//		PendingIntent piRestore = PendingIntent.getService(this, 0, restoreIntent,
-	//		PendingIntent.FLAG_UPDATE_CURRENT);
-	//		builder.setContentIntent(piRestore);
-	//
-	//		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-	//
-	//		inboxStyle.addLine("Вы хотите прекратить");
-	//		inboxStyle.addLine("озвучивание статей?");
-	//
-	//		builder.setStyle(inboxStyle);
-	//
-	//		builder.addAction(R.drawable.ic_keyboard_arrow_left_grey600_48dp, "Вообще-то нет", piRestore);
-	//
-	//		Intent closeIntent = new Intent(this, ServiceTTS.class);
-	//		closeIntent.setAction("close");
-	//		PendingIntent piClose = PendingIntent.getService(this, 0, closeIntent,
-	//		PendingIntent.FLAG_UPDATE_CURRENT);
-	//		builder.addAction(R.drawable.ic_pause_grey600_48dp, "Очень", piClose);
-	//
-	//		return builder;
-	//	}
 
 	private NotificationCompat.Builder getNotification()
 	{
@@ -527,17 +520,21 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 			{
 				Log.e("TTS", "Извините, этот язык не поддерживается");
-				locale = new Locale("en");
+				Toast
+				.makeText(
+				ctx,
+				"Озвучивание на русском не поддерживается на сём устройстве. Установите синтез речи в настройках телефона",
+				Toast.LENGTH_SHORT).show();
 
-				result = mTTS.setLanguage(locale);
-				if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
-				{
-					Log.e("TTS", "Извините, этот язык не поддерживается");
-				}
-				else
-				{
-					Log.i("TTS", "set colace eng");
-				}
+				Log.i(LOG, "close");
+				this.mTTS.stop();
+				this.mTTS.shutdown();
+				this.mTTS = null;
+				
+				mNotifyManager.cancel(NOTIFICATION_TTS_ID);
+				
+				this.stopForeground(true);
+				this.stopSelf();
 			}
 
 			if (!this.isPaused)
@@ -551,6 +548,17 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		else
 		{
 			Log.e("TTS", "Ошибка!");
+
+			Toast
+			.makeText(ctx, "Произошла какая-то жуткая ошибка при попытке озвучить статью... =(",
+			Toast.LENGTH_SHORT).show();
+
+			Log.i(LOG, "close");
+			this.mTTS.stop();
+			this.mTTS.shutdown();
+			this.mTTS = null;
+			this.stopForeground(true);
+			this.stopSelf();
 		}
 	}
 
@@ -593,6 +601,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			this.mTTS.stop();
 			this.mTTS.shutdown();
 			this.mTTS = null;
+			
+			mNotifyManager.cancel(NOTIFICATION_TTS_ID);
 		}
 		if (articleReceiver != null)
 		{
