@@ -79,9 +79,8 @@
                             android:scaleType="fitXY" />
 
                         <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_margin="5dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             app:mrl_rippleColor="?colorPrimaryDark"
                             app:mrl_rippleDelayClick="false"
                             app:mrl_rippleHover="true"

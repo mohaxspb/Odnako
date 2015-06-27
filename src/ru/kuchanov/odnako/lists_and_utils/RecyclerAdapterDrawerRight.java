@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -200,14 +201,22 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 						dialogFavsAbout.show();
 					}
 				});
-				hH.goPro.setOnClickListener(new OnClickListener()
+				if (pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == true)
 				{
-					@Override
-					public void onClick(View v)
+					LinearLayout.LayoutParams paramsGoProLay = new LayoutParams(0, 0);
+					hH.goProLayout.setLayoutParams(paramsGoProLay);
+				}
+				else
+				{
+					hH.goPro.setOnClickListener(new OnClickListener()
 					{
-						FragmentDialogDownloads.showGoProDialog(act);
-					}
-				});
+						@Override
+						public void onClick(View v)
+						{
+							FragmentDialogDownloads.showGoProDialog(act);
+						}
+					});
+				}
 			break;
 			case (AUTHORS):
 				final HolderAuthors hA = (HolderAuthors) holder;
@@ -506,6 +515,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 	{
 		TextView login, refreshed, goPro;
 		ImageView refreshBtn, editBtn, about;
+		LinearLayout goProLayout;
 
 		HolderHeader(View itemLayoutView)
 		{
@@ -516,6 +526,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 			this.editBtn = (ImageView) itemLayoutView.findViewById(R.id.edit);
 			this.about = (ImageView) itemLayoutView.findViewById(R.id.info);
 			this.goPro = (TextView) itemLayoutView.findViewById(R.id.go_pro_btn);
+			this.goProLayout = (LinearLayout) itemLayoutView.findViewById(R.id.go_pro_layout);
 		}
 	}
 
