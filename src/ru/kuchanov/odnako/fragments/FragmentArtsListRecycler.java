@@ -15,6 +15,7 @@ import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.animations.RecyclerViewOnScrollListener;
 import ru.kuchanov.odnako.animations.SpacesItemDecoration;
 import ru.kuchanov.odnako.db.Article;
@@ -341,7 +342,7 @@ public class FragmentArtsListRecycler extends Fragment
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-
+			boolean showPreview=pref.getBoolean(ActivityPreference.PREF_KEY_PREVIEW_SHOW, false)==true;
 			switch (msg[0])
 			{
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
@@ -360,7 +361,8 @@ public class FragmentArtsListRecycler extends Fragment
 					updateAdapter(intent, page);
 					setLoading(false);
 					//TODO remove RSS to ServiceDB
-					if (getCategoryToLoad().contains("odnako.org/blogs"))
+					
+					if (getCategoryToLoad().contains("odnako.org/blogs") && showPreview)
 					{
 						Intent intentRSS = new Intent(act, ServiceRSS.class);
 						intentRSS.putExtra("categoryToLoad", getCategoryToLoad());
@@ -379,7 +381,7 @@ public class FragmentArtsListRecycler extends Fragment
 					updateAdapter(intent, page);
 					setLoading(false);
 					//TODO remove RSS to ServiceDB
-					if (getCategoryToLoad().contains("odnako.org/blogs"))
+					if (getCategoryToLoad().contains("odnako.org/blogs") && showPreview)
 					{
 						Intent intentRSS = new Intent(act, ServiceRSS.class);
 						intentRSS.putExtra("categoryToLoad", getCategoryToLoad());
