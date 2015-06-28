@@ -693,7 +693,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 					case (Msg.NO_NEW):
 						Log.d(LOG + "NOTIF", "Новых статей не обнаружено!");
 					//XXX It's for test only!
-					//sendNotification("15", dataFromWeb);
+					//					sendNotification("15", dataFromWeb);
 					//nothing to notify
 					break;
 					case (Msg.NEW_QUONT):
@@ -812,7 +812,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		PendingIntent.FLAG_UPDATE_CURRENT);
 
 		builder.addAction(R.drawable.ic_file_download_grey600_24dp,
-		"Загрузить статьи", pendingIntentDownloadArts);
+		"Загрузить", pendingIntentDownloadArts);
 		//add TTS of new arts
 
 		Intent intentTTS = new Intent(this.getApplicationContext(), ServiceTTS.class);
@@ -823,7 +823,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		PendingIntent piSnooze = PendingIntent.getService(this.getApplicationContext(), 0, intentTTS,
 		PendingIntent.FLAG_CANCEL_CURRENT);
 
-		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "Прочитать статьи вслух", piSnooze);
+		builder.addAction(R.drawable.ic_play_arrow_grey600_24dp, "Озвучить", piSnooze);
 
 		//Vibration
 		if (this.pref.getBoolean(ActivityPreference.PREF_KEY_NOTIF_VIBRATION, false))
@@ -1023,7 +1023,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			catch (Exception e)
 			{
 				Log.i(LOG, "Catched error in ArticleChanged receiver of SERVICE_DB");
-//				e.printStackTrace();
+				//				e.printStackTrace();
 			}
 		}
 	};

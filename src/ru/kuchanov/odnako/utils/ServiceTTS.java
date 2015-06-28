@@ -124,12 +124,15 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 		if (action == null)
 		{
 			Log.i(LOG, "action = null");
-			this.mTTS.stop();
-			this.mTTS.shutdown();
-			this.mTTS = null;
-			this.stopForeground(true);
-			this.stopSelf();
-			return super.onStartCommand(intent, flags, startId);
+			try
+			{
+				destroyServiceAndNotification();
+				return super.onStartCommand(intent, flags, startId);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				//XXX no thoughts can it be and what to do if can!
+			}
 		}
 
 		try
@@ -211,14 +214,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				break;
 				case "close":
 					Log.i(LOG, "close");
-					this.mTTS.stop();
-					this.mTTS.shutdown();
-					this.mTTS = null;
-					
-					mNotifyManager.cancel(NOTIFICATION_TTS_ID);
-					
-					this.stopForeground(true);
-					this.stopSelf();
+					destroyServiceAndNotification();
 				break;
 				case "restore":
 					Log.i(LOG, "restore");
@@ -235,14 +231,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 					}
 					else
 					{
-						this.mTTS.stop();
-						this.mTTS.shutdown();
-						this.mTTS = null;
-						
-						mNotifyManager.cancel(NOTIFICATION_TTS_ID);
-						
-						this.stopForeground(true);
-						this.stopSelf();
+						destroyServiceAndNotification();
 					}
 
 					//Обнуление счётчика через 5 секунд
@@ -264,15 +253,8 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			Toast
 			.makeText(ctx, "Произошла какая-то жуткая ошибка при попытке озвучить статью... =(",
 			Toast.LENGTH_SHORT).show();
-			
-			this.mTTS.stop();
-			this.mTTS.shutdown();
-			this.mTTS = null;
-			
-			mNotifyManager.cancel(NOTIFICATION_TTS_ID);
-			
-			this.stopForeground(true);
-			this.stopSelf();
+
+			destroyServiceAndNotification();
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -526,15 +508,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 				"Озвучивание на русском не поддерживается на сём устройстве. Установите синтез речи в настройках телефона",
 				Toast.LENGTH_SHORT).show();
 
-				Log.i(LOG, "close");
-				this.mTTS.stop();
-				this.mTTS.shutdown();
-				this.mTTS = null;
-				
-				mNotifyManager.cancel(NOTIFICATION_TTS_ID);
-				
-				this.stopForeground(true);
-				this.stopSelf();
+				destroyServiceAndNotification();
 			}
 
 			if (!this.isPaused)
@@ -553,12 +527,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			.makeText(ctx, "Произошла какая-то жуткая ошибка при попытке озвучить статью... =(",
 			Toast.LENGTH_SHORT).show();
 
-			Log.i(LOG, "close");
-			this.mTTS.stop();
-			this.mTTS.shutdown();
-			this.mTTS = null;
-			this.stopForeground(true);
-			this.stopSelf();
+			destroyServiceAndNotification();
 		}
 	}
 
@@ -601,7 +570,7 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			this.mTTS.stop();
 			this.mTTS.shutdown();
 			this.mTTS = null;
-			
+
 			mNotifyManager.cancel(NOTIFICATION_TTS_ID);
 		}
 		if (articleReceiver != null)
@@ -610,5 +579,16 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 			articleReceiver = null;
 		}
 		super.onDestroy();
+	}
+
+	private void destroyServiceAndNotification()
+	{
+		Log.i(LOG, "destroyServiceAndNotification");
+		this.mTTS.stop();
+		this.mTTS.shutdown();
+		this.mTTS = null;
+		mNotifyManager.cancel(NOTIFICATION_TTS_ID);
+		this.stopForeground(true);
+		this.stopSelf();
 	}
 }
