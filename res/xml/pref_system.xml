@@ -6,15 +6,15 @@
     android:title="@string/system_settings" >
 
     <!-- Папка хранения файлов -->
-   <!--  <ListPreference
-        android:defaultValue="/data/data/ru.kuchanov.odnako/files"
-        android:entries="@array/files_dir"
-        android:entryValues="@array/files_dir_values"
+  <ListPreference
+        android:defaultValue="10"
+        android:entries="@array/max_arts_to_store"
+        android:entryValues="@array/max_arts_to_store_values"
         android:icon="?folderIcon"
-        android:key="filesDir"
-        android:summary="В приложении или на карте памяти"
-        android:title="Папка для хранения файлов" >
-    </ListPreference> -->
+        android:key="max_arts_to_store"
+        android:summary="от 10 и до бесконечности"
+        android:title="Макс. кол-во сохраняемых статей" >
+    </ListPreference>
 
     <!-- Обновлять при запуске -->
 

@@ -32,5 +32,25 @@
         <item>left</item>
         <item>right</item>
     </string-array>
+    
+    <string-array name="max_arts_to_store">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>Без ограничений</item>
+    </string-array>
+    
+    <string-array name="max_arts_to_store_values">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>42</item>
+    </string-array>
 
 </resources>

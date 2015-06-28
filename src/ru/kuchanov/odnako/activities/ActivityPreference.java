@@ -16,6 +16,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentPreference;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceAbout;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceDesign;
+import ru.kuchanov.odnako.fragments.FragmentPreferenceSystem;
 import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -61,6 +62,9 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String PREF_KEY_PREVIEW_SHOW = "preview_show";
 	public static final String PREF_KEY_AUTHOR_IMAGE_SHOW = "author_image_show";
 	public static final String PREF_KEY_ARTICLE_IS_READEN_BACKGROUND = "is_readen_background_show";
+	
+	//system
+	public static final String PREF_KEY_MAX_ARTICLES_TO_STORE = "max_arts_to_store";
 	
 	//notification keys
 	public static final String PREF_KEY_NOTIFICATION = "notification";
@@ -254,7 +258,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	{
 		return FragmentPreference.class.getName().equals(fragmentName)
 		|| FragmentPreferenceAbout.class.getName().equals(fragmentName)
-		|| FragmentPreferenceDesign.class.getName().equals(fragmentName);
+		|| FragmentPreferenceDesign.class.getName().equals(fragmentName)
+		|| FragmentPreferenceSystem.class.getName().equals(fragmentName);
 	}
 
 	/**

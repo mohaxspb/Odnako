@@ -17,14 +17,14 @@
             android:name="pref-resource"
             android:value="pref_notifications" />
     </header>
-    <!-- <header
-        android:fragment="ru.kuchanov.odnako.fragments.FragmentPreference"
-        android:summary="Папка хранения картинок и статей, обновлление при запуске"
+    <header
+        android:fragment="ru.kuchanov.odnako.fragments.FragmentPreferenceSystem"
+        android:summary="База данных, кэш и всё такое"
         android:title="@string/system_settings" >
         <extra
             android:name="pref-resource"
             android:value="pref_system" />
-    </header> -->
+    </header>
     <header
         android:fragment="ru.kuchanov.odnako.fragments.FragmentPreferenceAbout"
         android:summary="Сслыки на маркет, истроия изменений, связь с разработчиком"
