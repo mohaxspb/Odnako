@@ -18,9 +18,6 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 
 	private PreferenceActivity act;
 
-	private static String APP_NAME;
-	private static String APP_TITLE;
-
 	public final static String LINK_TO_PRO = "ru.kuchanov.odnakopro";
 
 	SharedPreferences pref;
@@ -35,9 +32,6 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
 		this.isPro = pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false) == true;
-
-		APP_TITLE = act.getResources().getString(R.string.app_name);
-		APP_NAME = this.act.getApplicationInfo().packageName;
 
 		addPreferencesFromResource(R.xml.pref_system);
 
@@ -64,6 +58,10 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 						Toast.makeText(act, "Только в Однако+ версии!", Toast.LENGTH_SHORT).show();
 						FragmentDialogDownloads.showGoProDialog(act);
 						return false;
+					}
+					else if(index==0)
+					{
+						return true;
 					}
 					return false;
 				}

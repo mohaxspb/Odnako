@@ -17,7 +17,6 @@
     </ListPreference>
 
     <!-- Обновлять при запуске -->
-
     <!-- <CheckBoxPreference
         android:defaultValue="true"
         android:enabled="true"

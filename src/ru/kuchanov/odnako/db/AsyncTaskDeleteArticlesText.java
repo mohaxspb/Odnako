@@ -47,7 +47,7 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 	private DataBaseHelper h;
 	private int type = 0;
 
-	SharedPreferences pref;
+	private SharedPreferences pref;
 
 	public AsyncTaskDeleteArticlesText(Context ctx, int requestType)
 	{

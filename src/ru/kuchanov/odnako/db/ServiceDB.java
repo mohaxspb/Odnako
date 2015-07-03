@@ -496,8 +496,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				public void onAnswerFromDBFromTop(String answer, String categoryToLoad, int pageToLoad,
 				ArrayList<Article> dataToSend)
 				{
-					//					switch (new DBActions(this, this.getHelper()).askDBFromTop(categoryToLoad, calOfLastRefresh, pageToLoad))
 					String[] resultMessage;
+					Log.e(LOG, "ON_ERROR CALLBACK answer: "+answer);
 					switch (answer)
 					{
 						case Msg.DB_ANSWER_NEVER_REFRESHED:
@@ -511,15 +511,15 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 							//but no arts... Anyway we tell about it;
 							resultMessage = new String[] { Msg.ERROR, "Статей в кэше не обнаружено" };
 							sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
-						//TODO chrck theis
+						//TODO check this
 						break;
 						case Msg.DB_ANSWER_UNKNOWN_CATEGORY:
 						//that's can't be, because we check it before
 						break;
 						case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 							//Everything is OK. We send arts from DB to fragment
-							resultMessage = new String[] { Msg.ERROR, "Статьи загружены из кэша" };
-							sendBroadcastWithResult(ctx, resultMessage, null, categoryToLoad, pageToLoad);
+							resultMessage = new String[] { /*Msg.ERROR*/Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, "Статьи загружены из кэша" };
+							sendBroadcastWithResult(ctx, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 						break;
 					}//switch
 				}
@@ -527,6 +527,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, categoryToLoad,
 			calOfLastRefresh, pageToLoad, callback);
 			askFromTop.execute();
+//			this.startDownLoad(catToLoad, pageToLoad);
 		}//if (pageToLoad == 1)
 	}//onError
 
