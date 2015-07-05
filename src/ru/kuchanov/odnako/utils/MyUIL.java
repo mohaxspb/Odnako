@@ -30,7 +30,6 @@ import com.nostra13.universalimageloader.utils.L;
  */
 public class MyUIL
 {
-
 	public static ImageLoader get(Context act)
 	{
 		//UniversalImageLoader
@@ -61,7 +60,7 @@ public class MyUIL
 		{
 			imageLoader.init(config);
 		}
-
+		
 		return imageLoader;
 
 	}

@@ -105,6 +105,9 @@
     <string name="delete_saved_arts">Удалить загруженные статьи</string>
     <string name="db_drop">Очистить базу данных</string>
     <string name="clear_db_summary">Стереть загруженные статьи, полная очистка БД</string>
+    <string name="image_cache_title">Кэш изображений</string>
+    <string name="image_cache_summary">Размер и местоположение</string>
+    <string name="clear_cache_title">Очистить кэш изображений</string>
     
     
     <string name="favorites">Избранное</string>

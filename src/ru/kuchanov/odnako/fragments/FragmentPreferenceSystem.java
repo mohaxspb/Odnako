@@ -14,6 +14,7 @@ import ru.kuchanov.odnako.db.AsyncTaskDeleteArticlesText;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
+import ru.kuchanov.odnako.utils.MyUIL;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
@@ -47,6 +48,8 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 
 	ListPreference prefMaxArtsToStore;
 	Preference dbClear;
+	Preference cacheInfo;
+	Preference cacheClear;
 
 	@Override
 	public void onCreate(Bundle savedState)
@@ -66,6 +69,12 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 
 		dbClear = (Preference) findPreference(ActivityPreference.PREF_KEY_DB_CLEAR);
 		dbClear.setOnPreferenceClickListener(prefCLDBClear);
+
+		cacheInfo = (Preference) findPreference(ActivityPreference.PREF_KEY_IMAGE_CACHE_INFO);
+		cacheInfo.setOnPreferenceClickListener(prefCLCacheInfo);
+
+		//		cacheClear = (Preference) findPreference(ActivityPreference.PREF_KEY_CACHE_CLEAR);
+		//		cacheClear.setOnPreferenceClickListener(prefCLCacheClear);
 	}
 
 	Preference.OnPreferenceChangeListener prefCLmaxArtsToStore = new Preference.OnPreferenceChangeListener()
@@ -175,9 +184,9 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 			TextView dbSizeTV = (TextView) dialogDBClear.getCustomView().findViewById(R.id.db_size);
 			File f = act.getDatabasePath(DataBaseHelper.DATABASE_NAME);
 			long dbSize = f.length();
-			Log.i(LOG, "DB file size is: "+dbSize+ " bait");
-			float dbSizeInMB=(float) dbSize / 1048576;
-//			Log.i(LOG, "DB file size is: "+dbSizeInMB+ " Mbait");
+			Log.i(LOG, "DB file size is: " + dbSize + " bait");
+			float dbSizeInMB = (float) dbSize / 1048576;
+			//			Log.i(LOG, "DB file size is: "+dbSizeInMB+ " Mbait");
 			dbSizeTV.setText("Размер базы данных: " + String.format("%.2f", dbSizeInMB) + " Мбайт");
 			TextView dbDropTV = (TextView) dialogDBClear.getCustomView().findViewById(R.id.drop_db);
 			dbDropTV.setOnClickListener(new OnClickListener()
@@ -225,6 +234,36 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 			});
 
 			dialogDBClear.show();
+			return false;
+		}
+	};
+
+	private OnPreferenceClickListener prefCLCacheInfo = new OnPreferenceClickListener()
+	{
+		@SuppressWarnings("deprecation")
+		@Override
+		public boolean onPreferenceClick(Preference preference)
+		{
+			final MaterialDialog dialog;
+			MaterialDialog.Builder dialogDBClearBuilder = new MaterialDialog.Builder(act);
+
+			File cache=MyUIL.get(act).getDiskCache().getDirectory();
+			File[] cached=cache.listFiles();
+			
+			long length=0;
+			for(File f: cached)
+			{
+				length+=f.length();
+			}
+			float cahceSizeInMB=(float) length / 1048576;
+			
+			String content = "Размер кэша на устройстве: \n" + String.format("%.2f", cahceSizeInMB)+" Мбайт"
+			+ "\n\n" + "Расположение кэша: \n" + MyUIL.get(act).getDiskCache().getDirectory().getAbsolutePath();
+			dialogDBClearBuilder.title("Кэш изображений")
+			.content(content)
+			.positiveText("Закрыть");
+			dialog = dialogDBClearBuilder.build();
+			dialog.show();
 			return false;
 		}
 	};

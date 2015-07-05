@@ -66,6 +66,8 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	//system
 	public static final String PREF_KEY_MAX_ARTICLES_TO_STORE = "max_arts_to_store";
 	public static final String PREF_KEY_DB_CLEAR = "clear_db";
+	public static final String PREF_KEY_IMAGE_CACHE_INFO = "imageCacheSizeAndRoot";
+	public static final String PREF_KEY_CACHE_CLEAR = "clearCache";
 	
 	//notification keys
 	public static final String PREF_KEY_NOTIFICATION = "notification";

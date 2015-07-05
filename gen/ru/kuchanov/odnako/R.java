@@ -3987,7 +3987,7 @@ containing a value of this type.
         public static final int about=0x7f0a008b;
         public static final int accept=0x7f0a0029;
         public static final int action_settings=0x7f0a0064;
-        public static final int add_to_favorites=0x7f0a00a8;
+        public static final int add_to_favorites=0x7f0a00ab;
         public static final int allLoadInfoMessage=0x7f0a0091;
         public static final int also_by_theme=0x7f0a005a;
         public static final int also_to_read=0x7f0a005b;
@@ -3999,13 +3999,13 @@ containing a value of this type.
         public static final int article_loading=0x7f0a00a2;
         public static final int articles=0x7f0a0051;
         public static final int arts_list=0x7f0a0069;
-        public static final int artslist_min=0x7f0a00aa;
-        public static final int artslist_mina=0x7f0a00ab;
-        public static final int artslist_minb=0x7f0a00ac;
-        public static final int artslist_minc=0x7f0a00ad;
-        public static final int artslist_mind=0x7f0a00ae;
-        public static final int artslist_mine=0x7f0a00af;
-        public static final int artslist_ming=0x7f0a00b0;
+        public static final int artslist_min=0x7f0a00ad;
+        public static final int artslist_mina=0x7f0a00ae;
+        public static final int artslist_minb=0x7f0a00af;
+        public static final int artslist_minc=0x7f0a00b0;
+        public static final int artslist_mind=0x7f0a00b1;
+        public static final int artslist_mine=0x7f0a00b2;
+        public static final int artslist_ming=0x7f0a00b3;
         public static final int author=0x7f0a0055;
         public static final int author_descr=0x7f0a0068;
         public static final int authors=0x7f0a0056;
@@ -4016,6 +4016,7 @@ containing a value of this type.
         public static final int check_new=0x7f0a0077;
         public static final int choose_email_provider=0x7f0a000b;
         public static final int choose_time_btn=0x7f0a0090;
+        public static final int clear_cache_title=0x7f0a00a9;
         public static final int clear_db_summary=0x7f0a00a6;
         public static final int close=0x7f0a007e;
         public static final int comments=0x7f0a006c;
@@ -4137,11 +4138,11 @@ containing a value of this type.
         public static final int download_all=0x7f0a008e;
         public static final int download_article=0x7f0a0081;
         public static final int downloads=0x7f0a006d;
-        public static final int drawer_close=0x7f0a00b2;
-        public static final int drawer_open=0x7f0a00b1;
+        public static final int drawer_close=0x7f0a00b5;
+        public static final int drawer_open=0x7f0a00b4;
         public static final int email=0x7f0a009f;
-        public static final int favorites=0x7f0a00a7;
-        public static final int favs_about=0x7f0a00a9;
+        public static final int favorites=0x7f0a00aa;
+        public static final int favs_about=0x7f0a00ac;
         public static final int favs_log_pass_title=0x7f0a006f;
         public static final int feature_login=0x7f0a00a0;
         public static final int feedback_hint=0x7f0a000a;
@@ -4158,6 +4159,8 @@ containing a value of this type.
         public static final int help_us=0x7f0a0008;
         public static final int hint_login=0x7f0a0070;
         public static final int hint_password=0x7f0a0071;
+        public static final int image_cache_summary=0x7f0a00a8;
+        public static final int image_cache_title=0x7f0a00a7;
         public static final int img=0x7f0a009b;
         /**  Author section 
          */
@@ -4177,7 +4180,7 @@ containing a value of this type.
         public static final int library_FloatingActionButton_licenseId=0x7f0a0026;
         public static final int library_FloatingActionButton_repositoryLink=0x7f0a0025;
         public static final int loading=0x7f0a00a1;
-        public static final int mail_to_me_summary=0x7f0a00b4;
+        public static final int mail_to_me_summary=0x7f0a00b7;
         public static final int main_dialog_text=0x7f0a0006;
         public static final int mark_as_read=0x7f0a005c;
         public static final int mark_as_read_unread=0x7f0a005e;
@@ -4196,7 +4199,7 @@ containing a value of this type.
         public static final int off=0x7f0a0093;
         public static final int on=0x7f0a0092;
         public static final int preview=0x7f0a0054;
-        public static final int pro_ver_adv=0x7f0a00b5;
+        public static final int pro_ver_adv=0x7f0a00b8;
         /**  <string name="category">Раздел</string> 
          */
         public static final int quontity=0x7f0a008c;
@@ -4214,7 +4217,7 @@ containing a value of this type.
         public static final int service_rss=0x7f0a0073;
         public static final int service_tts=0x7f0a0076;
         public static final int settings=0x7f0a0065;
-        public static final int settings_title=0x7f0a00b3;
+        public static final int settings_title=0x7f0a00b6;
         public static final int share=0x7f0a0084;
         public static final int share_article=0x7f0a0060;
         public static final int share_link=0x7f0a005f;
@@ -4231,10 +4234,10 @@ containing a value of this type.
          */
         public static final int theme=0x7f0a0094;
         public static final int title=0x7f0a0052;
-        public static final int two_pane_alert=0x7f0a00b7;
+        public static final int two_pane_alert=0x7f0a00ba;
         public static final int ui_text_scale=0x7f0a0096;
-        public static final int used_libs=0x7f0a00b8;
-        public static final int version_history_summary=0x7f0a00b6;
+        public static final int used_libs=0x7f0a00bb;
+        public static final int version_history_summary=0x7f0a00b9;
         public static final int vibration=0x7f0a0088;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
