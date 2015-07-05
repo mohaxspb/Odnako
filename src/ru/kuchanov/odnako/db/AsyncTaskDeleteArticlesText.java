@@ -68,6 +68,12 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 		int maxArtsToStore = Integer.valueOf(pref.getString(ActivityPreference.PREF_KEY_MAX_ARTICLES_TO_STORE, "10"));
 		boolean noLimit = (maxArtsToStore == 42);
 
+		if (noLimit)
+		{
+			artsToDelete = new ArrayList<Article>();
+			return artsToDelete;
+		}
+
 		switch (this.type)
 		{
 			case REQUEST_TYPE_STANDART:
@@ -82,7 +88,7 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 
 					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
 
-					if (allDownloadedArts.size() > maxArtsToStore && noLimit == false)
+					if (allDownloadedArts.size() > maxArtsToStore)
 					{
 						for (int i = maxArtsToStore; i < allDownloadedArts.size(); i++)
 						{
@@ -102,44 +108,23 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 			case REQUEST_TYPE_DELETE_ALL:
 				try
 				{
+					qb = h.getDaoArticle().queryBuilder();
+					qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
+					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
+
+					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
+
 					UpdateBuilder<Article, Integer> ub = h.getDaoArticle().updateBuilder();
 					ub.updateColumnValue(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
 					ub.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
 					ub.update();
+
+					artsToDelete = allDownloadedArts;
 				} catch (SQLException e)
 				{
 					e.printStackTrace();
 				}
 			break;
-		//			case REQUEST_TYPE_DELETE_SOME:
-		//				//find arts with text 
-		//				//if their quont more than 10 sort them by refreshed date
-		//				//and delete old to get no more than 10 downloaded arts;
-		//				try
-		//				{
-		//					qb = h.getDaoArticle().queryBuilder();
-		//					qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
-		//					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
-		//
-		//					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
-		//					
-		//					if (allDownloadedArts.size() > maxArtsToStore)
-		//					{
-		//						for (int i = maxArtsToStore; i < allDownloadedArts.size(); i++)
-		//						{
-		//							Article.updateArtText(h, allDownloadedArts.get(i).getId(), Const.EMPTY_STRING);
-		//							Article.updateRefreshedDate(h, allDownloadedArts.get(i).getId(), new Date(0));
-		//
-		//							allDownloadedArts.get(i).setArtText(Const.EMPTY_STRING);
-		//							allDownloadedArts.get(i).setRefreshed(new Date(0));
-		//							artsToDelete.add(allDownloadedArts.get(i));
-		//						}
-		//					}
-		//				} catch (SQLException e)
-		//				{
-		//					e.printStackTrace();
-		//				}
-		//			break;
 		}
 		return artsToDelete;
 	}

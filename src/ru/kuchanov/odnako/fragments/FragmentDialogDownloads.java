@@ -277,6 +277,7 @@ public class FragmentDialogDownloads extends DialogFragment
 					{
 						Toast.makeText(act, "Только в Однако+ версии", Toast.LENGTH_SHORT).show();
 						spinnerQuont.setSelection(1);
+						showGoProDialog(act);
 					}
 				}
 			}

@@ -5,19 +5,28 @@
     android:summary="Папка хранения картинок и статей, обновление при запуске"
     android:title="@string/system_settings" >
 
-    <!-- Папка хранения файлов -->
-  <ListPreference
-        android:defaultValue="10"
-        android:entries="@array/max_arts_to_store"
-        android:entryValues="@array/max_arts_to_store_values"
-        android:icon="?folderIcon"
-        android:key="max_arts_to_store"
-        android:summary="от 10 и до бесконечности"
-        android:title="Макс. кол-во сохраняемых статей" >
-    </ListPreference>
+    <PreferenceCategory android:title="База данных" >
+        <ListPreference
+            android:defaultValue="10"
+            android:entries="@array/max_arts_to_store"
+            android:entryValues="@array/max_arts_to_store_values"
+            android:icon="?saveIcon"
+            android:key="max_arts_to_store"
+            android:summary="От 10 и до бесконечности"
+            android:title="Макс. кол-во сохраняемых статей" >
+        </ListPreference>
+
+        <Preference
+            android:icon="?archiveIcon"
+            android:key="clear_db"
+            android:summary="@string/clear_db_summary"
+            android:title="Очистка базы данных" >
+        </Preference>
+    </PreferenceCategory>
 
     <!-- Обновлять при запуске -->
-    <!-- <CheckBoxPreference
+    <!--
+    <CheckBoxPreference
         android:defaultValue="true"
         android:enabled="true"
         android:icon="?refreshIcon"
@@ -25,5 +34,7 @@
         android:summaryOff="НЕ обновляюсь при запуске"
         android:summaryOn="ОБНОВЛЯЮСЬ при запуске"
         android:title="Обновлять при запуске" >
-    </CheckBoxPreference> -->
+    </CheckBoxPreference>
+    -->
+
 </PreferenceScreen>

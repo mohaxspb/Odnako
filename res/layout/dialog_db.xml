@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/num_of_saved_arts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="?android:textColorSecondary" />
+
+    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:mrl_rippleColor="?colorPrimaryDark"
+        app:mrl_rippleDelayClick="false"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="true" >
+
+        <TextView
+            android:id="@+id/delete_saved_arts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_saved_arts"
+            android:textSize="23sp"
+            android:textColor="?android:textColorPrimary" />
+    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+
+    <TextView
+        android:id="@+id/db_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="?android:textColorSecondary" />
+
+    <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:mrl_rippleColor="?colorPrimaryDark"
+        app:mrl_rippleDelayClick="false"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="true" >
+
+        <TextView
+            android:id="@+id/drop_db"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/db_drop"
+            android:textSize="23sp"
+            android:textColor="?android:textColorPrimary" />
+    </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
+
+</LinearLayout>

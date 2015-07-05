@@ -162,7 +162,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 				//no logPass in prefs, so let user write it
 				{
 					hH.login.setTextColor(act.getResources().getColor(R.color.red));
-					hH.login.setText("Ваш логин");
+					hH.login.setText("Логин");
 				}
 				hH.editBtn.setOnClickListener(new OnClickListener()
 				{

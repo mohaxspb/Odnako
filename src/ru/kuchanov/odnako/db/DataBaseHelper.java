@@ -86,7 +86,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		}
 	}
 
-	private void fillTables()
+	public void fillTables()
 	{
 		//fill initial category info
 		//AllTags

@@ -99,6 +99,14 @@
     <string name="feature_login">Когда-нибудь разработчик разберётся как залогиниться на сайте через приложение и тут будет ваша автатарка, ваши ФИО и ваш логин. И вы сможете комментировать статьи через приложение! =)</string>
     <string name="loading">Загружаю, подождите, пожалуйста.</string>
     <string name="article_loading">Тут появится текст статьи, когда она загрузится!</string>
+    
+    <string name="never">Никогда</string>
+    
+    <string name="delete_saved_arts">Удалить загруженные статьи</string>
+    <string name="db_drop">Очистить базу данных</string>
+    <string name="clear_db_summary">Стереть загруженные статьи, полная очистка БД</string>
+    
+    
     <string name="favorites">Избранное</string>
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="favs_about">Избранное работает так: \n

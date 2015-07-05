@@ -85,7 +85,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
-                    android:text="@string/fio"
+                    android:text="@string/never"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="17sp" />
 
@@ -126,7 +126,7 @@
                     android:scrollHorizontally="true"
                     android:text="@string/email"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="21sp" />
+                    android:textSize="17sp" />
 
                 <ru.kuchanov.odnako.custom.view.MaterialRippleLayout
                     android:layout_width="60dp"
