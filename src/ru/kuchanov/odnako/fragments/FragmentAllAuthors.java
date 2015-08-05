@@ -153,7 +153,7 @@ public class FragmentAllAuthors extends Fragment
 					pagerRight.setAdapter(pagerAdapter);
 					PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
 					adapter.getCurAllAuthorsList());
-					pagerRight.setOnPageChangeListener(listener);
+					pagerRight.addOnPageChangeListener(listener);
 					listener.onPageSelected(0);
 				}
 			}
@@ -164,7 +164,7 @@ public class FragmentAllAuthors extends Fragment
 				pagerRight.setAdapter(pagerAdapter);
 				PagerListenerAllAuthors listener = new PagerListenerAllAuthors(mainActivity,
 				adapter.getCurAllAuthorsList());
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(0);
 			}
 

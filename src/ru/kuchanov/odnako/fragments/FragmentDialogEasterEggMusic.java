@@ -32,8 +32,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.MaterialDialog.ButtonCallback;
 
-//import android.support.v4.app.DialogFragment;
-
 public class FragmentDialogEasterEggMusic extends DialogFragment
 {
 	final static String LOG = FragmentDialogEasterEggMusic.class.getSimpleName();
@@ -119,7 +117,7 @@ public class FragmentDialogEasterEggMusic extends DialogFragment
 				//				mp.release();
 			}
 		})
-		.customView(R.layout.easter_egg_dialog, false);
+		.customView(R.layout.dialog_easter_egg, false);
 
 		dialogPlayer = dialogPlayerBuilder.build();
 

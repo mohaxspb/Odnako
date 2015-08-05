@@ -3,12 +3,15 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.fragments.FragmentAllCategories;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.MyUIL;
+import ru.kuchanov.odnako.utils.UILListenerCategory;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -38,7 +41,6 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 	private static final int HEADER = 0;
 	private static final int CATEGORY = 2;
 
-//	private ActivityMain act;
 	private ActivityBase act;
 
 	private ImageLoader imageLoader;
@@ -53,7 +55,7 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 
 	private String currentFilter = null;
 
-//	public RecyclerAdapterAllCategories(ActivityMain act, FragmentAllCategories artsListFrag)
+	//	public RecyclerAdapterAllCategories(ActivityMain act, FragmentAllCategories artsListFrag)
 	public RecyclerAdapterAllCategories(ActivityBase act, FragmentAllCategories artsListFrag)
 	{
 		this.act = act;
@@ -181,16 +183,18 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 				String link = "";
 				if (p.getImgUrl().startsWith("/"))
 				{
-					link = "http://odnako.org" + p.getImgUrl();
+					link = Const.DOMAIN_MAIN + p.getImgUrl();
 				}
-				boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+				boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 				if (nightModeIsOn)
 				{
-					imageLoader.displayImage(link, holderMain.categoryImg, MyUIL.getDarkOptions());
+					imageLoader.displayImage(link, holderMain.categoryImg, MyUIL.getDarkOptions(),
+					new UILListenerCategory(imageLoader, MyUIL.getDarkOptions(), holderMain.categoryImg));
 				}
 				else
 				{
-					imageLoader.displayImage(link, holderMain.categoryImg);
+					imageLoader.displayImage(link, holderMain.categoryImg,
+					new UILListenerCategory(imageLoader, MyUIL.getLightOptions(), holderMain.categoryImg));
 				}
 				//end of ART_IMG
 
@@ -200,7 +204,7 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 				holderMain.title.setTextSize(35 * scaleFactor);
 
 				//description
-				if (!p.getDescription().equals("empty") && !p.getDescription().equals(""))
+				if (!p.getDescription().equals(Const.EMPTY_STRING) && !p.getDescription().equals(""))
 				{
 					Spanned spannedContentPreview = Html.fromHtml(p.getDescription());
 					holderMain.description.setText(spannedContentPreview);

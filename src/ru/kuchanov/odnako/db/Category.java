@@ -27,56 +27,38 @@ public class Category implements Parcelable
 {
 	private static final String LOG = Category.class.getSimpleName() + "/";
 
-	public final static String ID_FIELD_NAME = "id";
-	public final static String URL_FIELD_NAME = "url";
-	public final static String TITLE_FIELD_NAME = "title";
-	public final static String REFRESHED_FIELD_NAME = "refreshed";
-	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
+	public final static String FIELD_ID = "id";
+	public final static String FIELD_URL = "url";
+	public final static String FIELD_TITLE = "title";
+	public final static String FIELD_REFRESHED = "refreshed";
+	public static final String FIELD_FIRST_ARTICLE_URL = "firstArticleURL";
+	public static final String FIELD_IMAGE_URL = "imgUrl";
 
-	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
+	@DatabaseField(generatedId = true, columnName = FIELD_ID)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_URL)
 	private String url;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = TITLE_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_TITLE)
 	private String title;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String description;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_IMAGE_URL)
 	private String imgUrl;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false)
-	private String imgFileName;
-
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
+	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = FIELD_REFRESHED)
 	private Date refreshed;
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
 	private Date lastArticleDate;
 
-	//true if there are full list of arts without intervals
-	//false if we have arts, with interval, that we catch while loading arts from web;
-	//i.e. on first launch we have no arts at all, so it's false
-	//after first load we have it's true
-	//then if we'll load MORE arts we search for then in DB
-	//if there are no arts (or less then 30). we load from web
-	//else from bd
-	////
-	//if it's no first load (there are arts in DB) and we have no match of loaded arts (i.e. by url) we set it to false
-	//and so load MORE arts by web;
-	//else (we have matches) we update Article table and ArtCatCable set sink value to true,
-	//so next MORE arts we'll get from DB
-	//TODO DO NOT NEED THIS!!!s
-	//	@DatabaseField(dataType = DataType.BOOLEAN, canBeNull = false, columnName = SINCHRONISED_FIELD_NAME)
-	//	private boolean sinhronised = false;
-
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,
 	//or in same case while requesting arts from bottom
-	@DatabaseField(dataType = DataType.STRING, columnName = FIRST_ARTICLE_URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_FIRST_ARTICLE_URL)
 	private String firstArticleURL;
 
 	/**
@@ -84,16 +66,16 @@ public class Category implements Parcelable
 	 */
 	public Category()
 	{
+
 	}
 
-	public Category(String url, String title, String description, String img_url, String img_file_name, Date refreshed,
+	public Category(String url, String title, String description, String img_url, Date refreshed,
 	Date lastArticleDate)
 	{
 		this.url = url;
 		this.title = title;
 		this.description = description;
 		this.imgUrl = img_url;
-		this.imgFileName = img_file_name;
 		this.refreshed = refreshed;
 		this.lastArticleDate = lastArticleDate;
 	}
@@ -104,7 +86,6 @@ public class Category implements Parcelable
 		this.title = stringData[1];
 		this.description = stringData[2];
 		this.imgUrl = stringData[3];
-		this.imgFileName = stringData[4];
 		this.refreshed = dateData[0];
 		this.lastArticleDate = dateData[1];
 	}
@@ -113,11 +94,6 @@ public class Category implements Parcelable
 	{
 		return id;
 	}
-
-	//	public void setId(int id)
-	//	{
-	//		this.id = id;
-	//	}
 
 	public String getUrl()
 	{
@@ -157,16 +133,6 @@ public class Category implements Parcelable
 	public void setImgUrl(String img_url)
 	{
 		this.imgUrl = img_url;
-	}
-
-	public String getImg_file_name()
-	{
-		return imgFileName;
-	}
-
-	public void setImg_file_name(String img_file_name)
-	{
-		this.imgFileName = img_file_name;
 	}
 
 	public Date getRefreshed()
@@ -230,7 +196,7 @@ public class Category implements Parcelable
 		Category c = null;
 		try
 		{
-			c = h.getDaoCategory().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
+			c = h.getDaoCategory().queryBuilder().where().eq(FIELD_URL, url).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -249,7 +215,7 @@ public class Category implements Parcelable
 		Integer id = null;
 		try
 		{
-			id = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url).queryForFirst().getId();
+			id = h.getDaoCategory().queryBuilder().where().eq(Category.FIELD_URL, url).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -265,7 +231,7 @@ public class Category implements Parcelable
 		String firstArtUrl = null;
 		try
 		{
-			firstArtUrl = h.getDaoCategory().queryBuilder().where().eq(ID_FIELD_NAME, categoryId).queryForFirst()
+			firstArtUrl = h.getDaoCategory().queryBuilder().where().eq(FIELD_ID, categoryId).queryForFirst()
 			.getFirstArticleURL();
 		} catch (SQLException e)
 		{
@@ -279,7 +245,7 @@ public class Category implements Parcelable
 		String name;
 		try
 		{
-			name = h.getDaoCategory().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getTitle();
+			name = h.getDaoCategory().queryBuilder().where().eq(FIELD_URL, url).queryForFirst().getTitle();
 		} catch (SQLException e)
 		{
 			name = url;
@@ -301,7 +267,7 @@ public class Category implements Parcelable
 		Boolean isCategory = null;
 		try
 		{
-			Category cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url)
+			Category cat = h.getDaoCategory().queryBuilder().where().eq(Category.FIELD_URL, url)
 			.queryForFirst();
 			if (cat != null)
 			{
@@ -312,7 +278,7 @@ public class Category implements Parcelable
 			{
 				//try find in Author
 				Author aut = h.getDaoAuthor().queryBuilder().where()
-				.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+				.eq(Author.FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url))
 				.queryForFirst();
 				if (aut != null)
 				{
@@ -323,9 +289,10 @@ public class Category implements Parcelable
 				{
 					//we can't find url both in Category and Author, so it's unknown Category; return null;
 					//					//try without slash at the end
-					cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+					cat = h.getDaoCategory().queryBuilder().where()
+					.eq(Category.FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url))
 					.queryForFirst();
-					if(cat!=null)
+					if (cat != null)
 					{
 						isCategory = true;
 						return isCategory;
@@ -334,10 +301,10 @@ public class Category implements Parcelable
 					if (isCategory == null)
 					{
 						//try with slash...
-						cat = h.getDaoCategory().queryBuilder().where().eq(Category.URL_FIELD_NAME, url+"/")
+						cat = h.getDaoCategory().queryBuilder().where().eq(Category.FIELD_URL, url + "/")
 						.queryForFirst();
 						isCategory = (cat == null) ? null : true;
-						if(cat!=null)
+						if (cat != null)
 						{
 							isCategory = true;
 							return isCategory;
@@ -356,19 +323,18 @@ public class Category implements Parcelable
 
 	public String[] getAsStringArray()
 	{
-		String[] allInfo = new String[9];
+		String[] allInfo = new String[8];
 
 		allInfo[0] = String.valueOf(id);
 		allInfo[1] = url;
 		allInfo[2] = title;
 		allInfo[3] = description;
 		allInfo[4] = imgUrl;
-		allInfo[5] = imgFileName;
 
-		allInfo[6] = refreshed.toString();
-		allInfo[7] = lastArticleDate.toString();
+		allInfo[5] = refreshed.toString();
+		allInfo[6] = lastArticleDate.toString();
 
-		allInfo[8] = firstArticleURL;
+		allInfo[7] = firstArticleURL;
 
 		return allInfo;
 	}
@@ -378,7 +344,7 @@ public class Category implements Parcelable
 	 */
 	public static String[] getFieldsNames()
 	{
-		String[] arrStr1 = { "id", "url", "title", "description", "img_url", "img_file_name",
+		String[] arrStr1 = { "id", "url", "title", "description", "img_url",
 				"refreshed", "lastArticleDate", "firstArticleURL" };
 		return arrStr1;
 	}
@@ -389,8 +355,8 @@ public class Category implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoCategory().updateBuilder();
-			updateBuilder.where().eq(Category.ID_FIELD_NAME, categoryId);
-			updateBuilder.updateColumnValue(Category.FIRST_ARTICLE_URL_FIELD_NAME, initialArtsUrl);
+			updateBuilder.where().eq(Category.FIELD_ID, categoryId);
+			updateBuilder.updateColumnValue(Category.FIELD_FIRST_ARTICLE_URL, initialArtsUrl);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -405,7 +371,7 @@ public class Category implements Parcelable
 		return 0;
 	}
 
-	//"id", "url", "title", "description", "img_url", "img_file_name",
+	//"id", "url", "title", "description", "img_url",
 	//"refreshed", "lastArticleDate", "firstArticleURL"
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
@@ -415,7 +381,6 @@ public class Category implements Parcelable
 		dest.writeString(title);
 		dest.writeString(description);
 		dest.writeString(imgUrl);
-		dest.writeString(imgFileName);
 		dest.writeLong(refreshed.getTime());
 		dest.writeLong(lastArticleDate.getTime());
 		dest.writeString(firstArticleURL);
@@ -428,7 +393,6 @@ public class Category implements Parcelable
 		title = in.readString();
 		description = in.readString();
 		imgUrl = in.readString();
-		imgFileName = in.readString();
 		refreshed = new Date(in.readLong());
 		lastArticleDate = new Date(in.readLong());
 		firstArticleURL = in.readString();
@@ -436,7 +400,6 @@ public class Category implements Parcelable
 
 	public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>()
 	{
-
 		@Override
 		public Category createFromParcel(Parcel source)
 		{

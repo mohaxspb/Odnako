@@ -33,11 +33,11 @@
             android:title="@string/image_cache_title" >
         </Preference>
         
-        <Preference
+       <!--  <Preference
             android:icon="?default_image"
             android:key="clearCache"
             android:title="@string/clear_cache_title" >
-        </Preference>
+        </Preference> -->
     </PreferenceCategory>
 
     <!-- Обновлять при запуске -->

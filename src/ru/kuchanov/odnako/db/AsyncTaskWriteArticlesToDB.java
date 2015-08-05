@@ -64,7 +64,7 @@ public class AsyncTaskWriteArticlesToDB extends AsyncTask<Void, Void, ArrayList<
 				try
 				{
 					aut = h.getDaoAuthor().queryBuilder().where()
-					.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(a.getAuthorBlogUrl())).queryForFirst();
+					.eq(Author.FIELD_URL, Author.getURLwithoutSlashAtTheEnd(a.getAuthorBlogUrl())).queryForFirst();
 
 				} catch (SQLException e)
 				{

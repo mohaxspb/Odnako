@@ -6,11 +6,16 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import ru.kuchanov.odnako.callbacks.CallbackWriteFromTop;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 {
@@ -34,6 +39,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 
 	protected String[] doInBackground(Void... args)
 	{
+		String[] result;
 		//check if there are arts of given category
 		//switch by Category or Author				
 		if (Category.isCategory(h, categoryToLoad))
@@ -78,7 +84,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
-								return new String[] { Msg.NO_NEW, null };
+								/* return */result = new String[] { Msg.NO_NEW, null };
 							}
 							else
 							{
@@ -134,10 +140,15 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 								//and update def quont on page - new qount prev URL by last of gained
 								ArtCatTable.updatePreviousArt(h, firstArtOfNextPageId,
 								dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
+								
+								//update isTop to null for old entry
+								ArtCatTable.updateIsTop(h, topArtCat.getId(), null);
+								//set new topArtCatRow
+								dataToWrite.get(0).isTop(true);
 								//Finally write new rows!
 								ArtCatTable.write(h, dataToWrite);
 
-								return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+								/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 							}
 						}
 						else
@@ -163,7 +174,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							//FINALLY write new entries to ArtCatTable
 							ArtCatTable.write(h, artCatDataToWrite);
 
-							return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
+							/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 						}
 					}
 					else
@@ -181,11 +192,11 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							artCatDataToWrite.get(0).isTop(true);
 							//FINALLY write new entries to ArtCatTable
 							ArtCatTable.write(h, artCatDataToWrite);
-							return new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
+							/* return */result = new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
 						}
 					}
 				}
-				return new String[] { null, null };
+				/* return */result = new String[] { Msg.ERROR, "Непредвиденная ошибка" };
 			}
 			else
 			{
@@ -197,7 +208,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				artCatDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtCatTable
 				ArtCatTable.write(h, artCatDataToWrite);
-				return new String[] { Msg.NO_NEW, null };
+				/* return */result = new String[] { Msg.NO_NEW, null };
 			}
 		}
 		else
@@ -240,7 +251,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
-								return new String[] { Msg.NO_NEW, null };
+								/* return */result = new String[] { Msg.NO_NEW, null };
 							}
 							else
 							{
@@ -285,10 +296,14 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									//create ArtAut list from ArtInfo
 									List<ArtAutTable> dataToWrite = ArtAutTable.getArtAutListFromArtInfoList(
 									h, dataFromWeb, authorId);
+									//update isTop to null for old entry
+									ArtCatTable.updateIsTop(h, topArtAut.getId(), null);
+									//set new topArtCatRow
+									dataToWrite.get(0).isTop(true);
 									//Finally write new rows!
 									ArtAutTable.write(h, dataToWrite);
 
-									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+									/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 								}
 								else
 								{
@@ -309,10 +324,15 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									//and update def quont on page - new qount prev URL by last of gained
 									ArtAutTable.updatePreviousArt(h, firstArtOfNextPageId,
 									dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
+									
+									//update isTop to null for old entry
+									ArtCatTable.updateIsTop(h, topArtAut.getId(), null);
+									//set new topArtCatRow
+									dataToWrite.get(0).isTop(true);
 									//Finally write new rows!
 									ArtAutTable.write(h, dataToWrite);
 
-									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+									/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 								}
 							}
 						}
@@ -338,7 +358,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							//FINALLY write new entries to ArtAutTable
 							ArtAutTable.write(h, artAutDataToWrite);
 
-							return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
+							/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 						}
 					}
 					else
@@ -356,11 +376,11 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							artAutDataToWrite.get(0).isTop(true);
 							//FINALLY write new entries to ArtAutTable
 							ArtAutTable.write(h, artAutDataToWrite);
-							return new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
+							/* return */result = new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
 						}
 					}
 				}
-				return new String[] { null, null };
+				/* return */result = new String[] { Msg.ERROR, "Непредвиденная ошибка" };
 			}
 			else
 			{
@@ -372,9 +392,45 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				artAutDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtAutTable
 				ArtAutTable.write(h, artAutDataToWrite);
-				return new String[] { Msg.NO_NEW, null };
+				/* return */result = new String[] { Msg.NO_NEW, null };
 			}
 		}//this is author
+
+		switch (result[0])
+		{
+			case (Msg.NO_NEW):
+			case (Msg.NEW_QUONT):
+			case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
+				if (Category.isCategory(h, categoryToLoad))
+				{
+					try
+					{
+						UpdateBuilder<Category, Integer> updateBuilder = h.getDaoCategory().updateBuilder();
+						updateBuilder.updateColumnValue(Category.FIELD_REFRESHED, new Date(System.currentTimeMillis()));
+						updateBuilder.where().eq(Category.FIELD_URL, categoryToLoad);
+						updateBuilder.update();
+					} catch (SQLException e)
+					{
+						Log.e(LOG, "SQLException updateRefreshedDate CATEGORY");
+					}
+				}
+				else
+				{
+					try
+					{
+						UpdateBuilder<Author, Integer> updateBuilder = h.getDaoAuthor().updateBuilder();
+						updateBuilder.updateColumnValue(Author.FIELD_REFRESHED, new Date(System.currentTimeMillis()));
+						//DO NOT forget, that we can receive categoryToLoad with or without "/" at the and!
+						updateBuilder.where().eq(Author.FIELD_URL, Author.getURLwithoutSlashAtTheEnd(categoryToLoad));
+						updateBuilder.update();
+					} catch (SQLException e)
+					{
+						Log.e(LOG, "SQLException updateRefreshedDate AUTHOR");
+					}
+				}
+			break;
+		}
+		return result;
 	}
 
 	protected void onPostExecute(String[] result)

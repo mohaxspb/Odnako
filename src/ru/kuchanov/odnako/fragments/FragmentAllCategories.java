@@ -143,7 +143,7 @@ public class FragmentAllCategories extends Fragment
 					pagerRight.setAdapter(pagerAdapter);
 					PagerListenerAllCategories listener = new PagerListenerAllCategories(mainActivity,
 					adapter.getCurAllCategoriesList());
-					pagerRight.setOnPageChangeListener(listener);
+					pagerRight.addOnPageChangeListener(listener);
 					listener.onPageSelected(0);
 				}
 			}
@@ -153,7 +153,7 @@ public class FragmentAllCategories extends Fragment
 				pagerRight.setAdapter(pagerAdapter);
 				PagerListenerAllCategories listener = new PagerListenerAllCategories(mainActivity,
 				adapter.getCurAllCategoriesList());
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(0);
 			}
 		}

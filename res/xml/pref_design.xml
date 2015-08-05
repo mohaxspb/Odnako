@@ -2,120 +2,131 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="design"
-    android:summary="Выбор размера шрифтов, темы"
+    android:summary="Выбор размера шрифтов, цветовой темы, оформления карточек"
     android:title="@string/design" >
 
-    <!-- Масштаб картинок и текста на главной -->
+    <PreferenceCategory android:title="Размер текста" >
 
-    <ListPreference
-        android:defaultValue="0.75"
-        android:entries="@array/scale"
-        android:entryValues="@array/scale_values"
-        android:icon="?textSizeIcon"
-        android:key="scale"
-        android:summary="От 0.5х до 2х"
-        android:title="@string/ui_text_scale" >
-    </ListPreference>
+        <!-- Масштаб картинок и текста на главной -->
 
-    <!-- Масштаб текста в статьях -->
+        <ListPreference
+            android:defaultValue="0.75"
+            android:entries="@array/scale"
+            android:entryValues="@array/scale_values"
+            android:icon="?textSizeIcon"
+            android:key="scale"
+            android:summary="От 0.5х до 2х"
+            android:title="@string/text_size_ui" >
+        </ListPreference>
 
-    <ListPreference
-        android:defaultValue="0.75"
-        android:entries="@array/scale"
-        android:entryValues="@array/scale_values"
-        android:icon="?textFormatIcon"
-        android:key="scale_art"
-        android:summary="От 0.5х до 2х"
-        android:title="@string/art_text_scale" >
-    </ListPreference>
+        <!-- Масштаб текста в статьях -->
 
-    <!-- Масштаб текста комментариев -->
+        <ListPreference
+            android:defaultValue="0.75"
+            android:entries="@array/scale"
+            android:entryValues="@array/scale_values"
+            android:icon="?textFormatIcon"
+            android:key="scale_art"
+            android:summary="От 0.5х до 2х"
+            android:title="@string/text_size_article" >
+        </ListPreference>
 
-    <ListPreference
-        android:defaultValue="0.75"
-        android:entries="@array/scale"
-        android:entryValues="@array/scale_values"
-        android:icon="?commentsIcon"
-        android:key="scale_comments"
-        android:summary="От 0.5х до 2х"
-        android:title="@string/comments_text_scale" />
+        <!-- Масштаб текста комментариев -->
 
+        <ListPreference
+            android:defaultValue="0.75"
+            android:entries="@array/scale"
+            android:entryValues="@array/scale_values"
+            android:icon="?commentsIcon"
+            android:key="scale_comments"
+            android:summary="От 0.5х до 2х"
+            android:title="@string/text_size_comments" />
+    </PreferenceCategory>
     <!-- Выбор темы -->
+    <PreferenceCategory android:title="Цветовое оформление" >
+        <ListPreference
+            android:defaultValue="grey"
+            android:entries="@array/theme"
+            android:entryValues="@array/theme_values"
+            android:icon="?themeIcon"
+            android:key="theme"
+            android:summary="Поверните экран для применения"
+            android:title="Цветовая тема приложения" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="?nightModeIcon"
-        android:key="night_mode"
-        android:summaryOff="Ночной режим"
-        android:summaryOn="Ночной режим"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="?nightModeIcon"
+            android:key="night_mode"
+            android:summaryOff="Ночной режим"
+            android:summaryOn="Ночной режим"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+    </PreferenceCategory>
+    
 
-    <ListPreference
-        android:defaultValue="grey"
-        android:entries="@array/theme"
-        android:entryValues="@array/theme_values"
-        android:icon="?themeIcon"
-        android:key="theme"
-        android:summary="Поверните экран для применения"
-        android:title="Выбор темы приложения" />
+    <PreferenceCategory android:title="Оформление карточек статей" >
 
-    <!--
+        <!-- images -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?default_image"
+            android:key="image_show"
+            android:summaryOff="Картинки НЕ отображаются и НЕ загружаются"
+            android:summaryOn="Картинки отображаются и загружаются"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+
+        <ListPreference
+            android:defaultValue="up"
+            android:entries="@array/images_position"
+            android:entryValues="@array/images_position_values"
+            android:icon="?default_image"
+            android:key="images_position"
+            android:summary="Расположение картинки относительно заголовка"
+            android:title="Расположение картинки относительно заголовка" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?authorIcon"
+            android:key="author_image_show"
+            android:summaryOff="Фото авторов НЕ отображаются и НЕ загружаются"
+            android:summaryOn="Фото авторов отображаются и загружаются"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="?pagesIcon"
+            android:key="preview_show"
+            android:summaryOff="Краткое содержание"
+            android:summaryOn="Краткое содержание"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+        <SwitchPreference
+            android:summary="Затемнять прочитанные"
+            android:defaultValue="true"
+            android:icon="?readenIcon"
+            android:key="is_readen_background_show"
+            android:summaryOff="Фон прочитанной статьи"
+            android:summaryOn="Фон прочитанной статьи"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="При использовании сих опций стабильность работы не гарантируется! Зато оно красиво, анимации там всякие, понимаешь... =)"
+        android:title="Разное. Стабильность работы не гарантируется." >
+        <!--
          <SwitchPreference
         android:defaultValue="@bool/isTablet"
     -->
-    <SwitchPreference
-        android:defaultValue="false"
-        android:enabled="true"
-        android:icon="?tabletIcon"
-        android:key="twoPane"
-        android:summaryOff="Планшетный режим"
-        android:summaryOn="Планшетный режим"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
-
-    <!-- images -->
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="?default_image"
-        android:key="image_show"
-        android:summaryOff="Картинки НЕ отображаются и НЕ загружаются"
-        android:summaryOn="Картинки отображаются и загружаются"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
-
-    <ListPreference
-        android:defaultValue="up"
-        android:entries="@array/images_position"
-        android:entryValues="@array/images_position_values"
-        android:icon="?default_image"
-        android:key="images_position"
-        android:summary="Расположение картинки относительно заголовка"
-        android:title="Расположение картинки относительно заголовка" />
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="?authorIcon"
-        android:key="author_image_show"
-        android:summaryOff="Фото авторов НЕ отображаются и НЕ загружаются"
-        android:summaryOn="Фото авторов отображаются и загружаются"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="?pagesIcon"
-        android:key="preview_show"
-        android:summaryOff="Краткое содержание"
-        android:summaryOn="Краткое содержание"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="?readenIcon"
-        android:key="is_readen_background_show"
-        android:summaryOff="Фон прочитанной статьи"
-        android:summaryOn="Фон прочитанной статьи"
-        android:switchTextOff="Выкл"
-        android:switchTextOn="Вкл" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:icon="?tabletIcon"
+            android:key="twoPane"
+            android:summaryOff="Планшетный режим"
+            android:summaryOn="Планшетный режим"
+            android:switchTextOff="Выкл"
+            android:switchTextOn="Вкл" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

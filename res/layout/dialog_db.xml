@@ -28,9 +28,10 @@
             android:id="@+id/delete_saved_arts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="?deleteIcon"
             android:text="@string/delete_saved_arts"
-            android:textSize="23sp"
-            android:textColor="?android:textColorPrimary" />
+            android:textColor="?android:textColorPrimary"
+            android:textSize="23sp" />
     </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
 
     <TextView
@@ -56,9 +57,10 @@
             android:id="@+id/drop_db"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="?deleteIcon"
             android:text="@string/db_drop"
-            android:textSize="23sp"
-            android:textColor="?android:textColorPrimary" />
+            android:textColor="?android:textColorPrimary"
+            android:textSize="23sp" />
     </ru.kuchanov.odnako.custom.view.MaterialRippleLayout>
 
 </LinearLayout>

@@ -57,5 +57,4 @@ public class ImgLoadListenerBigSmall implements ImageLoadingListener
 		imageLoader.displayImage(newURL, this.imgView,
 		options);
 	}
-
 }

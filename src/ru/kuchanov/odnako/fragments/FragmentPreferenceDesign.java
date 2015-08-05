@@ -44,9 +44,6 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 		prefTwoPane.setOnPreferenceClickListener(this.twoPaneCL);
 
 		//theme
-		//		Preference prefTheme = findPreference(ActivityPreference.PREF_KEY_THEME);
-		//		prefTheme.setOnPreferenceClickListener(this.themeCL);
-
 		final ListPreference prefTheme = (ListPreference) findPreference(ActivityPreference.PREF_KEY_THEME);
 		prefTheme.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{

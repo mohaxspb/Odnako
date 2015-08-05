@@ -121,14 +121,15 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 			{
 				//TODO think about what to launch in case of "odnako.org"
 				Log.d(LOG, "main domain adress");
-				formatedAdress = "http://odnako.org";
+				//XXX for now we'll launch main category (//blogs);
+				formatedAdress = "http://odnako.org/blogs";
 				Actions.showAllCategoriesArticles(formatedAdress, act);
 				this.finish();
 			}
 			else
 			{
-				//search adress in DB.
-				//It can be authoe, category or unknown category
+				//search address in DB.
+				//It can be author, category or unknown category
 				//...or something else...
 				Boolean isCategory = null;
 
@@ -217,7 +218,7 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 			try
 			{
 				this.allAuthorsList = (ArrayList<Author>) h.getDaoAuthor().queryBuilder()
-				.orderBy(Author.NAME_FIELD_NAME, true).query();
+				.orderBy(Author.FIELD_NAME, true).query();
 			} catch (SQLException e)
 			{
 				e.printStackTrace();
@@ -240,7 +241,7 @@ public class ActivityCatchUrl extends ActivityBase//AppCompatActivity
 			try
 			{
 				this.allCategoriesList = (ArrayList<Category>) h.getDaoCategory().queryBuilder()
-				.orderBy(Category.TITLE_FIELD_NAME, true)
+				.orderBy(Category.FIELD_TITLE, true)
 				.query();
 			} catch (SQLException e)
 			{

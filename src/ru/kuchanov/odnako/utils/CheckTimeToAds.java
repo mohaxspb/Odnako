@@ -234,7 +234,7 @@ public class CheckTimeToAds
 			public void onAdFailedToLoad(int errorCode)
 			{
 				Log.e(LOG, "onAdFailedToLoad with errorCode " + errorCode);
-				requestNewInterstitial();
+//				requestNewInterstitial();
 			}
 
 			// Сохраняет состояние приложения перед переходом к оверлею объявления.

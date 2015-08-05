@@ -5,11 +5,6 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <!--
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        -->
         <item name="android:windowBackground">@color/material_grey_700</item>
         <item name="selectorColor">@color/material_grey_500</item>
         <item name="android:textColorPrimary">@color/material_grey_300</item>
@@ -41,6 +36,8 @@
         <item name="unreadenIcon">@drawable/ic_markunread_white_48dp</item>
         <item name="searchIconOdnako">@drawable/ic_search_white_48dp</item>
         <item name="default_image">@drawable/ic_crop_original_white_48dp</item>
+        <item name="deleteIcon">@drawable/ic_delete_white_48dp</item>
+        <item name="warningIcon">@drawable/ic_warning_white_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_white_48dp</item>
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_white_48dp</item>
@@ -139,6 +136,8 @@
         <item name="unreadenIcon">@drawable/ic_markunread_grey600_48dp</item>
         <item name="searchIconOdnako">@drawable/ic_search_grey600_48dp</item>
         <item name="default_image">@drawable/ic_crop_original_grey600_48dp</item>
+        <item name="deleteIcon">@drawable/ic_delete_grey600_48dp</item>
+        <item name="warningIcon">@drawable/ic_warning_grey600_48dp</item>
         <!-- arrows -->
         <item name="arrowLeftIcon">@drawable/ic_keyboard_arrow_left_grey600_48dp</item>
         <item name="arrowRightIcon">@drawable/ic_keyboard_arrow_right_grey600_48dp</item>

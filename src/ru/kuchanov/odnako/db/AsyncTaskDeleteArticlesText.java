@@ -84,7 +84,7 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 				{
 					qb = h.getDaoArticle().queryBuilder();
 					qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
-					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
+					qb.orderBy(Article.FIELD_NAME_REFRESHED_DATE, false);
 
 					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
 
@@ -110,7 +110,7 @@ public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList
 				{
 					qb = h.getDaoArticle().queryBuilder();
 					qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
-					qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
+					qb.orderBy(Article.FIELD_NAME_REFRESHED_DATE, false);
 
 					ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
 

@@ -27,19 +27,19 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "author")
 public class Author implements Comparable<Author>, Parcelable
 {
-	public final static String ID_FIELD_NAME = "id";
-	public final static String URL_FIELD_NAME = "blogUrl";
-	public final static String NAME_FIELD_NAME = "name";
-	public final static String REFRESHED_FIELD_NAME = "refreshed";
-	public static final String FIRST_ARTICLE_URL_FIELD_NAME = "firstArticleURL";
+	public final static String FIELD_ID = "id";
+	public final static String FIELD_URL = "blogUrl";
+	public final static String FIELD_NAME = "name";
+	public final static String FIELD_REFRESHED = "refreshed";
+	public static final String FIELD_FIRST_ARTICLE_URL = "firstArticleURL";
 
-	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
+	@DatabaseField(generatedId = true, columnName = FIELD_ID)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_URL)
 	private String blogUrl;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = NAME_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_NAME)
 	private String name;
 
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
@@ -54,7 +54,7 @@ public class Author implements Comparable<Author>, Parcelable
 	@DatabaseField(dataType = DataType.STRING, canBeNull = true)
 	private String avatarBig;
 
-	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = REFRESHED_FIELD_NAME)
+	@DatabaseField(dataType = DataType.DATE, canBeNull = false, columnName = FIELD_REFRESHED)
 	private Date refreshed = new Date(0);
 
 	@DatabaseField(dataType = DataType.DATE, canBeNull = false)
@@ -63,7 +63,7 @@ public class Author implements Comparable<Author>, Parcelable
 	//we need this to check if we have all arts at the end of category's list
 	//we need it to prevent loading arts from web, when category is synked, and we have less than 30 arts at all,
 	//or in same case while requesting arts from bottom
-	@DatabaseField(dataType = DataType.STRING, columnName = FIRST_ARTICLE_URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_FIRST_ARTICLE_URL)
 	private String firstArticleURL;
 
 	/**
@@ -197,7 +197,7 @@ public class Author implements Comparable<Author>, Parcelable
 		String firstArtUrl = null;
 		try
 		{
-			firstArtUrl = h.getDaoAuthor().queryBuilder().where().eq(ID_FIELD_NAME, authorId).queryForFirst()
+			firstArtUrl = h.getDaoAuthor().queryBuilder().where().eq(FIELD_ID, authorId).queryForFirst()
 			.getFirstArticleURL();
 		} catch (SQLException e)
 		{
@@ -205,16 +205,6 @@ public class Author implements Comparable<Author>, Parcelable
 		}
 		return firstArtUrl;
 	}
-
-	//	public boolean isSinhronised()
-	//	{
-	//		return sinhronised;
-	//	}
-	//
-	//	public void setSinhronised(boolean sinhronised)
-	//	{
-	//		this.sinhronised = sinhronised;
-	//	}
 
 	/**
 	 * 
@@ -227,7 +217,27 @@ public class Author implements Comparable<Author>, Parcelable
 		Author a = null;
 		try
 		{
-			a = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+			a = h.getDaoAuthor().queryBuilder().where().eq(FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url))
+			.queryForFirst();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return a;
+	}
+	
+	/**
+	 * 
+	 * @param h
+	 * @param url
+	 * @return Author if can find or (null if can't or on SQLException)
+	 */
+	public static Author getAuthorByName(DataBaseHelper h, String name)
+	{
+		Author a = null;
+		try
+		{
+			a = h.getDaoAuthor().queryBuilder().where().eq(FIELD_NAME, name)
 			.queryForFirst();
 		} catch (SQLException e)
 		{
@@ -248,7 +258,7 @@ public class Author implements Comparable<Author>, Parcelable
 		try
 		{
 			id = h.getDaoAuthor().queryBuilder().where()
-			.eq(Author.URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getId();
+			.eq(Author.FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -261,7 +271,7 @@ public class Author implements Comparable<Author>, Parcelable
 		String avatarUrl = Const.EMPTY_STRING;
 		try
 		{
-			avatarUrl = h.getDaoAuthor().queryBuilder().where().eq(NAME_FIELD_NAME, name).queryForFirst().getAvatar();
+			avatarUrl = h.getDaoAuthor().queryBuilder().where().eq(FIELD_NAME, name).queryForFirst().getAvatar();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -275,7 +285,7 @@ public class Author implements Comparable<Author>, Parcelable
 		try
 		{
 			avatarUrl = h.getDaoAuthor().queryBuilder().where()
-			.eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getAvatar();
+			.eq(FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url)).queryForFirst().getAvatar();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -288,7 +298,7 @@ public class Author implements Comparable<Author>, Parcelable
 		String name;
 		try
 		{
-			name = h.getDaoAuthor().queryBuilder().where().eq(URL_FIELD_NAME, Author.getURLwithoutSlashAtTheEnd(url))
+			name = h.getDaoAuthor().queryBuilder().where().eq(FIELD_URL, Author.getURLwithoutSlashAtTheEnd(url))
 			.queryForFirst().getName();
 		} catch (SQLException e)
 		{
@@ -349,8 +359,8 @@ public class Author implements Comparable<Author>, Parcelable
 		try
 		{
 			updateBuilder = h.getDaoAuthor().updateBuilder();
-			updateBuilder.where().eq(Author.ID_FIELD_NAME, authorId);
-			updateBuilder.updateColumnValue(Author.FIRST_ARTICLE_URL_FIELD_NAME, initialArtsUrl);
+			updateBuilder.where().eq(Author.FIELD_ID, authorId);
+			updateBuilder.updateColumnValue(Author.FIELD_FIRST_ARTICLE_URL, initialArtsUrl);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{

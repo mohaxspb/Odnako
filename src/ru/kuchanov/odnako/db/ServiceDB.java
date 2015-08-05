@@ -144,8 +144,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 					else
 					{
 						AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper,
-						categoryToLoad, cal,
-						pageToLoad, this);
+						categoryToLoad, cal, pageToLoad, this);
 						askFromTop.execute();
 					}
 				}
@@ -160,14 +159,12 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				}
 			break;
 			case Const.Action.DATA_DOWNLOAD:
-				//TODO
 				this.quontToDownload = intent.getIntExtra("quont", 10);
 				LocalBroadcastManager.getInstance(this).registerReceiver(artsDataReceiver,
 				new IntentFilter(categoryToLoad));
 				this.startDownLoad(categoryToLoad, 1);
 			break;
 			case Const.Action.GET_DOWNLOADED:
-				//TODO
 				AsyncTaskGetDownloaded getDownloaded = new AsyncTaskGetDownloaded(getHelper(), categoryToLoad,
 				pageToLoad, this);
 				getDownloaded.execute();
@@ -853,9 +850,9 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		//and write downloaded arts to ArtCatTable
 		if (pageToLoad == 1)
 		{
-			AsyncTaskAskUpdateRefreshedDate updateRefreshedDate = new AsyncTaskAskUpdateRefreshedDate(getHelper(),
-			categoryToLoad);
-			updateRefreshedDate.execute();
+//			AsyncTaskAskUpdateRefreshedDate updateRefreshedDate = new AsyncTaskAskUpdateRefreshedDate(getHelper(),
+//			categoryToLoad);
+//			updateRefreshedDate.execute();
 			AsyncTaskWriteFromTop resultWriteFromTop = new AsyncTaskWriteFromTop(getHelper(), dataFromDB,
 			categoryToLoad, pageToLoad, this);
 			resultWriteFromTop.execute();

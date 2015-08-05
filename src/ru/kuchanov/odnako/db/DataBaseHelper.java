@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
-
+import ru.kuchanov.odnako.utils.DateParse;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -23,15 +24,18 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 {
-	Context ctx;
+	final static String LOG = DataBaseHelper.class.getSimpleName();
+	public static final String DATABASE_NAME = "db_odnako.db";
+
+	private Context ctx;
 
 	// name of the database file for your application
-	public static final String DATABASE_NAME = "db_odnako.db";
 
 	// the DAO object we use to access the Book table
 	private Dao<Category, Integer> daoCategory = null;
@@ -75,7 +79,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			//create artAutTable table
 			TableUtils.createTable(connectionSource, ArtAutTable.class);
 
-			Log.i(DataBaseHelper.class.getSimpleName(), "all tables have been created");
+			Log.i(LOG, "all tables have been created");
 
 			//fill with initial data
 			fillTables();
@@ -94,7 +98,6 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		String[] titles = CatData.getAllTagsNames(ctx);
 		String[] descriptions = CatData.getAllTagsDescriptions(ctx);
 		String[] img_urls = CatData.getAllTagsImgsURLs(ctx);
-		String[] img_files_names = CatData.getAllTagsImgsFILEnames(ctx);
 
 		int length = urls.length;
 
@@ -103,7 +106,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			try
 			{
 				this.daoCategory = this.getDaoCategory();
-				String[] stringData = { urls[i], titles[i], descriptions[i], img_urls[i], img_files_names[i] };
+				String[] stringData = { urls[i], titles[i], descriptions[i], img_urls[i] };
 				Date[] dateData = { new Date(0), new Date(0) };
 				Category category = new Category(stringData, dateData);
 				this.daoCategory.create(category);
@@ -113,20 +116,18 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 			}
 		}
 		//menuCategories
-		//		String[] urlsM = CatData.getMenuLinks(ctx);
+		//				String[] urlsM = CatData.getMenuLinks(ctx);
 		//		String[] titlesM = CatData.getMenuNames(ctx);
 		//		String[] descriptionsM = CatData.getMenuDescriptions(ctx);
 		//		String[] img_urlsM = CatData.getMenuImgsUrls(ctx);
-		//		String[] img_files_namesM = CatData.getMenuImgsFilesNames(ctx);
 
 		String[] urlsM = ctx.getResources().getStringArray(R.array.categories_links);
 		String[] titlesM = ctx.getResources().getStringArray(R.array.categories);
 		String[] descriptionsM = ctx.getResources().getStringArray(R.array.categories_descriptions);
 		String[] img_urlsM = ctx.getResources().getStringArray(R.array.categories_imgs_urls);
-		String[] img_files_namesM = ctx.getResources().getStringArray(R.array.categories_imgs_files_names);
 
 		//XXX we loop through urlsM.length-1, because of ALL_CATEGORIES
-		int lengthM = urlsM.length/* - 1 */;
+		int lengthM = urlsM.length;
 		for (int i = 0; i < lengthM; i++)
 		{
 			if (!urlsM[i].equals("all_categories"))
@@ -134,7 +135,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 				try
 				{
 					this.daoCategory = this.getDaoCategory();
-					String[] stringData = { urlsM[i], titlesM[i], descriptionsM[i], img_urlsM[i], img_files_namesM[i] };
+					String[] stringData = { urlsM[i], titlesM[i], descriptionsM[i], img_urlsM[i] };
 					Date[] dateData = { new Date(0), new Date(0) };
 					Category category = new Category(stringData, dateData);
 					this.daoCategory.create(category);
@@ -186,6 +187,61 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 				e.printStackTrace();
 			}
 		}
+
+		//article table
+		try
+		{
+			this.daoArticle = this.getDaoArticle();
+
+			//			Article article=new Article(artInfoArr, new Date(0), Author.getAuthorByName(this, "Юрий Кучанов"));
+			Article article = new Article();
+			article.setUrl(ctx.getString(R.string.my_article_url));
+			article.setTitle("Цифровой фронт. Латвийский блицкриг и наш ответ.");
+			article.setImgArt("/i/75_75/blogs/44991/cifrovoy-front-latviyskiy-blickrig-i-nash-otvet-1482-44991.png");
+			article.setAuthorBlogUrl(ctx.getString(R.string.my_article_blog_url));
+			article.setImgAuthor("/i/75_75/users/7160/7160-1481-7160.jpg");
+			article.setAuthorName("Юрий Кучанов");
+			article.setPubDate(DateParse.parse("Wed, 24 Sep 2014 14:48:00 +0400"));
+			article.setPreview(ctx.getString(R.string.my_article_preview));
+			article.setArtText(Const.EMPTY_STRING);
+			article.setAuthor(Author.getAuthorByURL(this, article.getAuthorBlogUrl()));
+			this.daoArticle.create(article);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		//artCatTable table
+		try
+		{
+			this.daoArtAutTable = this.getDaoArtAutTable();
+
+			ArtAutTable artAut = new ArtAutTable();//id, article_id, category_id, nextArtUrl, previousArtUrl
+			artAut.setArticleId(Article.getArticleIdByURL(this, ctx.getString(R.string.my_article_url)));
+			artAut.setAuthorId(Author.getAuthorIdByURL(this, ctx.getString(R.string.my_article_blog_url)));
+			artAut.setNextArtUrl(null);
+			artAut.setPreviousArtUrl(null);
+			artAut.isTop(true);
+			this.daoArtAutTable.create(artAut);
+
+			//update refreshed date of category
+			Author author = Author.getAuthorByURL(this, ctx.getString(R.string.my_article_blog_url));
+			UpdateBuilder<Author, Integer> updateBuilder;
+			updateBuilder = this.getDaoAuthor().updateBuilder();
+			updateBuilder.where().eq(Author.FIELD_ID, author.getId());
+			updateBuilder.updateColumnValue(Author.FIELD_REFRESHED, new Date(1));
+			updateBuilder.update();
+
+			//XXX test. delete it
+			ArrayList<ArtAutTable> test = (ArrayList<ArtAutTable>) this.getDaoArtAutTable().queryForAll();
+			for (ArtAutTable a : test)
+			{
+				Log.i(LOG, a.toString());
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -194,7 +250,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper
 		// TODO need to write full code here
 		try
 		{
-			Log.i(DataBaseHelper.class.getName(), "onUpgrade");
+			Log.i(LOG, "onUpgrade");
 			//delete all tables
 			TableUtils.dropTable(connectionSource, Category.class, true);
 			TableUtils.dropTable(connectionSource, Author.class, true);

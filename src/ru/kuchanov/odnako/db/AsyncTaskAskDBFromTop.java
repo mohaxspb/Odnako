@@ -96,12 +96,6 @@ public class AsyncTaskAskDBFromTop extends AsyncTask<Void, Void, String>
 				//so there is some arts in DB by category, that we can send to frag and show
 				List<ArtCatTable> dataFromDBToSend = ArtCatTable.getListFromTop(h, categoryId, pageToLoad);
 				ArrayList<Article> data = ArtCatTable.getArticleListFromArtCatList(h, dataFromDBToSend);
-//				String[] resultMessage = new String[] { Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, null };
-
-				//				ServiceDB.sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-				//				new ServiceDB().sendBroadcastWithResult(ctx, resultMessage, data, categoryToLoad, pageToLoad);
-				//				this.callback
-				//				.onAnswerFromDBFromTop(Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, categoryToLoad, categoryId, data);
 				this.dataToSend = data;
 
 				return Msg.DB_ANSWER_INFO_SENDED_TO_FRAG;

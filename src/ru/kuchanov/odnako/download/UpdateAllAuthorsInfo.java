@@ -75,7 +75,5 @@ public class UpdateAllAuthorsInfo extends AsyncTask<Void, Integer, String[][]>
 		{
 			System.out.println("output=null  So  no internet!");
 		}
-
 	}
-
 }

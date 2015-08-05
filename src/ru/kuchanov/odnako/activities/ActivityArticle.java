@@ -175,7 +175,7 @@ public class ActivityArticle extends ActivityBase
 		this.pagerAdapter = new PagerAdapterArticles(this.getSupportFragmentManager(), getCurrentCategory(), act);
 		this.pager.setAdapter(pagerAdapter);
 		PagerListenerArticle listener = new PagerListenerArticle(this, getCurrentCategory());
-		this.pager.setOnPageChangeListener(listener);
+		this.pager.addOnPageChangeListener(listener);
 		this.pager.setCurrentItem(getCurArtPosition(), true);
 		if (getCurArtPosition() == 0)
 		{

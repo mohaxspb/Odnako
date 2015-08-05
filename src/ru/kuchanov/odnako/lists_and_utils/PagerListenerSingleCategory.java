@@ -100,7 +100,7 @@ public class PagerListenerSingleCategory extends ViewPager.SimpleOnPageChangeLis
 			singleCategoryUrl, act));
 			//			pagerRight.setPageTransformer(true, new RotationPageTransformer());
 			OnPageChangeListener listener = new PagerListenerArticle(this.act, singleCategoryUrl);
-			pagerRight.setOnPageChangeListener(listener);
+			pagerRight.addOnPageChangeListener(listener);
 			int curPos = 0;
 			if (act.getAllCatListsSelectedArtPosition().containsKey(singleCategoryUrl))
 			{

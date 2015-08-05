@@ -6,11 +6,13 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.activities;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.db.ArtCatTable;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
@@ -33,7 +35,6 @@ import ru.kuchanov.odnako.receivers.ReceiverTimer;
 import ru.kuchanov.odnako.utils.CheckTimeToAds;
 import ru.kuchanov.odnako.utils.DipToPx;
 import ru.kuchanov.odnako.utils.NewVersionFeachersDialog;
-import ru.kuchanov.odnako.utils.ReporterSettings;
 import ru.kuchanov.odnako.utils.ShareApp;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -303,7 +304,7 @@ public class ActivityMain extends ActivityBase
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				listener = new PagerListenerMenu(this);
-				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.addOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 			break;
 			case PAGER_TYPE_AUTHORS:
@@ -311,7 +312,7 @@ public class ActivityMain extends ActivityBase
 				act.getSupportFragmentManager(), this);
 				this.artsListPager.setAdapter(authorsPagerAdapter);
 				listener = new PagerListenerAllAuthors(this, authorsPagerAdapter.getAllAuthorsList());
-				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.addOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 				this.setGroupChildPosition(-1, -1);
 			break;
@@ -320,7 +321,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 				singleCategoryUrl));
 				listener = new PagerListenerSingleCategory((ActivityMain) act);
-				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.addOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 				this.setGroupChildPosition(-1, -1);
 			break;
@@ -329,7 +330,7 @@ public class ActivityMain extends ActivityBase
 				act.getSupportFragmentManager(), this);
 				this.artsListPager.setAdapter(categoriesPagerAdapter);
 				listener = new PagerListenerAllCategories(this, categoriesPagerAdapter.getAllCategoriesList());
-				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.addOnPageChangeListener(listener);
 				this.artsListPager.setCurrentItem(this.currentCategoryPosition);
 				this.setGroupChildPosition(-1, -1);
 			break;
@@ -424,7 +425,8 @@ public class ActivityMain extends ActivityBase
 		YandexMetrica.onResumeActivity(this);
 
 		//report setting
-		ReporterSettings.checkIsUpdatedFromOldVer(act);
+		//We do not need it more;
+		//ReporterSettings.checkIsUpdatedFromOldVer(act);
 
 		this.checkTimeAds.onResume();
 
@@ -684,7 +686,7 @@ public class ActivityMain extends ActivityBase
 							artsListPager.setAdapter(adapter);
 							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
 							.getAllAuthorsList());
-							artsListPager.setOnPageChangeListener(listener);
+							artsListPager.addOnPageChangeListener(listener);
 							listener.onPageSelected(0);
 						}
 						else
@@ -710,7 +712,7 @@ public class ActivityMain extends ActivityBase
 							artsListPager.setAdapter(adapter);
 							OnPageChangeListener listener = new PagerListenerAllAuthors((ActivityMain) act, adapter
 							.getAllAuthorsList());
-							artsListPager.setOnPageChangeListener(listener);
+							artsListPager.addOnPageChangeListener(listener);
 							listener.onPageSelected(0);
 						}
 					break;
@@ -724,7 +726,7 @@ public class ActivityMain extends ActivityBase
 							artsListPager.setAdapter(adapter);
 							OnPageChangeListener listener = new PagerListenerAllCategories((ActivityMain) act, adapter
 							.getAllCategoriesList());
-							artsListPager.setOnPageChangeListener(listener);
+							artsListPager.addOnPageChangeListener(listener);
 							listener.onPageSelected(0);
 						}
 						else
@@ -750,7 +752,7 @@ public class ActivityMain extends ActivityBase
 							artsListPager.setAdapter(adapter);
 							OnPageChangeListener listener = new PagerListenerAllCategories((ActivityMain) act, adapter
 							.getAllCategoriesList());
-							artsListPager.setOnPageChangeListener(listener);
+							artsListPager.addOnPageChangeListener(listener);
 							listener.onPageSelected(0);
 						}
 					break;
@@ -919,6 +921,12 @@ public class ActivityMain extends ActivityBase
 				}
 			}
 		}
+
+		//		MenuItem debug = menu.findItem(R.id.debug);
+		//		Log.d(LOG, "debug==null: "+String.valueOf(debug==null));
+		//		Log.d(LOG, "debug.getActionView()==null: "+String.valueOf(debug.getActionView()==null));
+		//		debug.getActionView().setBackgroundColor(Color.RED);
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -931,7 +939,7 @@ public class ActivityMain extends ActivityBase
 		{
 			return true;
 		}
-		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
@@ -946,39 +954,6 @@ public class ActivityMain extends ActivityBase
 					themeMenuItem.setChecked(true);
 				}
 				return true;
-				//			case R.id.refresh:
-				//				Log.e(LOG, "refresh");
-				//				DataBaseHelper h = new DataBaseHelper(act);
-				//				int DBVersion = h.getWritableDatabase().getVersion();
-				//				h.onUpgrade(h.getWritableDatabase(), DBVersion, DBVersion + 1);
-				// 
-				//				Intent intent = new Intent(this.act, ServiceDB.class);
-				//				Bundle b = new Bundle();
-				//				b.putString("categoryToLoad", "odnako.org/blogs");
-				//				b.putLong("timeStamp", System.currentTimeMillis());
-				//				b.putBoolean("startDownload", true);
-				//				intent.putExtras(b);
-				//				this.startService(intent);
-				//XXX
-				//				PagerAdapterArtsLists adapter=(PagerAdapterArtsLists)this.artsListPager.getAdapter();
-				//				FragmentAllAuthorsList allAuthorsFrag=(FragmentAllAuthorsList) (adapter.getItem(currentCategoryPosition));
-				//				RecyclerView rec=allAuthorsFrag.getArtsList();
-				//
-				//				this.setAllAuthorsList(Collections.sort(getAllAuthorsList()));
-				//				rec.swapAdapter(new AllAuthorsListAdapter(this, rec, allAuthorsFrag), true);
-				//((AllAuthorsListAdapter)rec.getAdapter()).getFilter().filter("Мараховский");
-				//				rec.setFilterText("Мараховский");
-
-				//				List<Author> allAutList = this.getAllAuthorsList();
-				//				Collections.sort(allAutList, new Author.AuthorNameComparator(/*"Василий"*/));
-				//				Collections.sort(allAutList, new Author.AuthorDescriptionComparator());
-				//				Collections.sort(allAutList, new Author.AuthorWhoComparator());
-				//				this.setAllAuthorsList(allAutList);
-				//				Intent intentToListFrag = new Intent(CatData.getAllCategoriesMenuLinks(act)[3]
-				//				+ "_set_filter");
-				//				LocalBroadcastManager.getInstance(act).sendBroadcast(intentToListFrag);
-
-				//				return true;
 			case R.id.action_settings:
 				item.setIntent(new Intent(this, ActivityPreference.class));
 				return super.onOptionsItemSelected(item);
@@ -1047,6 +1022,34 @@ public class ActivityMain extends ActivityBase
 					this.pref.edit().putBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, true).commit();
 				}
 				this.recreate();
+				return super.onOptionsItemSelected(item);
+			case R.id.debug:
+				DataBaseHelper h = new DataBaseHelper(act);
+				try
+				{
+					ArrayList<Article> artsList = (ArrayList<Article>) h.getDaoArticle().queryForAll();
+					for (Article a : artsList)
+					{
+						//						Log.i(LOG, a.printAllInfo());
+						a.printAllInfo();
+					}
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+
+				try
+				{
+					ArrayList<ArtCatTable> list = (ArrayList<ArtCatTable>) h.getDaoArtCatTable().queryForAll();
+					for (ArtCatTable a : list)
+					{
+						Log.i(LOG, a.toString());
+					}
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+
 				return super.onOptionsItemSelected(item);
 			default:
 				return super.onOptionsItemSelected(item);
@@ -1243,7 +1246,7 @@ public class ActivityMain extends ActivityBase
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
-				this.artsListPager.setOnPageChangeListener(new PagerListenerMenu(this));
+				this.artsListPager.addOnPageChangeListener(new PagerListenerMenu(this));
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 			break;
 		}
@@ -1282,7 +1285,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerMenu(this);
-				this.artsListPager.setOnPageChangeListener(listener);
+				this.artsListPager.addOnPageChangeListener(listener);
 
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 

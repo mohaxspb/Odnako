@@ -107,7 +107,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				try
 				{
 					iterator = this.getHelper().getDaoArticle()
-					.iterator(qb.where().ge(Article.ID_FIELD_NAME, 0).prepare());
+					.iterator(qb.where().ge(Article.FIELD_NAME_ID, 0).prepare());
 					// get the raw results which can be cast under Android
 					AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
 					cursor = results.getRawCursor();
@@ -172,7 +172,7 @@ public class ContentProviderOdnakoDB extends ContentProvider
 				try
 				{
 					iteratorAuthor = this.getHelper().getDaoAuthor()
-					.iterator(qbAuthor.where().ge(Author.ID_FIELD_NAME, 0).prepare());
+					.iterator(qbAuthor.where().ge(Author.FIELD_ID, 0).prepare());
 					// get the raw results which can be cast under Android
 					AndroidDatabaseResults results = (AndroidDatabaseResults) iteratorAuthor.getRawResults();
 					cursor = results.getRawCursor();

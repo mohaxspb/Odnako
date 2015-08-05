@@ -63,7 +63,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRight.setAdapter(pagerRightAdapter);
 				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerAllAuthors(act, pagerRightAdapter.getAllAuthorsList());
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
 				pagerRight.setCurrentItem(curPos, true);
 
@@ -81,7 +81,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerAllCategories(act,
 				pagerRightAdapter.getAllCategoriesList());
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(menuLinks[currentCategoryPosition]);
 				pagerRight.setCurrentItem(curPos, true);
 
@@ -103,7 +103,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 				pagerRight.getAdapter().notifyDataSetChanged();
 				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(this.act, categoryForRightPager);
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				int curPos = act.getAllCatListsSelectedArtPosition().get(categoryForRightPager);
 				pagerRight.setCurrentItem(curPos, true);
 
@@ -145,6 +145,7 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 		//menuOptions
 		Menu menu = toolbar.getMenu();
 		MenuItem search = menu.findItem(R.id.action_search);
+		MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
 		if (search == null)
 		{
 			//this may be if onCreateOptionsMenu called after onResume
@@ -154,21 +155,14 @@ public class PagerListenerMenu extends ViewPager.SimpleOnPageChangeListener
 			if (position == 3 || position == 13 || position == 14)
 			{
 				search.setVisible(true);
-				
-				MenuItem addToFavs = menu.findItem(R.id.add_to_favorites);
-				if (position == 3 || position == 13 || position == 14)
-				{
-					addToFavs.setVisible(false);
-				}
-				else
-				{
-					addToFavs.setVisible(true);
-				}
+				addToFavs.setVisible(false);
 			}
 			else
 			{
 				search.setVisible(false);
 				search.collapseActionView();
+
+				addToFavs.setVisible(true);
 			}
 		}
 	}

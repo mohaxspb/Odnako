@@ -351,8 +351,9 @@ public class ActivityBase extends AppCompatActivity
 		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
 		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
 		ImageLoader imgLoader = MyUIL.get(act);
-		imgLoader.displayImage("http://www.odnako.org/i/75_75/users/7160/7160-1481-7160.jpg", ava,
-		MyUIL.getTransparentBackgroundROUNDOptions(act));
+//		imgLoader.displayImage("http://www.odnako.org/i/75_75/users/7160/7160-1481-7160.jpg", ava,
+//		MyUIL.getTransparentBackgroundROUNDOptions(act));
+		imgLoader.displayImage("drawable://"+R.drawable.dev_ava, ava, MyUIL.getTransparentBackgroundROUNDOptions(act));
 		ava.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -501,7 +502,7 @@ public class ActivityBase extends AppCompatActivity
 			try
 			{
 				this.allAuthorsList = (ArrayList<Author>) h.getDaoAuthor().queryBuilder()
-				.orderBy(Author.NAME_FIELD_NAME, true).query();
+				.orderBy(Author.FIELD_NAME, true).query();
 			} catch (SQLException e)
 			{
 				e.printStackTrace();
@@ -521,7 +522,7 @@ public class ActivityBase extends AppCompatActivity
 			try
 			{
 				this.allCategoriesList = (ArrayList<Category>) h.getDaoCategory().queryBuilder()
-				.orderBy(Category.TITLE_FIELD_NAME, true)
+				.orderBy(Category.FIELD_TITLE, true)
 				.query();
 			} catch (SQLException e)
 			{

@@ -128,7 +128,7 @@ public class PagerListenerAllAuthors extends ViewPager.SimpleOnPageChangeListene
 				pagerRight.setAdapter(pagerRightAdapter);
 				//				pagerRight.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerArticle(act, curentCategory);
-				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 
 				int curPos = this.act.getAllCatListsSelectedArtPosition().get(curentCategory);
 				pagerRight.setCurrentItem(curPos, true);

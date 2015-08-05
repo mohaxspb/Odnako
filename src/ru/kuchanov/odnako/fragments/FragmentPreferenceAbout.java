@@ -238,14 +238,14 @@ public class FragmentPreferenceAbout extends PreferenceFragment
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
-			MaterialDialog dialogVersionHistory;
+			MaterialDialog dialogUsedLibs;
 			MaterialDialog.Builder dialogGoProBuilder = new MaterialDialog.Builder(act);
-			dialogGoProBuilder.title("Список использованных в разработке библиотек")
+			dialogGoProBuilder.title(R.string.used_libs_list_title)
 			.content(Html.fromHtml(act.getResources().getString(R.string.used_libs)))
 			.positiveText("Это может пригодится...");
-			dialogVersionHistory = dialogGoProBuilder.build();
+			dialogUsedLibs = dialogGoProBuilder.build();
 
-			dialogVersionHistory.show();
+			dialogUsedLibs.show();
 
 			return false;
 		}

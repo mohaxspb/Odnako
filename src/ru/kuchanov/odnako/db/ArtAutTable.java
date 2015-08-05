@@ -18,40 +18,40 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * id,article_id,category_id,nextArtUrl,previousArtUrl,isTop
+ * id,articleId,categoryId,nextArtUrl,previousArtUrl,isTop
  */
 @DatabaseTable(tableName = "art_aut_table")
 public class ArtAutTable
 {
 	final private static String LOG = ArtAutTable.class.getSimpleName();
 
-	public final static String ID_FIELD_NAME = "id";
-	public final static String ARTICLE_ID_FIELD_NAME = "article_id";
-	public final static String AUTHOR_ID_FIELD_NAME = "author_id";
-	public static final String NEXT_ART_URL_FIELD_NAME = "nextArtUrl";
-	public static final String PREVIOUS_ART_URL_FIELD_NAME = "previousArtUrl";
-	public static final String IS_TOP_FIELD_NAME = "isTop";
+	public final static String FIELD_ID = "id";
+	public final static String FIELD_ARTICLE_ID = "articleId";
+	public final static String FIELD_AUTHOR_ID = "authorId";
+	public static final String FIELD_NEXT_ART_URL = "nextArtUrl";
+	public static final String FIELD_PREVIOUS_ART_URL = "previousArtUrl";
+	public static final String FIELD_IS_TOP = "isTop";
 
-	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
+	@DatabaseField(generatedId = true, columnName = FIELD_ID)
 	private int id;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = ARTICLE_ID_FIELD_NAME)
-	private int article_id;
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = FIELD_ARTICLE_ID)
+	private int articleId;
 
-	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = AUTHOR_ID_FIELD_NAME)
-	private int author_id;
+	@DatabaseField(dataType = DataType.INTEGER, canBeNull = false, index = true, columnName = FIELD_AUTHOR_ID)
+	private int authorId;
 
-	@DatabaseField(dataType = DataType.STRING, columnName = NEXT_ART_URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_NEXT_ART_URL)
 	private String nextArtUrl;
 
-	@DatabaseField(dataType = DataType.STRING, columnName = PREVIOUS_ART_URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, columnName = FIELD_PREVIOUS_ART_URL)
 	private String previousArtUrl;
 
 	/**
 	 * boolean isTop for the most top article in list. May be true for top,
 	 * false for very bottom (initial in category) or null for others
 	 */
-	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOP_FIELD_NAME)
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = FIELD_IS_TOP)
 	private boolean isTop;
 
 	public ArtAutTable()
@@ -72,8 +72,8 @@ public class ArtAutTable
 			//gained id=null, so it must be set automatically by ORMLite
 		}
 
-		this.article_id = article_id;
-		this.author_id = author_id;
+		this.articleId = article_id;
+		this.authorId = author_id;
 		this.setNextArtUrl(nextArtUrl);
 		this.setPreviousArtUrl(previousArtUrl);
 	}
@@ -81,8 +81,8 @@ public class ArtAutTable
 	public ArtAutTable(int id, int articleId, int authorId)
 	{
 		this.id = id;
-		this.article_id = articleId;
-		this.author_id = authorId;
+		this.articleId = articleId;
+		this.authorId = authorId;
 	}
 
 	public int getId()
@@ -97,22 +97,22 @@ public class ArtAutTable
 
 	public int getArticleId()
 	{
-		return article_id;
+		return articleId;
 	}
 
 	public void setArticleId(int articleId)
 	{
-		this.article_id = articleId;
+		this.articleId = articleId;
 	}
 
 	public int getAuthorId()
 	{
-		return author_id;
+		return authorId;
 	}
 
 	public void setAuthorId(int authorId)
 	{
-		this.author_id = authorId;
+		this.authorId = authorId;
 	}
 
 	public String getPreviousArtUrl()
@@ -158,8 +158,8 @@ public class ArtAutTable
 		try
 		{
 			updateBuilder = h.getDaoArtAutTable().updateBuilder();
-			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
-			updateBuilder.updateColumnValue(ArtAutTable.IS_TOP_FIELD_NAME, isTop);
+			updateBuilder.where().eq(ArtAutTable.FIELD_ID, id);
+			updateBuilder.updateColumnValue(ArtAutTable.FIELD_IS_TOP, isTop);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -176,8 +176,8 @@ public class ArtAutTable
 		try
 		{
 			updateBuilder = h.getDaoArtAutTable().updateBuilder();
-			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
-			updateBuilder.updateColumnValue(ArtAutTable.NEXT_ART_URL_FIELD_NAME, url);
+			updateBuilder.where().eq(ArtAutTable.FIELD_ID, id);
+			updateBuilder.updateColumnValue(ArtAutTable.FIELD_NEXT_ART_URL, url);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -194,8 +194,8 @@ public class ArtAutTable
 		try
 		{
 			updateBuilder = h.getDaoArtAutTable().updateBuilder();
-			updateBuilder.where().eq(ArtAutTable.ID_FIELD_NAME, id);
-			updateBuilder.updateColumnValue(ArtAutTable.PREVIOUS_ART_URL_FIELD_NAME, url);
+			updateBuilder.where().eq(ArtAutTable.FIELD_ID, id);
+			updateBuilder.updateColumnValue(ArtAutTable.FIELD_PREVIOUS_ART_URL, url);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -203,7 +203,6 @@ public class ArtAutTable
 		}
 	}
 
-	//////
 	/**
 	 * Searches trough ArtCatTable for entry with given categoryId and TRUE
 	 * isTop value so, on success we return true (there are arts of category in
@@ -218,11 +217,20 @@ public class ArtAutTable
 		boolean exists = false;
 		try
 		{
-			ArtAutTable topArt = h.getDaoArtAutTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, authorId)
-			.and().eq(IS_TOP_FIELD_NAME, true).queryForFirst();
-			if (topArt != null)
+			//			ArtAutTable topArt = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_AUTHOR_ID, authorId)
+			//			.and().eq(FIELD_IS_TOP, true).queryForFirst();
+			//			ArtAutTable topArt = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_AUTHOR_ID, authorId)
+			//			.and().ne(FIELD_IS_TOP, null).queryForFirst();
+			//			if (topArt != null)
+			//			{
+			//				exists = true;
+			//			}
+			ArtAutTable artAutTableRows = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_AUTHOR_ID, authorId)
+			.queryForFirst();
+			if (artAutTableRows != null)
 			{
 				exists = true;
+				return exists;
 			}
 		} catch (SQLException e)
 		{
@@ -245,8 +253,8 @@ public class ArtAutTable
 		ArtAutTable a = null;
 		try
 		{
-			a = h.getDaoArtAutTable().queryBuilder().where().eq(IS_TOP_FIELD_NAME, isTop).and()
-			.eq(AUTHOR_ID_FIELD_NAME, authorId).queryForFirst();
+			a = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_IS_TOP, isTop).and()
+			.eq(FIELD_AUTHOR_ID, authorId).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -347,15 +355,14 @@ public class ArtAutTable
 			ArtAutTable a = h.getDaoArtAutTable().queryForId(id);
 			String nextArtUrl = a.getNextArtUrl();
 
-			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
+			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.FIELD_NAME_URL, nextArtUrl)
 			.queryForFirst();
-			nextArtAutId = h.getDaoArtAutTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())
-			.and().eq(AUTHOR_ID_FIELD_NAME, a.getAuthorId()).queryForFirst().getId();
+			nextArtAutId = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_ARTICLE_ID, nextArt.getId())
+			.and().eq(FIELD_AUTHOR_ID, a.getAuthorId()).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			//e.printStackTrace();
-		}
-		catch(NullPointerException e)
+		} catch (NullPointerException e)
 		{
 			//e.printStackTrace();
 		}
@@ -462,7 +469,7 @@ public class ArtAutTable
 
 		try
 		{
-			h.getDaoArtAutTable().queryForEq(ArtAutTable.PREVIOUS_ART_URL_FIELD_NAME, null);
+			h.getDaoArtAutTable().queryForEq(ArtAutTable.FIELD_PREVIOUS_ART_URL, null);
 		} catch (SQLException e)
 		{
 			//			e.printStackTrace();
@@ -519,8 +526,8 @@ public class ArtAutTable
 		String[] allInfo = new String[6];
 
 		allInfo[0] = String.valueOf(id);
-		allInfo[1] = String.valueOf(article_id);
-		allInfo[2] = String.valueOf(author_id);
+		allInfo[1] = String.valueOf(articleId);
+		allInfo[2] = String.valueOf(authorId);
 		allInfo[3] = nextArtUrl;
 		allInfo[4] = previousArtUrl;
 		allInfo[5] = String.valueOf(isTop);
@@ -549,12 +556,21 @@ public class ArtAutTable
 		List<ArtAutTable> objs = new ArrayList<ArtAutTable>();
 		try
 		{
-			objs = h.getDaoArtAutTable().queryBuilder().where().eq(AUTHOR_ID_FIELD_NAME, authorId).query();
+			objs = h.getDaoArtAutTable().queryBuilder().where().eq(FIELD_AUTHOR_ID, authorId).query();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 			objs = new ArrayList<ArtAutTable>();
 		}
 		return objs;
+	}
+
+	public String toString()
+	{
+		String description = "id = " + this.id + " authorId =" + this.authorId + " articleId = " + this.articleId
+		+ " nextArtUrl = " + this.nextArtUrl + " prevArtUrl = " + this.previousArtUrl + " isTop = "
+		+ String.valueOf(this.isTop);
+
+		return description;
 	}
 }

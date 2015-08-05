@@ -44,7 +44,7 @@ public class DrawerGroupClickListener implements ExpandableListView.OnGroupClick
 			dialogGoProBuilder.title("Ссылки для связи")
 			.positiveText("Всё понятно!")
 			//			.content(Html.fromHtml(act.getResources().getString(R.string.contacts)))
-			.customView(R.layout.contacts_dialog, wrapInScrollView);
+			.customView(R.layout.dialog_contacts, wrapInScrollView);
 
 			dialogGoPro = dialogGoProBuilder.build();
 

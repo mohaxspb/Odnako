@@ -133,11 +133,11 @@ public class HtmlHelper
 		//row news-body clearfix
 		String description = Const.EMPTY_STRING;
 		String img_url = this.getCategoryImage();
-		String img_file_name = Const.EMPTY_STRING;
+//		String img_file_name = Const.EMPTY_STRING;
 		Date refreshed = new Date(System.currentTimeMillis());
 		Date lastArticleDate = new Date(0);
 
-		return new Category(url, title, description, img_url, img_file_name, refreshed, lastArticleDate);
+		return new Category(url, title, description, img_url, /*img_file_name,*/ refreshed, lastArticleDate);
 	}
 
 	ArrayList<ArrayList<String>> getAllCategoriesAsList()

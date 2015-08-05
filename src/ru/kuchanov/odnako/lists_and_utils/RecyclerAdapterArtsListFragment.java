@@ -56,12 +56,13 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 
 	private ImageLoader imageLoader;
 	private final DisplayImageOptions options;
-	boolean nightMode;
 
 	private ArrayList<Article> artsInfo;
+	
 	private SharedPreferences pref;
-
+	private boolean nightMode;
 	private boolean twoPane;
+	
 	private boolean isInLeftPager;
 
 	private FragmentArtsListRecycler artsListFrag;
@@ -76,7 +77,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 		this.isInLeftPager = this.artsListFrag.isInLeftPager();
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
-		twoPane = pref.getBoolean("twoPane", false);
+		twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		imageLoader = MyUIL.get(act);
 
@@ -166,7 +167,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					final ArticleHolder holderMain = (ArticleHolder) holder;
 
 					//variables for scaling text and icons and images from settings
-					String scaleFactorString = pref.getString("scale", "1");
+					String scaleFactorString = pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "1");
 					float scaleFactor = Float.valueOf(scaleFactorString);
 
 					final float scale = act.getResources().getDisplayMetrics().density;

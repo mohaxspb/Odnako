@@ -334,8 +334,8 @@ public class ArtCatTable
 			String nextArtUrl = a.getNextArtUrl();
 
 			//Log.e(LOG, nextArtUrl);
-			
-			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.URL_FIELD_NAME, nextArtUrl)
+
+			Article nextArt = h.getDaoArticle().queryBuilder().where().eq(Article.FIELD_NAME_URL, nextArtUrl)
 			.queryForFirst();
 			nextArtCatId = h.getDaoArtCatTable().queryBuilder().where().eq(ARTICLE_ID_FIELD_NAME, nextArt.getId())
 			.and().eq(CATEGORY_ID_FIELD_NAME, a.getCategoryId()).queryForFirst().getId();
@@ -472,7 +472,7 @@ public class ArtCatTable
 				nextArtUrl = artToWrite.get(u + 1).getUrl();
 			} catch (Exception e)
 			{
-
+				e.printStackTrace();
 			}
 			//get previous Article url by asking gained from web list
 			String previousArtUrl = null;
@@ -481,7 +481,7 @@ public class ArtCatTable
 				previousArtUrl = artToWrite.get(u - 1).getUrl();
 			} catch (Exception e)
 			{
-
+				e.printStackTrace();
 			}
 			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 		}
@@ -558,5 +558,13 @@ public class ArtCatTable
 	{
 		String[] arrStr1 = { "id", "article_id", "category_id", "nextArtUrl", "previousArtUrl", "isTop" };
 		return arrStr1;
+	}
+
+	@Override
+	public String toString()
+	{
+		String s = "id: " + this.id + " artId: " + this.article_id + " catId: " + this.category_id + " prevUrl: "
+		+ this.previousArtUrl + " nextUrl: " + this.nextArtUrl;
+		return s;
 	}
 }

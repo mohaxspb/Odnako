@@ -342,7 +342,7 @@ public class FragmentArtsListRecycler extends Fragment
 			//get result message
 			String[] msg = intent.getStringArrayExtra(Msg.MSG);
 			int page = intent.getIntExtra("pageToLoad", 1);
-			boolean showPreview=pref.getBoolean(ActivityPreference.PREF_KEY_PREVIEW_SHOW, false)==true;
+			boolean showPreview = pref.getBoolean(ActivityPreference.PREF_KEY_PREVIEW_SHOW, false) == true;
 			switch (msg[0])
 			{
 				case Msg.DB_ANSWER_FROM_BOTTOM_LESS_30_HAVE_MATCH_TO_INITIAL:
@@ -361,7 +361,6 @@ public class FragmentArtsListRecycler extends Fragment
 					updateAdapter(intent, page);
 					setLoading(false);
 					//TODO remove RSS to ServiceDB
-					
 					if (getCategoryToLoad().contains("odnako.org/blogs") && showPreview)
 					{
 						Intent intentRSS = new Intent(act, ServiceRSS.class);
@@ -510,7 +509,8 @@ public class FragmentArtsListRecycler extends Fragment
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
 
-				pagerRight.setOnPageChangeListener(listener);
+				//				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(this.position);
 			case (Msg.NO_NEW):
 				pagerRight.getAdapter().notifyDataSetChanged();
@@ -519,17 +519,20 @@ public class FragmentArtsListRecycler extends Fragment
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
 
-				pagerRight.setOnPageChangeListener(listener);
+				//				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(this.position);
 			break;
 			case (Msg.NEW_QUONT):
 				pagerRight.getAdapter().notifyDataSetChanged();
-				pagerRight.setOnPageChangeListener(listener);
+				//			pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(0);
 			break;
 			case (Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES):
 				pagerRight.getAdapter().notifyDataSetChanged();
-				pagerRight.setOnPageChangeListener(listener);
+				//			pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(0);
 			break;
 			case (Msg.DB_ANSWER_WRITE_PROCESS_RESULT_ALL_RIGHT):
@@ -539,7 +542,8 @@ public class FragmentArtsListRecycler extends Fragment
 				allArtsSize = this.allArtsInfo.size();
 				rightToolbar.setTitle("Статья " + selectedArt + "/" + allArtsSize);
 
-				pagerRight.setOnPageChangeListener(listener);
+				//				pagerRight.setOnPageChangeListener(listener);
+				pagerRight.addOnPageChangeListener(listener);
 				listener.onPageSelected(this.position);
 			break;
 			case (Msg.DB_ANSWER_WRITE_FROM_BOTTOM_EXCEPTION):
@@ -914,7 +918,7 @@ public class FragmentArtsListRecycler extends Fragment
 						}
 					} catch (Exception e)
 					{
-						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
+						Log.i(LOG + categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
 				break;
 				case Const.Action.ARTICLE_LOADED:
@@ -975,7 +979,7 @@ public class FragmentArtsListRecycler extends Fragment
 						}
 					} catch (Exception e)
 					{
-						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
+						Log.i(LOG + categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
 
 				break;
@@ -1021,7 +1025,7 @@ public class FragmentArtsListRecycler extends Fragment
 						}
 					} catch (Exception e)
 					{
-						Log.i(LOG+categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
+						Log.i(LOG + categoryToLoad, "Catched error in ArticleChanged receiver of artsList");
 					}
 				break;
 			}

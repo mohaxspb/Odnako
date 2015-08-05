@@ -15,8 +15,8 @@ public class DipToPx
 	/**
 	 * 
 	 * @param dip
-	 * @param act
-	 * @return convert given pid to px
+	 * @param ctx
+	 * @return convert given dip to px
 	 */
 	public static float convert(int dip, Context ctx)
 	{

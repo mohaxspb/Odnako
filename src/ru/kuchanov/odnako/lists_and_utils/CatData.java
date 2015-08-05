@@ -103,10 +103,10 @@ public class CatData
 	{
 		String[] arr = act.getResources().getStringArray(R.array.authors_imgs_files_names);
 
-		String[] arr2 = act.getResources().getStringArray(R.array.categories_imgs_files_names);
+//		String[] arr2 = act.getResources().getStringArray(R.array.categories_imgs_files_names);
 
-		String[] allCategoriesMenuLinks = CatData.concatArrays(arr, arr2);
-		return allCategoriesMenuLinks;
+//		String[] allCategoriesMenuLinks = CatData.concatArrays(arr, arr2);
+		return arr;//allCategoriesMenuLinks;
 	}
 
 	public static String[] getAllTagsLinks(Context ctx)
@@ -138,11 +138,11 @@ public class CatData
 		return categoriesLinks;
 	}
 
-	public static String[] getAllTagsImgsFILEnames(Context act)
-	{
-		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_imgs_files_names);
-		return categoriesLinks;
-	}
+//	public static String[] getAllTagsImgsFILEnames(Context act)
+//	{
+//		String[] categoriesLinks = act.getResources().getStringArray(R.array.all_categories_imgs_files_names);
+//		return categoriesLinks;
+//	}
 
 	//////authors
 	public static String[] getAllAuthorsNames(Context act)

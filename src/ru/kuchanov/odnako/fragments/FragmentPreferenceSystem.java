@@ -72,9 +72,6 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 
 		cacheInfo = (Preference) findPreference(ActivityPreference.PREF_KEY_IMAGE_CACHE_INFO);
 		cacheInfo.setOnPreferenceClickListener(prefCLCacheInfo);
-
-		//		cacheClear = (Preference) findPreference(ActivityPreference.PREF_KEY_CACHE_CLEAR);
-		//		cacheClear.setOnPreferenceClickListener(prefCLCacheClear);
 	}
 
 	Preference.OnPreferenceChangeListener prefCLmaxArtsToStore = new Preference.OnPreferenceChangeListener()
@@ -139,7 +136,7 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 				QueryBuilder<Article, Integer> qb;
 				qb = h.getDaoArticle().queryBuilder();
 				qb.where().ne(Article.FIELD_NAME_ART_TEXT, Const.EMPTY_STRING);
-				qb.orderBy(Article.FIELD_REFRESHED_DATE, false);
+				qb.orderBy(Article.FIELD_NAME_REFRESHED_DATE, false);
 
 				ArrayList<Article> allDownloadedArts = (ArrayList<Article>) qb.query();
 
@@ -186,7 +183,6 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 			long dbSize = f.length();
 			Log.i(LOG, "DB file size is: " + dbSize + " bait");
 			float dbSizeInMB = (float) dbSize / 1048576;
-			//			Log.i(LOG, "DB file size is: "+dbSizeInMB+ " Mbait");
 			dbSizeTV.setText("Размер базы данных: " + String.format("%.2f", dbSizeInMB) + " Мбайт");
 			TextView dbDropTV = (TextView) dialogDBClear.getCustomView().findViewById(R.id.drop_db);
 			dbDropTV.setOnClickListener(new OnClickListener()
@@ -244,26 +240,59 @@ public class FragmentPreferenceSystem extends PreferenceFragment
 		@Override
 		public boolean onPreferenceClick(Preference preference)
 		{
-			final MaterialDialog dialog;
-			MaterialDialog.Builder dialogDBClearBuilder = new MaterialDialog.Builder(act);
+			final MaterialDialog dialogImgCache;
+			MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(act);
 
-			File cache=MyUIL.get(act).getDiskCache().getDirectory();
-			File[] cached=cache.listFiles();
-			
-			long length=0;
-			for(File f: cached)
-			{
-				length+=f.length();
-			}
-			float cahceSizeInMB=(float) length / 1048576;
-			
-			String content = "Размер кэша на устройстве: \n" + String.format("%.2f", cahceSizeInMB)+" Мбайт"
-			+ "\n\n" + "Расположение кэша: \n" + MyUIL.get(act).getDiskCache().getDirectory().getAbsolutePath();
-			dialogDBClearBuilder.title("Кэш изображений")
-			.content(content)
+			dialogBuilder.title("Кэш изображений")
+			.customView(R.layout.dialog_image_cache, true)
 			.positiveText("Закрыть");
-			dialog = dialogDBClearBuilder.build();
-			dialog.show();
+			dialogImgCache = dialogBuilder.build();
+
+			TextView imgCacheInfo = (TextView) dialogImgCache.getCustomView().findViewById(R.id.img_cache_info);
+			TextView imgCacheDelete = (TextView) dialogImgCache.getCustomView().findViewById(R.id.img_cache_delete);
+
+			File cache = MyUIL.get(act).getDiskCache().getDirectory();
+			File[] cached = cache.listFiles();
+
+			long length = 0;
+			for (File f : cached)
+			{
+				length += f.length();
+			}
+			float cahceSizeInMB = (float) length / 1048576;
+
+			String content = "Размер кэша на устройстве: \n" + String.format("%.2f", cahceSizeInMB) + " Мбайт"
+			+ "\n\n" + "Расположение кэша: \n" + MyUIL.get(act).getDiskCache().getDirectory().getAbsolutePath();
+
+			imgCacheInfo.setText(content);
+			imgCacheDelete.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					MaterialDialog dialogWarning;
+					MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(act);
+
+					dialogBuilder.title("Подтверждение удаления")
+					.content("Вы уверены, что хотите очистить кэш изображений?")
+					.positiveText("Да!")
+					.negativeText("Отмена")
+					.callback(new MaterialDialog.ButtonCallback()
+					{
+						@Override
+						public void onPositive(MaterialDialog dialog)
+						{
+							Log.i(LOG, "Image cache clear!");
+							MyUIL.get(act).getDiskCache().clear();
+							dialogImgCache.cancel();
+						}
+					});
+					dialogWarning = dialogBuilder.build();
+					dialogWarning.show();
+				}
+			});
+
+			dialogImgCache.show();
 			return false;
 		}
 	};

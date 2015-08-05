@@ -39,19 +39,19 @@ public class Article implements Parcelable
 	public static final String KEY_CURENT_ART = "curArtInfo";
 	public static final String KEY_ALL_ART_INFO = "allArtInfo";
 
-	public final static String ID_FIELD_NAME = "id";
-	public final static String AUTHOR_FIELD_NAME = "author";
-	public final static String URL_FIELD_NAME = "url";
+	public final static String FIELD_NAME_ID = "id";
+	public final static String FIELD_NAME_AUTHOR = "author";
+	public final static String FIELD_NAME_URL = "url";
 	public final static String FIELD_NAME_PUB_DATE = "pubDate";
 	public final static String FIELD_NAME_PREVIEW = "preview";
 	public final static String FIELD_NAME_ART_TEXT = "artText";
-	public final static String FIELD_IS_READEN = "isReaden";
-	public final static String FIELD_REFRESHED_DATE = "refreshed";
+	public final static String FIELD_NAME_IS_READEN = "isReaden";
+	public final static String FIELD_NAME_REFRESHED_DATE = "refreshed";
 
-	@DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
+	@DatabaseField(generatedId = true, columnName = FIELD_NAME_ID)
 	private int id;
 
-	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = URL_FIELD_NAME)
+	@DatabaseField(dataType = DataType.STRING, canBeNull = false, columnName = FIELD_NAME_URL)
 	private String url;
 
 	@DatabaseField(dataType = DataType.STRING)
@@ -106,11 +106,11 @@ public class Article implements Parcelable
 	@DatabaseField(dataType = DataType.STRING)
 	private String imgAuthor = Const.EMPTY_STRING;
 
-	@DatabaseField(dataType = DataType.BOOLEAN, columnName = FIELD_IS_READEN)
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = FIELD_NAME_IS_READEN)
 	private boolean isReaden = false;
 
 	//foreignKeys
-	@DatabaseField(foreign = true, columnName = AUTHOR_FIELD_NAME, canBeNull = true)
+	@DatabaseField(foreign = true, columnName = FIELD_NAME_AUTHOR, canBeNull = true)
 	private Author author;
 
 	/**
@@ -143,7 +143,7 @@ public class Article implements Parcelable
 
 		this.preview = artInfoArr[5];
 
-		//date; here can be 2 different ways of storing date, that we recive from site, so get them from util
+		//date; here can be 2 different ways of storing date, that we receive from site, so get them from util
 		this.pubDate = DateParse.parse(artInfoArr[6]);
 
 		this.numOfComments = Integer.parseInt(artInfoArr[7]);
@@ -457,6 +457,7 @@ public class Article implements Parcelable
 		}
 		else
 		{
+			//TODO CHECK IT!!! IT must be "empty"!!!
 			author = "null";
 		}
 
@@ -491,7 +492,7 @@ public class Article implements Parcelable
 		Integer id = null;
 		try
 		{
-			id = h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst().getId();
+			id = h.getDaoArticle().queryBuilder().where().eq(FIELD_NAME_URL, url).queryForFirst().getId();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -545,7 +546,7 @@ public class Article implements Parcelable
 		Article art = null;
 		try
 		{
-			art = h.getDaoArticle().queryBuilder().where().eq(URL_FIELD_NAME, url).queryForFirst();
+			art = h.getDaoArticle().queryBuilder().where().eq(FIELD_NAME_URL, url).queryForFirst();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -560,7 +561,7 @@ public class Article implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoArticle().updateBuilder();
-			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.where().eq(Article.FIELD_NAME_ID, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_PUB_DATE, d);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -575,8 +576,8 @@ public class Article implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoArticle().updateBuilder();
-			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
-			updateBuilder.updateColumnValue(Article.FIELD_REFRESHED_DATE, d);
+			updateBuilder.where().eq(Article.FIELD_NAME_ID, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_NAME_REFRESHED_DATE, d);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -590,7 +591,7 @@ public class Article implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoArticle().updateBuilder();
-			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.where().eq(Article.FIELD_NAME_ID, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_PREVIEW, preview);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -605,7 +606,7 @@ public class Article implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoArticle().updateBuilder();
-			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
+			updateBuilder.where().eq(Article.FIELD_NAME_ID, articleId);
 			updateBuilder.updateColumnValue(Article.FIELD_NAME_ART_TEXT, artText);
 			updateBuilder.update();
 		} catch (SQLException e)
@@ -620,8 +621,8 @@ public class Article implements Parcelable
 		try
 		{
 			updateBuilder = h.getDaoArticle().updateBuilder();
-			updateBuilder.where().eq(Article.ID_FIELD_NAME, articleId);
-			updateBuilder.updateColumnValue(Article.FIELD_IS_READEN, isReaden);
+			updateBuilder.where().eq(Article.FIELD_NAME_ID, articleId);
+			updateBuilder.updateColumnValue(Article.FIELD_NAME_IS_READEN, isReaden);
 			updateBuilder.update();
 		} catch (SQLException e)
 		{
@@ -650,10 +651,12 @@ public class Article implements Parcelable
 		return this.getTitle();
 	}
 
+	/**
+	 * Prints all class fields info in logs
+	 */
 	public void printAllInfo()
 	{
-		//XXX
-		Log.i(LOG, "PRINT_ALL_INFO");
+		Log.d(LOG, "PRINT_ALL_INFO");
 		Field[] f = this.getClass().getDeclaredFields();
 		for (int i = 0; i < f.length; i++)
 		{
@@ -663,12 +666,16 @@ public class Article implements Parcelable
 				{
 					if (!f[i].getName().equals("artText"))
 					{
-						Log.e(f[i].getName(), f[i].get(this).toString());
+						Log.i(f[i].getName(), f[i].get(this).toString());
 					}
 					else
 					{
-						Log.e(f[i].getName(), f[i].get(this).toString().substring(0, 100));
+						Log.i(f[i].getName(), f[i].get(this).toString().substring(0, 100));
 					}
+				}
+				else
+				{
+					Log.i(f[i].getName(), f[i].get(this).toString());
 				}
 			} catch (IllegalAccessException e)
 			{

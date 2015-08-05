@@ -96,7 +96,7 @@
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
     </string-array>
-    <string-array name="categories_imgs_files_names">
+    <!-- <string-array name="categories_imgs_files_names">
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[ekonomicheskaya_politika_1770_1_16.png]]></item>
         <item><![CDATA[gosudarstvennoe_stroitelstvo_1770_1_15.jpg]]></item>
@@ -108,7 +108,7 @@
         <item><![CDATA[novosti_1770_1_4.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
          <item><![CDATA[agr_dummy.jpg]]></item>
-    </string-array>
+    </string-array> -->
     <!-- End of menu categories -->
     <!-- all categories -->
     <string-array name="all_categories">
@@ -333,7 +333,7 @@
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
         <item><![CDATA[/img/deleteme/agr-dummy.jpg]]></item>
     </string-array>
-    <string-array name="all_categories_imgs_files_names">
+   <!--  <string-array name="all_categories_imgs_files_names">
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
@@ -406,7 +406,7 @@
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
         <item><![CDATA[agr_dummy.jpg]]></item>
-    </string-array>
+    </string-array> -->
     <string-array name="all_authors_names">
         <item><![CDATA[Юрий Кучанов]]></item>
         <item><![CDATA[Станислав Бескаравайный]]></item>
