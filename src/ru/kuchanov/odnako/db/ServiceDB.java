@@ -8,6 +8,7 @@ package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -580,9 +581,12 @@ CallbackWriteFromBottom, CallbackWriteFromTop, /* CallbackWriteArticles, */Callb
 	public void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<Article> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
-		//Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
-		updateHashMap(dataToSend, categoryToLoad, pageToLoad);
-
+		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+		Log.e(LOG, Arrays.toString(resultMessage));
+		if(!Msg.ERROR.equals(resultMessage[0])&&!Const.Error.CONNECTION_ERROR.equals(resultMessage[1]))
+		{
+			updateHashMap(dataToSend, categoryToLoad, pageToLoad);
+		}
 		Intent intent = new Intent(categoryToLoad);
 		intent.putExtra(Msg.MSG, resultMessage);
 		intent.putExtra("pageToLoad", pageToLoad);
