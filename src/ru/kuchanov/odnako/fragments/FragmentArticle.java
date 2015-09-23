@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
-//import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.db.Msg;
@@ -38,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+//import ru.kuchanov.odnako.custom.view.MyLinearLayoutManager;
 
 public class FragmentArticle extends Fragment implements FragArtUPD
 {

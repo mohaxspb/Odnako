@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
+import ru.kuchanov.odnako.Const;
+import ru.kuchanov.odnako.fragments.FragmentArticle;
+import ru.kuchanov.odnako.fragments.FragmentComments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-
-import ru.kuchanov.odnako.Const;
-import ru.kuchanov.odnako.fragments.FragmentArticle;
-import ru.kuchanov.odnako.fragments.FragmentComments;
 
 public class DownloadCommentsLoader extends AsyncTaskLoader<ArrayList<CommentInfo>>
 {

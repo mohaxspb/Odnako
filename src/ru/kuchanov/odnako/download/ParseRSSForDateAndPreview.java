@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;

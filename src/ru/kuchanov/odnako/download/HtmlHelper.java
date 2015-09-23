@@ -9,19 +9,18 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.HtmlCleanerException;
 import org.htmlcleaner.TagNode;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import android.text.Html;
-import android.util.Log;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DateParse;
+import android.text.Html;
+import android.util.Log;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class HtmlHelper
 {

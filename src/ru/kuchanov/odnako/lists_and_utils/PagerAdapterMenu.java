@@ -6,10 +6,10 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.lists_and_utils;
 
+import ru.kuchanov.odnako.activities.ActivityMain;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
 import ru.kuchanov.odnako.fragments.FragmentAllCategories;
 import ru.kuchanov.odnako.fragments.FragmentArtsListRecycler;
-import ru.kuchanov.odnako.activities.ActivityMain;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

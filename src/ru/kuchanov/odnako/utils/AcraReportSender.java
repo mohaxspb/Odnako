@@ -15,7 +15,6 @@ import org.acra.sender.ReportSender;
 import org.acra.sender.ReportSenderException;
 
 import ru.kuchanov.odnako.MyApplication;
-
 import android.content.Context;
 import android.util.Log;
 

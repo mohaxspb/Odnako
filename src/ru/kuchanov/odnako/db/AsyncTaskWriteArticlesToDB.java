@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ru.kuchanov.odnako.callbacks.CallbackWriteArticles;
-
 import android.os.AsyncTask;
 import android.util.Log;
 

@@ -7,13 +7,11 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.utils;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
@@ -22,19 +20,35 @@ import com.google.android.gms.ads.InterstitialAd;
 
 public class CheckTimeToAds
 {
-	final static String LOG = CheckTimeToAds.class.getSimpleName() + "/";
+	private final static String LOG = CheckTimeToAds.class.getSimpleName() + "/";
 
 	public final static String PREF_KEY_IN_APP_PERIOD = "inAppPeriod";
 	public final static String PREF_KEY_MAX_IN_APP_PERIOD = "maxInAppPeriod";
 	public final static String PREF_NEED_TO_SHOW_ADS = "needToShowAds";
 
-	Context ctx;
-	SharedPreferences pref;
-	long timeOnResume;
+	private Context ctx;
+	private SharedPreferences pref;
+	private long timeOnResume;
 
-	InterstitialAd mInterstitialAd;
+	private InterstitialAd mInterstitialAd;
 
-	UncaughtExceptionHandler deafultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+	private UncaughtExceptionHandler deafultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+	private UncaughtExceptionHandler myUncaughtExceptionHandler = new UncaughtExceptionHandler()
+	{
+		public Thread.UncaughtExceptionHandler oldHandler = deafultUncaughtExceptionHandler;
+
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex)
+		{
+			String errMsg = (ex.getLocalizedMessage() != null) ? ex.getLocalizedMessage() : "NULL message";
+			Log.e(LOG, "uncaughtException: " + errMsg);
+			onPause();
+			if (oldHandler != null)
+			{
+				oldHandler.uncaughtException(thread, ex);
+			}
+		}
+	};
 
 	public CheckTimeToAds(Context ctx, InterstitialAd mInterstitialAd)
 	{
@@ -46,27 +60,8 @@ public class CheckTimeToAds
 
 	public void requestNewInterstitial()
 	{
-		Log.e(LOG, "requestNewInterstitial");
-		//get EMULATOR deviceID
-		String android_id = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
-		String deviceId = DeviceID.md5(android_id).toUpperCase(Locale.ENGLISH);
-
-		Log.e(LOG, deviceId);
-		AdRequest adRequest;
-		if (deviceId.equals("358635056478739"))
-		{
-			Log.e(LOG, "deviceId matched!");
-			adRequest = new AdRequest.Builder()
-			.addTestDevice(deviceId)
-			.build();
-		}
-		else
-		{
-			Log.e(LOG, "deviceId NOT matched!");
-			adRequest = new AdRequest.Builder()
-			.build();
-		}
-
+		Log.d(LOG, "requestNewInterstitial");
+		AdRequest adRequest = new AdRequest.Builder().build();
 		mInterstitialAd.loadAd(adRequest);
 	}
 
@@ -102,21 +97,7 @@ public class CheckTimeToAds
 			this.requestNewInterstitial();
 		}
 
-		this.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
-		{
-			public Thread.UncaughtExceptionHandler oldHandler = deafultUncaughtExceptionHandler;//Thread.getDefaultUncaughtExceptionHandler();
-
-			@Override
-			public void uncaughtException(Thread thread, Throwable ex)
-			{
-				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
-				onPause();
-				if (oldHandler != null)
-				{
-					oldHandler.uncaughtException(thread, ex);
-				}
-			}
-		});
+		this.setUncaughtExceptionHandler(myUncaughtExceptionHandler);
 	}
 
 	public void onPause()
@@ -131,78 +112,29 @@ public class CheckTimeToAds
 		{
 			inAppPeriod += alreadyStoredInAppPeriod;
 			this.pref.edit().putLong(PREF_KEY_IN_APP_PERIOD, inAppPeriod).commit();
-			Log.e(LOG, "onPause, less then max");
-
-			Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
-			Log.e(LOG, "onPause, getMaxInAppPeriod(this.ctx): " + getMaxInAppPeriod(this.ctx));
+			//			Log.e(LOG, "onPause, less then max");
 		}
 		else
 		{
 			inAppPeriod = 0;//inAppPeriod + alreadyStoredInAppPeriod - getMaxInAppPeriod(this.ctx);
 			this.pref.edit().putBoolean(PREF_NEED_TO_SHOW_ADS, true).commit();
 			this.pref.edit().putLong(PREF_KEY_IN_APP_PERIOD, inAppPeriod).commit();
-			Log.e(LOG, "onPause, MORE then max");
-			Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
-			Log.e(LOG, "onPause, getMaxInAppPeriod(this.ctx): " + getMaxInAppPeriod(this.ctx));
+			//			Log.e(LOG, "onPause, MORE then max");
 		}
+		//		Log.e(LOG, "onPause, inAppPeriod: " + inAppPeriod);
+		//		Log.e(LOG, "onPause, getMaxInAppPeriod(this.ctx): " + getMaxInAppPeriod(this.ctx));
 
 		this.setUncaughtExceptionHandler(deafultUncaughtExceptionHandler);
 	}
 
 	private void setUncaughtExceptionHandler(UncaughtExceptionHandler handler)
 	{
-		//this.myUncaughtExceptionHandler = handler;
 		Thread.setDefaultUncaughtExceptionHandler(handler);
-		//		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
-		//		{
-		//			public Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
-		//
-		//			@Override
-		//			public void uncaughtException(Thread thread, Throwable ex)
-		//			{
-		//				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
-		//				onPause();
-		//				if (oldHandler != null)
-		//				{
-		//					oldHandler.uncaughtException(thread, ex);
-		//				}
-		//			}
-		//		});
 	}
 
 	private void init()
 	{
-		this.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
-		{
-			public Thread.UncaughtExceptionHandler oldHandler = deafultUncaughtExceptionHandler;//Thread.getDefaultUncaughtExceptionHandler();
-
-			@Override
-			public void uncaughtException(Thread thread, Throwable ex)
-			{
-				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
-				onPause();
-				if (oldHandler != null)
-				{
-					oldHandler.uncaughtException(thread, ex);
-				}
-			}
-		});
-
-		//		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
-		//		{
-		//			Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
-		//
-		//			@Override
-		//			public void uncaughtException(Thread thread, Throwable ex)
-		//			{
-		//				Log.e(LOG, "Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()");
-		//				onPause();
-		//				if (oldHandler != null)
-		//				{
-		//					oldHandler.uncaughtException(thread, ex);
-		//				}
-		//			}
-		//		});
+		this.setUncaughtExceptionHandler(myUncaughtExceptionHandler);
 
 		mInterstitialAd = new InterstitialAd(ctx);
 		mInterstitialAd.setAdUnitId(ctx.getResources().getString(R.string.AD_UNIT_ID_FULL_SCREEN));
@@ -234,7 +166,7 @@ public class CheckTimeToAds
 			public void onAdFailedToLoad(int errorCode)
 			{
 				Log.e(LOG, "onAdFailedToLoad with errorCode " + errorCode);
-//				requestNewInterstitial();
+				//				requestNewInterstitial();
 			}
 
 			// Сохраняет состояние приложения перед переходом к оверлею объявления.

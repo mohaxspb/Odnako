@@ -7,6 +7,8 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.db;
 
 import java.io.File;
+
+import android.os.AsyncTask;
 //import java.io.FileWriter;
 //import java.io.IOException;
 //import java.sql.SQLException;
@@ -15,13 +17,11 @@ import java.io.File;
 //
 //import com.j256.ormlite.android.apptools.OpenHelperManager;
 //import com.opencsv.CSVWriter;
-
 //import ru.kuchanov.odnako.R;
 //
 //import android.content.Context;
 //import android.content.Intent;
 //import android.net.Uri;
-import android.os.AsyncTask;
 //import android.util.Log;
 
 public class ExportDatabaseCSVTask extends AsyncTask<Void, Void, File[]>

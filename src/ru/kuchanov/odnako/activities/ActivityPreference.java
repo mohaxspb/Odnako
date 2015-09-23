@@ -10,8 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.yandex.metrica.YandexMetrica;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.fragments.FragmentPreference;
 import ru.kuchanov.odnako.fragments.FragmentPreferenceAbout;
@@ -32,6 +30,8 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.yandex.metrica.YandexMetrica;
+
 public class ActivityPreference extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -51,9 +51,12 @@ SharedPreferences.OnSharedPreferenceChangeListener
 	public static final String THEME_AMBER = "amber";
 
 	public static final String PREF_KEY_TWO_PANE = "twoPane";
-	public static final String PREF_KEY_UI_SCALE = "scale";
-	public static final String PREF_KEY_ART_SCALE = "scale_art";
-	public static final String PREF_KEY_COMMENTS_SCALE = "scale_comments";
+	
+	public static final String PREF_KEY_TEXT_SIZE = "text_size";
+	public static final String PREF_KEY_SCALE_UI = "scale";
+	public static final String PREF_KEY_SCALE_ARTICLE = "scale_art";
+	public static final String PREF_KEY_SCALE_COMMENTS = "scale_comments";
+	
 	public static final String PREF_KEY_IMAGE_SHOW = "image_show";
 	public static final String PREF_KEY_IMAGE_POSITION = "images_position";
 	public static final String PREF_VALUE_IMAGE_POSITION_UP = "up";

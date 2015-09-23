@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.db.Article;
@@ -35,6 +36,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -351,9 +353,10 @@ public class ActivityBase extends AppCompatActivity
 		View header = (View) this.getLayoutInflater().inflate(R.layout.drawer_header, this.mDrawer, false);
 		ImageView ava = (ImageView) header.findViewById(R.id.ava_img);
 		ImageLoader imgLoader = MyUIL.get(act);
-//		imgLoader.displayImage("http://www.odnako.org/i/75_75/users/7160/7160-1481-7160.jpg", ava,
-//		MyUIL.getTransparentBackgroundROUNDOptions(act));
-		imgLoader.displayImage("drawable://"+R.drawable.dev_ava, ava, MyUIL.getTransparentBackgroundROUNDOptions(act));
+		//		imgLoader.displayImage("http://www.odnako.org/i/75_75/users/7160/7160-1481-7160.jpg", ava,
+		//		MyUIL.getTransparentBackgroundROUNDOptions(act));
+		imgLoader
+		.displayImage("drawable://" + R.drawable.dev_ava, ava, MyUIL.getTransparentBackgroundROUNDOptions(act));
 		ava.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -565,5 +568,38 @@ public class ActivityBase extends AppCompatActivity
 			h.close();
 		}
 		return allCatAndAutTitles;
+	}
+
+	/**
+	 * search in allPrefs Map for text scale prefs, checks if their type is
+	 * String, and if so removes it and add new pref with same key but with
+	 * float type
+	 */
+	protected void reorganizeTextSizePreferences()
+	{
+		this.pref = (this.pref == null) ? PreferenceManager.getDefaultSharedPreferences(act) : this.pref;
+		Map<String, ?> allPrefs = pref.getAll();
+		ArrayList<String> textSizeKeys = new ArrayList<String>();
+		ArrayList<String> textSizeValues = new ArrayList<String>();
+		for (Map.Entry<String, ?> entry : allPrefs.entrySet())
+		{
+			if (ActivityPreference.PREF_KEY_SCALE_UI.equals(entry.getKey()) ||
+			ActivityPreference.PREF_KEY_SCALE_ARTICLE.equals(entry.getKey()) ||
+			ActivityPreference.PREF_KEY_SCALE_COMMENTS.equals(entry.getKey()))
+			{
+				if (entry.getValue() instanceof String)
+				{
+					// put keys and values to arrayList and after looping remove and put values to prevent modifiing this MAP;
+					textSizeKeys.add(entry.getKey());
+					textSizeValues.add((String) entry.getValue());
+				}
+			}
+		}
+		for (int i = 0; i < textSizeKeys.size(); i++)
+		{
+			String key = textSizeKeys.get(i);
+			this.pref.edit().remove(key).commit();
+			this.pref.edit().putFloat(key, Float.valueOf(textSizeValues.get(i))).commit();
+		}
 	}
 }

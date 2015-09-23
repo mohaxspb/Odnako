@@ -22,6 +22,7 @@ package ru.kuchanov.odnako.custom.view;
  * limitations under the License.
  */
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import ru.kuchanov.odnako.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -45,6 +46,7 @@ import android.util.AttributeSet;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -55,9 +57,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-
-import static android.view.GestureDetector.SimpleOnGestureListener;
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MaterialRippleLayout extends FrameLayout {
 

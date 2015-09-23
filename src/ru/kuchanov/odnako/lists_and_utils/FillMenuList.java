@@ -3,7 +3,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
-
 import android.content.Context;
 
 public class FillMenuList

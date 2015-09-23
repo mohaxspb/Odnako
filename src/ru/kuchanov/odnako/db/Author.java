@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import ru.kuchanov.odnako.Const;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 

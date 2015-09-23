@@ -118,6 +118,7 @@ public class Actions
 							leftPager.setAdapter(pagerAllAut);
 							OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut
 							.getAllAuthorsList());
+							leftPager.clearOnPageChangeListeners();
 							leftPager.addOnPageChangeListener(listener);
 							leftPager.setCurrentItem(position);
 							if (position == 0)
@@ -135,6 +136,7 @@ public class Actions
 							leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 							authorBlogUrl));
 							OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+							leftPager.clearOnPageChangeListeners();
 							leftPager.addOnPageChangeListener(listener);
 							leftPager.setCurrentItem(0);
 
@@ -197,6 +199,7 @@ public class Actions
 						leftPager.setAdapter(pagerAllAut);
 						OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity, pagerAllAut
 						.getAllAuthorsList());
+						leftPager.clearOnPageChangeListeners();
 						leftPager.addOnPageChangeListener(listener);
 						leftPager.setCurrentItem(position);
 						if (position == 0)
@@ -214,6 +217,7 @@ public class Actions
 						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 						authorBlogUrl));
 						OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+						leftPager.clearOnPageChangeListeners();
 						leftPager.addOnPageChangeListener(listener);
 						leftPager.setCurrentItem(0);
 
@@ -341,6 +345,7 @@ public class Actions
 							leftPager.setAdapter(pagerAllCat);
 							OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity, pagerAllCat
 							.getAllCategoriesList());
+							leftPager.clearOnPageChangeListeners();
 							leftPager.addOnPageChangeListener(listener);
 							leftPager.setCurrentItem(position);
 							if (position == 0)
@@ -358,6 +363,7 @@ public class Actions
 							leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 							categoryUrl));
 							OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+							leftPager.clearOnPageChangeListeners();
 							leftPager.addOnPageChangeListener(listener);
 							leftPager.setCurrentItem(0);
 
@@ -420,6 +426,7 @@ public class Actions
 						leftPager.setAdapter(pagerAllCat);
 						OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity, pagerAllCat
 						.getAllCategoriesList());
+						leftPager.clearOnPageChangeListeners();
 						leftPager.addOnPageChangeListener(listener);
 						leftPager.setCurrentItem(position);
 						if (position == 0)
@@ -437,6 +444,7 @@ public class Actions
 						leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 						categoryUrl));
 						OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+						leftPager.clearOnPageChangeListeners();
 						leftPager.addOnPageChangeListener(listener);
 						leftPager.setCurrentItem(0);
 
@@ -567,6 +575,7 @@ public class Actions
 					leftPager.setAdapter(pagerAllAut);
 					OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,
 					pagerAllAut.getAllAuthorsList());
+					leftPager.clearOnPageChangeListeners();
 					leftPager.addOnPageChangeListener(listener);
 					leftPager.setCurrentItem(positionInLeftPager);
 					//try notify pager that item selected if it's 0 item
@@ -586,6 +595,7 @@ public class Actions
 					leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 					authorBlogUrl));
 					OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+					leftPager.clearOnPageChangeListeners();
 					leftPager.addOnPageChangeListener(listener);
 					leftPager.setCurrentItem(0);
 
@@ -625,6 +635,7 @@ public class Actions
 				leftPager.setAdapter(pagerAllCat);
 				OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity,
 				pagerAllCat.getAllCategoriesList());
+				leftPager.clearOnPageChangeListeners();
 				leftPager.addOnPageChangeListener(listener);
 				leftPager.setCurrentItem(positionInLeftPager);
 				//try notify pager that item selected if it's 0 item
@@ -746,6 +757,7 @@ public class Actions
 					leftPager.setAdapter(pagerAllAut);
 					OnPageChangeListener listener = new PagerListenerAllAuthors(mainActivity,
 					pagerAllAut.getAllAuthorsList());
+					leftPager.clearOnPageChangeListeners();
 					leftPager.addOnPageChangeListener(listener);
 					leftPager.setCurrentItem(positionInLeftPager);
 					//try notify pager that item selected if it's 0 item
@@ -765,6 +777,7 @@ public class Actions
 					leftPager.setAdapter(new PagerAdapterSingleCategory(act.getSupportFragmentManager(), act,
 					authorBlogUrl));
 					OnPageChangeListener listener = new PagerListenerSingleCategory(mainActivity);
+					leftPager.clearOnPageChangeListeners();
 					leftPager.addOnPageChangeListener(listener);
 					leftPager.setCurrentItem(0);
 
@@ -805,6 +818,7 @@ public class Actions
 				leftPager.setAdapter(pagerAllCat);
 				OnPageChangeListener listener = new PagerListenerAllCategories(mainActivity,
 				pagerAllCat.getAllCategoriesList());
+				leftPager.clearOnPageChangeListeners();
 				leftPager.addOnPageChangeListener(listener);
 				leftPager.setCurrentItem(positionInLeftPager);
 				//try notify pager that item selected if it's 0 item

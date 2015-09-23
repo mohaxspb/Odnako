@@ -12,7 +12,6 @@ import ru.kuchanov.odnako.callbacks.CallbackComments;
 import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.download.ParseComments;
 import ru.kuchanov.odnako.fragments.FragmentComments;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;

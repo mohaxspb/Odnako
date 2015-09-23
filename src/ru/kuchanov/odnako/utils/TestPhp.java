@@ -8,16 +8,15 @@ package ru.kuchanov.odnako.utils;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 
 public class TestPhp extends AsyncTask<Void, Void, String>
 {

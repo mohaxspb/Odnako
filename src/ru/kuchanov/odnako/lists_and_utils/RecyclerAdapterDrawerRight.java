@@ -194,7 +194,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 					{
 						MaterialDialog dialogFavsAbout;
 						MaterialDialog.Builder dialogFavsAboutBuilder = new MaterialDialog.Builder(act);
-						dialogFavsAboutBuilder.title("Избранное");
+						dialogFavsAboutBuilder.title(R.string.favorites);
 						dialogFavsAboutBuilder.content(R.string.favs_about);
 						dialogFavsAboutBuilder.positiveText("Всё понятно!");
 						dialogFavsAbout = dialogFavsAboutBuilder.build();
@@ -451,7 +451,6 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 							public void onClick(View v)
 							{
 								Log.e(LOG, pairArr[0]);
-								//TODO
 								showArticle(pairArr[0], pairArr[1]);
 								ActivityBase actBase = (ActivityBase) act;
 								actBase.mDrawerLayout.closeDrawer(Gravity.RIGHT);

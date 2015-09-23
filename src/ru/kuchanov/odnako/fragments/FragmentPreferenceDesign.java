@@ -39,6 +39,19 @@ public class FragmentPreferenceDesign extends PreferenceFragment
 
 		addPreferencesFromResource(R.xml.pref_design);
 
+		//textSize
+		Preference prefTextSize = findPreference(ActivityPreference.PREF_KEY_TEXT_SIZE);
+		prefTextSize.setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				FragmentDialogTextAppearance frag = FragmentDialogTextAppearance.newInstance();
+				frag.show(act.getFragmentManager(), "TextAppearance");
+				return false;
+			}
+		});
+
 		//twoPane
 		Preference prefTwoPane = findPreference(ActivityPreference.PREF_KEY_TWO_PANE);
 		prefTwoPane.setOnPreferenceClickListener(this.twoPaneCL);

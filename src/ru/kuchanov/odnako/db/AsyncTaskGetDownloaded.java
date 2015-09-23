@@ -9,12 +9,12 @@ package ru.kuchanov.odnako.db;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.j256.ormlite.stmt.QueryBuilder;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.callbacks.CallbackGetDownloaded;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.j256.ormlite.stmt.QueryBuilder;
 
 public class AsyncTaskGetDownloaded extends AsyncTask<Void, Void, ArrayList<Article>>
 {

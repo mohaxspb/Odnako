@@ -2,10 +2,9 @@ package ru.kuchanov.odnako.download;
 
 import java.util.ArrayList;
 
+import ru.kuchanov.odnako.Const;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import ru.kuchanov.odnako.Const;
 
 public class CommentInfo implements Parcelable
 {

@@ -167,8 +167,9 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					final ArticleHolder holderMain = (ArticleHolder) holder;
 
 					//variables for scaling text and icons and images from settings
-					String scaleFactorString = pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "1");
-					float scaleFactor = Float.valueOf(scaleFactorString);
+//					String scaleFactorString = pref.getString(ActivityPreference.PREF_KEY_UI_SCALE, "1");
+//					float scaleFactor = Float.valueOf(scaleFactorString);
+					float scaleFactor= pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
 
 					final float scale = act.getResources().getDisplayMetrics().density;
 					int pixels = (int) (75 * scaleFactor * scale + 0.5f);

@@ -2,9 +2,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import java.util.ArrayList;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityPreference;
@@ -31,10 +28,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -66,11 +66,11 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 		this.commentsInfoList = commentsInfoList;
 
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
-		this.twoPane = pref.getBoolean("twoPane", false);
+		this.twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		this.imageLoader = MyUIL.get(act);
 
-		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 		if (nightModeIsOn)
 		{
 			this.options = MyUIL.getDarkOptions();
@@ -129,11 +129,13 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
-
-		String scaleFactorCommentsString = pref.getString("scale_comments", "1");
-		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
+//		String scaleFactorString = pref.getString("scale", "1");
+//		float scaleFactor = Float.valueOf(scaleFactorString);
+		float scaleFactor = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
+		
+//		String scaleFactorCommentsString = pref.getString("scale_comments", "1");
+//		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
+		float scaleFactorComments = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_COMMENTS, 0.75f);
 
 		final float scale = act.getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);
@@ -333,7 +335,7 @@ public class RecyclerAdapterCommentsFragment extends RecyclerView.Adapter<Recycl
 				int displayWidth = displayMetrics.widthPixels;
 				int maxWidth;
 				int newWidth;
-				boolean twoPane = this.pref.getBoolean("twoPane", false);
+				boolean twoPane = this.pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 				if (twoPane)
 				{
 					maxWidth = displayWidth / 3 * 2;

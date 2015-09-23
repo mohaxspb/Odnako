@@ -6,41 +6,14 @@
     android:title="@string/design" >
 
     <PreferenceCategory android:title="Размер текста" >
-
-        <!-- Масштаб картинок и текста на главной -->
-
-        <ListPreference
-            android:defaultValue="0.75"
-            android:entries="@array/scale"
-            android:entryValues="@array/scale_values"
+        
+        <Preference
             android:icon="?textSizeIcon"
-            android:key="scale"
-            android:summary="От 0.5х до 2х"
-            android:title="@string/text_size_ui" >
-        </ListPreference>
-
-        <!-- Масштаб текста в статьях -->
-
-        <ListPreference
-            android:defaultValue="0.75"
-            android:entries="@array/scale"
-            android:entryValues="@array/scale_values"
-            android:icon="?textFormatIcon"
-            android:key="scale_art"
-            android:summary="От 0.5х до 2х"
-            android:title="@string/text_size_article" >
-        </ListPreference>
-
-        <!-- Масштаб текста комментариев -->
-
-        <ListPreference
-            android:defaultValue="0.75"
-            android:entries="@array/scale"
-            android:entryValues="@array/scale_values"
-            android:icon="?commentsIcon"
-            android:key="scale_comments"
-            android:summary="От 0.5х до 2х"
-            android:title="@string/text_size_comments" />
+            android:key="text_size"
+            android:summary="@string/text_size_summary"
+            android:title="@string/text_size" >
+        </Preference>
+        
     </PreferenceCategory>
     <!-- Выбор темы -->
     <PreferenceCategory android:title="Цветовое оформление" >

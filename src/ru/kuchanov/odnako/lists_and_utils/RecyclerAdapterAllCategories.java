@@ -63,7 +63,7 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 		this.frag = artsListFrag;
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
-		twoPane = pref.getBoolean("twoPane", false);
+		twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		imageLoader = MyUIL.get(act);
 		this.allCategoriesInfoList = (ArrayList<Category>) act.getAllCategoriesList();
@@ -147,8 +147,9 @@ public class RecyclerAdapterAllCategories extends RecyclerView.Adapter<RecyclerV
 				final CategoryHolder holderMain = (CategoryHolder) holder;
 
 				//variables for scaling text and icons and images from settings
-				String scaleFactorString = pref.getString("scale", "1");
-				float scaleFactor = Float.valueOf(scaleFactorString);
+				//				String scaleFactorString = pref.getString("scale", "1");
+				//				float scaleFactor = Float.valueOf(scaleFactorString);
+				float scaleFactor = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
 				////End of variables for scaling text and icons and images from settings
 
 				//light checked item in listView

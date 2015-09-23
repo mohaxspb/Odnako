@@ -21,6 +21,7 @@ import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.download.HtmlHelper;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
+import ru.kuchanov.odnako.fragments.FragmentDialogTextAppearance;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllAuthors;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterAllCategories;
@@ -113,6 +114,8 @@ public class ActivityMain extends ActivityBase
 		PreferenceManager.setDefaultValues(this, R.xml.pref_system, true);
 		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(this);
+		//change text size prefs from String type to float
+		this.reorganizeTextSizePreferences();
 		//set IS_PRO pref
 		//TODO
 		boolean isProSeted = (this.pref.contains(ActivityPreference.PREF_KEY_IS_PRO));
@@ -297,6 +300,7 @@ public class ActivityMain extends ActivityBase
 		//set arts lists viewPager
 		Log.e(LOG, "pagerType: " + this.getPagerType());
 		OnPageChangeListener listener = new PagerListenerMenu(this);
+		this.artsListPager.clearOnPageChangeListeners();
 		switch (this.getPagerType())
 		{
 			case PAGER_TYPE_MENU:
@@ -677,6 +681,7 @@ public class ActivityMain extends ActivityBase
 						}
 					break;
 					case PAGER_TYPE_AUTHORS:
+						artsListPager.clearOnPageChangeListeners();
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);
@@ -717,6 +722,7 @@ public class ActivityMain extends ActivityBase
 						}
 					break;
 					case PAGER_TYPE_CATEGORIES:
+						artsListPager.clearOnPageChangeListeners();
 						if (TextUtils.isEmpty(newText))
 						{
 							setSearchText(null);
@@ -1023,6 +1029,10 @@ public class ActivityMain extends ActivityBase
 				}
 				this.recreate();
 				return super.onOptionsItemSelected(item);
+			case R.id.text_size:
+				FragmentDialogTextAppearance frag = FragmentDialogTextAppearance.newInstance();
+				frag.show(act.getFragmentManager(), "TextAppearance");
+				return super.onOptionsItemSelected(item);
 			case R.id.debug:
 				DataBaseHelper h = new DataBaseHelper(act);
 				try
@@ -1246,6 +1256,7 @@ public class ActivityMain extends ActivityBase
 				this.getSupportFragmentManager(), act);
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
+				artsListPager.clearOnPageChangeListeners();
 				this.artsListPager.addOnPageChangeListener(new PagerListenerMenu(this));
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);
 			break;
@@ -1285,6 +1296,7 @@ public class ActivityMain extends ActivityBase
 				this.artsListPager.setAdapter(artsListPagerAdapter);
 				//				this.artsListPager.setPageTransformer(true, new RotationPageTransformer());
 				OnPageChangeListener listener = new PagerListenerMenu(this);
+				artsListPager.clearOnPageChangeListeners();
 				this.artsListPager.addOnPageChangeListener(listener);
 
 				this.artsListPager.setCurrentItem(currentCategoryPosition, true);

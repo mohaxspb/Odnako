@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.kuchanov.odnako.BuildConfig;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.SpannableStringBuilder;

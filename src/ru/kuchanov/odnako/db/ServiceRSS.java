@@ -6,8 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.db;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.ParseRSSForDateAndPreview;
 import android.app.Service;
@@ -15,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 public class ServiceRSS extends Service
 {

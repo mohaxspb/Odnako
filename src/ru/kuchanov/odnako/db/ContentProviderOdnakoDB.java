@@ -8,10 +8,6 @@ package ru.kuchanov.odnako.db;
 
 import java.sql.SQLException;
 
-import com.j256.ormlite.android.AndroidDatabaseResults;
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.stmt.QueryBuilder;
-
 import ru.kuchanov.odnako.R;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -20,6 +16,10 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+
+import com.j256.ormlite.android.AndroidDatabaseResults;
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 public class ContentProviderOdnakoDB extends ContentProvider
 {

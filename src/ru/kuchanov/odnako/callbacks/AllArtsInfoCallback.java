@@ -15,11 +15,11 @@ public interface AllArtsInfoCallback
 	/**
 	 * We use it to call service methods from asynkTask
 	 * 
-	 * @param someResult downloaded data to send
+	 * @param dataFromWeb downloaded data to send
 	 * @param categoryToLoad category on site from where we get data
 	 * @param pageToLoad number of page, that contains each 30 arts
 	 */
-	public void sendDownloadedData(ArrayList<Article> someResult, String categoryToLoad, int pageToLoad);
+	public void sendDownloadedData(ArrayList<Article> dataFromWeb, String categoryToLoad, int pageToLoad);
 	
 	/**
 	 * We use it to say user, that we have some error in asynkTask.

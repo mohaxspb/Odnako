@@ -6,6 +6,7 @@ import java.util.Locale;
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityBase;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.fragments.FragmentAllAuthors;
 import ru.kuchanov.odnako.utils.DipToPx;
@@ -55,7 +56,6 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 
 	private String currentFilter = null;
 
-	//	public RecyclerAdapterAllAuthors(ActivityMain act, FragmentAllAuthors artsListFrag)
 	public RecyclerAdapterAllAuthors(ActivityBase act, FragmentAllAuthors artsListFrag)
 	{
 		this.act = act;
@@ -63,7 +63,7 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 		this.artsListFrag = artsListFrag;
 
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
-		twoPane = pref.getBoolean("twoPane", false);
+		twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		imageLoader = MyUIL.get(act);
 		this.allAuthrsInfoList = (ArrayList<Author>) act.getAllAuthorsList();
@@ -157,8 +157,9 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 				final AuthorHolder holderMain = (AuthorHolder) holder;
 
 				//variables for scaling text and icons and images from settings
-				String scaleFactorString = pref.getString("scale", "1");
-				float scaleFactor = Float.valueOf(scaleFactorString);
+//				String scaleFactorString = pref.getFloat(ActivityPreference.PREF_KEY_UI_SCALE, 0.75f);
+//				float scaleFactor = Float.valueOf(scaleFactorString);
+				float scaleFactor = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);;
 
 				final float scale = act.getResources().getDisplayMetrics().density;
 				int pixels = (int) (75 * scaleFactor * scale + 0.5f);
@@ -196,7 +197,7 @@ public class RecyclerAdapterAllAuthors extends RecyclerView.Adapter<RecyclerView
 				params.width = pixels;
 				holderMain.author_img.setLayoutParams(params);
 
-				boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+				boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 				if (nightModeIsOn)
 				{
 					imageLoader.displayImage(p.getAvatar(), holderMain.author_img,

@@ -8,7 +8,6 @@ package ru.kuchanov.odnako.lists_and_utils;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
@@ -19,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 
 /**
  * Yes, I know that there could be only 1 page, but we want to create right

@@ -86,11 +86,11 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 			this.articlesTags = DialogShare.getArticlesTags(article);
 		}
 		pref = PreferenceManager.getDefaultSharedPreferences(act);
-		twoPane = pref.getBoolean("twoPane", false);
+		twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false);
 
 		imageLoader = MyUIL.get(act);
 
-		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 		if (nightModeIsOn)
 		{
 			options = MyUIL.getDarkOptions();
@@ -204,11 +204,13 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
+//		String scaleFactorString = pref.getString("scale", "1");
+//		float scaleFactor = Float.valueOf(scaleFactorString);
+		float scaleFactor=pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
 
-		String scaleFactorArticleString = pref.getString("scale_art", "1");
-		float scaleFactorArticle = Float.valueOf(scaleFactorArticleString);
+//		String scaleFactorArticleString = pref.getString("scale_art", "1");
+//		float scaleFactorArticle = Float.valueOf(scaleFactorArticleString);
+		float scaleFactorArticle = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_ARTICLE, 0.75f);
 
 		final float scale = act.getResources().getDisplayMetrics().density;
 		int pixels = (int) (75 * scaleFactor * scale + 0.5f);

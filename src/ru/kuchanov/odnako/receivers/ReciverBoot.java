@@ -1,7 +1,6 @@
 package ru.kuchanov.odnako.receivers;
 
 import ru.kuchanov.odnako.activities.ActivityPreference;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

@@ -19,8 +19,6 @@ import java.util.TimeZone;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
@@ -37,7 +35,6 @@ import ru.kuchanov.odnako.download.ParsePageForAllArtsInfo;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.lists_and_utils.CatData;
 import ru.kuchanov.odnako.utils.ServiceTTS;
-
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -63,9 +60,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 //tag:^(?!dalvikvm) tag:^(?!libEGL) tag:^(?!Open) tag:^(?!Google) tag:^(?!resour) tag:^(?!Chore) tag:^(?!EGL) tag:^(?!SocketStream)
 public class ServiceDB extends Service implements AllArtsInfoCallback, CallbackAskDBFromTop, CallbackAskDBFromBottom,
-CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGetDownloaded
+CallbackWriteFromBottom, CallbackWriteFromTop, /* CallbackWriteArticles, */CallbackGetDownloaded
 {
 	final private static String LOG = ServiceDB.class.getSimpleName() + "/";
 
@@ -435,8 +434,8 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				}
 			}
 			//here we'll write gained arts to Article table 
-			AsyncTaskWriteArticlesToDB writeArticles = new AsyncTaskWriteArticlesToDB(getHelper(), dataToSend, this,
-			categoryToLoad, pageToLoad);
+			AsyncTaskWriteArticlesToDB writeArticles = new AsyncTaskWriteArticlesToDB(getHelper(), dataToSend,
+			callbackWriteArticles, categoryToLoad, pageToLoad);
 			writeArticles.execute();
 		}
 	}
@@ -494,7 +493,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 				ArrayList<Article> dataToSend)
 				{
 					String[] resultMessage;
-					Log.e(LOG, "ON_ERROR CALLBACK answer: "+answer);
+					Log.e(LOG, "ON_ERROR CALLBACK answer: " + answer);
 					switch (answer)
 					{
 						case Msg.DB_ANSWER_NEVER_REFRESHED:
@@ -515,7 +514,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 						break;
 						case Msg.DB_ANSWER_INFO_SENDED_TO_FRAG:
 							//Everything is OK. We send arts from DB to fragment
-							resultMessage = new String[] { /*Msg.ERROR*/Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, "Статьи загружены из кэша" };
+							resultMessage = new String[] { /* Msg.ERROR */Msg.DB_ANSWER_INFO_SENDED_TO_FRAG, "Статьи загружены из кэша" };
 							sendBroadcastWithResult(ctx, resultMessage, dataToSend, categoryToLoad, pageToLoad);
 						break;
 					}//switch
@@ -524,7 +523,7 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 			AsyncTaskAskDBFromTop askFromTop = new AsyncTaskAskDBFromTop(this, dataBaseHelper, categoryToLoad,
 			calOfLastRefresh, pageToLoad, callback);
 			askFromTop.execute();
-//			this.startDownLoad(catToLoad, pageToLoad);
+			//			this.startDownLoad(catToLoad, pageToLoad);
 		}//if (pageToLoad == 1)
 	}//onError
 
@@ -843,28 +842,31 @@ CallbackWriteFromBottom, CallbackWriteFromTop, CallbackWriteArticles, CallbackGe
 		notificationManager.notify(NOTIFICATION_NEW_ARTICLES_ID, builder.build());
 	}
 
-	@Override
-	public void onDoneWritingArticles(ArrayList<Article> dataFromDB, String categoryToLoad, int pageToLoad)
+	private CallbackWriteArticles callbackWriteArticles = new CallbackWriteArticles()
 	{
-		//now update REFRESHED field of Category or Author entry in table if we load from top
-		//and write downloaded arts to ArtCatTable
-		if (pageToLoad == 1)
+		@Override
+		public void onDoneWritingArticles(ArrayList<Article> dataFromDB, String categoryToLoad, int pageToLoad)
 		{
-//			AsyncTaskAskUpdateRefreshedDate updateRefreshedDate = new AsyncTaskAskUpdateRefreshedDate(getHelper(),
-//			categoryToLoad);
-//			updateRefreshedDate.execute();
-			AsyncTaskWriteFromTop resultWriteFromTop = new AsyncTaskWriteFromTop(getHelper(), dataFromDB,
-			categoryToLoad, pageToLoad, this);
-			resultWriteFromTop.execute();
+			//now update REFRESHED field of Category or Author entry in table if we load from top
+			//and write downloaded arts to ArtCatTable
+			if (pageToLoad == 1)
+			{
+				//			AsyncTaskAskUpdateRefreshedDate updateRefreshedDate = new AsyncTaskAskUpdateRefreshedDate(getHelper(),
+				//			categoryToLoad);
+				//			updateRefreshedDate.execute();
+				AsyncTaskWriteFromTop resultWriteFromTop = new AsyncTaskWriteFromTop(getHelper(), dataFromDB,
+				categoryToLoad, pageToLoad, ServiceDB.this);
+				resultWriteFromTop.execute();
+			}
+			else
+			{
+				//we don't need to update refreshed Date, cause we do it only when loading from top
+				AsyncTaskWriteFromBottom resultWriteFromBottom = new AsyncTaskWriteFromBottom(getHelper(), dataFromDB,
+				categoryToLoad, pageToLoad, ServiceDB.this);
+				resultWriteFromBottom.execute();
+			}
 		}
-		else
-		{
-			//we don't need to update refreshed Date, cause we do it only when loading from top
-			AsyncTaskWriteFromBottom resultWriteFromBottom = new AsyncTaskWriteFromBottom(getHelper(), dataFromDB,
-			categoryToLoad, pageToLoad, this);
-			resultWriteFromBottom.execute();
-		}
-	}
+	};
 
 	/**
 	 * map with lists of articles info for all categories and authors, witch

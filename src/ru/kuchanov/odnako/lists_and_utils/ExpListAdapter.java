@@ -6,8 +6,8 @@ import java.util.Arrays;
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
-import ru.kuchanov.odnako.activities.ActivityDownloads;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.DataBaseHelper;
 import ru.kuchanov.odnako.utils.DipToPx;
@@ -170,29 +170,31 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		}
 
 		///light checked item
-		if (this.act instanceof ActivityDownloads && groupPosition == 2)
-		{
-			Resources.Theme themes = act.getTheme();
-			TypedValue storedValueInTheme = new TypedValue();
-			if (themes.resolveAttribute(R.attr.selectorColor, storedValueInTheme, true))
-			{
-				view.setBackgroundColor(storedValueInTheme.data);
-			}
-		}
-		else
-		{
-			Resources.Theme themes = act.getTheme();
-			TypedValue storedValueInTheme = new TypedValue();
-			if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
-			{
-				view.setBackgroundColor(storedValueInTheme.data);
-			}
-		}
+//		if (this.act instanceof ActivityDownloads && groupPosition == 2)
+//		{
+//			Resources.Theme themes = act.getTheme();
+//			TypedValue storedValueInTheme = new TypedValue();
+//			if (themes.resolveAttribute(R.attr.selectorColor, storedValueInTheme, true))
+//			{
+//				view.setBackgroundColor(storedValueInTheme.data);
+//			}
+//		}
+//		else
+//		{
+//			Resources.Theme themes = act.getTheme();
+//			TypedValue storedValueInTheme = new TypedValue();
+//			if (themes.resolveAttribute(R.attr.colorPrimary, storedValueInTheme, true))
+//			{
+//				view.setBackgroundColor(storedValueInTheme.data);
+//			}
+//		}
 
 		holderMain.text.setText(this.cat[groupPosition]);
 
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
+//		String scaleFactorString = pref.getString("scale", "1");
+//		float scaleFactor = Float.valueOf(scaleFactorString);
+//		String scaleFactorString = pref.getString("scale", "1");
+		float scaleFactor = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
 		holderMain.text.setTextSize(21 * scaleFactor);
 
 		switch (groupPosition)
@@ -339,8 +341,9 @@ public class ExpListAdapter extends BaseExpandableListAdapter
 		//text and it's size
 		String drawerItemTitle = mGroups.get(groupPosition).get(childPosition);
 		holderMain.text.setText(drawerItemTitle);
-		String scaleFactorString = pref.getString("scale", "1");
-		float scaleFactor = Float.valueOf(scaleFactorString);
+//		String scaleFactorString = pref.getString("scale", "1");
+//		float scaleFactor = Float.valueOf(scaleFactorString);
+		float scaleFactor = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
 		holderMain.text.setTextSize(21 * scaleFactor);
 
 		//left and right imgs

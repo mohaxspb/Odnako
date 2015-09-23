@@ -10,14 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.UpdateBuilder;
-
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.activities.ActivityPreference;
-import ru.kuchanov.odnako.db.Article;
-import ru.kuchanov.odnako.db.DataBaseHelper;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +19,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 public class AsyncTaskDeleteArticlesText extends AsyncTask<Void, Void, ArrayList<Article>>
 {

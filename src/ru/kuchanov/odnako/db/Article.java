@@ -13,7 +13,6 @@ import java.util.Date;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.utils.DateParse;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;

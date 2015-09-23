@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.j256.ormlite.stmt.UpdateBuilder;
-
 import ru.kuchanov.odnako.callbacks.CallbackWriteFromTop;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 {
@@ -39,7 +39,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 
 	protected String[] doInBackground(Void... args)
 	{
-		String[] result;
+		//String[] result;
 		//check if there are arts of given category
 		//switch by Category or Author				
 		if (Category.isCategory(h, categoryToLoad))
@@ -84,7 +84,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
-								/* return */result = new String[] { Msg.NO_NEW, null };
+								return new String[] { Msg.NO_NEW, null };
 							}
 							else
 							{
@@ -140,7 +140,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 								//and update def quont on page - new qount prev URL by last of gained
 								ArtCatTable.updatePreviousArt(h, firstArtOfNextPageId,
 								dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
-								
+
 								//update isTop to null for old entry
 								ArtCatTable.updateIsTop(h, topArtCat.getId(), null);
 								//set new topArtCatRow
@@ -148,7 +148,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 								//Finally write new rows!
 								ArtCatTable.write(h, dataToWrite);
 
-								/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+								return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 							}
 						}
 						else
@@ -174,7 +174,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							//FINALLY write new entries to ArtCatTable
 							ArtCatTable.write(h, artCatDataToWrite);
 
-							/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(i) };
+							return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 						}
 					}
 					else
@@ -192,11 +192,12 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							artCatDataToWrite.get(0).isTop(true);
 							//FINALLY write new entries to ArtCatTable
 							ArtCatTable.write(h, artCatDataToWrite);
-							/* return */result = new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
+							return new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
 						}
 					}
 				}
-				/* return */result = new String[] { Msg.ERROR, "Непредвиденная ошибка" };
+				return new String[] { Msg.ERROR, "Непредвиденная ошибка" };
+				//				/* return */result = new String[] { null, null };
 			}
 			else
 			{
@@ -208,7 +209,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				artCatDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtCatTable
 				ArtCatTable.write(h, artCatDataToWrite);
-				/* return */result = new String[] { Msg.NO_NEW, null };
+				return new String[] { Msg.NO_NEW, null };
 			}
 		}
 		else
@@ -251,7 +252,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							{
 								//if so lists of loaded from web and stored in DB equals
 								//do nothing, send result as NO_NEW
-								/* return */result = new String[] { Msg.NO_NEW, null };
+								return new String[] { Msg.NO_NEW, null };
 							}
 							else
 							{
@@ -303,7 +304,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									//Finally write new rows!
 									ArtAutTable.write(h, dataToWrite);
 
-									/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 								}
 								else
 								{
@@ -324,7 +325,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									//and update def quont on page - new qount prev URL by last of gained
 									ArtAutTable.updatePreviousArt(h, firstArtOfNextPageId,
 									dataFromWeb.get(dataFromWeb.size() - 1).getUrl());
-									
+
 									//update isTop to null for old entry
 									ArtCatTable.updateIsTop(h, topArtAut.getId(), null);
 									//set new topArtCatRow
@@ -332,7 +333,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 									//Finally write new rows!
 									ArtAutTable.write(h, dataToWrite);
 
-									/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
+									return new String[] { Msg.NEW_QUONT, Integer.toString(newQuont) };
 								}
 							}
 						}
@@ -358,7 +359,7 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							//FINALLY write new entries to ArtAutTable
 							ArtAutTable.write(h, artAutDataToWrite);
 
-							/* return */result = new String[] { Msg.NEW_QUONT, Integer.toString(i) };
+							return new String[] { Msg.NEW_QUONT, Integer.toString(i) };
 						}
 					}
 					else
@@ -376,11 +377,12 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							artAutDataToWrite.get(0).isTop(true);
 							//FINALLY write new entries to ArtAutTable
 							ArtAutTable.write(h, artAutDataToWrite);
-							/* return */result = new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
+							return new String[] { Msg.DB_ANSWER_WRITE_FROM_TOP_NO_MATCHES, "более 30" };
 						}
 					}
 				}
-				/* return */result = new String[] { Msg.ERROR, "Непредвиденная ошибка" };
+				return new String[] { Msg.ERROR, "Непредвиденная ошибка" };
+				//				/* return */result = new String[] { null, null };
 			}
 			else
 			{
@@ -392,10 +394,24 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				artAutDataToWrite.get(0).isTop(true);
 				//FINALLY write new entries with new Arts to ArtAutTable
 				ArtAutTable.write(h, artAutDataToWrite);
-				/* return */result = new String[] { Msg.NO_NEW, null };
+				return new String[] { Msg.NO_NEW, null };
 			}
 		}//this is author
 
+		//		if(result[0]==null)
+		//		{
+		//			return result;
+		//		}
+	}
+
+	protected void onPostExecute(String[] result)
+	{
+		updateRereshedDate(result);
+		this.callback.onDoneWritingFromTop(result, this.dataFromWeb, this.categoryToLoad, this.pageToLoad);
+	}
+
+	private void updateRereshedDate(String[] result)
+	{
 		switch (result[0])
 		{
 			case (Msg.NO_NEW):
@@ -430,11 +446,5 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 				}
 			break;
 		}
-		return result;
-	}
-
-	protected void onPostExecute(String[] result)
-	{
-		this.callback.onDoneWritingFromTop(result, this.dataFromWeb, this.categoryToLoad, this.pageToLoad);
 	}
 }

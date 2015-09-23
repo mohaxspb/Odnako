@@ -8,15 +8,13 @@ package ru.kuchanov.odnako.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.google.android.gms.ads.InterstitialAd;
-import com.yandex.metrica.YandexMetrica;
 
 import ru.kuchanov.odnako.R;
-//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Favorites;
 import ru.kuchanov.odnako.fragments.FragmentArticle;
 import ru.kuchanov.odnako.fragments.FragmentComments;
+import ru.kuchanov.odnako.fragments.FragmentDialogTextAppearance;
 import ru.kuchanov.odnako.lists_and_utils.Actions;
 import ru.kuchanov.odnako.lists_and_utils.PagerAdapterArticles;
 import ru.kuchanov.odnako.lists_and_utils.PagerListenerArticle;
@@ -34,6 +32,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.InterstitialAd;
+import com.yandex.metrica.YandexMetrica;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 
 public class ActivityArticle extends ActivityBase
 {
@@ -55,9 +57,10 @@ public class ActivityArticle extends ActivityBase
 		PreferenceManager.setDefaultValues(this, R.xml.pref_system, true);
 		PreferenceManager.setDefaultValues(this, R.xml.pref_about, true);
 		this.pref = PreferenceManager.getDefaultSharedPreferences(act);
-		//end of get default settings to get all settings later
+		//change text size prefs from String type to float
+		this.reorganizeTextSizePreferences();
 
-		// binf to service
+		// bind to service
 		this.bindService();
 
 		//ADS
@@ -68,7 +71,7 @@ public class ActivityArticle extends ActivityBase
 		this.checkTimeAds = new CheckTimeToAds(this, mInterstitialAd);
 
 		//set theme before super and set content to apply it
-		boolean nightModeIsOn = this.pref.getBoolean("night_mode", false);
+		boolean nightModeIsOn = this.pref.getBoolean(ActivityPreference.PREF_KEY_NIGHT_MODE, false);
 		int themeID = R.style.ThemeLight;
 		switch (this.pref.getString(ActivityPreference.PREF_KEY_THEME, ActivityPreference.THEME_GREY))
 		{
@@ -359,7 +362,10 @@ public class ActivityArticle extends ActivityBase
 				}
 				this.recreate();
 				return super.onOptionsItemSelected(item);
-
+			case R.id.text_size:
+				FragmentDialogTextAppearance frag = FragmentDialogTextAppearance.newInstance();
+				frag.show(act.getFragmentManager(), "TextAppearance");
+				return super.onOptionsItemSelected(item);
 			case R.id.speeck:
 				Intent intentTTS = new Intent(act.getApplicationContext(), ServiceTTS.class);
 				intentTTS.setAction("init");

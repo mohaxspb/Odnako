@@ -32,6 +32,12 @@
                     app:showAsAction="always"/>
             </group>
             <item
+                android:id="@+id/text_size"
+                android:icon="?textSizeIcon"
+                android:orderInCategory="250"
+                android:title="@string/text_size"
+                app:showAsAction="always"/>
+            <item
                 android:id="@+id/add_to_favorites"
                 android:icon="?favoriteStarIcon"
                 android:orderInCategory="300"

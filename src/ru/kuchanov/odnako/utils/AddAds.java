@@ -3,19 +3,18 @@ package ru.kuchanov.odnako.utils;
 import java.util.Locale;
 
 import ru.kuchanov.odnako.R;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.mediation.admob.AdMobExtras;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class AddAds
 {
@@ -29,12 +28,6 @@ public class AddAds
 		this.act = act;
 		this.adView = adView;
 	}
-
-//	public static boolean isTimeToShowAds(AppCompatActivity act2)
-//	{
-//		//TODO
-//		return false;
-//	}
 
 	/**
 	 * adding ads to allActivities since ver 2.3

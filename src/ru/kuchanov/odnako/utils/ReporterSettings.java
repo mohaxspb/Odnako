@@ -7,8 +7,8 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.utils;
 
 import org.acra.ACRA;
-import ru.kuchanov.odnako.activities.ActivityPreference;
 
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

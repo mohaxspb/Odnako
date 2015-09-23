@@ -6,9 +6,6 @@ mohax.spb@gmail.com
  */
 package ru.kuchanov.odnako.fragments;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.utils.MyUIL;
@@ -25,6 +22,9 @@ import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FragmentDialogComment extends DialogFragment
 {

@@ -13,7 +13,6 @@ import org.htmlcleaner.TagNode;
 
 import ru.kuchanov.odnako.Const;
 import ru.kuchanov.odnako.callbacks.CallbackComments;
-
 import android.os.AsyncTask;
 import android.util.Log;
 

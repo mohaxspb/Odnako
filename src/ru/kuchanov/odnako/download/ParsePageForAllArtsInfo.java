@@ -15,7 +15,6 @@ import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
 import ru.kuchanov.odnako.db.DataBaseHelper;
-
 import android.os.AsyncTask;
 import android.util.Log;
 

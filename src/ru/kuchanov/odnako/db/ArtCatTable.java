@@ -472,7 +472,7 @@ public class ArtCatTable
 				nextArtUrl = artToWrite.get(u + 1).getUrl();
 			} catch (Exception e)
 			{
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			//get previous Article url by asking gained from web list
 			String previousArtUrl = null;
@@ -481,7 +481,7 @@ public class ArtCatTable
 				previousArtUrl = artToWrite.get(u - 1).getUrl();
 			} catch (Exception e)
 			{
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			artCatTableList.add(new ArtCatTable(null, articleId, categoryId, nextArtUrl, previousArtUrl));
 		}

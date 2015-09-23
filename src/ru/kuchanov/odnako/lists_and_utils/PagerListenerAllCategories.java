@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityMain;
-//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 import ru.kuchanov.odnako.db.Category;
 import android.content.Intent;
 import android.preference.PreferenceManager;
@@ -22,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+//import ru.kuchanov.odnako.animations.RotationPageTransformer;
 
 public class PagerListenerAllCategories extends ViewPager.SimpleOnPageChangeListener
 {

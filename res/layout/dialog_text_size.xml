@@ -5,14 +5,15 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/text_size_interface"
+        android:id="@+id/text_size_ui"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="5dp"
+        android:drawableLeft="?textSizeIcon"
         android:text="@string/text_size_ui" />
 
     <SeekBar
-        android:id="@+id/seekbar_interface"
+        android:id="@+id/seekbar_ui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp" />
@@ -20,8 +21,9 @@
     <TextView
         android:id="@+id/text_size_article"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="5dp"
+        android:drawableLeft="?textFormatIcon"
         android:text="@string/text_size_article" />
 
     <SeekBar
@@ -33,8 +35,9 @@
     <TextView
         android:id="@+id/text_size_comments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="5dp"
+        android:drawableLeft="?commentsIcon"
         android:text="@string/text_size_comments" />
 
     <SeekBar
@@ -42,5 +45,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp" />
+    
+    <TextView
+        android:id="@+id/warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/green"
+        android:drawableLeft="?warningIcon"
+        android:drawableRight="?warningIcon"
+        android:text="@string/text_size_warning" />
 
 </LinearLayout>

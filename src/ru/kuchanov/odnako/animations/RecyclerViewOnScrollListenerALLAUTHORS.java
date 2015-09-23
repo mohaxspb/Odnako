@@ -11,8 +11,8 @@ import ru.kuchanov.odnako.activities.ActivityMain;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
 public class RecyclerViewOnScrollListenerALLAUTHORS extends OnScrollListener
