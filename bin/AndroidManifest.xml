@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.kuchanov.odnako"
-    android:versionCode="321"
-    android:versionName="3.21.arctic.alpha" >
+    android:versionCode="330"
+    android:versionName="3.30.arctic" >
 
     <uses-sdk
         android:minSdkVersion="14"
