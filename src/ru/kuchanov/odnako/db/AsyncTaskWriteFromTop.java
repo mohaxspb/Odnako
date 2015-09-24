@@ -41,7 +41,9 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 	{
 		//String[] result;
 		//check if there are arts of given category
-		//switch by Category or Author				
+		//switch by Category or Author
+//Log.e(LOG, "String.valueOf(h==null): "+String.valueOf(h==null));
+//Log.e(LOG, "String.valueOf(categoryToLoad==null): "+String.valueOf(categoryToLoad==null));
 		if (Category.isCategory(h, categoryToLoad))
 		{
 			//this is Category, so...

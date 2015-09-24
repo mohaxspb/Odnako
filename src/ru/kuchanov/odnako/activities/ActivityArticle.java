@@ -66,7 +66,11 @@ public class ActivityArticle extends ActivityBase
 		//ADS
 		if (!this.pref.contains(CheckTimeToAds.PREF_KEY_MAX_IN_APP_PERIOD))
 		{
-			CheckTimeToAds.setMaxInAppPeriod(act, 60L * 60L * 1000L);
+			CheckTimeToAds.setMaxInAppPeriod(act, 45L * 60L * 1000L);
+		}
+		else if(CheckTimeToAds.getMaxInAppPeriod(act)>(45L*60L*1000L))
+		{
+			CheckTimeToAds.setMaxInAppPeriod(act, (45L*60L*1000L));
 		}
 		this.checkTimeAds = new CheckTimeToAds(this, mInterstitialAd);
 

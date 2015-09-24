@@ -148,11 +148,10 @@ public class FragmentArtsListRecycler extends Fragment
 		{
 			if (this.isLoadingFromTop)
 			{
-				int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
-				int indexOfAttrTextSize = 0;
+				int[] actionBarSizeAttr = new int[] { android.R.attr.actionBarSize };
 				TypedValue typedValue = new TypedValue();
-				TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-				int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
+				TypedArray a = act.obtainStyledAttributes(typedValue.data, actionBarSizeAttr);
+				int actionBarSize = a.getDimensionPixelSize(0, 100);
 				a.recycle();
 				//this.swipeRef.setProgressViewOffset(false, 0, actionBarSize);
 				swipeRef.setProgressViewEndTarget(false, actionBarSize);
@@ -160,10 +159,9 @@ public class FragmentArtsListRecycler extends Fragment
 			else
 			{
 				int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
-				int indexOfAttrTextSize = 0;
 				TypedValue typedValue = new TypedValue();
 				TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);
-				int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, 100);
+				int actionBarSize = a.getDimensionPixelSize(0, 100);
 				a.recycle();
 				DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 				int height = displayMetrics.heightPixels;

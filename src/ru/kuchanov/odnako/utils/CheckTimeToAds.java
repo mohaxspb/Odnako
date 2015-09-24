@@ -68,7 +68,7 @@ public class CheckTimeToAds
 	public static long getMaxInAppPeriod(Context ctx)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pref.getLong(PREF_KEY_MAX_IN_APP_PERIOD, (90L * 60L * 1000L));
+		return pref.getLong(PREF_KEY_MAX_IN_APP_PERIOD, (45L * 60L * 1000L));
 	}
 
 	public static void setMaxInAppPeriod(Context ctx, long period)
