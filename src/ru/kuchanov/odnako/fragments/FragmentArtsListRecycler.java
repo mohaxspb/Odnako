@@ -492,6 +492,12 @@ public class FragmentArtsListRecycler extends Fragment
 	{
 		ActivityMain mainActivity = (ActivityMain) this.act;
 		ViewPager pagerRight = (ViewPager) mainActivity.findViewById(R.id.pager_right);
+		
+		if(pagerRight==null)
+		{
+			mainActivity.recreate();
+		}
+		
 		Toolbar rightToolbar = (Toolbar) mainActivity.findViewById(R.id.toolbar_right);
 		int selectedArt;
 		int allArtsSize;

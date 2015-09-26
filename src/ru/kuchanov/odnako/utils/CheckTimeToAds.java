@@ -9,6 +9,7 @@ package ru.kuchanov.odnako.utils;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -80,7 +81,15 @@ public class CheckTimeToAds
 	public static boolean isTimeToShowAds(Context ctx)
 	{
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false) == true;
+		if(pref.getBoolean(ActivityPreference.PREF_KEY_IS_PRO, false))
+		{
+			return false;
+		}
+		else
+		{
+			return pref.getBoolean(PREF_NEED_TO_SHOW_ADS, false);
+		}
+		
 	}
 
 	public static void adsShown(Context ctx)

@@ -1,4 +1,5 @@
 /*
+
  07.12.2014
 ServiceDB.java
 Created by Kuchanov Yuri,
@@ -580,9 +581,9 @@ CallbackWriteFromBottom, CallbackWriteFromTop, /* CallbackWriteArticles, */Callb
 	public void sendBroadcastWithResult(Context ctx, String[] resultMessage, ArrayList<Article> dataToSend,
 	String categoryToLoad, int pageToLoad)
 	{
-//		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
-//		Log.e(LOG, Arrays.toString(resultMessage));
-		if(!Msg.ERROR.equals(resultMessage[0])&&!Const.Error.CONNECTION_ERROR.equals(resultMessage[1]))
+		//		Log.d(LOG + categoryToLoad, "sendBroadcastWithResult");
+		//		Log.e(LOG, Arrays.toString(resultMessage));
+		if (!Msg.ERROR.equals(resultMessage[0]) && !Const.Error.CONNECTION_ERROR.equals(resultMessage[1]))
 		{
 			updateHashMap(dataToSend, categoryToLoad, pageToLoad);
 		}
@@ -894,7 +895,14 @@ CallbackWriteFromBottom, CallbackWriteFromTop, /* CallbackWriteArticles, */Callb
 		}
 		else
 		{
-			this.getAllCatArtsInfo().get(categoryToLoad).addAll(dataToSend);
+			if (this.getAllCatArtsInfo().get(categoryToLoad) != null)
+			{
+				this.getAllCatArtsInfo().get(categoryToLoad).addAll(dataToSend);
+			}
+			else
+			{
+				this.getAllCatArtsInfo().put(categoryToLoad, dataToSend);
+			}
 		}
 	}
 

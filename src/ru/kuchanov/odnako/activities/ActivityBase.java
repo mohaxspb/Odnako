@@ -329,7 +329,7 @@ public class ActivityBase extends AppCompatActivity
 		//XXX
 		this.drawerRightRecyclerView.setLayoutManager(new LinearLayoutManager(act));
 		this.drawerRightRecyclerView.setAdapter(new RecyclerAdapterDrawerRight(act, null));
-		int[] textSizeAttr = new int[] { ru.kuchanov.odnako.R.attr.colorPrimary };
+		int[] textSizeAttr = new int[] { R.attr.colorPrimary };
 		int indexOfAttrTextSize = 0;
 		TypedValue typedValue = new TypedValue();
 		TypedArray a = act.obtainStyledAttributes(typedValue.data, textSizeAttr);

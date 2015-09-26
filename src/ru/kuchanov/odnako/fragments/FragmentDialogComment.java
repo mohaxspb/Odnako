@@ -7,6 +7,7 @@ mohax.spb@gmail.com
 package ru.kuchanov.odnako.fragments;
 
 import ru.kuchanov.odnako.R;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.download.CommentInfo;
 import ru.kuchanov.odnako.utils.MyUIL;
 import android.app.Dialog;
@@ -44,8 +45,8 @@ public class FragmentDialogComment extends DialogFragment
 	@Override
 	public void onCreate(Bundle savedState)
 	{
-		super.onCreate(savedState);
 		System.out.println("CommentDialogFragment onCreate");
+		super.onCreate(savedState);
 
 		this.act = (AppCompatActivity) this.getActivity();
 
@@ -66,8 +67,9 @@ public class FragmentDialogComment extends DialogFragment
 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
 
-		String scaleFactorCommentsString = pref.getString("scale_comments", "1");
-		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
+//		float scaleFactor=pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
+		float scaleFactorComments = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_COMMENTS, 0.75f);
+//		float scaleFactorComments = Float.valueOf(scaleFactorCommentsString);
 
 		final CommentInfo p = curCommentInfo;
 

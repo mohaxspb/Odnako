@@ -1,5 +1,5 @@
 /*
- 05.04.2015
+No arts at all and no initial art, so load from web 05.04.2015
 AskDBFromTop.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com

@@ -70,13 +70,13 @@ public class AcraReportSender implements ReportSender
 		}
 
 		request.url(this.url);
-		//request.build();
 
 		try
 		{
 			OkHttpClient client = new OkHttpClient();
 			Response response = client.newCall(request.build()).execute();
-			Log.e(LOG, response.body().string());
+			response.toString().replace("", "");
+//			Log.e(LOG, response.body().string());
 		} catch (IOException e)
 		{
 			e.printStackTrace();

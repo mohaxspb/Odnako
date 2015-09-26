@@ -584,9 +584,12 @@ public class ServiceTTS extends Service implements TextToSpeech.OnInitListener
 	private void destroyServiceAndNotification()
 	{
 		Log.i(LOG, "destroyServiceAndNotification");
-		this.mTTS.stop();
-		this.mTTS.shutdown();
-		this.mTTS = null;
+		if (this.mTTS != null)
+		{
+			this.mTTS.stop();
+			this.mTTS.shutdown();
+			this.mTTS = null;
+		}
 		mNotifyManager.cancel(NOTIFICATION_TTS_ID);
 		this.stopForeground(true);
 		this.stopSelf();

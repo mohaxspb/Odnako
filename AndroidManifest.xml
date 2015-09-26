@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.kuchanov.odnako"
-    android:versionCode="330"
-    android:versionName="3.30.arctic" >
+    android:versionCode="335"
+    android:versionName="3.35.arctic.hotfix" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -37,7 +37,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name="MyApplication"
+        android:name="ru.kuchanov.odnako.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -55,7 +55,7 @@
         <!-- end of adMob -->
         <activity
             android:name="ru.kuchanov.odnako.activities.ActivityMain"
-            android:label="@string/app_name"
+			android:label="@string/app_name"
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -112,7 +112,7 @@
         </activity>
         <activity
             android:name="ru.kuchanov.odnako.activities.ActivityPreference"
-            android:enabled="true"
+                        android:enabled="true"
             android:label="@string/settings_title" >
             <intent-filter>
                 <category android:name="android.intent.category.PREFERENCE" />
@@ -147,7 +147,6 @@
 
         <receiver
             android:name="ru.kuchanov.odnako.receivers.ReciverBoot"
-            android:enabled="true"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -155,13 +154,13 @@
         </receiver>
         <receiver
             android:name="ru.kuchanov.odnako.receivers.ReceiverTimer"
-            android:enabled="true"
             android:exported="false" >
             <intent-filter>
-                <action android:name="ru.kuchanov.odnako.RECEIVER_TIMER" />
+                <action android:name="ru.kuchanov.odnakopro.RECEIVER_TIMER" />
             </intent-filter>
         </receiver>
-        <receiver android:name="ru.kuchanov.odnako.receivers.ReceiverPhone" >
+        <receiver android:name="ru.kuchanov.odnako.receivers.ReceiverPhone"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>

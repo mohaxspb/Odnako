@@ -204,12 +204,7 @@ public class RecyclerAdapterArticleFragment extends RecyclerView.Adapter<Recycle
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
-//		String scaleFactorString = pref.getString("scale", "1");
-//		float scaleFactor = Float.valueOf(scaleFactorString);
 		float scaleFactor=pref.getFloat(ActivityPreference.PREF_KEY_SCALE_UI, 0.75f);
-
-//		String scaleFactorArticleString = pref.getString("scale_art", "1");
-//		float scaleFactorArticle = Float.valueOf(scaleFactorArticleString);
 		float scaleFactorArticle = pref.getFloat(ActivityPreference.PREF_KEY_SCALE_ARTICLE, 0.75f);
 
 		final float scale = act.getResources().getDisplayMetrics().density;

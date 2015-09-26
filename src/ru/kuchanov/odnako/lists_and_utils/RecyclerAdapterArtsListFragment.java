@@ -493,7 +493,7 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					boolean artBackgroundIsReaden = this.pref.getBoolean(
 					ActivityPreference.PREF_KEY_ARTICLE_IS_READEN_BACKGROUND, true) == true;
 					//set arrowDownIcon by theme
-					int[] attrs = new int[] { ru.kuchanov.odnako.R.attr.cardBackGroundColor };
+					int[] attrs = new int[] { R.attr.cardBackGroundColor };
 					TypedArray ta = act.obtainStyledAttributes(attrs);
 					int defaultBackgroundColor = ta.getColor(0, Color.WHITE);
 					ta.recycle();
@@ -501,11 +501,11 @@ public class RecyclerAdapterArtsListFragment extends RecyclerView.Adapter<Recycl
 					ta = act.obtainStyledAttributes(attrs);
 					int readenBackgroundColor = ta.getColor(0, Color.WHITE);
 					ta.recycle();
-					attrs = new int[] { ru.kuchanov.odnako.R.attr.readenIcon };
+					attrs = new int[] { R.attr.readenIcon };
 					ta = act.obtainStyledAttributes(attrs);
 					int readenIconId = ta.getResourceId(0, R.drawable.ic_drafts_white_48dp);
 					ta.recycle();
-					attrs = new int[] { ru.kuchanov.odnako.R.attr.unreadenIcon };
+					attrs = new int[] { R.attr.unreadenIcon };
 					ta = act.obtainStyledAttributes(attrs);
 					int unreadenIconId = ta.getResourceId(0, R.drawable.ic_markunread_white_48dp);
 					ta.recycle();

@@ -1132,6 +1132,10 @@ public class ActivityMain extends ActivityBase
 		{
 			Log.e(LOG, "menu is NULL!!!!!!!!!!!!!!!!!");
 			this.menu = this.toolbar.getMenu();
+			if(this.menu==null)
+			{
+				this.recreate();
+			}
 		}
 		MenuItem searchMenuItem = this.menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();

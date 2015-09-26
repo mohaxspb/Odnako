@@ -307,11 +307,12 @@ public class ActivityArticle extends ActivityBase
 				}
 				return true;
 			case R.id.share:
+				try
+				{
 				if (this.getSupportFragmentManager().findFragmentByTag(FragmentArticle.LOG) != null)
 				{
 					FragmentArticle upperArtFrag = (FragmentArticle) this.getSupportFragmentManager()
 					.findFragmentByTag(FragmentArticle.LOG);
-					//					Actions.shareUrl(upperArtFrag.getArticle().getUrl(), this.act);
 					DialogShare.showChoiceDialog(act, upperArtFrag.getArticle(), DialogShare.SHARE_TYPE_ALL);
 				}
 				else
@@ -319,6 +320,11 @@ public class ActivityArticle extends ActivityBase
 					DialogShare.showChoiceDialog(act,
 					this.allCatArtsInfo.get(getCurrentCategory()).get(this.getCurArtPosition()),
 					DialogShare.SHARE_TYPE_ALL);
+				}
+				}catch(Exception e)
+				{
+					Log.e(LOG, "catch error DialogShare");
+					e.printStackTrace();
 				}
 				return true;
 			case R.id.add_to_favorites:

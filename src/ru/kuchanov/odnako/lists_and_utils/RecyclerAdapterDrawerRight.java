@@ -109,7 +109,7 @@ public class RecyclerAdapterDrawerRight extends RecyclerView.Adapter<RecyclerVie
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
 	{
 		//set arrowDownIcon by theme
-		int[] attrs = new int[] { ru.kuchanov.odnako.R.attr.arrowDownIcon };
+		int[] attrs = new int[] { R.attr.arrowDownIcon };
 		TypedArray ta = this.act.obtainStyledAttributes(attrs);
 		final int expandIconId = ta.getResourceId(0, R.drawable.ic_action_overflow_dark);
 		ta.recycle();

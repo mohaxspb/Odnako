@@ -1,5 +1,4 @@
-/*
- 19.10.2014
+/* 19.10.2014
 ArticlesListFragment.java
 Created by Kuchanov Yuri,
 mohax.spb@gmail.com

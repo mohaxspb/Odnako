@@ -13,6 +13,7 @@ import ru.kuchanov.odnako.R;
 import ru.kuchanov.odnako.activities.ActivityArticle;
 import ru.kuchanov.odnako.activities.ActivityBase;
 import ru.kuchanov.odnako.activities.ActivityMain;
+import ru.kuchanov.odnako.activities.ActivityPreference;
 import ru.kuchanov.odnako.db.Article;
 import ru.kuchanov.odnako.db.Author;
 import ru.kuchanov.odnako.db.Category;
@@ -716,7 +717,7 @@ public class Actions
 	{
 		Log.d(LOG, "showArticle!");
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(act);
-		boolean twoPane = pref.getBoolean("twoPane", false)==true;
+		boolean twoPane = pref.getBoolean(ActivityPreference.PREF_KEY_TWO_PANE, false)==true;
 		//check if it's large screen
 		
 		if (twoPane)
@@ -724,6 +725,10 @@ public class Actions
 			final ActivityMain mainActivity = (ActivityMain) act;
 			final ViewPager leftPager = (ViewPager) act.findViewById(R.id.pager_left);
 			final ViewPager rightPager = (ViewPager) act.findViewById(R.id.pager_right);
+			if(rightPager==null)
+			{
+				act.recreate();
+			}
 			//check if we are showing allAuthors (curCatPosition=3) or allCategories (curCatPosition=13) 
 			if (rightPager.getAdapter() instanceof PagerAdapterAllAuthors)
 			{

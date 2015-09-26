@@ -78,6 +78,15 @@ public class AsyncTaskWriteFromTop extends AsyncTask<Void, Void, String[]>
 							List<ArtCatTable> first30FromTop = ArtCatTable.getListFromTop(h, categoryId,
 							1);
 
+							//TODO
+							//here is reason of crushing when first30FromTop.size==1
+							//so check it and return NO_NEW
+							//because we cant find how to reproduce it
+							if(first30FromTop.size()==1)
+							{
+								return new String[] { Msg.NO_NEW, null };
+							}
+							
 							String lastInFirst30Url = Article.getArticleUrlById(h,
 							first30FromTop.get(first30FromTop.size() - 1).getArticleId());
 
